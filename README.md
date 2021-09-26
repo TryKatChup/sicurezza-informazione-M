@@ -25,8 +25,7 @@ ostacoli.
 da scrivere bene dopo
 
 ---
-
-![sesso](https://user-images.githubusercontent.com/56556806/134665244-be69d87c-059a-43e7-8e3e-06ebe2a26e3b.jpg)
+![cyber sesso](https://user-images.githubusercontent.com/56556806/134823047-da26060a-3813-4e73-a13c-256bcd0483c4.png)
 
 # How I Defeated Fascism with the Power of Love
 
