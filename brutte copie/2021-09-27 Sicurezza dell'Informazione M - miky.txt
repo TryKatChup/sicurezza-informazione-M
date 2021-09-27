@@ -211,11 +211,30 @@ caratteristica comune alle trasformazioni per la sicurezza è la ridondanza.
 
 trasformazioni che non studiamo in questo corso, vanno studiate in termini di quanto tempo e quante risorse computazionali richiedono per rompere tali proprietà.
 
+3 principi della difesa che guidano la progettazione delle trasformazioni:
+-dev'essere impossbile sapere che trasformazione è stata eseguita;
+-impossibile dedurre qual è la trasformazione adottata;
+-dev'essere impossibile indovinare la trasformazione adottata.
+
+Per ora parliamo di impossibilità, poi arriveremo alla difficoltà
+
+se la trasformazione è segreta è chiaro che diventa impossibile dedurre e indovinare
+
+devo far sì che il calcolo di sapere, dedurre o indovinare, sia impossibile.
+
+difficili per chi conosce il segreto, impossibili per chi non lo conosce.
 
 
 
 
+trasformazione diretta (di encryprion): prendo il mio dato in chiaro (plain text) in qualcosa di non comprensibile (cypher text)
+trasformazione inversa (di decryption): prende dal canale il cypher text e lo trasforma in plain text
 
+un intrusore si può intromettere, ma non riesce a capire quale sia il testo in chiaro
+
+
+questa trasformazione è bidirezionale: uno cripta, l'altro decripta e viceversa.
+Questo schema funziona se entrambi sono online/solo uno dei due? Questo schema va bene in tutte le situazioni (se ad esempio A è online e cripta e invia, ma B è offline, quando torna online lo decripta, easy pez)
 
 
 
