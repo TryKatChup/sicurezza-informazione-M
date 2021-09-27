@@ -236,20 +236,68 @@ un intrusore si può intromettere, ma non riesce a capire quale sia il testo in 
 questa trasformazione è bidirezionale: uno cripta, l'altro decripta e viceversa.
 Questo schema funziona se entrambi sono online/solo uno dei due? Questo schema va bene in tutte le situazioni (se ad esempio A è online e cripta e invia, ma B è offline, quando torna online lo decripta, easy pez)
 
+i calcoli per mettere in chiaro un testo cifrato, senza conoscere la trasformazione di decription devono essere facili per chi conosce
+
+
+confronto:
+deve poter vedere se a quel dato corrisponde quel riassunto
+
+se il confronto ha successo => la destinazione può dire che il dato ricevuto è integro.
+Significa che sul canale, in qualche modo sono stati inviati entrambi (dati originali e riassunto) - in qualche modo l'intrusore può attaccare entrambe o solo una delle due -
+
+di sicuro la destinazione deve riceverle entrambe e deve confrontarle.
+
+Quali sono le caratteristiche.
+
+Come otteniamo il riassunto:
+esistono le funzioni hash (funzioni che dato un input producono un input molto più piccolo, un'impronta)
+
+non ci vanno bene tutte le funzioni hash, ma abbiamo bisogno di una funzione che chiamiamo "crittograficamente sicura", ovvero con 2 caratteristiche fondamentali:
+"facilità di esecuzione" e "comportamento da oracolo casuale".
+
+Una funzione hash crittograficamente sicura è tale se il suo comportamento è apparentemente aleatorio.
+
+se io fornisco in ingresso a tale funzione un emssaggio di cui non conosco ancora l'impronta, si riscrontra in uscita uno dei qualsiasi dei 2^n valori possibili dove n è il numero di bit dell'impronta.
+se io do in input un messaggio di dimensione m, non so con quale probabilità avrò quell'impronta.
+Non posso prevedere con certezza quale valore avrà in uscita.
+
+Questa è una caratteristica fondamentale;
+
+altra caratteristica necessaria:
+resistenza alle collisioni, ovvero se una funzione hash è critt sicura, l'individuazione di due messaggi con la stessa impronta da parte di un intrusore dev'essere difficile
+
+se ho 2^m valori di ingresso con m > n, ovviamente ci sono delle collisioni, è inevitabile, ma dev'essere difficile per un intrusore trovare quella coppia di messaggi con la stessa impronta.
+
+funzioni hash impiegate soprattutto per rilevare i disturbi (check sum)
 
 
 
 
 
 
+per ora non ci interessa di com'è fatta o qual è l'algoritmo che useremo, ma sappiamo che per costruire un certificato di autenticità abbiamo bisogno di una funzione hash con certe caratteristiche (definite in precedenza).
 
 
 
+esempio:
+(slide) attestazione ed accertamento dell'integrità
+
+supponiamo che A metta sul canale insicuro -> un messaggio m, affiancato da H (funzione hash crittograficamente sicura), a partire da m è stata costruita H(m)
+B deve prendere il messaggio ricevuto, applicargli la funzione hash, che conosce anche lui, e verificare che l'hash ricevuto coincida con quello ottenuto applicando a sua volta la funzione hash.
+Se equivalgono è tutto ok (tutto trasmesso correttamente).
+
+La destinazion è in grado di rilevare se il messaggio ha subito modifiche?
+
+Mettiamoci nei panni dell'intrusore:
+se l'intrusore conosce la funzione hash può mettere un nuovo messaggio con hash allegato
 
 
 
+abbiamo quindi 2 tipi di trasformazioni: Encryption, Hash
 
+possiamo anche combinarle
 
+e se volessimo garantire la riservatezza e l'integrità dei dati
 
 
 
