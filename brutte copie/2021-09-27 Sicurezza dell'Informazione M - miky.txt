@@ -1,0 +1,240 @@
+pdf 1 - Intro
+
+slide 21
+questo corso si focalizza principalmente sulla sicurezza dei dati (meccanismi capaci di proteggere i dati in termini di requisiti fonrmanetali autenticità, confidenz, ecc.)
+
+infrastrutture didedployment per meccanismi di sicurezza
+
+quando parleremo di sicurezza dei dati, faremo un'assunzione fond: assumiamo che il nostro HW e Firmware e SO siano SICURI.
+Ovviamente questa ipotesi non è sempre verificata, ma in questo corso lo diamo come ipotesi
+
+quando inizieremo a studiare i servizi e meccanismi di sicurezza faremo questa assunzione
+
+la sicurezza HW sta emergendo in modo preponderante, perché sempre di più si sono scoperte vulnerabilità a livello di componenti fisiche.
+
+dispositivi fisici: memorie, periferiche, linee di trasmissione.
+
+sicurezza HW: protegge calcolatore e altri dispositivi fisici da quali minacce? Furto, danneggiamento, alterazione dei componenti.
+
+Anche il firmware dev'essere sicuro: ci sono diverse vulenrabilità legate al FW, specialmente recenti (area in grande espansione)
+
+quindi ci sono anche diversi meccanismi di analisi del FW (metodi sia statici che dinamici che permettono di verificare che il fw si comporti correttamente)
+
+problema? Dobbiamo occuparci anche di questo perché quando abbiamo a che fare con glia pplicativi dobbiamo verificare che un componente software sia autentico e funzioni come deve (sia stato sviluppato da chi effettivamente lo crea, non abbia subito modifiche ad esempio iniezione di software malevolo)
+
+se un software è progettato per eseguire una certa funzionalità dobbiamo comunque verificare che non contenga software malevolo che esegue ad esempio in bg
+
+primo check che possiamo fare: quello che passa attrvarso utilizzo di software antimalware: a livello applicativo vado ad eseguire dei software che vanno a verificare
+chi mi garantisce che il software antimalware sia giusto corretto e sia proprio quello? Il SO
+e chi garantisce per il SO?
+Il bootloader?
+E per il bootloader?
+
+Per garantire che la fase di booting sia avvenuta con successo (trusted boot oppure secure boot)
+
+Non sono oggetto del corso ma ce le dice per darci cenni di base (noi daremo questo per scontato)
+
+trusted boot: tutta la fase di iniz. è avvenuta usando piattaforme trusted (che fanno utilizzo di componenti -processori- ad hoc anche crittografici, che conservano delle chiavi tramite le quali possiamo verificare che tutti i componenti (firmware) vengano eseguiti correttamente
+
+secure boot: faccia utilizzo di un'interfaccia standard che garantisce più a livello software che tutto avvenga in maniera corretta.
+
+quello che possiamo dire è che grandi aziende quali Intel, IBM, ecc.
+
+tramite chip aggiuntivi e SO ad hoc, garantiscono che ttute le conf hw e sw siano avviate correttamente.
+Questo garantisce una piattaforma fidata.
+
+da una parte le grandi aziende che si sono riunite per fare qualcosa a livello hardware, mentre dall'altro è un approccio più software.
+
+
+c'è una catena di sicurezza che dovrebbe essere rispettata
+
+applicativi > SO > bootloading > hardware
+
+trusted boot/secure boot
+
+coprocessori dedicati e SO specifici (quindi soluzione hardware);
+SO enhanced, estesi con funzionalità specifiche di sicurezza (qua però è tutto a livello software)
+
+vogliamo garantire che l'accesso ad ogni risorsa, almeno a livello base, siano regolamentati
+
+>>> Madonna Troia <<< (Sì)
+
+è evidente che comunque la sicurezza
+
+
+
+slide 22
+
+quando installo dei componenti di sicurezza come faccio a sapere che quel componente sia sicuro? Ci dev'essere qualcuno che me lo garantisca.
+
+ovviamente occorrono degli enti di certificazione e degli standard che definiscono delle metodologie con cui andare a verificare che un prodotto effettivamente sia sicuro.
+Applicando questi standard gli enti ci garantiscono la sicurezza del prodotto che installiamo (ce ne sono citati alcuni).
+
+
+terminologia
+
+abbiamo già definito:
+requisiti di sicurezza, confidenzialità, integritò, disponibilità, autenticità, non ripudio
+
+andremo ad analizzare quali sono i meccanismi che ci permettono di rilevare/prevenire un attacco
+
+
+attacco: azione mirante a compromettere una proprietà critica dell'informazione
+
+d'ora in poi per analizzare estudiare i meccanismi di sicurezza faremo riferimento ad un modello molto specifico: modello del canale insicuro
+
+
+Modello che ha senso ovviamente se ci occupiamo di sicurezza dei dati.
+Questo modello prevede che ci sia una sorgente dei dati, destinazione a cui sono rivolti, e che ci sia un canale che mette in comunicaione sorgente con destinazione
+
+assumiamo che:
+-la sorgente abbia un HW e SO sicuro;
+-che la destinazione abbia un ambiente sicuro;
+-ma che il canale sia insicuro.
+
+Ovvero: sul canale si possono inserire degli intrusori e possono fare degli attacchi passivi e attivi appunto sul canale.
+
+Se questo è il nostro modello, ci chiediamo se la sorgente produce dei dati, che devono essere trasmessi sul canale insicuro, la destinazione consuma i dati;
+
+dobbiamo garantire che la destinazione possa consumare correttametne ed interpretare correttamente quei dati.
+
+
+se la sorgente produce dati con garanzia di autenticità, la destinazione deve poter verificare l'autenticità anche in seguito alla consumazione di tali (non ripudio).
+
+Classificazione attacchi:
+2 tipi: attacco passivo/attivo
+
+passivo: l'intrusore si inserisce sul canale, ma l'unica cosa che può fare è intercettare i dati (li può osservare -io intrusore mi inserisco sul canale e monitoro i dati, ma non faccio alcuna azione che modifichi/alteri il flusso-)
+
+Questo canale può essere un bus, un canale interno offline, ma ovviamente anche un canale diretto;
+
+
+attivo: l'intrusore può accedere al canale ed alteraattivamente il normale flusso dei dati, in che modo? diversi:
+-modificare il flusso intenzionalmente, per minare il contenuto dei dati (attacco all' "integrità");
+-aggiungere informazioni (inserite dall'intrusore) - sto come fabbricando dei nuovi dati - la falsificazione secondo questo tipo mina l' "autenticità". Faccio credere alla destinazione che i dati da me prodotti siano prodotti dalla sorgente legittima;
+-interrompere il normale flusso, impedendo che i dati arrivino alla destinazione (minaccia il requisito di "disponibilità".
+
+
+slide 24
+contromisure per attacchi passivi:
+-preventive, prevengo la possibilità che un dato venga intercettato;
+-rilevazione, che sia in corso;
+-reazione, ad attacco avvenuto
+
+Se i dati sono non confidenziali, a me non interessa nulla che i dati vengano intercettati
+
+
+per proteggere riservatezza dei dati, ovviamente sarà necessaria prevenzione
+
+
+
+nostro obbiettivo come ingegneri: capire a fronte di più possibilità progettuali quale ha più senso
+
+Possibili soluzioni per attacchi passivi:
+-impedire accesso al canale. È una soluzione sensata? È scalabile? È economicamente sostenibile? Impedire l'accesso significa che o ho dei canali dedicati, oppure metto in piedi meccanismi di controllo accesso su larga scala, che fa in modo che ogni volta che una sorgente accede al canale, il meccanismo chiede di autenticarsi. Questa soluzione non è economicamente sostenibile né scalabile.
+-criptare i dati che vogliamo inviare (rendere incomprensibili i dati trasmessi, tranne il destinatario legittimo)
+
+
+
+contromisure per attacchi attivi:
+
+ha senso adottare una contromisura preventiva? Protegge contro attacchi ad autenticità, integrità, disponibilità? In linea di principio sì, ma come posso prevenire un attacco al flusso dei dati? Il flusso è in corso
+
+unico modo è impedire l'accesso al canale, si può fare ma ovviamente ci sono sempre gli svantaggi specificati prima.
+
+è necessaria una contromisura di rilevazione, per permettere alla destinazione se quel flusso di dati è corretto o no.
+
+certificato di autenticità.
+
+la rappresentazione dei dati non è incomprensibile, ma al normale flusso dei dati aggiungo dati in più che permettono alla destinazione di capire se il flusso è integro e autentico.
+
+attestati di autenticità/integrità
+
+ci sono meccanismi crittografici che permettono di ottenerli
+
+VOGLIAMO
+LA
+PORCAMADONNA
+DI
+PAUSA
+DIOPORCO REBECCA
+
+(dio stronzo, dio mattone, dio sedia, dio tappeto, dio finestra, dio matita, dio orologio, dio serio, dio stupido, dio telegram, dio crittografato, dio telegrafato, dio barra spaziatrice, dio sistema operativo, dio linux, dio Marcello, gesù saponetta, gesù scivoloso, gesù rickroll, gesù sul lago duria, madonna donna, madonna sgravata, madonna asus, madonna erba, madonna pokèmon, madonna alta 1.70, madonna bruttissima, madonna ruggine, madonna grondaria sporca, madonna tubo di plastica, madonna scarico)
+
+
+se il meccanismo lo colloco a livello applicativo è molto personalizzabile ma richiede manutenzione
+
+trasporto è più trasparente alle applicazioni;
+
+livello di rete è completamente trasparente, ma è meno personalizzabile rispetto alle esigenze delle applicazioni
+
+a seconda del livello avrò prestazioni, personalizzabilità e trasparenza alle applicazioni diverse.
+
+
+NUOVO PDF
+
+
+passa pausa
+pausa banda
+pausa dioporco
+dio maiuscolo
+
+
+come facciamo a costruire degli attestati? Dandoti una testata xd
+
+trasformazioni di sicurezza -> dobbiamo costruire degli algoritmi o protocolli (sequenza di azioni ordinate, che mi permettano di trasformare l'informazione orginaria in qualcos'altro (qualcosa di incomprensibile o qualcosa di ridondante che aggiunga alle informazioni gli attestati)
+
+trasformazioni: algotirmi o protocolli
+
+algoritmi =
+prima trasformazione T1 (trasformazione dei dati prima di metterli sul canale insicuro)
+seconda trasformazione T2 (per risalire al contenuto dei dati)
+
+non sempre una singola trasformazione è sufficiente. per vari motivi: a volte c'è bisogno di un protocollo (serie di trasformazioni che sorgente e destinazione devono fare, perché noi nel modello di minaccia più semplice assumiamo che la sorgente si comporti bene e la destinazione si comportano bene, ma a volte potrebbero a loro volta essere compromesse o malintenzionate)
+
+estremi in buona fede
+mmh dimmi come fai a fare la fede che ti viene buona esagerata
+
+vedremo vari protocolli:
+
+alcuni richiedono l'intervento di una terza entità (oltre a sorgente/destinatario), che fa da arbitro/giudice
+
+caratteristica di tutte queste trasformazioni: ridondanza in termini di codifica e di tempo
+
+caratteristica comune alle trasformazioni per la sicurezza è la ridondanza.
+È fondamentale. Perché impiegando più bit di rappresentazione, ha un overhead nel sistema, se non altro in termini di occupazione di banda, di memorizzazione del dato.
+
+
+-crittografia studia come progettare le trasformazioni che mi permettono di proteggere le proprietà di sicurezza dell'informazione
+-crittoanalisi studia roba che permette di rompere le proprietà di sicurezza dell'informazione
+
+
+trasformazioni che non studiamo in questo corso, vanno studiate in termini di quanto tempo e quante risorse computazionali richiedono per rompere tali proprietà.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
