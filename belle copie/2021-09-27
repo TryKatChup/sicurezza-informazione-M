@@ -21,100 +21,58 @@ L'ambito della sicurezza hardware si occupa di proteggere il calcolatore, ma anc
 Sicurezza FW
 Così come l'hardware, anche il firmware dev'essere sicuro: ci sono infatti diverse vulnerabilità legate al FW, specialmente recenti (anche in questo caso ci troviamo in un'area in grande espansione, soprattutto nell'ultimo periodo).
 Esistono diversi meccanismi di analisi del firmware, che si dividono in statici e dinamici, e che permettono, appunto, di verificare che il firmware si comporti correttamente.
-Il motivo per cui è importante anche la sicurezza del firmware, è dato dal fatto che, partendo dal livello applicativo, per garantirne l'autenticità (ovvero che sia stato sviluppato effettivamente dall'azienda o produttore che l'ha rilasciato) e che non sia stato compromesso (ovvero che non abbia subito modifiche, quali ad esempio iniezione di software malevolo, e quindi che funzioni correttamente), c'è una specie di catena di sicurezza:
-1) per verificare la correttezza dell'applicativo esistono ad esempio dei software antimalware;
-2) ma i software antimalware eseguono anch'essi a livello applicativo, e nessuno ci garantisce che l'ambiente di esecuzione (ovvero il Sistema Operativo) sia corretto;
-3) prima ancora del Sistema Operativo esegue il bootloader, che esegue dei controlli di verifica per garantire l'affidabilità del SO;
+Il motivo per cui è importante anche la sicurezza del firmware, è dato dal fatto che, partendo dal livello applicativo, per garantirne l'autenticità (ovvero che sia stato sviluppato effettivamente dall'azienda o produttore che l'ha rilasciato) e che non sia stato compromesso (ovvero che non abbia subito modifiche, quali ad esempio iniezione di software malevolo, e quindi che funzioni correttamente), c'è una specie di catena di sicurezza, che segue diversi check:
+1) il primo check che possiamo fare è quello "di più alto livello", che sfrutta l'utilizzo di software antimalware;
+2) ma i software antimalware eseguono anch'essi a livello applicativo, chi garantisce che siano corretti? Il Sistema Operativo, ovvero l'ambiente di esecuzione, e nessuno ci garantisce che il SO sia corretto;
+3) prima ancora del Sistema Operativo esegue il bootloader (che deve garantire l'hardware stesso), che esegue dei controlli di verifica per garantire l'affidabilità del SO;
 4) a loro volta i bootloader potrebbero essere compromessi, dunque serve ancora qualcosa che ci garantisca che la fase di bootloading sia avvenuta con successo.
 
-Meccanismi per garantire la corretta esecuzione del bootloading: trusted boot e secure boot
+Riassumendo, partendo da livello più alto: applicativi > SO > bootloading > hardware
+
+Vediamo come alla radice di questa catena c'è l'hardware. In linea di principio, per garantire che l'hardware sia corretto, tramite il bootloading, esistono due metodologie: trusted boot e secure boot.
 
 Trusted boot
-Tutta la fase di inizializzazione è avvenuta usando piattaforme trusted (che fanno utilizzo di componenti -processori- ad hoc, anche crittografici, che conservano delle chiavi tramite le quali possiamo verificare che il firmware venga eseguito correttamente.
+Tutta la fase di inizializzazione è avvenuta usando piattaforme "trusted" (ovvero che fanno anche utilizzo di componenti -processori- ad hoc, anche crittografici, che conservano delle chiavi crittografiche tramite le quali possiamo verificare che tutti i componenti, fra cui il firmware siano autentici e vengano avviati correttamente).
 
 Secure boot
+Viene usata un'interfaccia standard UEFI (Unified Extensible Firmware Interface) che garantisce, più a livello software, che tutto avvenga in maniera corretta.
+
+3 approcci per la rilevazione tempestiva degli errori hardware e firmware:
+1) TRUSTED COMPUTER PLATFORM - Grandi aziende (ad esempio IBM, Intel, ecc.) si sono riunite in un'iniziativa (TCPA - Trusted Computing Platform Alliance, che ora è diventata la TCG - Trusted Computing Group) che ha come obbiettivo quello di definire degli standard, in grado di impedire tramite chip aggiuntivi (Fritz) e sistemi operativi ad hoc (Nexus) che garantiscono che le configurazioni hardware e software siano avviati correttamente. Ciò garantisce una piattaforma attivata.
+2) FUNZIONI E REGOLE DI SICUREZZA - Come controparte della soluzione precedente, c'è il problema che l'architettura diventa blindata: si è vincolati all'utilizzo di quel particolare chip con quel particolare sistema operativo. Come possibile alternativa si può ricorrere ad un approccio che consiste nell'utilizzo di sistemi operativi con ESTENSIONI di sicurezza (es Unix, SeLinux).
+3) COPROCESSORI - Una terza alternativa consiste nell'utilizzo di coprocessori dedicati (anche in ambiente di comunicazioni mobili). Idea di affidare a processori dedicati l'esecuzione di funzioni specifiche di sicurezza, almeno per quei calcolatori che hanno funzioni critiche da eseguire.
 
 
-Per garantire che la fase di booting sia avvenuta con successo (trusted boot oppure secure boot)
-
-Non sono oggetto del corso ma ce le dice per darci cenni di base (noi daremo questo per scontato)
-
-trusted boot: tutta la fase di iniz. è avvenuta usando piattaforme trusted (che fanno utilizzo di componenti -processori- ad hoc anche crittografici, che conservano delle chiavi tramite le quali possiamo verificare che tutti i componenti (firmware) vengano eseguiti correttamente
-
-secure boot: faccia utilizzo di un'interfaccia standard che garantisce più a livello software che tutto avvenga in maniera corretta.
-
-quello che possiamo dire è che grandi aziende quali Intel, IBM, ecc.
-
-tramite chip aggiuntivi e SO ad hoc, garantiscono che ttute le conf hw e sw siano avviate correttamente.
-Questo garantisce una piattaforma fidata.
-
-da una parte le grandi aziende che si sono riunite per fare qualcosa a livello hardware, mentre dall'altro è un approccio più software.
-
-
-c'è una catena di sicurezza che dovrebbe essere rispettata
-
-applicativi > SO > bootloading > hardware
-
-trusted boot/secure boot
-
-coprocessori dedicati e SO specifici (quindi soluzione hardware);
-SO enhanced, estesi con funzionalità specifiche di sicurezza (qua però è tutto a livello software)
-
-vogliamo garantire che l'accesso ad ogni risorsa, almeno a livello base, siano regolamentati
-
->>> Madonna Troia <<< (Sì)
-
-è evidente che comunque la sicurezza
-
-
-
-slide 22
-
-quando installo dei componenti di sicurezza come faccio a sapere che quel componente sia sicuro? Ci dev'essere qualcuno che me lo garantisca.
-
-ovviamente occorrono degli enti di certificazione e degli standard che definiscono delle metodologie con cui andare a verificare che un prodotto effettivamente sia sicuro.
-Applicando questi standard gli enti ci garantiscono la sicurezza del prodotto che installiamo (ce ne sono citati alcuni).
+Valutazione, Certificazione, Enti
+Per poter sapere che un componente di sicurezza sia sicuro, ci dev'essere qualcuno che me lo garantisca.
+In questo caso, occorrono degli enti di certificazione e degli standard che definiscono delle metodologie con cui andare a verificare che un progetto sia effettivamente sicuro. Applicando questi standard, gli enti ci garantiscono la sicurezza del prodotto che installiamo. Esempi di standard internazionali per valutazione e certificazione della sicurezza: Orange book del NCSC, ISO 17799, CINI, CERT, ecc.
 
 
 terminologia
+Meccanismo di Sicurezza (Definizione): meccanismo progettato per rilevare/prevenire un attacco, risanare il sistema a seguito di un attacco.
+Servizio di Sicurezza (Definizione): servizio che migliora la sicurezza dell'elaborazione dei dati e del trasferimento delle informazioni. Un servizio di sicurezza utilizza uno o più meccanismi.
 
-abbiamo già definito:
-requisiti di sicurezza, confidenzialità, integritò, disponibilità, autenticità, non ripudio
+Attacco: azione mirata a compromettere una proprietà critica dell'informazione.
 
-andremo ad analizzare quali sono i meccanismi che ci permettono di rilevare/prevenire un attacco
+D'ora in poi per analizzare e studiare i meccanismi di sicurezza faremo riferimento ad un modello molto specifico, chiamato "modello del canale insicuro".
 
+Modello del canale insicuro: è un modello che ha senso (ovviamente) se ci occupiamo di sicurezza dei dati. Prevede che ci sia una sorgente dei dati, una destinazione a cui sono rivolti, e che ci sia un canale che mette in comunicazione sorgente con destinazione.
+Assumiamo che:
+- la sorgente abbia un ambiente sicuro (hardware e sistema operativo sicuri);
+- che la destinazione abbia un ambiente sicuro;
+- ma che il canale sia insicuro (ovvero che sul canale si possono inserire degli intrusori e possono fare degli attacchi passivi e attivi su tale canale).
 
-attacco: azione mirante a compromettere una proprietà critica dell'informazione
+Definito un modello di questo genere, il nostro obbiettivo è garantire che la destinazione possa consumare correttamente ed interpretare correttamente i dati inviati dalla sorgente: se la sorgente produce dati con garanzia di autenticità, la destinazione deve poter verificare l'autenticità anche in seguito alla consumazione di tali (non ripudio).
 
-d'ora in poi per analizzare estudiare i meccanismi di sicurezza faremo riferimento ad un modello molto specifico: modello del canale insicuro
+Classificazione attacchi
+Gli attacchi si classificano in 2 tipologie: attacco passivo e attacco attivo.
 
-
-Modello che ha senso ovviamente se ci occupiamo di sicurezza dei dati.
-Questo modello prevede che ci sia una sorgente dei dati, destinazione a cui sono rivolti, e che ci sia un canale che mette in comunicaione sorgente con destinazione
-
-assumiamo che:
--la sorgente abbia un HW e SO sicuro;
--che la destinazione abbia un ambiente sicuro;
--ma che il canale sia insicuro.
-
-Ovvero: sul canale si possono inserire degli intrusori e possono fare degli attacchi passivi e attivi appunto sul canale.
-
-Se questo è il nostro modello, ci chiediamo se la sorgente produce dei dati, che devono essere trasmessi sul canale insicuro, la destinazione consuma i dati;
-
-dobbiamo garantire che la destinazione possa consumare correttametne ed interpretare correttamente quei dati.
-
-
-se la sorgente produce dati con garanzia di autenticità, la destinazione deve poter verificare l'autenticità anche in seguito alla consumazione di tali (non ripudio).
-
-Classificazione attacchi:
-2 tipi: attacco passivo/attivo
-
-passivo: l'intrusore si inserisce sul canale, ma l'unica cosa che può fare è intercettare i dati (li può osservare -io intrusore mi inserisco sul canale e monitoro i dati, ma non faccio alcuna azione che modifichi/alteri il flusso-)
-
+Passivo
+L'intrusore si inserisce sul canale, ma l'unica cosa che può fare è intercettare i dati (li può osservare -io intrusore mi inserisco sul canale e monitoro i dati, ma non faccio alcuna azione che modifichi/alteri il flusso-).
 Questo canale può essere un bus, un canale interno offline, ma ovviamente anche un canale diretto;
 
-
-attivo: l'intrusore può accedere al canale ed alteraattivamente il normale flusso dei dati, in che modo? diversi:
+Attivo
+L'intrusore può accedere al canale ed alteraattivamente il normale flusso dei dati, in che modo? diversi:
 -modificare il flusso intenzionalmente, per minare il contenuto dei dati (attacco all' "integrità");
 -aggiungere informazioni (inserite dall'intrusore) - sto come fabbricando dei nuovi dati - la falsificazione secondo questo tipo mina l' "autenticità". Faccio credere alla destinazione che i dati da me prodotti siano prodotti dalla sorgente legittima;
 -interrompere il normale flusso, impedendo che i dati arrivino alla destinazione (minaccia il requisito di "disponibilità".
