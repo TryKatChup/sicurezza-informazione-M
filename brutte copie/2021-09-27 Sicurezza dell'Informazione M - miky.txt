@@ -1,24 +1,23 @@
 pdf 1 - Intro
 
 slide 21
-questo corso si focalizza principalmente sulla sicurezza dei dati (meccanismi capaci di proteggere i dati in termini di requisiti fonrmanetali autenticità, confidenz, ecc.)
+Un calcolatore per essere sicuro deve essere sicuro sia a livello hardware che a livello software.
+In questo corso ci si focalizza principalmente sulla "sicurezza dei dati", che consiste nel garantire i seguenti requisiti fondamentali:
+- confidenzialità;
+- integrità;
+- disponibilità;
+- autenticazione;
+- non ripudio.
 
-infrastrutture didedployment per meccanismi di sicurezza
+Quando parliamo di sicurezza dei dati, in questo corso, faremo un'assunzione fondamentale: assumeremo che il nostro hardware, firmware e sistema operativo, siano SICURI.
+Ovviamente questa ipotesi non è sempre verificata, ma in questo corso (quando studieremo i servizi e meccanismi di sicurezza) lo daremo per scontato.
 
-quando parleremo di sicurezza dei dati, faremo un'assunzione fond: assumiamo che il nostro HW e Firmware e SO siano SICURI.
-Ovviamente questa ipotesi non è sempre verificata, ma in questo corso lo diamo come ipotesi
+Soprattutto negli ultimi anni, la sicurezza hardware sta emergendo in maniera preponderante, perché sempre di più si sono scoperte vulnerabilità a livello di componenti fisici (in particolare memorie, periferiche, I/O e linee di trasmissione).
+L'ambito della sicurezza hardware si occupa di proteggere il calcolatore, ma anche altri dispositivi fisici, appunto, da minacce quali furto, danneggiamento o alterazione dei componenti.
 
-quando inizieremo a studiare i servizi e meccanismi di sicurezza faremo questa assunzione
+Così come l'hardware, anche il firmware dev'essere sicuro: ci sono infatti diverse vulnerabilità legate al FW, specialmente recenti (anche in questo caso ci troviamo in un'area in grande espansione, soprattutto nell'ultimo periodo).
+Esistono diversi meccanismi di analisi del firmware, che si dividono in statici e dinamici, e che permettono, appunto, di verificare che il firmware si comporti correttamente.
 
-la sicurezza HW sta emergendo in modo preponderante, perché sempre di più si sono scoperte vulnerabilità a livello di componenti fisiche.
-
-dispositivi fisici: memorie, periferiche, linee di trasmissione.
-
-sicurezza HW: protegge calcolatore e altri dispositivi fisici da quali minacce? Furto, danneggiamento, alterazione dei componenti.
-
-Anche il firmware dev'essere sicuro: ci sono diverse vulenrabilità legate al FW, specialmente recenti (area in grande espansione)
-
-quindi ci sono anche diversi meccanismi di analisi del FW (metodi sia statici che dinamici che permettono di verificare che il fw si comporti correttamente)
 
 problema? Dobbiamo occuparci anche di questo perché quando abbiamo a che fare con glia pplicativi dobbiamo verificare che un componente software sia autentico e funzioni come deve (sia stato sviluppato da chi effettivamente lo crea, non abbia subito modifiche ad esempio iniezione di software malevolo)
 
@@ -273,8 +272,6 @@ funzioni hash impiegate soprattutto per rilevare i disturbi (check sum)
 
 
 
-
-
 per ora non ci interessa di com'è fatta o qual è l'algoritmo che useremo, ma sappiamo che per costruire un certificato di autenticità abbiamo bisogno di una funzione hash con certe caratteristiche (definite in precedenza).
 
 
@@ -300,8 +297,6 @@ possiamo anche combinarle
 e se volessimo garantire la riservatezza e l'integrità dei dati
 
 
-
-
-
+dio stupido signor scheda grafica NVIDIA, la smetta di consumare la grande Battery
 
 
