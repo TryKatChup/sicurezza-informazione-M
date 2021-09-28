@@ -68,14 +68,14 @@ Classificazione attacchi
 Gli attacchi si classificano in 2 tipologie: attacco passivo e attacco attivo.
 
 Passivo
-- INTERCETTAZIONE - l'intrusore si inserisce sul canale, ma l'unica cosa che può fare è intercettare i dati (li può osservare -io intrusore mi inserisco sul canale e monitoro i dati, ma non faccio alcuna azione che modifichi/alteri il flusso-). Gli attacchi passivi minano la "confidenzialità" e l' "autenticazione".
-Questo canale può essere un bus, un canale interno offline, ma ovviamente anche un canale diretto;
+- INTERCETTAZIONE - l'intrusore si inserisce sul canale, ma l'unica cosa che può fare è intercettare i dati (li può osservare -io intrusore mi inserisco sul canale e monitoro i dati, ma non faccio alcuna azione che modifichi/alteri il flusso-). Gli attacchi passivi minano la proprietà di "confidenzialità" e anche l' "autenticazione".
+Questo canale può essere un bus, un canale interno offline, ma ovviamente anche un canale diretto (comunicazione di rete);
 
 Attivo
 L'intrusore può accedere al canale ed alterativamente il normale flusso dei dati, in che modo? diversi:
 - MODIFICA (modificare il flusso intenzionalmente) - modifica intenzionale del flusso dei dati, modificando il contenuto dei dati, mina la proprietà di "integrità";
-- FABBRICAZIONE - aggiungere informazioni (inserite dall'intrusore) - sto come fabbricando dei nuovi dati - la falsificazione secondo questo tipo mina l' "autenticità". Faccio credere alla destinazione che i dati da me prodotti siano prodotti dalla sorgente legittima;
-- INTERRUZIONE - interrompere il normale flusso, impedendo che i dati arrivino alla destinazione (minaccia il requisito di "disponibilità".
+- FABBRICAZIONE - aggiungere informazioni (inserite dall'intrusore) al flusso dei dati. La falsificazione secondo questo tipo mina la proprietà di "autenticità", in quanto si fa credere alla destinazione che i dati prodotti dall'intrusore siano prodotti dalla sorgente legittima;
+- INTERRUZIONE - interrompere il normale flusso, impedendo che i dati arrivino alla destinazione (minaccia il requisito di "disponibilità").
 
 Ricapitolando (tipo di attacco e proprietà che mette a rischio):
 - attacchi passivi -> confidenzialità, autenticazione
