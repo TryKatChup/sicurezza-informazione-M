@@ -68,38 +68,34 @@ Classificazione attacchi
 Gli attacchi si classificano in 2 tipologie: attacco passivo e attacco attivo.
 
 Passivo
-L'intrusore si inserisce sul canale, ma l'unica cosa che può fare è intercettare i dati (li può osservare -io intrusore mi inserisco sul canale e monitoro i dati, ma non faccio alcuna azione che modifichi/alteri il flusso-).
+- INTERCETTAZIONE - l'intrusore si inserisce sul canale, ma l'unica cosa che può fare è intercettare i dati (li può osservare -io intrusore mi inserisco sul canale e monitoro i dati, ma non faccio alcuna azione che modifichi/alteri il flusso-). Gli attacchi passivi minano la "confidenzialità" e l' "autenticazione".
 Questo canale può essere un bus, un canale interno offline, ma ovviamente anche un canale diretto;
 
 Attivo
-L'intrusore può accedere al canale ed alteraattivamente il normale flusso dei dati, in che modo? diversi:
--modificare il flusso intenzionalmente, per minare il contenuto dei dati (attacco all' "integrità");
--aggiungere informazioni (inserite dall'intrusore) - sto come fabbricando dei nuovi dati - la falsificazione secondo questo tipo mina l' "autenticità". Faccio credere alla destinazione che i dati da me prodotti siano prodotti dalla sorgente legittima;
--interrompere il normale flusso, impedendo che i dati arrivino alla destinazione (minaccia il requisito di "disponibilità".
+L'intrusore può accedere al canale ed alterativamente il normale flusso dei dati, in che modo? diversi:
+- MODIFICA (modificare il flusso intenzionalmente) - modifica intenzionale del flusso dei dati, modificando il contenuto dei dati, mina la proprietà di "integrità";
+- FABBRICAZIONE - aggiungere informazioni (inserite dall'intrusore) - sto come fabbricando dei nuovi dati - la falsificazione secondo questo tipo mina l' "autenticità". Faccio credere alla destinazione che i dati da me prodotti siano prodotti dalla sorgente legittima;
+- INTERRUZIONE - interrompere il normale flusso, impedendo che i dati arrivino alla destinazione (minaccia il requisito di "disponibilità".
 
+Ricapitolando (tipo di attacco e proprietà che mette a rischio):
+- attacchi passivi -> confidenzialità, autenticazione
+- attacchi attivi -> integrità, autenticità, disponibilità
 
-slide 24
-contromisure per attacchi passivi:
--preventive, prevengo la possibilità che un dato venga intercettato;
--rilevazione, che sia in corso;
--reazione, ad attacco avvenuto
+Contromisure
+Esistono 3 tipologie di contromisure per gli attacchi:
+- prevenzione, tramite cui si previene la possibilità che un dato venga intercettato;
+- rilevazione, tramite cui si rileva un attacco in corso;
+- reazione, tramite cui si reagisce dopo che un attacco è già avvenuto.
+Il tipo di contromisura da adottare, va scelto anche in base al sistema e ai dati da proteggere (nel nostro caso ci interessano i dati). Se ad esempio i dati sono non confidenziali, non ci interessa che vengano intercettati. Se i dati non sono riservati, non sarà necessaria la prevenzione.
+Come ingegneri, il nostro obbiettivo è capire a fronte di più possibilità progettuali, quale ha più senso per il nostro sistema ed i nostri dati da proteggere.
 
-Se i dati sono non confidenziali, a me non interessa nulla che i dati vengano intercettati
+Possibili contromisure per attacchi passivi
+- impedire l'accesso al canale. Questo viene implementato tramite l'utilizzo o di canali dedicati, oppure mettendo in piedi meccanismi di controllo dell'accesso su larga scala, che fanno in modo che ogni volta che una sorgente accede al canale, il  meccanismo chiede di autenticasi. Per come è realizzata, questa soluzione non è tuttavia economicamente sostenibile né scalabile;
+- criptare i dati da inviare, ovvero rendere incomprensibili i dati trasmessi, tranne al destinatario legittimo.
 
+Possibili contromisure per attacchi attivi
+Contro gli attacchi attivi, in linea di principio avrebbe senso adottare una contromisura preventiva, in quanto protegge l'autenticità, l'integrità e la riservatezza, ma come si può prevenire un attacco al flusso di dati, che è in corso? L'unico modo è impedire l'accesso al canale, si può fare ma ovviamente ci sono sempre gli svantaggi specificati in precedenza.
 
-per proteggere riservatezza dei dati, ovviamente sarà necessaria prevenzione
-
-
-
-nostro obbiettivo come ingegneri: capire a fronte di più possibilità progettuali quale ha più senso
-
-Possibili soluzioni per attacchi passivi:
--impedire accesso al canale. È una soluzione sensata? È scalabile? È economicamente sostenibile? Impedire l'accesso significa che o ho dei canali dedicati, oppure metto in piedi meccanismi di controllo accesso su larga scala, che fa in modo che ogni volta che una sorgente accede al canale, il meccanismo chiede di autenticarsi. Questa soluzione non è economicamente sostenibile né scalabile.
--criptare i dati che vogliamo inviare (rendere incomprensibili i dati trasmessi, tranne il destinatario legittimo)
-
-
-
-contromisure per attacchi attivi:
 
 ha senso adottare una contromisura preventiva? Protegge contro attacchi ad autenticità, integrità, disponibilità? In linea di principio sì, ma come posso prevenire un attacco al flusso dei dati? Il flusso è in corso
 
