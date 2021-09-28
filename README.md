@@ -30,66 +30,108 @@ da scrivere bene dopo
 
 ### Calcolatori sicuri
 
-Sicurezza dei dati in termini dei requisiti principali come:
 
-- Confidenzialità
-- Integrità
-- Disponibilità
-- Autenticazione
-- Non ripudio
+slide 21
+Un calcolatore per essere sicuro deve essere sicuro sia a livello hardware che a livello software.
+In questo corso ci si focalizza principalmente sulla "sicurezza dei dati", che consiste nel garantire i seguenti requisiti fondamentali:
 
-Sicurezza hardware: sempre di più si sono scoperte vulnerabilità a livello di componenti fisiche
-Area di protezione delle vulnerabilità che vengono dai dispositivi fisici
+- confidenzialità;
+- integrità;
+- disponibilità;
+- autenticazione;
+- non ripudio.
+
+Quando parliamo di sicurezza dei dati, in questo corso, faremo un'assunzione fondamentale: assumeremo che il nostro hardware, firmware e sistema operativo, siano **sicuri**.
+Ovviamente questa ipotesi non è sempre verificata, ma in questo corso (quando studieremo i servizi e meccanismi di sicurezza) lo daremo per scontato.
+
+NB: la sicurezza HW e FW non è argomento proprio del corso, ma la prof ci ha dato qualche info a riguardo per sapere giusto di cosa stiamo parlando.
+
+### Sicurezza hardware
+
+Soprattutto negli ultimi anni, la sicurezza hardware sta emergendo in maniera preponderante; si sono scoperte vulnerabilità a livello di componenti fisici, in particolare:
 
 - Memorie
 - Periferiche
 - I/O
+- linee di trasmissione)
 
-Protezione dal furto o danneggiamento
+L'ambito della sicurezza hardware si occupa di proteggere il calcolatore, ma anche altri dispositivi fisici, appunto, da minacce quali furto, danneggiamento o alterazione dei componenti.
 
-Hardware sicuro + firmware sicuro. Vulnerabilità recenti del firmware.
+### Sicurezza firmware
 
-Tecnologie statiche o dinamiche per vedere se il firmware si comporta correttamente.
+Così come l'hardware, anche il firmware deve essere sicuro: ci sono diverse vulnerabilità legate al FW, specialmente recenti (anche in questo caso ci troviamo in un'area in grande espansione, soprattutto nell'ultimo periodo).
 
-Chi mi assicura che il software sia integro (software integro, e originale, no modifiche anomale) e autentico (sviluppato da chi ci aspettiamo che abbia fatto il software).
+Esistono diversi meccanismi di analisi del firmware, che si dividono in
 
-Ci possono essere due metodologie per vedere se il boot è andato a buon fine:
+- statici
+- dinamici
 
-- Trusted boot: tutta la fase di inizializzazione è avvenuta mediante piattaforma trusted, con processori ad hoc che sfruttano la crittografia e chiavi crittografiche che garantiscano integrità del firmware. 
-- Secure boot: Interfaccia standard che garantisce al livello software che tutto avvenga in maniera corretta.
+e che permettono di verificare che il firmware si comporti correttamente.
 
-- Coprocessori dedicati 
+Il motivo per cui è importante anche la sicurezza del firmware, è dato dal fatto che, partendo dal livello applicativo, per garantirne l'_autenticità_ (ovvero che sia stato sviluppato effettivamente dall'azienda o produttore che l'ha rilasciato) e che non sia stato compromesso (ovvero che non abbia subito modifiche, quali ad esempio iniezione di software malevolo, e quindi che funzioni correttamente), c'è una catena di sicurezza, che segue diversi check:
 
+1) Il primo check che possiamo fare è quello "di più alto livello", che sfrutta l'utilizzo di software antimalware;
+2) Chi garantisce che i software antimalware siano affidabili?
+3) Chi mi garantisce che il sistema operativo non sia stato corrotto?
+4) Prima ancora del sistema operativo viene eseguito il bootloader, che esegue dei controlli di verifica per garantire l'affidabilità del SO;
+5) A loro volta i bootloader potrebbero essere compromessi, dunque serve ancora qualcosa che ci garantisca che la fase di boot sia avvenuta con successo.
 
-Ci vuole un ente di certificazione che mi garantisca che un prodotto sia sicuro. Esistono diversi standard, come ad esempio esistono delle normative di contromisure di sicurezza
+Riassumendo (partendo da livello più alto):
 
+- Livello applicativo
+- Sistema operativo
+- Boot
+- Hardware
 
-CINI, CERT
+In linea di principio, per garantire che l'hardware non sia compromesso, tramite il boot, esistono due metodologie:
 
-Cosa è un attacco? Azione mirata a compromettere una proprietà critica dell'informazione
+- **Trusted boot**: tutta la fase di inizializzazione è avvenuta usando piattaforme _trusted_ (ovvero che fanno anche utilizzo di componenti ad hoc (tra cui i processori) anche crittografici, che conservano delle chiavi crittografiche tramite le quali possiamo verificare che tutti i componenti, fra cui il firmware, siano autentici e vengano avviati correttamente.
 
+- **Secure boot**: viene usata un'interfaccia standard UEFI (Unified Extensible Firmware Interface) che garantisce, più a livello software, che la fase di boot avvenga in maniera corretta.
 
-Prevede che ci sia una sorgente di dati e una destinazione.
-Assumiamo che la sorgente abbia un hardware e un ambiente sicuro, che la destinazione abbia un ambiente sicuro, e che il canale di comunicazione sia sicuro.
+Tre approcci per la rilevazione tempestiva degli errori hardware e firmware:
 
-Sul canale si possono fare diversi attacchi:
+1) **Trusted computer platform**: grandi aziende (ad esempio IBM, Intel, ecc.) si sono riunite in un'iniziativa (TCPA - Trusted Computing Platform Alliance, che ora è diventata la TCG - Trusted Computing Group) che ha come obiettivo quello di definire degli standard, in grado di impedire tramite chip aggiuntivi (Fritz) e sistemi operativi ad hoc (Nexus) che garantiscono che le configurazioni hardware e software siano avviati correttamente. Ciò garantisce una piattaforma attivata.
+2) **Funzioni e regole di sicurezza**: Come controparte della soluzione precedente, c'è il problema che l'architettura diventa blindata: si è vincolati all'utilizzo di quel particolare chip con quel particolare sistema operativo (Ad esempio Apple). Come possibile alternativa si può ricorrere ad un approccio che consiste nell'utilizzo di sistemi operativi con _estensioni_ di sicurezza (es Unix, SELinux).
+3) **Coprocessori** - Una terza alternativa consiste nell'utilizzo di coprocessori dedicati (anche in ambiente di comunicazioni mobili). 
+Si affida a processori specifici l'esecuzione di determinate funzioni di sicurezza.
 
-- Attacchi attivi: prevede che l'intrusore possa accedere al canale e viene alterato il normale flusso di dati, con le seguenti modalità:
+### Valutazione, Certificazione, Enti
+Per poter sapere che un componente di sicurezza sia sicuro, ci deve essere qualcuno che lo garantisca.
+In questo caso, occorrono degli enti di certificazione e degli standard che definiscono delle metodologie con cui andare a verificare che un progetto sia effettivamente sicuro. Applicando questi standard, gli enti ci garantiscono la sicurezza del prodotto che installiamo.
 
-  - Può modificare il normale flusso di dati per minare la sua integrità. Viene minato il contenuto
-  - Aggiungere nuove informazioni, viene minata l'autenticità. I destinatari penseranno che il mittente abbia mandato il flusso di dati.
-- Attacchi passivi: L'intrusore si inserisce sul canale, ma l'unica cosa che può essere fatta è intercettare i dati. I dati vengono solo osservati.
-Non viene alterato il normale flusso di dati.
+Esempi di standard internazionali per valutazione e certificazione della sicurezza: Orange book del NCSC, ISO 17799, CINI, CERT, ecc.
 
-Sniffer di rete che può intercettare i pacchetti.
+### Terminologia
 
-Possibili contrimisure di attacco:
+**Meccanismo di Sicurezza (Definizione)**: meccanismo progettato per rilevare/prevenire un attacco, risanare il sistema a seguito di un attacco.
 
-- Attacchi passivi: 
+**Servizio di Sicurezza (Definizione)**: servizio che migliora la sicurezza dell'elaborazione dei dati e del trasferimento delle informazioni. Un servizio di sicurezza utilizza uno o più meccanismi.
 
-  - preventive: azioni atte a minimizzare la probabilità di successo dell'attacco
-  - Rilevazione: azioni atte ad individuare che l'attacco è in corso
-  - Reazione: azioni atte ad annullare, o almeno a delimitare, gli effetti dell'attacco.
+**Attacco**: azione mirata a compromettere una proprietà critica dell'informazione.
+
+D'ora in poi per analizzare e studiare i meccanismi di sicurezza faremo riferimento ad un modello molto specifico, chiamato "modello del canale insicuro".
+
+Modello del canale insicuro: è un modello che ha senso (ovviamente) se ci occupiamo di sicurezza dei dati. Prevede che ci sia una sorgente dei dati, una destinazione a cui sono rivolti, e che ci sia un canale che mette in comunicazione sorgente con destinazione.
+Assumiamo che:
+- la sorgente abbia un ambiente sicuro (hardware e sistema operativo sicuri);
+- che la destinazione abbia un ambiente sicuro;
+- ma che il canale sia insicuro (ovvero che sul canale si possono inserire degli intrusori e possono fare degli attacchi passivi e attivi su tale canale).
+
+Definito un modello di questo genere, il nostro obbiettivo è garantire che la destinazione possa consumare correttamente ed interpretare correttamente i dati inviati dalla sorgente: se la sorgente produce dati con garanzia di autenticità, la destinazione deve poter verificare l'autenticità anche in seguito alla consumazione di tali (non ripudio).
+
+Classificazione attacchi
+Gli attacchi si classificano in 2 tipologie: attacco passivo e attacco attivo.
+
+Passivo
+L'intrusore si inserisce sul canale, ma l'unica cosa che può fare è intercettare i dati (li può osservare -io intrusore mi inserisco sul canale e monitoro i dati, ma non faccio alcuna azione che modifichi/alteri il flusso-).
+Questo canale può essere un bus, un canale interno offline, ma ovviamente anche un canale diretto;
+
+Attivo
+L'intrusore può accedere al canale ed alteraattivamente il normale flusso dei dati, in che modo? diversi:
+-modificare il flusso intenzionalmente, per minare il contenuto dei dati (attacco all' "integrità");
+-aggiungere informazioni (inserite dall'intrusore) - sto come fabbricando dei nuovi dati - la falsificazione secondo questo tipo mina l' "autenticità". Faccio credere alla destinazione che i dati da me prodotti siano prodotti dalla sorgente legittima;
+-interrompere il normale flusso, impedendo che i dati arrivino alla destinazione (minaccia il requisito di "disponibilità".
 
 Diverse contromisure:
 
