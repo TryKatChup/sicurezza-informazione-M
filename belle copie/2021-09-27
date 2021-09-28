@@ -75,7 +75,7 @@ Attivo
 L'intrusore può accedere al canale ed alterativamente il normale flusso dei dati, in che modo? diversi:
 - MODIFICA (modificare il flusso intenzionalmente) - modifica intenzionale del flusso dei dati, modificando il contenuto dei dati, mina la proprietà di "integrità";
 - FABBRICAZIONE - aggiungere informazioni (inserite dall'intrusore) al flusso dei dati. La falsificazione secondo questo tipo mina la proprietà di "autenticità", in quanto si fa credere alla destinazione che i dati prodotti dall'intrusore siano prodotti dalla sorgente legittima;
-- INTERRUZIONE - interrompere il normale flusso, impedendo che i dati arrivino alla destinazione (minaccia il requisito di "disponibilità").
+- INTERRUZIONE - interrompere il normale flusso, impedendo che i dati arrivino alla destinazione (minaccia la proprietà di "disponibilità").
 
 Ricapitolando (tipo di attacco e proprietà che mette a rischio):
 - attacchi passivi -> confidenzialità, autenticazione
@@ -83,9 +83,9 @@ Ricapitolando (tipo di attacco e proprietà che mette a rischio):
 
 Contromisure
 Esistono 3 tipologie di contromisure per gli attacchi:
-- prevenzione, tramite cui si previene la possibilità che un dato venga intercettato;
-- rilevazione, tramite cui si rileva un attacco in corso;
-- reazione, tramite cui si reagisce dopo che un attacco è già avvenuto.
+- PREVENZIONE, tramite cui si previene la possibilità che un dato venga intercettato;
+- RILEVAZIONE, tramite cui si rileva un attacco in corso;
+- REAZIONE, tramite cui si reagisce dopo che un attacco è già avvenuto.
 Il tipo di contromisura da adottare, va scelto anche in base al sistema e ai dati da proteggere (nel nostro caso ci interessano i dati). Se ad esempio i dati sono non confidenziali, non ci interessa che vengano intercettati. Se i dati non sono riservati, non sarà necessaria la prevenzione.
 Come ingegneri, il nostro obbiettivo è capire a fronte di più possibilità progettuali, quale ha più senso per il nostro sistema ed i nostri dati da proteggere.
 
