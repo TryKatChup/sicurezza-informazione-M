@@ -113,33 +113,188 @@ Esempi di standard internazionali per valutazione e certificazione della sicurez
 D'ora in poi per analizzare e studiare i meccanismi di sicurezza faremo riferimento ad un modello molto specifico, chiamato "modello del canale insicuro".
 
 Modello del canale insicuro: è un modello che ha senso (ovviamente) se ci occupiamo di sicurezza dei dati. Prevede che ci sia una sorgente dei dati, una destinazione a cui sono rivolti, e che ci sia un canale che mette in comunicazione sorgente con destinazione.
+
 Assumiamo che:
+
 - la sorgente abbia un ambiente sicuro (hardware e sistema operativo sicuri);
 - che la destinazione abbia un ambiente sicuro;
-- ma che il canale sia insicuro (ovvero che sul canale si possono inserire degli intrusori e possono fare degli attacchi passivi e attivi su tale canale).
+- ma che il canale sia insicuro (ovvero che sul canale si possono inserire degli intrusori e possono fare degli attacchi passivi e attivi su tale canale)
 
 Definito un modello di questo genere, il nostro obbiettivo è garantire che la destinazione possa consumare correttamente ed interpretare correttamente i dati inviati dalla sorgente: se la sorgente produce dati con garanzia di autenticità, la destinazione deve poter verificare l'autenticità anche in seguito alla consumazione di tali (non ripudio).
 
-Classificazione attacchi
-Gli attacchi si classificano in 2 tipologie: attacco passivo e attacco attivo.
+### Classificazione attacchi
 
-Passivo
-L'intrusore si inserisce sul canale, ma l'unica cosa che può fare è intercettare i dati (li può osservare -io intrusore mi inserisco sul canale e monitoro i dati, ma non faccio alcuna azione che modifichi/alteri il flusso-).
-Questo canale può essere un bus, un canale interno offline, ma ovviamente anche un canale diretto;
+Gli attacchi si classificano in 2 tipologie:
 
-Attivo
-L'intrusore può accedere al canale ed alteraattivamente il normale flusso dei dati, in che modo? diversi:
--modificare il flusso intenzionalmente, per minare il contenuto dei dati (attacco all' "integrità");
--aggiungere informazioni (inserite dall'intrusore) - sto come fabbricando dei nuovi dati - la falsificazione secondo questo tipo mina l' "autenticità". Faccio credere alla destinazione che i dati da me prodotti siano prodotti dalla sorgente legittima;
--interrompere il normale flusso, impedendo che i dati arrivino alla destinazione (minaccia il requisito di "disponibilità".
+- **Passivo**: L'intrusore si inserisce sul canale, ma l'unica cosa che può fare è intercettare i dati, senza alterare il flusso.
+
+Questo canale può essere un bus, un canale interno offline, ma anche un canale diretto;
+
+- **Attivo**: L'intrusore può accedere al canale ed alterare il normale flusso dei dati:
+
+- Modificare il flusso intenzionalmente, per minare il contenuto dei dati (attacco all' _integrità_);
+- Aggiungere informazioni, in modo da evitare la falsificazione che mina all'integrità dei dati. La destinazione deve avere un controllo che garantisca la legittimità della fonte.
+- Interrompere il normale flusso, impedendo che i dati arrivino alla destinazione (minaccia il requisito di _disponibilità_).
+
+Ricapitolando per tipo di attacco e proprietà che mette a rischio):
+
+- Attacchi passivi: mina confidenzialità, autenticazione
+- Attacchi attivi: integrità, autenticità, disponibilità
+
+Contromisure
+Esistono 3 tipologie di contromisure per gli attacchi:
+
+- **Prevenzione**, tramite cui si previene la possibilità che un dato venga intercettato;
+- **Rilevazione**, tramite cui si rileva un attacco in corso;
+- **Reazione**, tramite cui si reagisce dopo che un attacco è già avvenuto.
+
+Il tipo di contromisura da adottare, va scelto anche in base al sistema e ai dati da proteggere (nel nostro caso ci interessano i dati). Se ad esempio i dati sono non confidenziali, non ci interessa che vengano intercettati. Se i dati non sono riservati, non sarà necessaria la prevenzione.
+
+Come ingegneri, il nostro obiettivo è capire a fronte di più possibilità progettuali, quale ha più senso per il nostro sistema ed i nostri dati da proteggere.
+
+Possibili contromisure per **attacchi passivi**:
+
+- Impedire l'accesso al canale. Questo viene implementato tramite l'utilizzo o di canali dedicati, oppure mettendo in piedi meccanismi di controllo dell'accesso su larga scala, che fanno in modo che ogni volta che una sorgente accede al canale, il  meccanismo chiede di autenticasi. Per come è realizzata, questa soluzione non è tuttavia economicamente sostenibile né scalabile;
+- Criptare i dati da inviare, ovvero rendere incomprensibili i dati trasmessi, tranne al destinatario legittimo.
+
+### Possibili contromisure per attacchi attivi
+
+Contro gli attacchi attivi, in linea di principio avrebbe senso adottare una contromisura preventiva, in quanto protegge l'autenticità, l'integrità e la riservatezza, ma come si può prevenire un attacco al flusso di dati, che è in corso? Possibili modi:
+
+- Controllo dell'accesso al canale, si può fare ma ovviamente ci sono sempre gli svantaggi specificati in precedenza.
+- Attestato di integrità e origine. Se è necessaria una contromisura di rilevazione, per permettere alla destinazione di sapere se quel flusso di dati è corretto o no, si può utilizzare un certificato di integrità/autenticità. In questo caso la rappresentazione dei dati non è incomprensibile, ma al normale flusso dei dati aggiungo dati in più che permettono alla destinazione di capire se il flusso è integro e autentico, oppure è stato manomesso. Esistono dei meccanismi crittografici che permettono di ottenerli.
+
+Collocazione dei meccanismi e dei servizi per la sicurezza
+se il meccanismo viene collocato a livello applicativo è molto personalizzabile ma richiede manutenzione
+
+Trasporto è più trasparente alle applicazioni;
+
+Livello di rete è completamente trasparente, ma è meno personalizzabile rispetto alle esigenze delle applicazioni
+
+A seconda del livello avrò prestazioni, personalizzabilità e trasparenza alle applicazioni diverse.
+
+trasformazioni di sicurezza -> dobbiamo costruire degli algoritmi o protocolli (sequenza di azioni ordinate, che mi permettano di trasformare l'informazione orginaria in qualcos'altro (qualcosa di incomprensibile o qualcosa di ridondante che aggiunga alle informazioni gli attestati)
+
+trasformazioni: algotirmi o protocolli
+
+algoritmi =
+prima trasformazione T1 (trasformazione dei dati prima di metterli sul canale insicuro)
+seconda trasformazione T2 (per risalire al contenuto dei dati)
+
+non sempre una singola trasformazione è sufficiente. per vari motivi: a volte c'è bisogno di un protocollo (serie di trasformazioni che sorgente e destinazione devono fare, perché noi nel modello di minaccia più semplice assumiamo che la sorgente si comporti bene e la destinazione si comportano bene, ma a volte potrebbero a loro volta essere compromesse o malintenzionate)
+
+estremi in buona fede
+mmh dimmi come fai a fare la fede che ti viene buona esagerata
+
+vedremo vari protocolli:
+
+alcuni richiedono l'intervento di una terza entità (oltre a sorgente/destinatario), che fa da arbitro/giudice
+
+caratteristica di tutte queste trasformazioni: ridondanza in termini di codifica e di tempo
+
+caratteristica comune alle trasformazioni per la sicurezza è la ridondanza.
+È fondamentale. Perché impiegando più bit di rappresentazione, ha un overhead nel sistema, se non altro in termini di occupazione di banda, di memorizzazione del dato.
+
+
+-crittografia studia come progettare le trasformazioni che mi permettono di proteggere le proprietà di sicurezza dell'informazione
+-crittoanalisi studia roba che permette di rompere le proprietà di sicurezza dell'informazione
+
+
+trasformazioni che non studiamo in questo corso, vanno studiate in termini di quanto tempo e quante risorse computazionali richiedono per rompere tali proprietà.
+
+3 principi della difesa che guidano la progettazione delle trasformazioni:
+-dev'essere impossbile sapere che trasformazione è stata eseguita;
+-impossibile dedurre qual è la trasformazione adottata;
+-dev'essere impossibile indovinare la trasformazione adottata.
+
+Per ora parliamo di impossibilità, poi arriveremo alla difficoltà
+
+se la trasformazione è segreta è chiaro che diventa impossibile dedurre e indovinare
+
+devo far sì che il calcolo di sapere, dedurre o indovinare, sia impossibile.
+
+difficili per chi conosce il segreto, impossibili per chi non lo conosce.
+
+
+
+
+trasformazione diretta (di encryprion): prendo il mio dato in chiaro (plain text) in qualcosa di non comprensibile (cypher text)
+trasformazione inversa (di decryption): prende dal canale il cypher text e lo trasforma in plain text
+
+un intrusore si può intromettere, ma non riesce a capire quale sia il testo in chiaro
+
+
+questa trasformazione è bidirezionale: uno cripta, l'altro decripta e viceversa.
+Questo schema funziona se entrambi sono online/solo uno dei due? Questo schema va bene in tutte le situazioni (se ad esempio A è online e cripta e invia, ma B è offline, quando torna online lo decripta, easy pez)
+
+i calcoli per mettere in chiaro un testo cifrato, senza conoscere la trasformazione di decription devono essere facili per chi conosce
+
+
+confronto:
+deve poter vedere se a quel dato corrisponde quel riassunto
+
+se il confronto ha successo => la destinazione può dire che il dato ricevuto è integro.
+Significa che sul canale, in qualche modo sono stati inviati entrambi (dati originali e riassunto) - in qualche modo l'intrusore può attaccare entrambe o solo una delle due -
+
+di sicuro la destinazione deve riceverle entrambe e deve confrontarle.
+
+Quali sono le caratteristiche.
+
+Come otteniamo il riassunto:
+esistono le funzioni hash (funzioni che dato un input producono un input molto più piccolo, un'impronta)
+
+non ci vanno bene tutte le funzioni hash, ma abbiamo bisogno di una funzione che chiamiamo "crittograficamente sicura", ovvero con 2 caratteristiche fondamentali:
+"facilità di esecuzione" e "comportamento da oracolo casuale".
+
+Una funzione hash crittograficamente sicura è tale se il suo comportamento è apparentemente aleatorio.
+
+se io fornisco in ingresso a tale funzione un emssaggio di cui non conosco ancora l'impronta, si riscrontra in uscita uno dei qualsiasi dei 2^n valori possibili dove n è il numero di bit dell'impronta.
+se io do in input un messaggio di dimensione m, non so con quale probabilità avrò quell'impronta.
+Non posso prevedere con certezza quale valore avrà in uscita.
+
+Questa è una caratteristica fondamentale;
+
+altra caratteristica necessaria:
+resistenza alle collisioni, ovvero se una funzione hash è critt sicura, l'individuazione di due messaggi con la stessa impronta da parte di un intrusore dev'essere difficile
+
+se ho 2^m valori di ingresso con m > n, ovviamente ci sono delle collisioni, è inevitabile, ma dev'essere difficile per un intrusore trovare quella coppia di messaggi con la stessa impronta.
+
+funzioni hash impiegate soprattutto per rilevare i disturbi (check sum)
+
+per ora non ci interessa di com'è fatta o qual è l'algoritmo che useremo, ma sappiamo che per costruire un certificato di autenticità abbiamo bisogno di una funzione hash con certe caratteristiche (definite in precedenza).
+
+esempio:
+(slide) attestazione ed accertamento dell'integrità
+
+supponiamo che A metta sul canale insicuro -> un messaggio m, affiancato da H (funzione hash crittograficamente sicura), a partire da m è stata costruita H(m)
+B deve prendere il messaggio ricevuto, applicargli la funzione hash, che conosce anche lui, e verificare che l'hash ricevuto coincida con quello ottenuto applicando a sua volta la funzione hash.
+Se equivalgono è tutto ok (tutto trasmesso correttamente).
+
+La destinazion è in grado di rilevare se il messaggio ha subito modifiche?
+
+Mettiamoci nei panni dell'intrusore:
+se l'intrusore conosce la funzione hash può mettere un nuovo messaggio con hash allegato
+
+
+
+abbiamo quindi 2 tipi di trasformazioni: Encryption, Hash
+
+possiamo anche combinarle
+
+e se volessimo garantire la riservatezza e l'integrità dei dati
+
+
+dio stupido signor scheda grafica NVIDIA, la smetta di consumare la grande Battery
+
+
 
 Diverse contromisure:
 
-- Impedire l'accesso al canale. Controllo dell'accesso al canale. Soluzione non scalabile e non sostenibile.
-In alcuni scenari applicativi si possono mettere dei cavi dedicati(???)
+- Controllo dell'accesso al canale. Soluzione non scalabile e non sostenibile.
+In alcuni scenari applicativi di facile realizzazione si possono mettere dei cavi appositi.
 
-- Seconda soluzione: cifrare il canale, e rendere possibile che quello che sto trasmettendo venga capito soltanto dal legittimo destinatario.
-In questo corso studieremo gli algoritmi crittografici, in modo da rendere incomprensibile per un intrusore la comprensione dei dati sul canale.
+- Cifrare il canale, e rendere possibile che quello che sto trasmettendo venga capito soltanto dal legittimo destinatario.
+In questo corso studieremo gli algoritmi di crittogragia, in modo da rendere incomprensibile per un intrusore la comprensione dei dati sul canale.
 
 - Attacchi attivi. Proprietà a rischio: integrità, autenticità.
   - io ho il normale flusso di dati e aggiungo dati in più, in modo da sapere se il flusso di dati che arriva a destinazione sia integro o meno.
