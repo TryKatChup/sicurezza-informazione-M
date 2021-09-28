@@ -94,18 +94,9 @@ Possibili contromisure per attacchi passivi
 - criptare i dati da inviare, ovvero rendere incomprensibili i dati trasmessi, tranne al destinatario legittimo.
 
 Possibili contromisure per attacchi attivi
-Contro gli attacchi attivi, in linea di principio avrebbe senso adottare una contromisura preventiva, in quanto protegge l'autenticità, l'integrità e la riservatezza, ma come si può prevenire un attacco al flusso di dati, che è in corso? L'unico modo è impedire l'accesso al canale, si può fare ma ovviamente ci sono sempre gli svantaggi specificati in precedenza.
-
-
-ha senso adottare una contromisura preventiva? Protegge contro attacchi ad autenticità, integrità, disponibilità? In linea di principio sì, ma come posso prevenire un attacco al flusso dei dati? Il flusso è in corso
-
-unico modo è impedire l'accesso al canale, si può fare ma ovviamente ci sono sempre gli svantaggi specificati prima.
-
-è necessaria una contromisura di rilevazione, per permettere alla destinazione se quel flusso di dati è corretto o no.
-
-certificato di autenticità.
-
-la rappresentazione dei dati non è incomprensibile, ma al normale flusso dei dati aggiungo dati in più che permettono alla destinazione di capire se il flusso è integro e autentico.
+Contro gli attacchi attivi, in linea di principio avrebbe senso adottare una contromisura preventiva, in quanto protegge l'autenticità, l'integrità e la riservatezza, ma come si può prevenire un attacco al flusso di dati, che è in corso? Possibili modi:
+- Conttrollo dell'accesso al canale, si può fare ma ovviamente ci sono sempre gli svantaggi specificati in precedenza.
+- Attestato di integrità e origine. Se è necessaria una contromisura di rilevazione, per permettere alla destinazione di sapere se quel flusso di dati è corretto o no, si può utilizzare un certificato di integrità/autenticità. In questo caso la rappresentazione dei dati non è incomprensibile, ma al normale flusso dei dati aggiungo dati in più che permettono alla destinazione di capire se il flusso è integro e autentico, oppure è stato manomesso.
 
 attestati di autenticità/integrità
 
