@@ -99,25 +99,13 @@ Contro gli attacchi attivi, in linea di principio avrebbe senso adottare una con
 - Attestato di integrità e origine. Se è necessaria una contromisura di rilevazione, per permettere alla destinazione di sapere se quel flusso di dati è corretto o no, si può utilizzare un certificato di integrità/autenticità. In questo caso la rappresentazione dei dati non è incomprensibile, ma al normale flusso dei dati aggiungo dati in più che permettono alla destinazione di capire se il flusso è integro e autentico, oppure è stato manomesso. Esistono dei meccanismi crittografici che permettono di ottenerli.
 
 Collocazione dei meccanismi e dei servizi per la sicurezza
-se il meccanismo viene collocato a livello applicativo è molto personalizzabile ma richiede manutenzione
-
-trasporto è più trasparente alle applicazioni;
-
-livello di rete è completamente trasparente, ma è meno personalizzabile rispetto alle esigenze delle applicazioni
-
-a seconda del livello avrò prestazioni, personalizzabilità e trasparenza alle applicazioni diverse.
+Se il meccanismo viene collocato a livello applicativo è molto personalizzabile ma richiede manutenzione; se viene collocato a livello di trasporto è più trasparente alle applicazioni; se viene collocato a livello di rete è completamente trasparente, ma è meno personalizzabile rispetto alle esigenze delle applicazioni.
+A seconda del livello avrò prestazioni, personalizzabilità e trasparenza alle applicazioni diverse.
 
 
-NUOVO PDF
 
-
-passa pausa
-pausa banda
-pausa dioporco
-dio maiuscolo
-
-
-come facciamo a costruire degli attestati? Dandoti una testata xd
+NUOVO PDF - Trasformazioni per la sicurezza
+Come facciamo a costruire degli attestati? Dandoti una testata xd
 
 trasformazioni di sicurezza -> dobbiamo costruire degli algoritmi o protocolli (sequenza di azioni ordinate, che mi permettano di trasformare l'informazione orginaria in qualcos'altro (qualcosa di incomprensibile o qualcosa di ridondante che aggiunga alle informazioni gli attestati)
 
