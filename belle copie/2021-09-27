@@ -96,23 +96,10 @@ Possibili contromisure per attacchi passivi
 Possibili contromisure per attacchi attivi
 Contro gli attacchi attivi, in linea di principio avrebbe senso adottare una contromisura preventiva, in quanto protegge l'autenticità, l'integrità e la riservatezza, ma come si può prevenire un attacco al flusso di dati, che è in corso? Possibili modi:
 - Conttrollo dell'accesso al canale, si può fare ma ovviamente ci sono sempre gli svantaggi specificati in precedenza.
-- Attestato di integrità e origine. Se è necessaria una contromisura di rilevazione, per permettere alla destinazione di sapere se quel flusso di dati è corretto o no, si può utilizzare un certificato di integrità/autenticità. In questo caso la rappresentazione dei dati non è incomprensibile, ma al normale flusso dei dati aggiungo dati in più che permettono alla destinazione di capire se il flusso è integro e autentico, oppure è stato manomesso.
+- Attestato di integrità e origine. Se è necessaria una contromisura di rilevazione, per permettere alla destinazione di sapere se quel flusso di dati è corretto o no, si può utilizzare un certificato di integrità/autenticità. In questo caso la rappresentazione dei dati non è incomprensibile, ma al normale flusso dei dati aggiungo dati in più che permettono alla destinazione di capire se il flusso è integro e autentico, oppure è stato manomesso. Esistono dei meccanismi crittografici che permettono di ottenerli.
 
-attestati di autenticità/integrità
-
-ci sono meccanismi crittografici che permettono di ottenerli
-
-VOGLIAMO
-LA
-PORCAMADONNA
-DI
-PAUSA
-DIOPORCO REBECCA
-
-(dio stronzo, dio mattone, dio sedia, dio tappeto, dio finestra, dio matita, dio orologio, dio serio, dio stupido, dio telegram, dio crittografato, dio telegrafato, dio barra spaziatrice, dio sistema operativo, dio linux, dio Marcello, gesù saponetta, gesù scivoloso, gesù rickroll, gesù sul lago duria, madonna donna, madonna sgravata, madonna asus, madonna erba, madonna pokèmon, madonna alta 1.70, madonna bruttissima, madonna ruggine, madonna grondaria sporca, madonna tubo di plastica, madonna scarico)
-
-
-se il meccanismo lo colloco a livello applicativo è molto personalizzabile ma richiede manutenzione
+Collocazione dei meccanismi e dei servizi per la sicurezza
+se il meccanismo viene collocato a livello applicativo è molto personalizzabile ma richiede manutenzione
 
 trasporto è più trasparente alle applicazioni;
 
