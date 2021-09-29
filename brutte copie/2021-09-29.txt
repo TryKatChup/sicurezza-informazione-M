@@ -152,6 +152,34 @@ Anonimato/Identificazione
 Altro requisito
 
 
+anonimato: requisito opposto all'identificazione (non lo vedremo)
+
+identificazione: scenari applicativi che necessariamente richiedono di identificare l'identità che sta partecipando ad un'interazione (o per farlo pagare o perché bisogna farlo accedere a certe risorse, perché in base alla persona può avere tipi di accesso diversi)
+
+processo di identificazione è realtime che si riferisce ad un preciso istante di tempo
+
+io posso sapere con certezza, chi è in quell'istante di tempo l'identità che sta chiedendo di essere identificata.
+
+
+per sapere chi c'è dall'altra parte bisogna prolungare l'identificazione nel tempo.
+L'identificazione fondamentalmente è in un istante temporale.
+
+Ma dev'essere anche efficace: evitare il più possibile la possibilità di falsi positivi e negativi:
+
+falso positivo: probabilità di scambiare un utente autenticato per uno che non lo è, ovvero un utente si autentica ma gli viene rifiutato comunque l'accesso. Causa inefficienza.
+falso negativo: un impostore si spacci per un utente specifico (più importante). Porta a una rottura della robustezza.
+
+io posso identificare un'entità in base a qualcosa che conosce (password, pin, key)
+
+se assumiamo che l'entità sia l'unica a conoscere questo segreto, possiamo autenticarla così
+
+oppure qualcosa che possiede (es: token, tessera, smart card);
+
+o qualcosa che fa parte di lui (dati biometrici, comportamentali).
+
+robustezza di un sistema di identificazione è tanto più robusto quanti più principi combina.
+
+
 
 
 
