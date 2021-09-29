@@ -97,6 +97,7 @@ Tre approcci per la rilevazione tempestiva degli errori hardware e firmware:
 Si affida a processori specifici l'esecuzione di determinate funzioni di sicurezza.
 
 ### Valutazione, Certificazione, Enti
+
 Per poter sapere che un componente di sicurezza sia sicuro, ci deve essere qualcuno che lo garantisca.
 In questo caso, occorrono degli enti di certificazione e degli standard che definiscono delle metodologie con cui andare a verificare che un progetto sia effettivamente sicuro. Applicando questi standard, gli enti ci garantiscono la sicurezza del prodotto che installiamo.
 
@@ -106,21 +107,21 @@ Esempi di standard internazionali per valutazione e certificazione della sicurez
 
 **Meccanismo di Sicurezza (Definizione)**: meccanismo progettato per rilevare/prevenire un attacco, risanare il sistema a seguito di un attacco.
 
-**Servizio di Sicurezza (Definizione)**: servizio che migliora la sicurezza dell'elaborazione dei dati e del trasferimento delle informazioni. Un servizio di sicurezza utilizza uno o più meccanismi.
+**Servizio di Sicurezza (Definizione)**: servizio che migliora la sicurezza dell'elaborazione dei dati e del trasferimento delle informazioni.
 
 **Attacco**: azione mirata a compromettere una proprietà critica dell'informazione.
 
 D'ora in poi per analizzare e studiare i meccanismi di sicurezza faremo riferimento ad un modello molto specifico, chiamato "modello del canale insicuro".
 
-Modello del canale insicuro: è un modello che ha senso (ovviamente) se ci occupiamo di sicurezza dei dati. Prevede che ci sia una sorgente dei dati, una destinazione a cui sono rivolti, e che ci sia un canale che mette in comunicazione sorgente con destinazione.
+**Modello del canale insicuro**: prevede che ci sia una sorgente dei dati, una destinazione a cui sono rivolti, e che ci sia un canale che mette in comunicazione sorgente con destinazione.
 
 Assumiamo che:
 
-- la sorgente abbia un ambiente sicuro (hardware e sistema operativo sicuri);
-- che la destinazione abbia un ambiente sicuro;
-- ma che il canale sia insicuro (ovvero che sul canale si possono inserire degli intrusori e possono fare degli attacchi passivi e attivi su tale canale)
+- La sorgente abbia un ambiente sicuro (hardware e sistema operativo sicuri);
+- La destinazione abbia un ambiente sicuro;
+- Il canale sia insicuro (ovvero che sul canale si possono inserire degli intrusori e possono fare degli attacchi passivi e attivi su tale canale)
 
-Definito un modello di questo genere, il nostro obbiettivo è garantire che la destinazione possa consumare correttamente ed interpretare correttamente i dati inviati dalla sorgente: se la sorgente produce dati con garanzia di autenticità, la destinazione deve poter verificare l'autenticità anche in seguito alla consumazione di tali (non ripudio).
+Definito un modello di questo genere, il nostro obiettivo è garantire che la destinazione possa consumare correttamente e interpretare correttamente i dati inviati dalla sorgente: se la sorgente produce dati con garanzia di autenticità, la destinazione deve poter verificare l'autenticità anche in seguito alla consumazione di tali (non ripudio).
 
 ### Classificazione attacchi
 
@@ -162,6 +163,7 @@ Possibili contromisure per **attacchi passivi**:
 Contro gli attacchi attivi, in linea di principio avrebbe senso adottare una contromisura preventiva, in quanto protegge l'autenticità, l'integrità e la riservatezza, ma come si può prevenire un attacco al flusso di dati, che è in corso? Possibili modi:
 
 - Controllo dell'accesso al canale, si può fare ma ovviamente ci sono sempre gli svantaggi specificati in precedenza.
+
 - Attestato di integrità e origine. Se è necessaria una contromisura di rilevazione, per permettere alla destinazione di sapere se quel flusso di dati è corretto o no, si può utilizzare un certificato di integrità/autenticità. In questo caso la rappresentazione dei dati non è incomprensibile, ma al normale flusso dei dati aggiungo dati in più che permettono alla destinazione di capire se il flusso è integro e autentico, oppure è stato manomesso. Esistono dei meccanismi crittografici che permettono di ottenerli.
 
 Collocazione dei meccanismi e dei servizi per la sicurezza
@@ -173,120 +175,109 @@ Livello di rete è completamente trasparente, ma è meno personalizzabile rispet
 
 A seconda del livello avrò prestazioni, personalizzabilità e trasparenza alle applicazioni diverse.
 
-trasformazioni di sicurezza -> dobbiamo costruire degli algoritmi o protocolli (sequenza di azioni ordinate, che mi permettano di trasformare l'informazione orginaria in qualcos'altro (qualcosa di incomprensibile o qualcosa di ridondante che aggiunga alle informazioni gli attestati)
+Trasformazioni di sicurezza -> dobbiamo costruire degli algoritmi o protocolli (sequenza di azioni ordinate, che mi permettano di trasformare l'informazione orginaria in qualcos'altro (qualcosa di incomprensibile o qualcosa di ridondante che aggiunga alle informazioni gli attestati)
 
 trasformazioni: algotirmi o protocolli
 
-algoritmi =
-prima trasformazione T1 (trasformazione dei dati prima di metterli sul canale insicuro)
+algoritmi = prima trasformazione T1 (trasformazione dei dati prima di metterli sul canale insicuro)
 seconda trasformazione T2 (per risalire al contenuto dei dati)
 
-non sempre una singola trasformazione è sufficiente. per vari motivi: a volte c'è bisogno di un protocollo (serie di trasformazioni che sorgente e destinazione devono fare, perché noi nel modello di minaccia più semplice assumiamo che la sorgente si comporti bene e la destinazione si comportano bene, ma a volte potrebbero a loro volta essere compromesse o malintenzionate)
+Nonn sempre una singola trasformazione è sufficiente.
 
-estremi in buona fede
+- A volte c'è bisogno di un protocollo (serie di trasformazioni che sorgente e destinazione devono fare, perché noi nel modello di minaccia più semplice assumiamo che la sorgente si comporti bene e la destinazione si comportano bene, ma a volte potrebbero a loro volta essere compromesse o malintenzionate)
+
 mmh dimmi come fai a fare la fede che ti viene buona esagerata
 
-vedremo vari protocolli:
+Vedremo vari protocolli: alcuni richiedono l'intervento di una terza entità (oltre a sorgente/destinatario), che fa da arbitro/giudice
 
-alcuni richiedono l'intervento di una terza entità (oltre a sorgente/destinatario), che fa da arbitro/giudice
+Caratteristica di tutte queste trasformazioni: ridondanza in termini di codifica e di tempo
 
-caratteristica di tutte queste trasformazioni: ridondanza in termini di codifica e di tempo
-
-caratteristica comune alle trasformazioni per la sicurezza è la ridondanza.
+Caratteristica comune alle trasformazioni per la sicurezza è la ridondanza.
 È fondamentale. Perché impiegando più bit di rappresentazione, ha un overhead nel sistema, se non altro in termini di occupazione di banda, di memorizzazione del dato.
 
+- **Crittografia**: studia come progettare le trasformazioni che mi permettono di proprietà di sicurezza dell'informazione
+- **Crittoanalisi**: Studia le trasformazioni che permettono di rompere la sicurezza di informazioni
 
--crittografia studia come progettare le trasformazioni che mi permettono di proteggere le proprietà di sicurezza dell'informazione
--crittoanalisi studia roba che permette di rompere le proprietà di sicurezza dell'informazione
+Ci sono tre principi della difesa che guidano la progettazione delle trasformazioni:
 
-
-trasformazioni che non studiamo in questo corso, vanno studiate in termini di quanto tempo e quante risorse computazionali richiedono per rompere tali proprietà.
-
-3 principi della difesa che guidano la progettazione delle trasformazioni:
--dev'essere impossbile sapere che trasformazione è stata eseguita;
--impossibile dedurre qual è la trasformazione adottata;
--dev'essere impossibile indovinare la trasformazione adottata.
+- Deve essere impossbile _sapere_ che trasformazione è stata eseguita;
+- Impossibile _dedurre_ qual è la trasformazione adottata;
+- Deve essere impossibile _indovinare_ la trasformazione adottata.
 
 Per ora parliamo di impossibilità, poi arriveremo alla difficoltà
 
-se la trasformazione è segreta è chiaro che diventa impossibile dedurre e indovinare
+Se la trasformazione è segreta è chiaro che diventa impossibile dedurre e indovinare
 
-devo far sì che il calcolo di sapere, dedurre o indovinare, sia impossibile.
+Devo far sì che il calcolo di sapere, dedurre o indovinare, sia impossibile.
 
-difficili per chi conosce il segreto, impossibili per chi non lo conosce.
+Difficili per chi conosce il segreto, impossibili per chi non lo conosce.
 
+- Trasformazione diretta (di encryption): prendo il mio dato in chiaro (plain text) in qualcosa di non comprensibile (cypher text)
+- Trasformazione inversa (di decryption): prende dal canale il cypher text e lo trasforma in plain text
 
+Un intrusore si può intromettere, ma non riesce a capire quale sia il testo in chiaro
 
-
-trasformazione diretta (di encryprion): prendo il mio dato in chiaro (plain text) in qualcosa di non comprensibile (cypher text)
-trasformazione inversa (di decryption): prende dal canale il cypher text e lo trasforma in plain text
-
-un intrusore si può intromettere, ma non riesce a capire quale sia il testo in chiaro
-
-
-questa trasformazione è bidirezionale: uno cripta, l'altro decripta e viceversa.
+Questa trasformazione è bidirezionale: uno cripta, l'altro decripta e viceversa.
 Questo schema funziona se entrambi sono online/solo uno dei due? Questo schema va bene in tutte le situazioni (se ad esempio A è online e cripta e invia, ma B è offline, quando torna online lo decripta, easy pez)
 
-i calcoli per mettere in chiaro un testo cifrato, senza conoscere la trasformazione di decription devono essere facili per chi conosce
+I calcoli per mettere in chiaro un testo cifrato, senza conoscere la trasformazione di decription devono essere facili per chi conosce
 
+Confronto:
 
-confronto:
-deve poter vedere se a quel dato corrisponde quel riassunto
+Deve poter vedere se a quel dato corrisponde quel riassunto
 
-se il confronto ha successo => la destinazione può dire che il dato ricevuto è integro.
+Se il confronto ha successo => la destinazione può dire che il dato ricevuto è integro.
+
 Significa che sul canale, in qualche modo sono stati inviati entrambi (dati originali e riassunto) - in qualche modo l'intrusore può attaccare entrambe o solo una delle due -
 
-di sicuro la destinazione deve riceverle entrambe e deve confrontarle.
+Di sicuro la destinazione deve riceverle entrambe e deve confrontarle.
 
 Quali sono le caratteristiche.
 
 Come otteniamo il riassunto:
 esistono le funzioni hash (funzioni che dato un input producono un input molto più piccolo, un'impronta)
 
-non ci vanno bene tutte le funzioni hash, ma abbiamo bisogno di una funzione che chiamiamo "crittograficamente sicura", ovvero con 2 caratteristiche fondamentali:
-"facilità di esecuzione" e "comportamento da oracolo casuale".
+Non ci vanno bene tutte le funzioni hash, ma abbiamo bisogno di una funzione che chiamiamo "crittograficamente sicura", ovvero con 2 caratteristiche fondamentali:
+
+- "facilità di esecuzione"
+- "comportamento da oracolo casuale".
 
 Una funzione hash crittograficamente sicura è tale se il suo comportamento è apparentemente aleatorio.
 
-se io fornisco in ingresso a tale funzione un emssaggio di cui non conosco ancora l'impronta, si riscrontra in uscita uno dei qualsiasi dei 2^n valori possibili dove n è il numero di bit dell'impronta.
-se io do in input un messaggio di dimensione m, non so con quale probabilità avrò quell'impronta.
+Se io fornisco in ingresso a tale funzione un messaggio di cui non conosco ancora l'impronta, si riscrontra in uscita uno dei qualsiasi dei 2^n valori possibili dove n è il numero di bit dell'impronta.
+
+Se io do in input un messaggio di dimensione m, non so con quale probabilità avrò quell'impronta.
+
 Non posso prevedere con certezza quale valore avrà in uscita.
 
 Questa è una caratteristica fondamentale;
 
-altra caratteristica necessaria:
-resistenza alle collisioni, ovvero se una funzione hash è critt sicura, l'individuazione di due messaggi con la stessa impronta da parte di un intrusore dev'essere difficile
+Altra caratteristica necessaria: resistenza alle collisioni, ovvero se una funzione hash è critt sicura, l'individuazione di due messaggi con la stessa impronta da parte di un intrusore dev'essere difficile
 
-se ho 2^m valori di ingresso con m > n, ovviamente ci sono delle collisioni, è inevitabile, ma dev'essere difficile per un intrusore trovare quella coppia di messaggi con la stessa impronta.
+Se ho 2^m valori di ingresso con m > n, ovviamente ci sono delle collisioni, è inevitabile, ma dev'essere difficile per un intrusore trovare quella coppia di messaggi con la stessa impronta.
 
-funzioni hash impiegate soprattutto per rilevare i disturbi (check sum)
+Funzioni hash impiegate soprattutto per rilevare i disturbi (check sum)
 
-per ora non ci interessa di com'è fatta o qual è l'algoritmo che useremo, ma sappiamo che per costruire un certificato di autenticità abbiamo bisogno di una funzione hash con certe caratteristiche (definite in precedenza).
+Per ora non ci interessa di com'è fatta o qual è l'algoritmo che useremo, ma sappiamo che per costruire un certificato di autenticità abbiamo bisogno di una funzione hash con certe caratteristiche (definite in precedenza).
 
-esempio:
+Esempio:
 (slide) attestazione ed accertamento dell'integrità
 
-supponiamo che A metta sul canale insicuro -> un messaggio m, affiancato da H (funzione hash crittograficamente sicura), a partire da m è stata costruita H(m)
+Supponiamo che A metta sul canale insicuro -> un messaggio m, affiancato da H (funzione hash crittograficamente sicura), a partire da m è stata costruita H(m)
+
 B deve prendere il messaggio ricevuto, applicargli la funzione hash, che conosce anche lui, e verificare che l'hash ricevuto coincida con quello ottenuto applicando a sua volta la funzione hash.
 Se equivalgono è tutto ok (tutto trasmesso correttamente).
 
-La destinazion è in grado di rilevare se il messaggio ha subito modifiche?
+La destinazione è in grado di rilevare se il messaggio ha subito modifiche
 
 Mettiamoci nei panni dell'intrusore:
 se l'intrusore conosce la funzione hash può mettere un nuovo messaggio con hash allegato
-
-
 
 abbiamo quindi 2 tipi di trasformazioni: Encryption, Hash
 
 possiamo anche combinarle
 
 e se volessimo garantire la riservatezza e l'integrità dei dati
-
-
-dio stupido signor scheda grafica NVIDIA, la smetta di consumare la grande Battery
-
-
 
 Diverse contromisure:
 
@@ -299,11 +290,9 @@ In questo corso studieremo gli algoritmi di crittogragia, in modo da rendere inc
 - Attacchi attivi. Proprietà a rischio: integrità, autenticità.
   - io ho il normale flusso di dati e aggiungo dati in più, in modo da sapere se il flusso di dati che arriva a destinazione sia integro o meno.
 
-
 ### Collocazione dei meccanismi e dei servizi per la sicurezza
 
 - Autenticazione a livello di host
-
 - Autenticazione mi sono persa. Basta
 
 ### Trasformazioni per la sicurezza
@@ -320,9 +309,6 @@ Destinazione in bonafede.
 Servono più trasformazioni, perché è pieno di malintenzionati
 
 ### Crittoanalisi
-
-- Crittografia: studia come progettare le trasformazioni che mi permettono di proprietà di sicurezza dell'informazione
-- Crittoanalisi: Studia le trasformazioni che permettono di rompere la sicurezza di informazioni
 
 ### I principi dell'informazione:
 
