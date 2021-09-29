@@ -201,7 +201,57 @@ alcune trasformazioni, ad esempio la funzione hash, di cifratura, o di firma a c
 Concetto di funzione unidirezionale (non la dimostriamo, la prendiamo per verificata)
 
 
-due principali problemi di un algoritmo (ovviamente per scenari applicativi generali):
-1) mi dicono che sia sicuro (ma se è segreto chi l'ha ispezionato/testato? Nessuno o comunque magari non abbastanza)
+due principali problemi di un algoritmo segreto (ovviamente per scenari applicativi generali):
+1) mi dicono che sia sicuro (ma se è segreto chi l'ha ispezionato/testato? Nessuno o comunque magari non abbastanza, e soprattutto, io non posso saperlo);
 2) 
+
+avendo algoritmo noto, ovvero in cui si conoscono la sequenza di operazione, è stato sottoposto a test di criptoanalisi, ecc. e fine a quel momento la conoscenza umana non è riuscita a "bucarlo"/trovarne le vulnerabilità, si può dire che è molto robusto.
+
+La robustezza deve stare nell'hw che esegue quell'algoritmo;
+e nella protezione assoluta di quel parametro - se viene violato, cambio il parametro (non devo buttare via nulla)
+
+
+
+
+
+se il parametro è segreto, quali sono i principi che dobbiamo garantire?
+Impossibilità di:
+-conoscere;
+-individuare;
+-dedurre.
+
+esiste sempre a disposizione dell'intrusore (forza bruta o "ricerca esauriente") che è l'algoritmo con cui esploro l'intero spazio delle chiavi.
+
+La possibilità di indovinare il parametro diventa facile o difficile in base a qual è lo spazio di individuazione delle chiavi.
+
+
+vedremo ad esempio che per algoritmi simmetrica, sceglieremo una chiave di almeno 128 bit
+
+
+
+Riservatezza e autenticazione:
+se voglio riservatezza: encryption, decryption;
+
+se voglio autenticazione:
+la seconda
+
+
+a seconda delle famiglie di sistemi crittografici di cui disponiamo, queste chiavi cambiano (possono essere le stesse o possono essere diverse)
+
+
+relazioni tra le chiavi:
+
+in un sistema simmetrico usano tipicamente la stessa chiave oppure una facilmente ricavabile dall'altra
+
+sistema asimmetrico: le chiavi ks e kd sono diverse (e una è difficilmente è calcolabile dall'altra). Fondamentalmente ogni entità dispone di una coppia di chiavi (una ks e una kd).
+
+la chiave ks è usata in fase di encryption e sing
+la chiave kd è usata per funzioni di decryption e verify
+
+per l'autenticazione la chiave che do alla funzione di verify è una chiave nota;
+la chiave che dov per la verifica dell'autenticità è segreta.
+
+
+
+
 
