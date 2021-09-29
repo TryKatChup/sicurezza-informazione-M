@@ -1,0 +1,157 @@
+minimizzare i costi
+
+scegliendo il compromesso più opportuno tra robustezza, costi e trasparenza(?)
+
+
+oggi ragioniamo a livello di schemi
+
+schemi di come combiniamo le trasformazioni
+
+
+possibile protocollo che combinasse trasformazioni di encryption ed hash
+
+messaggio cifrato affiancato da hash calcolato sul messaggio cifrato
+
+c = E(p)||H(E(p)) testo cifrato trasmesso
+
+riservatezza garantita;
+integrità non garantita - perché se io affianco attestato di integrità al
+dato, l'intrusore si trova due parti di messaggio (cifrato e hash su cifrato)
+
+
+
+potenzialmente un attacco è eseguibile? Ha veramente successo? 
+Dobbiamo capire se si può verificare in certe condizioni.
+
+
+
+
+
+l'autore e chi ha inviato un messaggio sono due cose diverse
+(autore e da chi proviene)
+
+
+
+la destinazione deve verificare che il messaggio ricevuto dev'essere originato proprio da chi 
+dichiara di averlo inviato
+
+
+trasformazioni che facciamo per costruire l'attestato di autenticità
+
+S: trasformazione di firma (Sign) ci permette di scrivere la prova di autenticità
+facile da eseguire in un senso, difficile da eseguire (nessun'altro è in grado di produrre un attestato di autenticità C spacciandosi per la sorgente legittima)
+
+il destinatario deve verificare l'autenticità di quell'attestato, tramite un'operazione di verificare (V)
+
+se l'operazione di V ha avuto successo deve anche restituire il messaggio M originale
+
+
+che caratteristiche devono avere queste trasformazioni, oltre ad essere facili o difficili da
+eseguire
+
+ricordiamo i due principi: trasformazioni segrete e calcoli impossibili
+
+trasformazione segreta: in questo caso è l'operazione di Sign - nessun'altro oltre la sorgente
+legittima deve conoscere quella trasformazione, altrimenti chiunque può produrre un messaggio spacciandolo per di proprietà della sorgente)
+
+i calcoli per costruire un messaggio apparentemente autentico senza conoscere la trasformazione della sorgente devono essere difficili.
+
+Non serve essere online (vale qualunque combinazione - A online, B offline, viceversa, ed entrambi online(?))
+
+2 schemi alternativi per realizzare sign-verify:
+
+1) firma digitale
+usa le funzioni S e V. La sorgente A invia sul canale sicuro M || c
+
+sul canale insicuro invio m || c
+la funzione S viene applicata all'impronta di m
+
+vantaggi di questo schema:
+- efficienza - la funzione di Sign è una trasformazione ridondante
+
+H(m) è un'impronta, quindi è più piccola
+
+- non ripudio - la destinazione (nello schema precedente) ottiene c dal canale (che è qualcosa di non interpretabile direttamente).
+In questo schema lascio la libertà applicativa di decidere cosa fare su quel messaggio m ricevuto.
+Se verificare immediatamente l'autenticità, oppure farlo più avanti.
+
+
+2) hash applicata al messaggio concatenato con un segreto S, condiviso tra sorgente e destinazione.
+
+la sorgente prende tale segreto, lo concatena col messaggio
+
+sul messaggio invia 
+
+la destinazione: se assume che il m viene da A, userà il segreto per fare i controlli (prende m*
+
+
+
+differenza: prima il segreto lo conosceva solo la sorgende, quindi solo lei poteva costruire il certificato di autenticità; qui lo conosce anche B.
+
+cosa non si può garantire: A si possa assumere la paternità di quel messaggio (può solo dimostrare di averlo inviato) perché anche B può costruire un H(m||s)
+
+è più efficiente perché non inserisce la trasformazione
+
+non garantisce il supporto di non ripudio: entrambi A e B possono scriverlo.
+
+utile perché lavoriamo anche in sistemi IoT, quindi potrebbero essere necessarie cose semplici, efficienti e che consentano di consumare poca batteria.
+
+
+
+sono entrambi robusti (garantiscono la correttezza del certificato di autenticità)
+
+primo lo uso se ho bisogno di sapere da chi proviene e di chi è
+
+secondo se voglio solo la provenienza
+
+
+
+
+potocollo per difesa di riservatezza ed autenticazione
+
+sul canale insicuro viene inviato il testo cifrato
+
+la sorgente crea il messaggio, costruisce il 
+
+SSL adotta funzione Hash crittograficamente sicura col segreto per costruire il c. di autenticità
+il client prende il messaggio, lo concatena al certificato e lo cifra.
+
+SSL IPsec
+
+SSL protocollo a livello di trasporto (crea socket sicure in cui i messaggi sono autenticati)
+
+
+altro schema:
+SSH permette di aprire shell remote sicure.
+Si prende il messaggio, si cifra e si manda sul canale insicuro il cifrato concatenato con l'attestato di autenticità costruito sul messaggio.
+
+
+chiediamoci sempre qual è sequenza in fase di invio e ordine in cui vengono eseguite le operazioni in invio e ricezione.
+
+terzo schema (IPSec)
+considerato + corretto: encrypt and mac:
+prima cifro poi creao l'autenticatore
+
+cifro e costruisco l'attestato di autenticità sul cifrato concatenato col segreto.
+
+in fase di invio in IPSec: cifro e autentico;
+in fase di ricezione: controllo attestato di autenticità e poi decifro.
+
+Oltre alla robustezza, ragioniamo in termini di efficienza.
+
+efficienza infase di ricezione:
+chi riceve deve necessariamente autenticare e decifrare (non ha altro modo di recuperare il messaggio iniziale, deve per forza eseguire 2 trasformazioni)
+
+in IPSec risparmio eventualmente una trasformazione. Se il cifrato ha subito delle modifiche, chi riceve verifica il certificato e se qualcosa è andato storto, si risparmia l'operazione di decifratura, ovvero non viene proprio fatta.
+
+in fase di invio il costo è uguale, tanto bisogna fare entrambe le trasformazioni.
+
+
+
+Anonimato/Identificazione
+Altro requisito
+
+
+
+
+
