@@ -181,5 +181,27 @@ robustezza di un sistema di identificazione è tanto più robusto quanti più pr
 
 
 
+qualunque protocollo di identificazione prevede una fase iniziale di registrazione (l'identificando sceglierà una prova da dimostrare, ed il verificatore registrerà un termine di paragone);
 
+poi fase di dichiarazione, interrogazione e dimostrazione.
+
+
+la dimostrazione dev'essere facile per la persona che si vuole autenticare ed è effettivamente lei, ma difficile per un intrusore.
+
+Minacce + tipiche: io posso replicare la prova di dimostrazione.
+
+un intrusore può:
+-dedurre o indovinare la prova di identità;
+-rubare il dispositivo;
+-replicare una prova di identità che ha viaggiato sul canale in una legittima transizione di identificazione
+
+
+alcune trasformazioni, ad esempio la funzione hash, di cifratura, o di firma a cui corrisponde funzione di verifica, devono essere difficili da invertire.
+
+Concetto di funzione unidirezionale (non la dimostriamo, la prendiamo per verificata)
+
+
+due principali problemi di un algoritmo (ovviamente per scenari applicativi generali):
+1) mi dicono che sia sicuro (ma se è segreto chi l'ha ispezionato/testato? Nessuno o comunque magari non abbastanza)
+2) 
 
