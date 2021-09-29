@@ -365,6 +365,43 @@ Supponiamo che A mandi a B un messaggio m. Sul canale viaggia m concatenato con 
 
 La destinazione sarà in grado di vedere se il messaggio ha avuto modifiche?
 
+---
+
+## 29/09/2021
+
+### Protocollo per la difesa di riservatezza e integrità
+
+Bisogna garantire l’integrità (rilevazione e reazione)
+
+Con un attacco attivo si possono cancellare e modificare i dati, oltre che modificarne anche l’ordine.
+
+Il disturbo invece non cambia l’ordine dei dati dell’informazione. Tutte le alterazioni avvengono con uguale probabilità.
+
+Proteggere l’integrità significa creare delle contromisure per la rilevazione di eventuali modifiche al contenuto del dato originale.
+
+Si utilizza la ridondanza dei dati, cioè insieme all’informazione viene aggiunto un piccolo riassunto (un riassunto di grandi dimensioni causerebbe overhead) che identifica in maniera univoca possibilmente l’informazione. La destinazione riceverà l’informazione più il riassunto che la sorgente ha creato.
+ 
+Utilizzando il riassunto, va ad applicarlo sull’informazione e sarà in grado di rilevare se l’informazione è corretta oppure è stata modificata. Il riassunto viene creato con una funzione hash, e per riuscire ad identificare
+un’informazione in maniera univoca deve essere una funzione hash criptograficamente sicura. Una funzione
+hash (M) prende in ingresso un messaggio m di lunghezza arbitraria e generano un’uscita chiamata impronta
+
+H(m) con una lunghezza del messaggio molto minore. Per essere criptograficamente sicura una funzione hash
+
+Deve avere due caratteristiche principali:
+
+
+Deve avere un comportamento da oracolo casuale, cioè se ho un’impronta di n bit con un numero di
+impronte possibili è 2n, nel momento in cui prendo m e gli applico la funzione hash H(m), la probabilità
+di ottenere una delle possibili 2n impronte è equivalente a quella di ottenere una qualsiasi delle altre
+2n-1 impronte.
+Deve essere resistente alle collisioni, cioè se due messaggi m1 e m2 hanno la stessa impronta (cosa
+molto possibile poiché lo spazio di input è molto minore dello spazio di output), per un intruso deve
+essere computazionalmente difficile trovare un messaggio m2 con impronta H(m2) uguale a quella di
+m1, cioè H(m1).
+
+
+
+
 ### Come vengono combinate le trasformazioni E ed H?
 
 ---

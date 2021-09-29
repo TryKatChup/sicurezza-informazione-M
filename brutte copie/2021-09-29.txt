@@ -255,3 +255,71 @@ la chiave che dov per la verifica dell'autenticità è segreta.
 
 
 
+descrizione delle chiavi pubbliche pubbliche e private 
+[...]
+
+come progettare bene le trasformazioni per evitare che un parametro sia indovinabile, deducibile, ecc.
+
+per indovinare si usa l'algoritmo di forza brutta (tipo me xdxd)
+
+attacco con dizionario: serve ulteriormente per rendere più facile l'attacco di forza bruta
+
+come si fa a rendere difficile indovinare? Se i simboli della stringa che rappresenta un segreto sono non solo molti, ma casuali (se molto probabilmente scelgo sempre lo stesso segreto, ovviamente diventa facilmente indovinabile)
+
+costruire una chiave di dimensione elevata in modo che i bit del segreto siano anch'essi difficili da indovinare.
+
+vedremo un componente crittografico che genera una chiave con molti bit ed assolutamente casuale
+
+è ovvio che il parametro è bene che sia modificato di frequenza.
+
+questo solitamente dipende da quanto e dove venga usato quel parametro. Se lo uso per cifrare grandi quantità di dati, e questi hanno un requisito di sicurezza che è di cento anni, significa che devo proteggerli in termini di riservatezza per 100 anni (dunque ci sono 100 anni in cui è possibile provare a guessarla)
+
+quindi cambiare frequentemente in base allo scenario applicativo.
+
+
+impedire l'accesso alla cella di memoria in cui il parametro segreto è stato memorizzato.
+
+impedire l'intercettazione del canale di comunicazione su cui il dato viene trasmesso quando è usato (tipicamente il bus di sistema).
+
+NB: mentre l'algoritmo esegue, i dato rimane in memoria in RAM, se qualcuno facesse un dump, potrebbe arrubarsela.
+
+
+
+buone norme: chiave dev'essere memorizzata in forma cifrata, possibilmente anche mentre viene trasferita;
+solo l'algoritmo deve poter decifrarla e deve riencriptarla una volta terminato.
+Queste sono le regole di base da utilizzare
+
+
+come genero le chiavi?
+
+RNG: nuovo componente (Random Number Generator) può generare una sequenza di bit, i cui tutti i bit sono assolutamente casuali e imprevedibili.
+Uso una funzione di encryption per mantenere in memoria il dato generato.
+
+a un certo punto posso dire che: quella chiave k non viene memorizzata da nessuna parte, e viene generata a partire da un segreto che conosce il legittimo possessore di quel segreto.
+
+
+u impronta che viene usata temporaneamente per cifrare s, e usata temporaneamente per decifrare e recuperare il dato dalla cella di memoria in cui è stata memorizzata.
+
+
+il sistema crittografico deve comprendere anche una funzione di cancellazione (di s ed u) non appena sia terminato il loro utilizzo - detta wiper.
+
+la cella di memoria dove contenere le chiavi dove può risiedere? HDD, soluzione meno robusta; supporto di memorizzazione tipo smart card (solo passiva); soluzione + sicura smart card attiva, su cui c'è anche una cpu.
+
+
+
+
+
+
+attacco con solo testo cifrato: l'intrusore dispone di esclusivamente di campioni di testo cifrato. L'intruso può osservare il traffico ma dispone solo del traffico cifrato.
+Ci si possono fare degli attacchi, ma a seconda di come vengono impiegati i cifrari, l'intrusore può sfruttare ... tecniche e statistiche per effettuare determinati attacchi (avendo il testo cifrato e qualche tecnica o informazione riguardante il cifrario o il parametro stesso, può dedurre delle informazioni sul traffico)
+
+testo in chiaro noto
+
+attacco con testo in chiaro scelto.
+
+
+attacco con testo cifrato scelto (dispone sempre di una coppia testo cifrato-testo scelto, ma l'attaccante si è fatto a differenza di prima, ha preso un campione di testo cifrato e ha ottenuto un campione di testo in chiaro)
+
+
+
+vogliamo che l'output di un alg crittografico sia sempre aleatorio, ovvero assuma con egual probabilità tutti i suoi possibili valori
