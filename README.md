@@ -197,9 +197,6 @@ Contro gli attacchi attivi, in linea di principio avrebbe senso adottare una con
 - Controllo dell'accesso al canale, si può fare ma ovviamente ci sono sempre gli svantaggi specificati in precedenza;
 - Attestato di integrità e origine. Se è necessaria una contromisura di rilevazione, per permettere alla destinazione di sapere se quel flusso di dati è corretto o no, si può utilizzare un certificato di integrità/autenticità. In questo caso la rappresentazione dei dati non è incomprensibile, ma al normale flusso dei dati aggiungo dati in più che permettono alla destinazione di capire se il flusso è integro e autentico, oppure è stato manomesso. Esistono dei meccanismi crittografici che permettono di ottenerli.
 
-<!-- nuovo blocco -->
----
-NUOVO BLOCCO
 
 Collocazione dei meccanismi e dei servizi per la sicurezza
 se il meccanismo viene collocato a livello applicativo è molto personalizzabile ma richiede manutenzione
@@ -209,6 +206,9 @@ Trasporto è più trasparente alle applicazioni;
 Livello di rete è completamente trasparente, ma è meno personalizzabile rispetto alle esigenze delle applicazioni
 
 A seconda del livello avrò prestazioni, personalizzabilità e trasparenza alle applicazioni diverse.
+
+---
+## 01.Dati Sicuri
 
 Trasformazioni di sicurezza -> dobbiamo costruire degli algoritmi o protocolli (sequenza di azioni ordinate, che mi permettano di trasformare l'informazione orginaria in qualcos'altro (qualcosa di incomprensibile o qualcosa di ridondante che aggiunga alle informazioni gli attestati)
 
@@ -231,7 +231,9 @@ Caratteristica comune alle trasformazioni per la sicurezza è la ridondanza.
 È fondamentale. Perché impiegando più bit di rappresentazione, ha un overhead nel sistema, se non altro in termini di occupazione di banda, di memorizzazione del dato.
 
 - **Crittografia**: studia come progettare le trasformazioni che mi permettono di proprietà di sicurezza dell'informazione
-- **Crittoanalisi**: Studia le trasformazioni che permettono di rompere la sicurezza di informazioni
+- **Crittoanalisi**: studia le trasformazioni che permettono di rompere la sicurezza di informazioni
+
+## I principi della difesa
 
 Ci sono tre principi della difesa che guidano la progettazione delle trasformazioni:
 
