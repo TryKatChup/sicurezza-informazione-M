@@ -1,28 +1,42 @@
 # Sicurezza dell'informazione 2021-2022
 
-## Introduzione (23/09/2021)
+<!--la data da togliereeeeee...tra due mesi viene l'angoscia di vedere quando il corso è iniziato-->
+## 01.Introduzione (23/09/2021)
 
 ### Scopo della sicurezza informatica
 
-La sicurezza informatica ha lo scopo di proteggere le risorse da accessi indesiderati, garantire la riservatezza delle informazioni, assicurare il funzionamento e la disponibilità dei servizi a fronte di eventi imprevedibili.
+Il tema della sicurezza informatica è molto importante, in un mondo come quello di oggi, dove l'informatica domina buona parte delle relazioni sociali, lavorative, economiche e politiche. Questo tema è ancora più sentito con l'arrivo del COVID in cui il mondo si presta a digitalizzarsi.
+Dunque, la sicurezza informatica ha lo scopo di proteggere le risorse da accessi indesiderati, garantire la riservatezza delle informazioni, assicurare il funzionamento e la disponibilità dei servizi a fronte di eventi imprevedibili.
 È l’insieme dei prodotti, dei servizi, delle regole organizzative e dei comportamenti individuali che proteggono i sistemi informatici di un’azienda.
 
 ### I tre caposaldi della sicurezza informatica (CIA Trade Triangle)
+
 Le tre proprietà da garantire per la sicurezza dei dati sono:
 
-- **Confidenzialità**: assicura che solo chi è autorizzato può accedere (in sola lettura) a risorse o sapere dove
-sono;
-- **Integrità**: solo chi è autorizzato può modificare, eliminare, creare risorse;
-- **Disponibilità**: solo chi è autorizzato può accedere alle risorse senza interferenze ed
-ostacoli.
+- **Confidenzialità**: assicura che solo chi è autorizzato può accedere (in sola lettura) a risorse o sapere almeno che esse esistano;
+- **Integrità**: solo chi è autorizzato può modificare, eliminare e creare risorse;
+- **Disponibilità**: solo chi è autorizzato può accedere alle risorse senza interferenze ed ostacoli.
+
+![cia](./img/cia.png)
+
+### Terminologia
+
+- **Vulnerabilità**: punto debole del sistema che può rendere realizzabile una minaccia;
+- **Minaccia**: un atto ostile intenzionale o meno che ha un qualsiasi effetto negativo sulle risorse o sugli utenti del sistema;
+- **Attacco**: qualsiasi azione che usa una vulnerabilità per concretizzare una minaccia
+- **Contromisura**: azione, dispositivo, procedura o tecnica che consente di rimuovere o ridurre una vulnerabilità
+
+Esempio: un ponte che ha una crepa -> vulnerabilità
+rischia di crollare ->minaccia, un peso totale eccessivo sul ponte -> attacco
 
 ### Qualche concetto (paragrafo da modificare)
+CANCELLEREI QUESTO PARAGRAFO :P
 - Analisi Valore: quanto valgono i miei dati?
 - Analisi Rischio: Quanto valgono i danni(?)
 - Modello di minaccia: dipende dall'analisi del valore, chi mi attacca e perché
 
 ### Poi ha detto qualche vulnerabilità a caso, spiegando bene solo l'IP spoofing e il SYN flooding, ma il resto le ha tralasciate perché sì.
-da scrivere bene dopo
+da scrivere bene dopo -> QUANDO VUOI...CANCELLEREI ANCHE QUESTO PARAGRAFO :P
 
 ---
 
@@ -30,34 +44,37 @@ da scrivere bene dopo
 
 ### Calcolatori sicuri
 
-
-slide 21
-Un calcolatore per essere sicuro deve essere sicuro sia a livello hardware che a livello software.
-In questo corso ci si focalizza principalmente sulla "sicurezza dei dati", che consiste nel garantire i seguenti requisiti fondamentali:
+Un calcolatore per essere sicuro lo deve essere sia a livello hardware che a livello software.
+<!--In questo corso ci si focalizza principalmente sulla "sicurezza dei dati", che consiste nel garantire i seguenti requisiti fondamentali:
 
 - confidenzialità;
 - integrità;
 - disponibilità;
 - autenticazione;
-- non ripudio.
+- non ripudio.!-->
 
 Quando parliamo di sicurezza dei dati, in questo corso, faremo un'assunzione fondamentale: assumeremo che il nostro hardware, firmware e sistema operativo, siano **sicuri**.
-Ovviamente questa ipotesi non è sempre verificata, ma in questo corso (quando studieremo i servizi e meccanismi di sicurezza) lo daremo per scontato.
 
-NB: la sicurezza HW e FW non è argomento proprio del corso, ma la prof ci ha dato qualche info a riguardo per sapere giusto di cosa stiamo parlando.
+Ovviamente questa ipotesi non è sempre verificata, ma in questo corso quando studieremo i servizi e meccanismi di sicurezza lo daremo per scontato.
+
+<!--NB: la sicurezza HW e FW non è argomento proprio del corso, ma la prof ci ha dato qualche info a riguardo per sapere giusto di cosa stiamo parlando.-->
 
 ### Sicurezza hardware
+
+<!-- toglierei questa sezione: non viene trattata nel corso e non è oggetto di esame -->
 
 Soprattutto negli ultimi anni, la sicurezza hardware sta emergendo in maniera preponderante; si sono scoperte vulnerabilità a livello di componenti fisici, in particolare:
 
 - Memorie
 - Periferiche
 - I/O
-- linee di trasmissione)
+- linee di trasmissione
 
 L'ambito della sicurezza hardware si occupa di proteggere il calcolatore, ma anche altri dispositivi fisici, appunto, da minacce quali furto, danneggiamento o alterazione dei componenti.
 
 ### Sicurezza firmware
+
+<!-- toglierei questa sezione: non viene trattata nel corso e non è oggetto di esame -->
 
 Così come l'hardware, anche il firmware deve essere sicuro: ci sono diverse vulnerabilità legate al FW, specialmente recenti (anche in questo caso ci troviamo in un'area in grande espansione, soprattutto nell'ultimo periodo).
 
@@ -111,15 +128,15 @@ Esempi di standard internazionali per valutazione e certificazione della sicurez
 
 **Attacco**: azione mirata a compromettere una proprietà critica dell'informazione.
 
-D'ora in poi per analizzare e studiare i meccanismi di sicurezza faremo riferimento ad un modello molto specifico, chiamato "modello del canale insicuro".
+D'ora in poi per analizzare e studiare i meccanismi di sicurezza faremo riferimento ad un modello molto specifico, chiamato *modello del canale insicuro*.
 
-**Modello del canale insicuro**: prevede che ci sia una sorgente dei dati, una destinazione a cui sono rivolti, e che ci sia un canale che mette in comunicazione sorgente con destinazione.
+**Modello del canale insicuro**: prevede che ci sia una sorgente dei dati, una destinazione a cui sono rivolti e che ci sia un canale che mette in comunicazione sorgente con destinazione.
 
 Assumiamo che:
 
 - La sorgente abbia un ambiente sicuro (hardware e sistema operativo sicuri);
-- La destinazione abbia un ambiente sicuro;
-- Il canale sia insicuro (ovvero che sul canale si possono inserire degli intrusori e possono fare degli attacchi passivi e attivi su tale canale)
+- La destinazione abbia un ambiente sicuro (hardware e sistema operativo sicuri);
+- Il canale sia insicuro ovvero che sul canale si possono inserire degli intrusori e possono fare degli attacchi passivi e attivi su tale canale
 
 Definito un modello di questo genere, il nostro obiettivo è garantire che la destinazione possa consumare correttamente e interpretare correttamente i dati inviati dalla sorgente: se la sorgente produce dati con garanzia di autenticità, la destinazione deve poter verificare l'autenticità anche in seguito alla consumazione di tali (non ripudio).
 
@@ -340,7 +357,7 @@ Una funzione che in uscita produce un dato inferiore in ingresso?
 
 # ORACOLO???
 
-![zeus](./zeus.jpg)
+![zeus](./img/zeus.jpg)
 
 
 
@@ -406,7 +423,7 @@ m1, cioè H(m1).
 
 ---
 
-![marco togni](./marco_togni.jpg)
+![marco togni](./img/marco_togni.jpg)
 
 
 ---
