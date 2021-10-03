@@ -1,5 +1,7 @@
 # Sicurezza dell'informazione 2021-2022
 
+<!-- chi è che ha preso questi appunti sulla lezione del 23? Mi sono venuti i brividi-->
+
 <!--la data da togliereeeeee...tra due mesi viene l'angoscia di vedere quando il corso è iniziato-->
 ## 01.Introduzione (23/09/2021)
 
@@ -7,7 +9,7 @@
 
 Il tema della sicurezza informatica è molto importante, in un mondo come quello di oggi, dove l'informatica domina buona parte delle relazioni sociali, lavorative, economiche e politiche. Questo tema è ancora più sentito con l'arrivo del COVID in cui il mondo si presta a digitalizzarsi.
 Dunque, la sicurezza informatica ha lo scopo di proteggere le risorse da accessi indesiderati, garantire la riservatezza delle informazioni, assicurare il funzionamento e la disponibilità dei servizi a fronte di eventi imprevedibili.
-È l’insieme dei prodotti, dei servizi, delle regole organizzative e dei comportamenti individuali che proteggono i sistemi informatici di un’azienda.
+Per essere più precisi, è l’insieme dei prodotti, dei servizi, delle regole organizzative e dei comportamenti individuali che proteggono i sistemi informatici di un’azienda.
 
 ### I tre caposaldi della sicurezza informatica (CIA Trade Triangle)
 
@@ -26,23 +28,28 @@ Le tre proprietà da garantire per la sicurezza dei dati sono:
 - **Attacco**: qualsiasi azione che usa una vulnerabilità per concretizzare una minaccia
 - **Contromisura**: azione, dispositivo, procedura o tecnica che consente di rimuovere o ridurre una vulnerabilità
 
-Esempio: un ponte che ha una crepa -> vulnerabilità
-rischia di crollare ->minaccia, un peso totale eccessivo sul ponte -> attacco
+Esempio: un ponte ha una crepa (vulnerabilità), rischia di crollare (minaccia), un peso totale eccessivo sul ponte (attacco), cercare di controllare il numero di veicoli sul ponte (contromisura)
 
+<!-- la tabella a pagina 9 secondo me è utile ma devo ancora capirla-->
+
+<!-- dove c'è scritto questa roba kkkkk-->
 ### Qualche concetto (paragrafo da modificare)
-CANCELLEREI QUESTO PARAGRAFO :P
+<!--CANCELLEREI QUESTO PARAGRAFO :P-->
+<!-- chi è che ha preso questi appunti? -->
 - Analisi Valore: quanto valgono i miei dati?
 - Analisi Rischio: Quanto valgono i danni(?)
 - Modello di minaccia: dipende dall'analisi del valore, chi mi attacca e perché
 
+<!-- dove c'è scritto questa roba kkkkk-->
 ### Poi ha detto qualche vulnerabilità a caso, spiegando bene solo l'IP spoofing e il SYN flooding, ma il resto le ha tralasciate perché sì.
-da scrivere bene dopo -> QUANDO VUOI...CANCELLEREI ANCHE QUESTO PARAGRAFO :P
+da scrivere bene dopo <!--QUANDO VUOI...CANCELLEREI ANCHE QUESTO PARAGRAFO :P-->
 
 ---
-
+<!-- TITOLO FAKE: non ne ho trovata manco una -->
+<!-- da togliere per fare il blocco 1 tutto unito -->
 ## Introduzione + bestemmie (27/09/2021)
 
-### Calcolatori sicuri
+### Calcolatore sicuro
 
 Un calcolatore per essere sicuro lo deve essere sia a livello hardware che a livello software.
 <!--In questo corso ci si focalizza principalmente sulla "sicurezza dei dati", che consiste nel garantire i seguenti requisiti fondamentali:
@@ -115,6 +122,7 @@ Si affida a processori specifici l'esecuzione di determinate funzioni di sicurez
 
 ### Valutazione, Certificazione, Enti
 
+<!-- non ho capito di cosa si parla. prodotto fisico?!?-->
 Per poter sapere che un componente di sicurezza sia sicuro, ci deve essere qualcuno che lo garantisca.
 In questo caso, occorrono degli enti di certificazione e degli standard che definiscono delle metodologie con cui andare a verificare che un progetto sia effettivamente sicuro. Applicando questi standard, gli enti ci garantiscono la sicurezza del prodotto che installiamo.
 
@@ -122,15 +130,18 @@ Esempi di standard internazionali per valutazione e certificazione della sicurez
 
 ### Terminologia
 
-**Meccanismo di Sicurezza (Definizione)**: meccanismo progettato per rilevare/prevenire un attacco, risanare il sistema a seguito di un attacco.
+**Meccanismo di Sicurezza**: meccanismo progettato per rilevare/prevenire un attacco, risanare il sistema a seguito di un attacco.
 
-**Servizio di Sicurezza (Definizione)**: servizio che migliora la sicurezza dell'elaborazione dei dati e del trasferimento delle informazioni.
+**Servizio di Sicurezza**: servizio che migliora la sicurezza dell'elaborazione dei dati e del trasferimento delle informazioni.
 
+<!-- l'attacco è stato scritto in alto!-->
 **Attacco**: azione mirata a compromettere una proprietà critica dell'informazione.
+
+### Modello a canale insicuro
 
 D'ora in poi per analizzare e studiare i meccanismi di sicurezza faremo riferimento ad un modello molto specifico, chiamato *modello del canale insicuro*.
 
-**Modello del canale insicuro**: prevede che ci sia una sorgente dei dati, una destinazione a cui sono rivolti e che ci sia un canale che mette in comunicazione sorgente con destinazione.
+Questo modello prevede che ci sia una sorgente dei dati, una destinazione a cui sono rivolti e che ci sia un canale che mette in comunicazione sorgente con destinazione.
 
 Assumiamo che:
 
@@ -138,50 +149,57 @@ Assumiamo che:
 - La destinazione abbia un ambiente sicuro (hardware e sistema operativo sicuri);
 - Il canale sia insicuro ovvero che sul canale si possono inserire degli intrusori e possono fare degli attacchi passivi e attivi su tale canale
 
-Definito un modello di questo genere, il nostro obiettivo è garantire che la destinazione possa consumare correttamente e interpretare correttamente i dati inviati dalla sorgente: se la sorgente produce dati con garanzia di autenticità, la destinazione deve poter verificare l'autenticità anche in seguito alla consumazione di tali (non ripudio).
+Definito un modello di questo genere, il nostro obiettivo è garantire che la destinazione possa consumare ed interpretare correttamente i dati inviati dalla sorgente: se la sorgente produce dati con garanzia di autenticità, la destinazione deve poter verificare l'autenticità anche in seguito alla consumazione di tali (non ripudio).
+
+Mmmm non mi convince la def di non ripudio
 
 ### Classificazione attacchi
 
 Gli attacchi si classificano in 2 tipologie:
 
-- **Passivo**: L'intrusore si inserisce sul canale, ma l'unica cosa che può fare è intercettare i dati, senza alterare il flusso.
+- **Passivo**: l'intrusore si inserisce sul canale ma l'unica cosa che può fare è intercettare i dati senza alterarne il flusso. Questo canale può essere un bus, un canale interno offline, ma anche un canale diretto. Viene minato il requisito di _disponibilità_.
+<!-- che cosa è un canale interno offline?-->
+- **Attivo**: l'intrusore può accedere al canale ed alterare il normale flusso dei dati. Può:
+  - Modificare/Aggiungere il flusso intenzionalmente per cambiare il contenuto dei dati. Viene minato il requisito dell'_integrità_;
+  <!--- Aggiungere informazioni, in modo da evitare la falsificazione che mina all'integrità dei dati. La destinazione deve avere un controllo che garantisca la legittimità della fonte-->
+  - Interrompere il normale flusso impedendo che i dati arrivino alla destinazione. Viene minato il requisito di _disponibilità_.
+  - Venire a conoscenza del flusso di dati senza modificare il contenuto. E' un attacco passivo. Viene minato il requisito della _confidenzialità_.
 
-Questo canale può essere un bus, un canale interno offline, ma anche un canale diretto;
+<!-- una volta basta e avanza metterlo-->
+<!--Ricapitolando per tipo di attacco e proprietà che mette a rischio):
 
-- **Attivo**: L'intrusore può accedere al canale ed alterare il normale flusso dei dati:
+- **Attacchi passivi**: mina confidenzialità e autenticazione. Autenticazione? DA DOVE ESCE FUORI?
+- **Attacchi attivi**: integrità, autenticità e disponibilità-->
 
-- Modificare il flusso intenzionalmente, per minare il contenuto dei dati (attacco all' _integrità_);
-- Aggiungere informazioni, in modo da evitare la falsificazione che mina all'integrità dei dati. La destinazione deve avere un controllo che garantisca la legittimità della fonte.
-- Interrompere il normale flusso, impedendo che i dati arrivino alla destinazione (minaccia il requisito di _disponibilità_).
-
-Ricapitolando per tipo di attacco e proprietà che mette a rischio):
-
-- Attacchi passivi: mina confidenzialità, autenticazione
-- Attacchi attivi: integrità, autenticità, disponibilità
-
-Contromisure
+### Contromisure
 Esistono 3 tipologie di contromisure per gli attacchi:
 
-- **Prevenzione**, tramite cui si previene la possibilità che un dato venga intercettato;
-- **Rilevazione**, tramite cui si rileva un attacco in corso;
-- **Reazione**, tramite cui si reagisce dopo che un attacco è già avvenuto.
+- **Prevenzione**: tramite cui si previene la possibilità che un dato venga intercettato;
+- **Rilevazione**: tramite cui si rileva un attacco in corso;
+- **Reazione**: tramite cui si reagisce dopo che un attacco è già avvenuto.
 
-Il tipo di contromisura da adottare, va scelto anche in base al sistema e ai dati da proteggere (nel nostro caso ci interessano i dati). Se ad esempio i dati sono non confidenziali, non ci interessa che vengano intercettati. Se i dati non sono riservati, non sarà necessaria la prevenzione.
+Il tipo di contromisura da adottare, va scelto anche in base al sistema e a cosa vogliamo proteggere (nel nostro caso ci interessano i dati). Se ad esempio i dati sono non confidenziali, non ci interessa che vengano intercettati. Invece, se i dati non sono riservati, non sarà necessaria la prevenzione.
 
 Come ingegneri, il nostro obiettivo è capire a fronte di più possibilità progettuali, quale ha più senso per il nostro sistema ed i nostri dati da proteggere.
 
-Possibili contromisure per **attacchi passivi**:
+**Possibili contromisure per attacchi passivi**:
+
+L’unica contromisura da utilizzare è la prevenzione. Non ha senso utilizzare la tecnica della rilevazione in quanto quando lo rilevo ormai è tardi e non ha più senso intervenire perché l’informazione è stata ormai violata.
 
 - Impedire l'accesso al canale. Questo viene implementato tramite l'utilizzo o di canali dedicati, oppure mettendo in piedi meccanismi di controllo dell'accesso su larga scala, che fanno in modo che ogni volta che una sorgente accede al canale, il  meccanismo chiede di autenticasi. Per come è realizzata, questa soluzione non è tuttavia economicamente sostenibile né scalabile;
 - Criptare i dati da inviare, ovvero rendere incomprensibili i dati trasmessi, tranne al destinatario legittimo.
 
-### Possibili contromisure per attacchi attivi
+**Possibili contromisure per attacchi attivi**:
+
+Le contromisure da adottare sono rilevazione e reazione.
 
 Contro gli attacchi attivi, in linea di principio avrebbe senso adottare una contromisura preventiva, in quanto protegge l'autenticità, l'integrità e la riservatezza, ma come si può prevenire un attacco al flusso di dati, che è in corso? Possibili modi:
-
-- Controllo dell'accesso al canale, si può fare ma ovviamente ci sono sempre gli svantaggi specificati in precedenza.
-
+- Controllo dell'accesso al canale, si può fare ma ovviamente ci sono sempre gli svantaggi specificati in precedenza;
 - Attestato di integrità e origine. Se è necessaria una contromisura di rilevazione, per permettere alla destinazione di sapere se quel flusso di dati è corretto o no, si può utilizzare un certificato di integrità/autenticità. In questo caso la rappresentazione dei dati non è incomprensibile, ma al normale flusso dei dati aggiungo dati in più che permettono alla destinazione di capire se il flusso è integro e autentico, oppure è stato manomesso. Esistono dei meccanismi crittografici che permettono di ottenerli.
+
+<!-- nuovo blocco -->
+---
+NUOVO BLOCCO
 
 Collocazione dei meccanismi e dei servizi per la sicurezza
 se il meccanismo viene collocato a livello applicativo è molto personalizzabile ma richiede manutenzione
