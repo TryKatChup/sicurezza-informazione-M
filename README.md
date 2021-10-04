@@ -19,7 +19,7 @@ Le tre proprietà da garantire per la sicurezza dei dati sono:
 - **Integrità**: solo chi è autorizzato può modificare, eliminare e creare risorse;
 - **Disponibilità**: solo chi è autorizzato può accedere alle risorse senza interferenze ed ostacoli.
 
-![cia](./img/cia.png)
+![cia](./img/img1.png)
 
 ### Terminologia
 
@@ -239,141 +239,69 @@ Ci sono tre principi che guidano la progettazione delle trasformazioni:
 
 Quando dobbiamo progettare una trasformazione bisogna fare in modo che essa sia segreta e che l'intruso che non conosce la trasformazione segreta non possa disporre di un'algoritmo alternativo che sia in grado di eseguire la stessa trasformazione in un tempo computazionalmente fattibile.
 
-## Elaborazioni per la riservatezza di un messaggio
+## Proteggere la proprietà di confidenzialità
 
-Come facciamo a progettare una trasformazione capace di progettere la confidenzialità dei dati? La trasformazione deve avere come caratteristica quella di poter ovviamente trasformare la trasformazione originaria delle informazioni, che noi vogliamo proteggere, in una rappresentazione che la renda incomprensibile e l'unica identità chepuò eseguire la trasformazione inversa cioè dal dato incomprensibile al dato originale è la destinazione leggittima. La riservatezza possiamo ottenerla con una trasformazione di tipo preventivo in modo che se un intruso possa accedere ai dati non li posssa capire.
+Come facciamo a progettare una trasformazione capace di rendere confidenziali i dati? La trasformazione deve avere come caratteristica quella di trasformare le informazioni che noi vogliamo proteggere in una rappresentazione che la renda incomprensibile. L'unica identità che può eseguire l'operazione inversa, cioè dal dato incomprensibile al dato originale, è la destinazione. Dunque, la riservatezza la possiamo ottenere con una trasformazione di tipo preventivo in modo che se un intruso accede ai dati non li può capire.
 
-![cia](./img/img2.png)
+![confidenzialità](./img/img2.png)
 
-La sorgente (A) non può mettere i dati (m) sul canale insicuro per ovvi motivi ma prima deve trasformarli tramite una trasformata (E). La trasformazione di encryption la conosce solo la sorgente A ed è l'unica in grado di eseguirla. Nell'esempio della figura i dati (m) vengono trasformati in dati incomprensibili (c) tranne per la destinazione (B) perchè quando li riceve deve essere in grado tramite la trasformazione di decryption in modo da risalire al contenuto dei dati (m).
+La sorgente (A) non può mettere i dati (m) sul canale insicuro per ovvi motivi ma deve prima trasformarli tramite un'encryption (E). Questa trasformazione la conosce solo la sorgente A ed è l'unica in grado di eseguirla. Nell'esempio della figura i dati (m), vengono trasformati in dati incomprensibili (c) tranne per la destinazione (B) perchè quando li riceve, deve essere in grado tramite la trasformazione di decryption, risalire al contenuto dei dati (m).
 
-La coppia di encryption + decryption costituisce il cifrario. L'intruso (I) non è in grado di risalire al contenuto per due motivi:
-- non conosce la trasformazione di encryption
-- non conosce una trasformazione alternativa ed equivalente a quella di decryption
-- non può indovinare perchè da un punto di vista computazionale non è facile la ricostruzione del messaggio
+La coppia di encryption e decryption costituisce il **cifrario**. L'intruso (I) non è in grado di risalire al contenuto per diversi motivi:
+- non conosce la trasformazione di encryption;
+- non conosce una trasformazione alternativa ed equivalente a quella di decryption;
+- non può indovinarla perchè da un punto di vista computazionale è un'operazione molto costosa.
 
-Produrre un testo cifrato aleatorio: l'intruso osservando c non deve imparare nulla di più di quello che sapeva già. Ad esempio, ho un messaggio strutturato che contiene "carissimi studenti, carissimi studentesse". Se applico una trasformazione che mi consente di ottenere in uscita la parola "carissimi" riesco a vedere che c'è un pattern tra tutti i messaggi e ciò mi rende il cifrato non perfetto perchè io intruso ho un'informazione in più.
+Altro punto importante è che bisogna produrre un testo cifrato aleatorio: l'intruso osservando c non deve imparare nulla di più di quello che sapeva già. Ad esempio, ho un messaggio strutturato che contiene "carissimi studenti, carissimi studentesse". Se applico una trasformazione che mi consente di ottenere in uscita la parola "carissimi" riesco a vedere che c'è un pattern tra tutti i messaggi e ciò mi rende il cifrato non perfetto perchè io intruso ho un'informazione in più e potrei studiare come fare a capire il resto del messaggio.
 
------------
+Altre considerazioni:
+- Lo schema della figura può essere applicato sia da A verso B che da B verso A (il flusso è bidirezionale);
+- A e B possono essere online contemporaneamente oppure A online e B offline cioè i messaggi possono essere decifrati in momenti diversi;
+- B = A. La sorgente potrebbe coincidere con la destinazione. Se voglio cifrare dei dati sul mio hard disk li cifro per me. Quando faccio il logout dal sistema, li voglio cifrare mentre quando faccio il login li decifro.
 
-Quali sono le caratteristiche.
+## Proteggere la proprietà di integrità
 
-Come otteniamo il riassunto:
-esistono le funzioni hash (funzioni che dato un input producono un input molto più piccolo, un'impronta)
+Quando si trasferiscono i dati sul canale, come visto in corsi precedenti, si sa che a causa di disturbi i bit possono mutare. In caso di disturbi, le alterazioni che si possono osservare sono la cancellazione e la modifica di bit. Ci sono dei disturbi che rendono più probabile certi tipi di alterazioni. Infatti, è possibile calcolare la probabilità.
 
-Non ci vanno bene tutte le funzioni hash, ma abbiamo bisogno di una funzione che chiamiamo "crittograficamente sicura", ovvero con 2 caratteristiche fondamentali:
+Nell'ambito della sicurezza informatica, non si parla di disturbo ma di attacco intenzionale attivo. Minare l'integrità significa fare un attacco attivo sul canale. L'attacco attivo condivide con i disturbi il fatto di poterli modificare e cancellare i messaggi ma è diverso dal disturbo perchè aggiunge il problema di alterare l'ordine dei bit.
 
-- "facilità di esecuzione"
-- "comportamento da oracolo casuale".
+Se nei disturbi c'è una probabilità di alterazione dei dati, ad esempio del 30%, nella sicurezza informatica tutti i bit hanno la stessa probabilità di essere cambiati.
 
-Una funzione hash crittograficamente sicura è tale se il suo comportamento è apparentemente aleatorio.
+Proteggere l'integrità vuol dire costruire delle trasformazioni in grado di rilevare modifiche al contenuto dei dati trasmessi. In questo caso la  contromisura da adottare è quella della rilevazione perchè le modifiche ai messaggi non possono essere evitate ma possiamo apportare tecniche in grado di far dire alla destinazione che il messaggio sia stato davvero alterato.
 
-Se io fornisco in ingresso a tale funzione un messaggio di cui non conosco ancora l'impronta, si riscrontra in uscita uno dei qualsiasi dei 2^n valori possibili dove n è il numero di bit dell'impronta.
+Se vogliamo costruire una trasformazione che protegga l'integrità, dobbiamo far si che la sorgente utilizzi ridondanza al messaggio e affianchi al dato iniziale un'informazione aggiuntiva che deve essere costruita opportunamente (riassunto la chiamiamo). La dimensione deve essere limitata perchè la si deve poi trasmettere.
 
-Se io do in input un messaggio di dimensione m, non so con quale probabilità avrò quell'impronta.
+La sua caratteristica deve essere quella di rappresentare in modo pressocchè univoco il contenuto del messaggio. Al messaggio originale deve corrispondere un unico riassunto. Se i messaggi da inviare sono diversi ovviamente i riassunti devono essere diversi. La destinazione riceve il dato e il riassunto. Poi ha bisogno di ricalcolare sul dato ricevuto un nuovo riassunto e vede se coincide con quello ricevuto. Se coincidono i due riassunti vuol dire che il dato non è stato alterato.
 
-Non posso prevedere con certezza quale valore avrà in uscita.
+E' importante che il riassunto debba avere delle caratteristiche specifiche. Le posso averesolo usando **funzioni hash crittograficamente sicure**.
 
-Questa è una caratteristica fondamentale;
+In generale, una funzione hash (H) è una funzione che prende un dato m di lunghezza arbitraria e restituisce in uscita un'impronta (H(m)) di dimensione nettamente inferiore.
 
-Altra caratteristica necessaria: resistenza alle collisioni, ovvero se una funzione hash è critt sicura, l'individuazione di due messaggi con la stessa impronta da parte di un intrusore dev'essere difficile
+A noi non basta avere una qualunque funzione hash, ma è importante che sia crittograficamente sicura perchè deve avere due caratteristiche:
+- **Comportamento da "oracolo casuale"**: se l'impronta ha dimensione m ed è formata da n bit, vuol dire che i bit possono avere 2^n possibili configurazioni. Preso il mio messaggio (m) corrisponda con uguale probabilità una delle 2^m possibili uscite. Dato un messaggio non devo sapere che ad esempio l'impronta sarà al 70% una determinata configurazione ma la probabilità che mi capiti una configurazione rispetto ad un'altra deve essere la stessa;
+- **resistente alle collisioni**: è inevitabile che due messaggi diversi abbiano in uscita la stessa impronta perchè lo spazio di input è molto più grande dello spazio di output. L'importante è che per un intruso sia computazionalmente difficile individuare due messaggi che abbiano la stessa impronta.
 
-Se ho 2^m valori di ingresso con m > n, ovviamente ci sono delle collisioni, è inevitabile, ma dev'essere difficile per un intrusore trovare quella coppia di messaggi con la stessa impronta.
+![integrità](./img/img3.png)
 
-Funzioni hash impiegate soprattutto per rilevare i disturbi (check sum)
+Se il mio obiettivo è rilevare i disturbi, posso usare delle funzioni hash che chiamiamo **funzioni hash semplici** dove è facile individuare le collisioni
+Invece, se il mio obiettivo è la sicurezza informatica le mie funzioni hash devono essere crittograficamente sicure e le chiamiamo **funzioni hash sicure** (vedi proprietà scritte in alto)
 
-Per ora non ci interessa di com'è fatta o qual è l'algoritmo che useremo, ma sappiamo che per costruire un certificato di autenticità abbiamo bisogno di una funzione hash con certe caratteristiche (definite in precedenza).
+![attestazioneIntegrità](./img/img4.png)
 
-Esempio:
-(slide) attestazione ed accertamento dell'integrità
+L'intruso può sostiuire il messaggio (m) con un altro (m'). La sorgente deve utiizzare la funzione H, deve costruire il riassunto univoco e consegnarlo ma su un canale sicuro. Ad esempio, un canale ad hoc. La destinazione riceve m', applica H(m') e va a confrontare H(m') con h(m) che ha ricevuto sul canale sicuro. Se i due riassunti coincidono vuol dire che quello è conforme.
 
-Supponiamo che A metta sul canale insicuro -> un messaggio m, affiancato da H (funzione hash crittograficamente sicura), a partire da m è stata costruita H(m)
+Perchè questo modello funziona?
+L'obiettivo di un intrusore è quello di trovare un m' che abbia un H(m') = H(m). Dunque, è fondamentale usare una funzione hash crittograficamente sicura che sia resistente alle collisioni.
 
-B deve prendere il messaggio ricevuto, applicargli la funzione hash, che conosce anche lui, e verificare che l'hash ricevuto coincida con quello ottenuto applicando a sua volta la funzione hash.
-Se equivalgono è tutto ok (tutto trasmesso correttamente).
+## Proteggere la proprietà di autenticazione
 
-La destinazione è in grado di rilevare se il messaggio ha subito modifiche
+Chi riceve un dato è importante che possa sapere da chi l'ha originato. L'intruso può creare ad hoc un messaggio, inserirlo nel flusso normale dei dati e spacciare i nuovi dati come se provenisse dal normale flusso. Questo attacco non lo si può prevenire ma rilevare. Per garantire l'autenticità di una sorgente,  devo costruire una trasformazione (S) che dato un messaggio (m) produce in uscita un attestato di autenticità (c) che rappresenta in maniera non imitabile il messaggio m originale. Nessuno deve essere in grado di effettuare questa trasformazione.
+La destinazione riceve un messaggio + l'attestato di autenticità. La destinazione effettua una trasformazione (V) sull'attestato di autenticità e produce in uscita una risposta che dice se il messaggio è autentico o no. In caso affermativo si recupera il messaggio m.
 
-Mettiamoci nei panni dell'intrusore:
-se l'intrusore conosce la funzione hash può mettere un nuovo messaggio con hash allegato
+La trasformazione S deve essere segreta perchè altrimenti altri potrebbero spacciarsi per quella sorgente. I calcoli per costruire un messaggio autentico devono essere difficili da un punto di vista computazionale
+Invece V deve essere noto perchè qualsiasi destinazione deve essere in grado di dirmi se l'attestato è autentico o no
 
-abbiamo quindi 2 tipi di trasformazioni: Encryption, Hash
-
-possiamo anche combinarle
-
-e se volessimo garantire la riservatezza e l'integrità dei dati
-
-Diverse contromisure:
-
-- Controllo dell'accesso al canale. Soluzione non scalabile e non sostenibile.
-In alcuni scenari applicativi di facile realizzazione si possono mettere dei cavi appositi.
-
-- Cifrare il canale, e rendere possibile che quello che sto trasmettendo venga capito soltanto dal legittimo destinatario.
-In questo corso studieremo gli algoritmi di crittogragia, in modo da rendere incomprensibile per un intrusore la comprensione dei dati sul canale.
-
-- Attacchi attivi. Proprietà a rischio: integrità, autenticità.
-  - io ho il normale flusso di dati e aggiungo dati in più, in modo da sapere se il flusso di dati che arriva a destinazione sia integro o meno.
-
-### Collocazione dei meccanismi e dei servizi per la sicurezza
-
-- Autenticazione a livello di host
-- Autenticazione mi sono persa. Basta
-
-### Trasformazioni per la sicurezza
-
-Abbiamo bisogno di costruire algoritmi/protocolli che permettano di trasformare l'informazione originaria in qualcos'altro (non comprensibile o qualcosa di ridondante)
-
-- algoritmi (singola trasformazione che avviene prima di mandare i dati)
-- protocolli (di una serie di trasformazioni)
-
-Esempio: io sono.
-
-Destinazione in bonafede.
-
-Servono più trasformazioni, perché è pieno di malintenzionati
-
-### Crittoanalisi
-
-### I principi dell'informazione:
-
-- Impossibilità di sapere:
-- Impossibilità di indovinare
-- Impossibilità di dedurre:
-
-Le trasformazione deve essere segreta e i calcoli devono essere impossibili.
-
-### Primo requisito: riservatezza
-
-La sorgente deve trasformare la rappresentazione originaria in una che la renda apparentemente incomprensibile, e il destinatario deve essere l'unico a sapere come ritornare a una info comprensibile.
-
-- Cifratura: trasformo testo comprensibile in testo incomprensibile (cyphertext)
-- Decifratura: l'esatto opposto
-
-La sorgente trasforma la rappresentazione originaria delle informazioni riservitare in una rappresentazione che le rende apparentemente incomprensibili; la destinazione è l'unica a sapere eseguire la trasformazione inversa.
-
-- Integrità: rilevazione di attacchi intenzionali
-La sorgente deve affiancare al documento un riassunto che ne rappresenti in modo pressoché univoco il contenuto; la destinazione deve ricalcolare il riassunto e confrontare i due dati.
-
-Come otteniamo il riassunto? Funzioni hash
-
-Un hash è una funzione che costruisce un attestato d'integrità
-
-Una funzione che in uscita produce un dato inferiore in ingresso?
-
-# ORACOLO???
-
-![zeus](./img/zeus.jpg)
-
-
-
-Hash: resistente alle collisioni: individuazione di due messaggi con la stessa impronta deve essere un calcolo difficile.
-
-Le collisioni esistono, deve essere però difficili trovare una coppia di messaggi avente la stessa impronta.
-
-n bit di hash : 2^n valori di uscita
-
-
-Oracolo casuale
+![autenticazione](./img/img5.png)
 
 ### Attestato di integrità
 
@@ -389,47 +317,15 @@ La destinazione sarà in grado di vedere se il messaggio ha avuto modifiche?
 
 ---
 
-## 29/09/2021
-
-### Protocollo per la difesa di riservatezza e integrità
-
-Bisogna garantire l’integrità (rilevazione e reazione)
-
-Con un attacco attivo si possono cancellare e modificare i dati, oltre che modificarne anche l’ordine.
-
-Il disturbo invece non cambia l’ordine dei dati dell’informazione. Tutte le alterazioni avvengono con uguale probabilità.
-
-Proteggere l’integrità significa creare delle contromisure per la rilevazione di eventuali modifiche al contenuto del dato originale.
-
-Si utilizza la ridondanza dei dati, cioè insieme all’informazione viene aggiunto un piccolo riassunto (un riassunto di grandi dimensioni causerebbe overhead) che identifica in maniera univoca possibilmente l’informazione. La destinazione riceverà l’informazione più il riassunto che la sorgente ha creato.
- 
-Utilizzando il riassunto, va ad applicarlo sull’informazione e sarà in grado di rilevare se l’informazione è corretta oppure è stata modificata. Il riassunto viene creato con una funzione hash, e per riuscire ad identificare
-un’informazione in maniera univoca deve essere una funzione hash criptograficamente sicura. Una funzione
-hash (M) prende in ingresso un messaggio m di lunghezza arbitraria e generano un’uscita chiamata impronta
-
-H(m) con una lunghezza del messaggio molto minore. Per essere criptograficamente sicura una funzione hash
-
-Deve avere due caratteristiche principali:
-
-
-Deve avere un comportamento da oracolo casuale, cioè se ho un’impronta di n bit con un numero di
-impronte possibili è 2n, nel momento in cui prendo m e gli applico la funzione hash H(m), la probabilità
-di ottenere una delle possibili 2n impronte è equivalente a quella di ottenere una qualsiasi delle altre
-2n-1 impronte.
-Deve essere resistente alle collisioni, cioè se due messaggi m1 e m2 hanno la stessa impronta (cosa
-molto possibile poiché lo spazio di input è molto minore dello spazio di output), per un intruso deve
-essere computazionalmente difficile trovare un messaggio m2 con impronta H(m2) uguale a quella di
-m1, cioè H(m1).
-
-
-
 
 ### Come vengono combinate le trasformazioni E ed H?
 
 ---
+AAAAAAAAAAAAAAAAAAAAAAA
+
+![zeus](./img/zeus.jpg)
 
 ![marco togni](./img/marco_togni.jpg)
-
 
 ---
 ![cyber sesso](https://user-images.githubusercontent.com/56556806/134823047-da26060a-3813-4e73-a13c-256bcd0483c4.png)
