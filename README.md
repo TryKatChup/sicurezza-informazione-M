@@ -237,7 +237,7 @@ Ci sono tre principi che guidano la progettazione delle trasformazioni:
 - Deve essere impossibile _dedurre_ qual è la trasformazione adottata;
 - Deve essere impossibile _indovinare_ la trasformazione adottata.
 
-Quando dobbiamo progettare una trasformazione bisogna fare in modo che essa sia segreta e che l'intruso che non conosce la trasformazione segreta non possa disporre di un'algoritmo alternativo che sia in grado di eseguire la stessa trasformazione in un tempo computazionalmente fattibile.
+Quando dobbiamo progettare una trasformazione bisogna fare in modo che essa sia segreta e che l'intruso, che non conosce la trasformazione segreta, non possa disporre di un'algoritmo alternativo che sia in grado di eseguire la stessa trasformazione in un tempo computazionalmente fattibile.
 
 ## Proteggere la proprietà di confidenzialità
 
@@ -245,14 +245,14 @@ Come facciamo a progettare una trasformazione capace di rendere confidenziali i 
 
 ![confidenzialità](./img/img2.png)
 
-La sorgente (A) non può mettere i dati (m) sul canale insicuro per ovvi motivi ma deve prima trasformarli tramite un'encryption (E). Questa trasformazione la conosce solo la sorgente A ed è l'unica in grado di eseguirla. Nell'esempio della figura i dati (m), vengono trasformati in dati incomprensibili (c) tranne per la destinazione (B) perchè quando li riceve, deve essere in grado tramite la trasformazione di decryption, risalire al contenuto dei dati (m).
+La sorgente `A` non può mettere i dati `m` sul canale insicuro per ovvi motivi ma deve prima trasformarli tramite un'encryption `E`. Questa trasformazione la conosce solo la sorgente `A` ed è l'unica in grado di eseguirla. Nell'esempio della figura i dati `m`, vengono trasformati in dati incomprensibili `c`. Solo la destinazione `B` li può comprendere perchè quando li riceve, deve essere in grado tramite la trasformazione di decryption, risalire al contenuto dei dati `m`.
 
-La coppia di encryption e decryption costituisce il **cifrario**. L'intruso (I) non è in grado di risalire al contenuto per diversi motivi:
+La coppia di encryption e decryption costituisce il **cifrario**. L'intruso `I` non è in grado di risalire al contenuto per diversi motivi:
 - non conosce la trasformazione di encryption;
 - non conosce una trasformazione alternativa ed equivalente a quella di decryption;
-- non può indovinarla perchè da un punto di vista computazionale è un'operazione molto costosa.
+- non può neanche indovinarla perchè da un punto di vista computazionale è un'operazione molto costosa.
 
-Altro punto importante è che bisogna produrre un testo cifrato aleatorio: l'intruso osservando c non deve imparare nulla di più di quello che sapeva già. Ad esempio, ho un messaggio strutturato che contiene "carissimi studenti, carissimi studentesse". Se applico una trasformazione che mi consente di ottenere in uscita la parola "carissimi" riesco a vedere che c'è un pattern tra tutti i messaggi e ciò mi rende il cifrato non perfetto perchè io intruso ho un'informazione in più e potrei studiare come fare a capire il resto del messaggio.
+Altro punto importante è che bisogna produrre un **testo cifrato aleatorio**: l'intruso osservando `c` non deve imparare nulla di più di quello che sapeva già. Ad esempio, ho dei  messaggi strutturati che iniziano con "carissimi studenti, carissimi studentesse". Se applico una trasformazione che mi consente di ottenere in uscita la parola "carissimi" riesco a vedere che c'è un pattern tra tutti i messaggi e ciò mi rende il cifrato non perfetto perchè io intruso ho un'informazione in più e potrei studiare come fare a capire il resto del messaggio.
 
 Altre considerazioni:
 - Lo schema della figura può essere applicato sia da A verso B che da B verso A (il flusso è bidirezionale);
@@ -263,45 +263,46 @@ Altre considerazioni:
 
 Quando si trasferiscono i dati sul canale, come visto in corsi precedenti, si sa che a causa di disturbi i bit possono mutare. In caso di disturbi, le alterazioni che si possono osservare sono la cancellazione e la modifica di bit. Ci sono dei disturbi che rendono più probabile certi tipi di alterazioni. Infatti, è possibile calcolare la probabilità.
 
-Nell'ambito della sicurezza informatica, non si parla di disturbo ma di attacco intenzionale attivo. Minare l'integrità significa fare un attacco attivo sul canale. L'attacco attivo condivide con i disturbi il fatto di poterli modificare e cancellare i messaggi ma è diverso dal disturbo perchè aggiunge il problema di alterare l'ordine dei bit.
+Invece, nell'ambito della sicurezza informatica, non si parla di disturbo ma di attacco intenzionale attivo. Minare l'integrità significa fare un attacco attivo sul canale. L'attacco attivo condivide con i disturbi il fatto di poter modificare e cancellare i messaggi ma è diverso dal disturbo perchè aggiunge il problema di alterare l'ordine dei bit.
 
 Se nei disturbi c'è una probabilità di alterazione dei dati, ad esempio del 30%, nella sicurezza informatica tutti i bit hanno la stessa probabilità di essere cambiati.
 
-Proteggere l'integrità vuol dire costruire delle trasformazioni in grado di rilevare modifiche al contenuto dei dati trasmessi. In questo caso la  contromisura da adottare è quella della rilevazione perchè le modifiche ai messaggi non possono essere evitate ma possiamo apportare tecniche in grado di far dire alla destinazione che il messaggio sia stato davvero alterato.
+Proteggere l'integrità vuol dire costruire delle trasformazioni in grado di rilevare modifiche al contenuto dei dati trasmessi. In questo caso, la contromisura da adottare è quella della rilevazione perchè le modifiche ai messaggi sul canale non possono essere evitate ma apportando tecniche in grado di far dire alla destinazione che il messaggio sia stato davvero alterato si riesce a superare questo problema.
 
-Se vogliamo costruire una trasformazione che protegga l'integrità, dobbiamo far si che la sorgente utilizzi ridondanza al messaggio e affianchi al dato iniziale un'informazione aggiuntiva che deve essere costruita opportunamente (riassunto la chiamiamo). La dimensione deve essere limitata perchè la si deve poi trasmettere.
+Se vogliamo costruire una trasformazione che protegga l'integrità, dobbiamo far si che la sorgente utilizzi ridondanza al messaggio e affianchi al dato iniziale un'informazione aggiuntiva che deve essere costruita opportunamente. Questa informazione aggiuntiva si chiama **riassunto** o **impronta**. La dimensione deve essere limitata perchè la si deve poi trasmettere.
 
-La sua caratteristica deve essere quella di rappresentare in modo pressocchè univoco il contenuto del messaggio. Al messaggio originale deve corrispondere un unico riassunto. Se i messaggi da inviare sono diversi ovviamente i riassunti devono essere diversi. La destinazione riceve il dato e il riassunto. Poi ha bisogno di ricalcolare sul dato ricevuto un nuovo riassunto e vede se coincide con quello ricevuto. Se coincidono i due riassunti vuol dire che il dato non è stato alterato.
+La sua caratteristica deve essere quella di rappresentare in modo pressocchè univoco il contenuto del messaggio. Al messaggio originale deve corrispondere un unico riassunto. Se i messaggi da inviare sono diversi ovviamente i riassunti devono essere anche loro diversi. La destinazione riceve il dato e il riassunto. Poi ha bisogno di ricalcolare sul dato ricevuto un nuovo riassunto e vede se coincide con quello ricevuto. Se coincidono vuol dire che il dato non è stato alterato.
 
-E' importante che il riassunto debba avere delle caratteristiche specifiche. Le posso averesolo usando **funzioni hash crittograficamente sicure**.
+E' importante che il riassunto debba avere delle caratteristiche specifiche. Esse si ottengono solo usando **funzioni hash crittograficamente sicure**.
 
-In generale, una funzione hash (H) è una funzione che prende un dato m di lunghezza arbitraria e restituisce in uscita un'impronta (H(m)) di dimensione nettamente inferiore.
+In generale, una funzione hash (H) è una funzione che prende un dato `m` di lunghezza arbitraria e restituisce in uscita un'impronta `H(m)` di dimensione nettamente inferiore.
 
-A noi non basta avere una qualunque funzione hash, ma è importante che sia crittograficamente sicura perchè deve avere due caratteristiche:
-- **Comportamento da "oracolo casuale"**: se l'impronta ha dimensione m ed è formata da n bit, vuol dire che i bit possono avere 2^n possibili configurazioni. Preso il mio messaggio (m) corrisponda con uguale probabilità una delle 2^m possibili uscite. Dato un messaggio non devo sapere che ad esempio l'impronta sarà al 70% una determinata configurazione ma la probabilità che mi capiti una configurazione rispetto ad un'altra deve essere la stessa;
-- **resistente alle collisioni**: è inevitabile che due messaggi diversi abbiano in uscita la stessa impronta perchè lo spazio di input è molto più grande dello spazio di output. L'importante è che per un intruso sia computazionalmente difficile individuare due messaggi che abbiano la stessa impronta.
+A noi non basta avere una qualunque funzione hash, ma è importante che abbia due caratteristiche:
+- **Comportamento da "oracolo casuale"**: se decido che l'impronta sia costituita da `n` bit, le possibili uscite della funzione hash sono 2^n. Preso il mio messaggio `m`, devo fare in modo che la probabilità che esca un uscita rispetto ad un'altra sia la stessa. Dato un messaggio, non devo sapere che ad esempio la probabilità che esca una determinata impronta sarà al 70% ma la probabilità che mi capiti una configurazione rispetto ad un'altra deve essere la stessa;
+- **Resistente alle collisioni**: è inevitabile che due messaggi diversi abbiano in uscita la stessa impronta perchè lo spazio di input è molto più grande dello spazio di output (`m > n`). L'importante è che per un intruso sia computazionalmente difficile individuare due messaggi che abbiano la stessa impronta.
+
+Queste caratteristiche le si ottengono solo usando **funzioni hash crittograficamente sicure**.
 
 ![integrità](./img/img3.png)
 
-Se il mio obiettivo è rilevare i disturbi, posso usare delle funzioni hash che chiamiamo **funzioni hash semplici** dove è facile individuare le collisioni
-Invece, se il mio obiettivo è la sicurezza informatica le mie funzioni hash devono essere crittograficamente sicure e le chiamiamo **funzioni hash sicure** (vedi proprietà scritte in alto)
+Se il mio obiettivo è rilevare i disturbi, posso usare delle funzioni hash che chiamiamo **funzioni hash semplici**. Invece, se il mio obiettivo è la sicurezza informatica, le funzioni hash devono essere crittograficamente sicure e prendono il nome di **funzioni hash sicure** (vedi proprietà scritte in alto).
 
 ![attestazioneIntegrità](./img/img4.png)
 
 L'intruso può sostiuire il messaggio (m) con un altro (m'). La sorgente deve utiizzare la funzione H, deve costruire il riassunto univoco e consegnarlo ma su un canale sicuro. Ad esempio, un canale ad hoc. La destinazione riceve m', applica H(m') e va a confrontare H(m') con h(m) che ha ricevuto sul canale sicuro. Se i due riassunti coincidono vuol dire che quello è conforme.
 
-Perchè questo modello funziona?
-L'obiettivo di un intrusore è quello di trovare un m' che abbia un H(m') = H(m). Dunque, è fondamentale usare una funzione hash crittograficamente sicura che sia resistente alle collisioni.
+L'obiettivo di un intrusore è quello di trovare un messaggio `m'` che abbia `H(m') = H(m)`. Dunque, è fondamentale usare una funzione hash crittograficamente sicura che sia resistente alle collisioni.
 
 ## Proteggere la proprietà di autenticazione
 
-Chi riceve un dato è importante che possa sapere da chi l'ha originato. L'intruso può creare ad hoc un messaggio, inserirlo nel flusso normale dei dati e spacciare i nuovi dati come se provenisse dal normale flusso. Questo attacco non lo si può prevenire ma rilevare. Per garantire l'autenticità di una sorgente,  devo costruire una trasformazione (S) che dato un messaggio (m) produce in uscita un attestato di autenticità (c) che rappresenta in maniera non imitabile il messaggio m originale. Nessuno deve essere in grado di effettuare questa trasformazione.
-La destinazione riceve un messaggio + l'attestato di autenticità. La destinazione effettua una trasformazione (V) sull'attestato di autenticità e produce in uscita una risposta che dice se il messaggio è autentico o no. In caso affermativo si recupera il messaggio m.
+Chi riceve un dato è importante che possa sapere chi è stato ad originarlo. L'intruso può creare ad hoc un messaggio, inserirlo nel flusso normale dei dati e spacciarlo come se provenisse dalla sorgente originale. Questo attacco non lo si può prevenire ma solo rilevare. Per garantire l'autenticità di una sorgente, devo costruire una trasformazione `S` che dato un messaggio `m`, deve produrre in uscita un **attestato di autenticità** `c` che rappresenta in maniera non imitabile il messaggio `m` originale. Nessuno deve essere in grado di effettuare questa trasformazione.
 
-La trasformazione S deve essere segreta perchè altrimenti altri potrebbero spacciarsi per quella sorgente. I calcoli per costruire un messaggio autentico devono essere difficili da un punto di vista computazionale
-Invece V deve essere noto perchè qualsiasi destinazione deve essere in grado di dirmi se l'attestato è autentico o no
+La destinazione riceve sia il messaggio che l'attestato di autenticità ed effettua una trasformazione `V` sull'attestato di autenticità producendo in uscita una risposta che dice se il messaggio è autentico o no. In caso affermativo si recupera il messaggio `m` altrimenti lo si scarta.
 
 ![autenticazione](./img/img5.png)
+
+La trasformazione `S` deve essere segreta perchè altrimenti altri potrebbero spacciarsi per quella sorgente. I calcoli per costruire un messaggio autentico devono essere difficili da un punto di vista computazionale.
+Invece, `V` può essere noto perchè qualsiasi destinazione deve essere in grado di dirmi se l'attestato è autentico o no.
 
 ### Attestato di integrità
 
