@@ -210,64 +210,51 @@ A seconda del livello avrò prestazioni, personalizzabilità e trasparenza alle 
 ---
 ## 01.Dati Sicuri
 
-Trasformazioni di sicurezza -> dobbiamo costruire degli algoritmi o protocolli (sequenza di azioni ordinate, che mi permettano di trasformare l'informazione orginaria in qualcos'altro (qualcosa di incomprensibile o qualcosa di ridondante che aggiunga alle informazioni gli attestati)
+Per proteggere i dati a fronte di possibili attacchi possiamo eseguire o delle singole trasformazioni usando degli *algoritmi* o a volte è necessario un insieme di trasformazioni. In questo caso, ovviamente la sequenza delle operazioni da eseguire non può essere casuale ma ben precisa e parliamo di *protocollo*.
 
-trasformazioni: algotirmi o protocolli
+Quando progetto un protocollo mi devo chiedere sempre se la sorgente e destinazione siano stati compromessi però nel modello di minaccia più semplice che abbiamo assunto questo problema non c'è.
 
-algoritmi = prima trasformazione T1 (trasformazione dei dati prima di metterli sul canale insicuro)
-seconda trasformazione T2 (per risalire al contenuto dei dati)
+Ad esempio, compro una casa a 100mila euro. Per comprarla introduco un protocollo di sicurezza per trasmettere l'informazione della compravendida. Se sorgente e destinazione si comportano correttamente, mi basta un protocollo che mi garantisca l'integrità di quel dato ma se la sorgente è compromessa, può alterare il prezzo. In questo caso il protocollo di protezione deve diventare più complesso perchè la sorgente e destinazione deve disconoscere l'operazione.
 
-Nonn sempre una singola trasformazione è sufficiente.
+Non è detto che ci sia sempre solo sorgente e destinazione ma in alcuni casi è necessario l'intervento di una terza entità che fa da arbitro/giudice. La si può usare quando sorgente e destinatari sono malintenzionati.
 
-- A volte c'è bisogno di un protocollo (serie di trasformazioni che sorgente e destinazione devono fare, perché noi nel modello di minaccia più semplice assumiamo che la sorgente si comporti bene e la destinazione si comportano bene, ma a volte potrebbero a loro volta essere compromesse o malintenzionate)
+Per ottenere la sicurezza dei dati ho bisogno di **ridondanza** sia nello spazio che nel tempo. Questo vuol dire che le trasformazioni hanno bisogno di bit in più di quelli che servirebbero (ridondanza nello spazio) e la sorgente/destinazione ha bisogno di un tempo più lungo di processamento sia in termini di banda che di calcolo computazionale (ridondanza nel tempo).
 
-mmh dimmi come fai a fare la fede che ti viene buona esagerata
+## Crittografia e Crittoanalisi
 
-Vedremo vari protocolli: alcuni richiedono l'intervento di una terza entità (oltre a sorgente/destinatario), che fa da arbitro/giudice
+- **Crittografia**: è la disciplina che studia gli algoritmi che possiamo adottare per proteggere i dati in in termini di riservatezza, autenticità e integrità e per garantire l'identificazione;
+- **Crittoanalisi**: è la disciplina che studia il modo in cui è possibile violare le trasformazioni che proteggono i dati
 
-Caratteristica di tutte queste trasformazioni: ridondanza in termini di codifica e di tempo
-
-Caratteristica comune alle trasformazioni per la sicurezza è la ridondanza.
-È fondamentale. Perché impiegando più bit di rappresentazione, ha un overhead nel sistema, se non altro in termini di occupazione di banda, di memorizzazione del dato.
-
-- **Crittografia**: studia come progettare le trasformazioni che mi permettono di proprietà di sicurezza dell'informazione
-- **Crittoanalisi**: studia le trasformazioni che permettono di rompere la sicurezza di informazioni
+Nel corso studieremo solo la crittografia. Quando studieremo una trasformazione crittografica, dovremmo capire la sua:
+- **Efficacia**: quanto è in grado la trasformazione di proteggere quel dato in termini di riservatezza, autenticità e integrità;
+- **Efficienza**: l'overhead associato.
 
 ## I principi della difesa
 
-Ci sono tre principi della difesa che guidano la progettazione delle trasformazioni:
+Ci sono tre principi che guidano la progettazione delle trasformazioni:
 
 - Deve essere impossbile _sapere_ che trasformazione è stata eseguita;
-- Impossibile _dedurre_ qual è la trasformazione adottata;
+- Deve essere impossibile _dedurre_ qual è la trasformazione adottata;
 - Deve essere impossibile _indovinare_ la trasformazione adottata.
 
-Per ora parliamo di impossibilità, poi arriveremo alla difficoltà
+Quando dobbiamo progettare una trasformazione bisogna fare in modo che essa sia segreta e che l'intruso che non conosce la trasformazione segreta non possa disporre di un'algoritmo alternativo che sia in grado di eseguire la stessa trasformazione in un tempo computazionalmente fattibile.
 
-Se la trasformazione è segreta è chiaro che diventa impossibile dedurre e indovinare
+## Elaborazioni per la riservatezza di un messaggio
 
-Devo far sì che il calcolo di sapere, dedurre o indovinare, sia impossibile.
+Come facciamo a progettare una trasformazione capace di progettere la confidenzialità dei dati? La trasformazione deve avere come caratteristica quella di poter ovviamente trasformare la trasformazione originaria delle informazioni, che noi vogliamo proteggere, in una rappresentazione che la renda incomprensibile e l'unica identità chepuò eseguire la trasformazione inversa cioè dal dato incomprensibile al dato originale è la destinazione leggittima. La riservatezza possiamo ottenerla con una trasformazione di tipo preventivo in modo che se un intruso possa accedere ai dati non li posssa capire.
 
-Difficili per chi conosce il segreto, impossibili per chi non lo conosce.
+![cia](./img/img2.png)
 
-- Trasformazione diretta (di encryption): prendo il mio dato in chiaro (plain text) in qualcosa di non comprensibile (cypher text)
-- Trasformazione inversa (di decryption): prende dal canale il cypher text e lo trasforma in plain text
+La sorgente (A) non può mettere i dati (m) sul canale insicuro per ovvi motivi ma prima deve trasformarli tramite una trasformata (E). La trasformazione di encryption la conosce solo la sorgente A ed è l'unica in grado di eseguirla. Nell'esempio della figura i dati (m) vengono trasformati in dati incomprensibili (c) tranne per la destinazione (B) perchè quando li riceve deve essere in grado tramite la trasformazione di decryption in modo da risalire al contenuto dei dati (m).
 
-Un intrusore si può intromettere, ma non riesce a capire quale sia il testo in chiaro
+La coppia di encryption + decryption costituisce il cifrario. L'intruso (I) non è in grado di risalire al contenuto per due motivi:
+- non conosce la trasformazione di encryption
+- non conosce una trasformazione alternativa ed equivalente a quella di decryption
+- non può indovinare perchè da un punto di vista computazionale non è facile la ricostruzione del messaggio
 
-Questa trasformazione è bidirezionale: uno cripta, l'altro decripta e viceversa.
-Questo schema funziona se entrambi sono online/solo uno dei due? Questo schema va bene in tutte le situazioni (se ad esempio A è online e cripta e invia, ma B è offline, quando torna online lo decripta, easy pez)
+Produrre un testo cifrato aleatorio: l'intruso osservando c non deve imparare nulla di più di quello che sapeva già. Ad esempio, ho un messaggio strutturato che contiene "carissimi studenti, carissimi studentesse". Se applico una trasformazione che mi consente di ottenere in uscita la parola "carissimi" riesco a vedere che c'è un pattern tra tutti i messaggi e ciò mi rende il cifrato non perfetto perchè io intruso ho un'informazione in più.
 
-I calcoli per mettere in chiaro un testo cifrato, senza conoscere la trasformazione di decription devono essere facili per chi conosce
-
-Confronto:
-
-Deve poter vedere se a quel dato corrisponde quel riassunto
-
-Se il confronto ha successo => la destinazione può dire che il dato ricevuto è integro.
-
-Significa che sul canale, in qualche modo sono stati inviati entrambi (dati originali e riassunto) - in qualche modo l'intrusore può attaccare entrambe o solo una delle due -
-
-Di sicuro la destinazione deve riceverle entrambe e deve confrontarle.
+-----------
 
 Quali sono le caratteristiche.
 
@@ -354,8 +341,6 @@ Servono più trasformazioni, perché è pieno di malintenzionati
 - Impossibilità di dedurre:
 
 Le trasformazione deve essere segreta e i calcoli devono essere impossibili.
-
-### Passo successivo: spararsi
 
 ### Primo requisito: riservatezza
 
