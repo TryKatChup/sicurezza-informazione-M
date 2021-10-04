@@ -278,8 +278,11 @@ E' importante che il riassunto debba avere delle caratteristiche specifiche. Ess
 In generale, una funzione hash (H) è una funzione che prende un dato `m` di lunghezza arbitraria e restituisce in uscita un'impronta `H(m)` di dimensione nettamente inferiore.
 
 A noi non basta avere una qualunque funzione hash, ma è importante che abbia due caratteristiche:
+
 - **Comportamento da "oracolo casuale"**: se decido che l'impronta sia costituita da `n` bit, le possibili uscite della funzione hash sono 2^n. Preso il mio messaggio `m`, devo fare in modo che la probabilità che esca un uscita rispetto ad un'altra sia la stessa. Dato un messaggio, non devo sapere che ad esempio la probabilità che esca una determinata impronta sarà al 70% ma la probabilità che mi capiti una configurazione rispetto ad un'altra deve essere la stessa;
 - **Resistente alle collisioni**: è inevitabile che due messaggi diversi abbiano in uscita la stessa impronta perchè lo spazio di input è molto più grande dello spazio di output (`m > n`). L'importante è che per un intruso sia computazionalmente difficile individuare due messaggi che abbiano la stessa impronta.
+
+![zeus](./img/zeus.jpg)
 
 Queste caratteristiche le si ottengono solo usando **funzioni hash crittograficamente sicure**.
 
@@ -317,14 +320,140 @@ Supponiamo che A mandi a B un messaggio m. Sul canale viaggia m concatenato con 
 La destinazione sarà in grado di vedere se il messaggio ha avuto modifiche?
 
 ---
+## 29/09/2021
+
+# 29/09/2021
+
+### Garantire la confidenzialità dell'informazione
+
+Si cifra il codice con una funzione di Encryption ed una funzione successiva di Decryption.
+
+`E -> Encryption`
+
+`D -> Decryption`
+
+`Plaintext -> E -> Chypertext -> D -> Plaintext`
+
+L'operazione `D` deve essere computazionalmente difficile. L'intrusore non deve essere in grado di ricavare il testo in chiaro, poiché decifrare i dati deve essere computazionalmente difficile.
+La sicurezza perfetta si ha quando, intercettato il chypertext, l’intrusore non riesce ad imparare nulla di più
+rispetto a quello che conosce al momento dell’intercettazione del testo cifrato.
+
+### Garantire l'integrità dell'informazione
+
+Bisogna garantire l’integrità (rilevazione e reazione)
+
+Con un attacco attivo si possono cancellare e modificare i dati, oltre che modificarne anche l’ordine.
+
+Il disturbo invece non cambia l’ordine dei dati dell’informazione. Tutte le alterazioni avvengono con uguale probabilità.
+
+Proteggere l’integrità significa creare delle contromisure per la rilevazione di eventuali modifiche al contenuto del dato originale.
+
+Si utilizza la ridondanza dei dati, cioè insieme all’informazione viene aggiunto un piccolo riassunto (un riassunto di grandi dimensioni causerebbe overhead) che identifica in maniera univoca possibilmente l’informazione. La destinazione riceverà l’informazione più il riassunto che la sorgente ha creato.
+ 
+Grazie al _riassunto_, si può capire se l'informazione è corretta o se è stata modificata. Il riassunto viene creato con una funzione hash, e per riuscire ad identificare un’informazione in maniera univoca deve essere una funzione hash crittograficamente sicura.
+
+Una funzione hash (M) prende in ingresso un messaggio `m` di lunghezza arbitraria e generano un’uscita chiamata _impronta_, detta anche `H(m)`.
+
+Per essere _crittograficamente sicura_ una funzione hash deve avere due caratteristiche principali:
+
+- Deve avere un comportamento da _oracolo casuale_, cioè rispondere a ogni domanda con una risposta casuale scelta uniformemente dal suo dominio di uscita. Se la domanda viene ripetuta, la risposta sarà la medesima, dato che è stata assegnata precedentemente dall'oracolo.
+
+- Deve essere resistente alle collisioni. Se due messaggi `m1` e `m2` hanno la stessa impronta (cosa molto possibile poiché lo spazio di input è molto minore dello spazio di output), per un intruso deve essere computazionalmente difficile trovare un messaggio `m2` con impronta `H(m2)` uguale a quella di `m1`, cioè `H(m1)`.
+
+### Garantire autenticità
+
+Per garantire autenticità si ricorre all'operazione di firma (Sign), che produce un certificato di autenticità e che viene inserito e inviato insieme al testo dell'informazione eventualmente cifrato. La destinazione avrà una funzione V di Verify (V) utilizzata per verificare se il certificato è effettivamente autentico e per ricavare il mittente.
+
+Viene utilizzato per rilevare _fabrication_, un attacco attivo in cui l'intrusore crea un messaggio dichiarandolo come proveniente da una sorgente legittima.
+
+Vengono quindi rispettati due principi:
+
+- **Trasformazioni segrete**: in questo caso l'operazione di Sign. Nessun altro, oltre alla sorgente legittima, deve conoscere la trasformazione che è stata applicata, altrimenti chiunque può effettuare _fabrication attack_.
+
+- **Calcoli impossibili**: i calcoli per costruire un messaggio apparentemente autentico e senza conoscere la trasformazione della sorgente devono essere complessi.
+
+Esistono 2 schemi alternativi per realizzare sign-verify: _la firma digitale_ e _hash_.
+
+#### Firma digitale
+
+La sorgente prende il messaggio `m` e lo sottopone a una trasformazione `H`, costruendo l’impronta `H(m)`, che garantisce l’integrità. 
+
+La funzione `S` di _sign_ viene eseguita su `H(m)`, e sul canale di comunicazione viene trasmesso `m` concatenato con `S(H(m))`.
+
+Il canale in questo modo viene reso sicuro e viene garantita anche la non ripudiabilità (la destinazione ottiene il messaggio dal canale non direttamente interpretabile). In questo caso la funzione `S` di Sign è segreta ed è conosciuta solamente dal mittente che _firma_ il messaggio.
 
 
-### Come vengono combinate le trasformazioni E ed H?
+#### Hash applicata al messaggio concatenato con un segreto S, condiviso tra sorgente e destinazione
+
+Due entità `A` e `B` (mittente e destinatario) condividano un segreto `s`. `A` calcola `H(m || s)` a partire da `m`, cioè il messaggio che si vuole trasferire, e invia alla destinazione `m || H(m || s)`. 
+
+La destinazione riceverà il messaggio `m*` e andrò a calcolare `H(m* || s)` e
+se è uguale a quello ricevuto le due proprietà sono state garantite.
+
+In questo caso non viene garantito il _non ripudio_, poiché la sorgente `A` potrebbe sospettare che la destinazione `B` si sia costruita da sola un segreto e che la sorgente `A` in realtà non abbia inviato nulla. Questo è dovuto al fatto che `A` e `B` condividono un segreto e quindi non si è in grado di risalire a
+chi ha effettivamente generato il segreto.
+
+Questo schema risulta essere più efficiente rispetto alla firma digitale, ma potrà essere usato solamente quando si è sicuri del corretto comportamento di `A` e `B`.
+Può essere utilizzato ad esempio con sistemi IoT che richiedono consumi ridotti di batteria e alta efficienza.
+
+Viceversa, la firma digitale è meno efficiente poiché ha anche la funzione di _sign_ (`S`) ma garantisce il _non ripudio_.
+
+
+#### Esempi di applicazioni di procolli
+
+- SSL adotta le funzioni hash crittograficamente sicure con un segreto per costruire il certificato di autenticità. Il messaggio viene concatenato al certificato e cifrato dal client.
+Si prende il messaggio, si cifra e si manda il cifrato concatenato con l'attestato di autenticità costruito sul messaggio.
+
+- SSL IPsec: protocollo SSL a livello di trasporto (TCP). Vengono creati socket sicuri in cui i messaggi sono autenticati. In fase di invio, il messaggio viene cifrato e autenticato, mentre in fase di ricezione viene controllato l'attestato di autenticità e decifrato il messaggio.
+La ricezione è efficiente: viene risparmiata una trasformazione una trasformazione. Se il cifrato ha subito delle modifiche, chi riceve verifica il certificato e, se qualche operazione illegale è avvenuta, si evita l'operazione di decifratura.
+
+- SSH: permette di aprire shell remote sicure.
+Si prende il messaggio, si cifra e si manda sul canale insicuro il cifrato concatenato con l'attestato di autenticità costruito sul messaggio.
+
+### Anonimato/Identificazione
+
+Altro requisito importante è l'anonimato, opposto all'identificazione.
+
+Per _identificazione_ si intende un insieme di azioni che richiedono di identificare chi sta partecipando a un'interazione (ad esempio per un pagamento o quando si accede a certe risorse, in base alla persona si possono avere tipi di accesso diversi).
+
+Il processo di identificazione ha le seguenti caratteristiche:
+
+- **Efficienza:**: l’identificazione di una entità deve avvenire in maniera _efficiente_ ed in _real-time_.
+
+- **Sicurezza**: possono essere presenti:
+  - **Falsi positivi**: una determinata persona ha diritti di accesso, ma non riesce ad accedere. Ciò causa inefficienza;
+  - **Falsi negativi**: l'accesso viene effettuato da persone non autorizzate.
+
+Un sistema di identificazione si può basare su 3 proprietà:
+
+- **Conoscenza**: password, pin, chiavi di sicurezza;
+- **Possesso**: carte magnetiche, token, smart card;
+- **Conformità**: dati biometrici come impronte o analisi della retina
+
+La robustezza di un sistema di identificazione è maggiore se vengono combinati più principi.
+
+### Protocollo di identificazione
+
+Qualunque protocollo di identificazione prevede:
+
+- **Registrazione**: l'identificando sceglierà una prova da dimostrare, e il verificatore registrerà un termine di paragone);
+- **Interrogazione**:
+- **Dimostrazione**: la persona autorizzata deve verificare la propria identità. Il processo deve essere complesso per un eventuale intrusore e semplice per una persona autorizzata.
+
+![kronk](/img/kronk.jpeg)
+
+Un intrusore può:
+
+- Dedurre o indovinare la prova di identità;
+- Rubare il dispositivo;
+- Replicare una prova di identità che ha viaggiato sul canale in una legittima transizione di identificazione.
+
+
 
 ---
 AAAAAAAAAAAAAAAAAAAAAAA
 
-![zeus](./img/zeus.jpg)
+
 
 ![marco togni](./img/marco_togni.jpg)
 
