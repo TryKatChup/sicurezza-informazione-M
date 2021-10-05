@@ -1,14 +1,13 @@
 # Sicurezza dell'informazione 2021-2022
 
-<!-- chi è che ha preso questi appunti sulla lezione del 23? Mi sono venuti i brividi-->
-
 <!--la data da togliereeeeee...tra due mesi viene l'angoscia di vedere quando il corso è iniziato-->
+<!--Perfetto, da non modificare -->
 ## 01.Introduzione (23/09/2021)
 
 ### Scopo della sicurezza informatica
 
 Il tema della sicurezza informatica è molto importante, in un mondo come quello di oggi, dove l'informatica domina buona parte delle relazioni sociali, lavorative, economiche e politiche. Questo tema è ancora più sentito con l'arrivo del COVID in cui il mondo si presta a digitalizzarsi.
-Dunque, la sicurezza informatica ha lo scopo di proteggere le risorse da accessi indesiderati, garantire la riservatezza delle informazioni, assicurare il funzionamento e la disponibilità dei servizi a fronte di eventi imprevedibili.
+La sicurezza informatica ha quindi lo scopo di proteggere le risorse da accessi indesiderati, garantire la riservatezza delle informazioni, assicurare il funzionamento e la disponibilità dei servizi a fronte di eventi imprevedibili.
 Per essere più precisi, è l’insieme dei prodotti, dei servizi, delle regole organizzative e dei comportamenti individuali che proteggono i sistemi informatici di un’azienda.
 
 ### I tre caposaldi della sicurezza informatica (CIA Trade Triangle)
@@ -25,14 +24,17 @@ Le tre proprietà da garantire per la sicurezza dei dati sono:
 
 - **Vulnerabilità**: punto debole del sistema che può rendere realizzabile una minaccia;
 - **Minaccia**: un atto ostile intenzionale o meno che ha un qualsiasi effetto negativo sulle risorse o sugli utenti del sistema;
-- **Attacco**: qualsiasi azione che usa una vulnerabilità per concretizzare una minaccia
-- **Contromisura**: azione, dispositivo, procedura o tecnica che consente di rimuovere o ridurre una vulnerabilità
+- **Attacco**: qualsiasi azione che usa una vulnerabilità per concretizzare una minaccia;
+- **Contromisura**: azione, dispositivo, procedura o tecnica che consente di rimuovere o ridurre una vulnerabilità.
 
-Esempio: un ponte ha una crepa (vulnerabilità), rischia di crollare (minaccia), un peso totale eccessivo sul ponte (attacco), cercare di controllare il numero di veicoli sul ponte (contromisura)
+Esempio: un ponte ha una crepa (vulnerabilità), rischia di crollare (minaccia), un peso totale eccessivo sul ponte (attacco), cercare di controllare il numero di veicoli sul ponte (contromisura).
 
-<!-- la tabella a pagina 9 secondo me è utile ma devo ancora capirla-->
-
-<!-- slide 13?>
+- **Virus**: provoca danni e si replica propagato dagli umani (involontariamente);
+- **Worm**: provoca danni perché si autoreplica (satura risorse) in maniera automatica, senza l'intervento dell'utente;
+- **Trojan (horse)**: vettore di malware, contiene funzionalità aggiuntive impreviste;
+- **Backdoor**: punto di accesso non autorizzato;
+- **Rootkit**: strumenti per accesso privilegiato, nascosti (modifica di un programma, libreria, driver,
+modulo kernel, hypervisor) ed invisibili.
 
 <!-- dove c'è scritto questa roba kkkkk-->
 ### Qualche concetto (paragrafo da modificare)
@@ -49,25 +51,26 @@ da scrivere bene dopo <!--QUANDO VUOI...CANCELLEREI ANCHE QUESTO PARAGRAFO :P-->
 ---
 <!-- TITOLO FAKE: non ne ho trovata manco una -->
 <!-- da togliere per fare il blocco 1 tutto unito -->
-## Introduzione + bestemmie (27/09/2021)
+## 27/09/2021
 
 ### Calcolatore sicuro
 
-Un calcolatore per essere sicuro lo deve essere sia a livello hardware che a livello software.
-<!--In questo corso ci si focalizza principalmente sulla "sicurezza dei dati", che consiste nel garantire i seguenti requisiti fondamentali:
+Un calcolatore per essere sicuro lo deve essere sia a livello hardware che a livello software. Ovviamente questa ipotesi non è sempre verificata, ma in questo corso quando studieremo i servizi e meccanismi di sicurezza lo daremo per scontato.
 
-- confidenzialità;
-- integrità;
-- disponibilità;
-- autenticazione;
-- non ripudio.!-->
+Quando parliamo di sicurezza dei dati faremo un'assunzione fondamentale: assumeremo che il nostro hardware, firmware e sistema operativo, siano **sicuri**.
 
-Quando parliamo di sicurezza dei dati, in questo corso, faremo un'assunzione fondamentale: assumeremo che il nostro hardware, firmware e sistema operativo, siano **sicuri**.
+In questo corso ci si focalizza principalmente sulla _sicurezza dei dati_, che consiste nel garantire i seguenti requisiti fondamentali:
 
-Ovviamente questa ipotesi non è sempre verificata, ma in questo corso quando studieremo i servizi e meccanismi di sicurezza lo daremo per scontato.
+- Confidenzialità;
+- Integrità;
+- Disponibilità;
+- Autenticazione;
+- Non ripudio.
+
 
 <!--NB: la sicurezza HW e FW non è argomento proprio del corso, ma la prof ci ha dato qualche info a riguardo per sapere giusto di cosa stiamo parlando.-->
 
+<!--Forse da togliere, non è importante: ci devo pensare (Karina) -->
 ### Sicurezza hardware
 
 <!-- toglierei questa sezione: non viene trattata nel corso e non è oggetto di esame -->
@@ -79,7 +82,7 @@ Soprattutto negli ultimi anni, la sicurezza hardware sta emergendo in maniera pr
 - I/O
 - linee di trasmissione
 
-L'ambito della sicurezza hardware si occupa di proteggere il calcolatore, ma anche altri dispositivi fisici, appunto, da minacce quali furto, danneggiamento o alterazione dei componenti.
+L'ambito della sicurezza hardware si occupa di proteggere il calcolatore, ma anche altri dispositivi fisici, da minacce quali furto, danneggiamento o alterazione dei componenti.
 
 ### Sicurezza firmware
 
@@ -124,7 +127,6 @@ Si affida a processori specifici l'esecuzione di determinate funzioni di sicurez
 
 ### Valutazione, Certificazione, Enti
 
-<!-- non ho capito di cosa si parla. prodotto fisico?!?-->
 Per poter sapere che un componente di sicurezza sia sicuro, ci deve essere qualcuno che lo garantisca.
 In questo caso, occorrono degli enti di certificazione e degli standard che definiscono delle metodologie con cui andare a verificare che un progetto sia effettivamente sicuro. Applicando questi standard, gli enti ci garantiscono la sicurezza del prodotto che installiamo.
 
@@ -136,12 +138,9 @@ Esempi di standard internazionali per valutazione e certificazione della sicurez
 
 **Servizio di Sicurezza**: servizio che migliora la sicurezza dell'elaborazione dei dati e del trasferimento delle informazioni.
 
-<!-- l'attacco è stato scritto in alto!-->
-**Attacco**: azione mirata a compromettere una proprietà critica dell'informazione.
-
 ### Modello a canale insicuro
 
-D'ora in poi per analizzare e studiare i meccanismi di sicurezza faremo riferimento ad un modello molto specifico, chiamato *modello del canale insicuro*.
+D'ora in poi per analizzare e studiare i meccanismi di sicurezza faremo riferimento ad un modello molto specifico, chiamato _modello del canale insicuro_.
 
 Questo modello prevede che ci sia una sorgente dei dati, una destinazione a cui sono rivolti e che ci sia un canale che mette in comunicazione sorgente con destinazione.
 
@@ -149,23 +148,23 @@ Assumiamo che:
 
 - La sorgente abbia un ambiente sicuro (hardware e sistema operativo sicuri);
 - La destinazione abbia un ambiente sicuro (hardware e sistema operativo sicuri);
-- Il canale sia insicuro ovvero che sul canale si possono inserire degli intrusori e possono fare degli attacchi passivi e attivi su tale canale
+- Il canale sia insicuro, ovvero che sul canale si possano inserire degli intrusori e possono fare degli attacchi passivi e attivi su tale canale
 
 Definito un modello di questo genere, il nostro obiettivo è garantire che la destinazione possa consumare ed interpretare correttamente i dati inviati dalla sorgente: se la sorgente produce dati con garanzia di autenticità, la destinazione deve poter verificare l'autenticità anche in seguito alla consumazione di tali (non ripudio).
 
-Mmmm non mi convince la def di non ripudio
+**Mmmm non mi convince la def di non ripudio**
 
 ### Classificazione attacchi
 
-Gli attacchi si classificano in 2 tipologie:
+Gli attacchi si classificano in due tipologie:
 
-- **Passivo**: l'intrusore si inserisce sul canale ma l'unica cosa che può fare è intercettare i dati senza alterarne il flusso. Questo canale può essere un bus, un canale interno offline, ma anche un canale diretto. Viene minato il requisito di _disponibilità_.
+- **Passivo**: l'intrusore si inserisce sul canale, ma l'unica cosa che può fare è intercettare i dati senza alterarne il flusso. Questo canale può essere un bus, un canale interno offline, ma anche un canale diretto. Viene minato il requisito di _disponibilità_.
 <!-- che cosa è un canale interno offline?-->
 - **Attivo**: l'intrusore può accedere al canale ed alterare il normale flusso dei dati. Può:
   - Modificare/Aggiungere il flusso intenzionalmente per cambiare il contenuto dei dati. Viene minato il requisito dell'_integrità_;
   <!--- Aggiungere informazioni, in modo da evitare la falsificazione che mina all'integrità dei dati. La destinazione deve avere un controllo che garantisca la legittimità della fonte-->
   - Interrompere il normale flusso impedendo che i dati arrivino alla destinazione. Viene minato il requisito di _disponibilità_.
-  - Venire a conoscenza del flusso di dati senza modificare il contenuto. E' un attacco passivo. Viene minato il requisito della _confidenzialità_.
+  - Venire a conoscenza del flusso di dati senza modificare il contenuto. È un attacco passivo. Viene minato il requisito della _confidenzialità_.
 
 <!-- una volta basta e avanza metterlo-->
 <!--Ricapitolando per tipo di attacco e proprietà che mette a rischio):
@@ -180,9 +179,9 @@ Esistono 3 tipologie di contromisure per gli attacchi:
 - **Rilevazione**: tramite cui si rileva un attacco in corso;
 - **Reazione**: tramite cui si reagisce dopo che un attacco è già avvenuto.
 
-Il tipo di contromisura da adottare, va scelto anche in base al sistema e a cosa vogliamo proteggere (nel nostro caso ci interessano i dati). Se ad esempio i dati sono non confidenziali, non ci interessa che vengano intercettati. Invece, se i dati non sono riservati, non sarà necessaria la prevenzione.
+Il tipo di contromisura da adottare va scelto anche in base al sistema e a cosa vogliamo proteggere (nel nostro caso ci interessano i dati). Se ad esempio i dati sono non confidenziali, non ci interessa che vengano intercettati. Invece, se i dati non sono riservati, non sarà necessaria la prevenzione.
 
-Come ingegneri, il nostro obiettivo è capire a fronte di più possibilità progettuali, quale ha più senso per il nostro sistema ed i nostri dati da proteggere.
+Come ingegneri (LOL https://youtu.be/EOR8Uz27s3Y?t=420), il nostro obiettivo è capire a fronte di più possibilità progettuali, quale ha più senso per il nostro sistema ed i nostri dati da proteggere.
 
 **Possibili contromisure per attacchi passivi**:
 
@@ -314,8 +313,6 @@ Queste caratteristiche le si ottengono solo usando **funzioni hash crittografica
 Se il mio obiettivo è rilevare i disturbi, posso usare delle funzioni hash che chiamiamo **funzioni hash semplici**. Invece, se il mio obiettivo è la sicurezza informatica, le funzioni hash devono essere crittograficamente sicure e prendono il nome di **funzioni hash sicure** (vedi proprietà scritte in alto).
 
 #### Attestazione di Integrità
-
-
 
 L'obiettivo di un intrusore è quello di trovare un messaggio `m'` che abbia
 `H(m') = H(m)`. Dunque, è fondamentale usare una funzione hash
