@@ -564,7 +564,7 @@ La robustezza di un sistema di identificazione è maggiore se vengono combinati 
 
 Qualunque protocollo di identificazione prevede:
 
-- **Registrazione**: l'identificando condivide con il verificatore la prova d'identità. Il verificatore deve memorizzarla perchè quando l'identificando si dovrà identificare la dovrà confrontare. In questa fase, l'identificando dovrà scegliere un qualcosa che solo lui sa e deve usare una funzione F capace di prendere quel segreto che porta alla costruzione della prova d'identità. Il verificatore memorizza il termine di paragone (F(s)). La funzione F cambia a seconda del modello di minaccia. Non è detto che identificando e verificatore abbiano la stessa funzione perchè il verificatore poi potrebbe spacciarsi per lui. Se il verificatore si comporta correttamente in questo caso identificando e verificatore condividono lo stesso segreto s. In caso contrario, l'identificando conoscerà solo lui il segreto e quello che fornirà sarà una prova d'identità che è solo l'identificando è in grado di produrre e il verificatore non potrà costruirne una nuova.
+- **Registrazione**: l'identificando condivide con il verificatore la prova d'identità. Il verificatore deve memorizzarla perchè quando l'identificando si dovrà identificare la dovrà confrontare. In questa fase, l'identificando dovrà scegliere un qualcosa che solo lui sa e deve usare una funzione F capace di prendere quel segreto che porta alla costruzione della prova d'identità. Il verificatore memorizza il _termine di paragone_ o _prova d'identità_ (F(s)). La funzione F cambia a seconda del modello di minaccia. Non è detto che identificando e verificatore abbiano la stessa funzione perchè il verificatore poi potrebbe spacciarsi per lui. Se il verificatore si comporta correttamente in questo caso identificando e verificatore condividono lo stesso segreto s. In caso contrario, l'identificando conoscerà solo lui il segreto e quello che fornirà sarà una prova d'identità che è solo l'identificando è in grado di produrre e il verificatore non potrà costruirne una nuova.
 - **Identificazione**: l'identificando e il verificatore siano entrambi online. Univocità del tempo e dell'entità.
 Questo processo può scomporsi in:
   - **Dichiarazione**: l'identificando dichiara chi è. L'identificando dovrà effettuare una trasformazione T1,1. Il verificatore eseguirà una trasformazione T1,2 e interroga.
@@ -603,6 +603,25 @@ Un altro esempio è l'elenco telefonico: dato un cognome di una persona è facil
 Per garantire alcune proprietà di sicurezza, abbiamo bisogno che le trasformazioni siano unidirezionali. Nella teoria matematica, non esiste una funzione che sia unidirezionale. Nella pratica, invece, sono state individuate molte funzioni che sono candidate ad avere un comportamento di unidirezionalità. Vengono chiamate pseudo-unidirezionali perchè se non si possiede un'informazione non è possibile trovare la funzione inversa.
 
 ## Trasformazioni segrete
+
+- **Trasformazione segreta**: ad esempio, tutte quelle volte che vogliamo proteggere la riservatezza dei dati (E e D), la trasformazione della sorgente con cui autentico i dati (S), trasformazione con cui genero la prova d'identità. Possiamo avere tre approcci:
+  - macchine a funzionamento segreto: non conoscere come è formata la macchina. Ad esempio, Macchina Enigma. 
+  - Algoritmo: le operazioni stesse sono segrete. Ad esempio, gli algoritmi delle prime SIM, algoritmi USA durante la guerra fredda;
+  - Parametro: la macchina e l'algoritmo sono noti ma un parametro di ingresso dell'algoritmo (chiave crittografica);
+
+  I primi due approcci non funzionano molto bene:
+  - No manutenibilità: è impossibile che non si possa violare la segretezza di una macchina o di un algoritmo. Non è immediato ripristinare la sua sicurezza perchè dovrei riprogettare tutto da zero.
+  - No scalabile: non si può pensare questo approccio su grande scala come internet
+  - No Certificazione: è bello avere in casa qualcosa di cui non si conosce nulla? Nessuno mi può garantire che quello che sto usando è sicuro
+
+  Dunque, l'approccio usato al giorno d'oggi è il terzo. D'ora in poi l'approccio che useremo è trasformazione nota con parametro segreto (chiave)
+
+  ![kronk](/img/img9.png)
+
+  Con T indicheremo la trasformazione che ha funzionamento pubblico (quindi anche l'intrusore)
+
+- **Computazionalmente facile**:
+- **Computazionalmente difficile**:
 
 ---
 
