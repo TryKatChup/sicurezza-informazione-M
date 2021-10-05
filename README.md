@@ -634,6 +634,7 @@ In base a come sono fatti i parametri che diamo in pasto agli algoritmi possiamo
 - **cifrari a chiavi simmetriche**: le trasformazioni E(), S) e D(), V). La trasformazione E e D sono note. La trasformazione E deve prendere in ingresso il parametro ks mentre la trasformazione D prende come parametro di ingresso kd. Se le chiavi ks e kd sono uguali o sono o uguali o facilmente calcolabili una dall’altra: ks = kd.
 Se prendiamo la coppia del cifrario E e D, quando cifro userò una chiave ks e quando decifro userò ks. Ciò implica che le due entità in gioco conoscano lo stesso segreto. Tuttavia, ks e kd deve essere *segreto*. Questo tipo di cifrario si usa per garantire riservatezza. Caso molto raro è quello di costruire un attestato di autenticità;
 - **cifrari a chiave pubbliche**: le chiavi ks e kd sono diverse e una delle due è difficilemnte calcolabile dall'altra. Questo tipo di cifrario si usa per garantire riservatezza e autenticazione.
+kd è facilmente calcolabile se conosco ks ma dalla chiave kd è difficile risalire alla chiave ks. Se uso un cifrario asimmetrico, la funzione F(kd) è facilmente calcolabile. ks è la chiave segreta e kd è la chiave pubblica.
 
 ---
 
