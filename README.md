@@ -467,23 +467,34 @@ Viene utilizzato per rilevare _fabrication_, un attacco attivo in cui l'intrusor
 Vengono quindi rispettati due principi:
 
 - **Trasformazioni segrete**: in questo caso l'operazione di Sign. Nessun altro, oltre alla sorgente legittima, deve conoscere la trasformazione che è stata applicata, altrimenti chiunque può effettuare _fabrication attack_.
+<!-- toglierei chiunque può effettuare _fabrication attack_. -->
 
 - **Calcoli impossibili**: i calcoli per costruire un messaggio apparentemente autentico e senza conoscere la trasformazione della sorgente devono essere complessi.
 
 Esistono 2 schemi alternativi per realizzare sign-verify: _la firma digitale_ e _hash_.
 
-## Firma digitale
+### Firma digitale
 
 ![firmadigitale](./img/img6.png)
 
-La sorgente prende il messaggio `m` e lo sottopone a una trasformazione `H`, costruendo l’impronta `H(m)`, che garantisce l’integrità. 
+La sorgente prende il messaggio `m` e lo sottopone a una trasformazione `H`, costruendo l’impronta `H(m)`, che garantisce l’integrità. <!--Ricordiamo che per garantire solo questa proprietà, l'attestato di integrità viene inviato su un canale sicuro. Però vogliamo garantire sia integrità che autenticazione.-->
 
-La funzione `S` di _sign_ viene eseguita su `H(m)`, e sul canale di comunicazione viene trasmesso `m` concatenato con `S(H(m))`.
+La funzione `S` di _sign_ viene eseguita su `H(m)`, e sul canale di comunicazione insicuro viene trasmesso `m` concatenato con `S(H(m))`.
 
-Il canale in questo modo viene reso sicuro e viene garantita anche la non ripudiabilità (la destinazione ottiene il messaggio dal canale non direttamente interpretabile). In questo caso la funzione `S` di Sign è segreta ed è conosciuta solamente dal mittente che _firma_ il messaggio.
+<!--aggiunto -->
+La destinazione verifica tramite V che c proviene dalla sorgente leggittima. In questo modo verifico l'autenticità del messaggio. Dato che c contiene H(m) posso verificare anche la proprietà di integrità.
+<!--aggiunto -->
 
+<!--non ripudiabilità: la sorgente a è l'unica che esegue s e non può disconoscere in un secondo momento l'attestato di autenticità-->
 
-## Hash applicata al messaggio concatenato con un segreto S, condiviso tra sorgente e destinazione
+<!--Sul canale insicuro possono viaggiare m || c-->
+
+Il canale in questo modo viene reso sicuro e viene garantita anche la non ripudiabilità (la destinazione ottiene il messaggio dal canale non direttamente interpretabile). In questo caso la funzione `S` di Sign è segreta ed è conosciuta solamente dal mittente A che _firma_ il messaggio.
+
+<!-- più corto il titolo secondo me-->
+### Hash applicata al messaggio concatenato con un segreto S, condiviso tra sorgente e destinazione
+
+![hashs](./img/img7.png)
 
 Due entità `A` e `B` (mittente e destinatario) condividano un segreto `s`. `A` calcola `H(m || s)` a partire da `m`, cioè il messaggio che si vuole trasferire, e invia alla destinazione `m || H(m || s)`. 
 
@@ -498,39 +509,44 @@ Può essere utilizzato ad esempio con sistemi IoT che richiedono consumi ridotti
 
 Viceversa, la firma digitale è meno efficiente poiché ha anche la funzione di _sign_ (`S`) ma garantisce il _non ripudio_.
 
-
 #### Esempi di applicazioni di procolli
 
-- SSL adotta le funzioni hash crittograficamente sicure con un segreto per costruire il certificato di autenticità. Il messaggio viene concatenato al certificato e cifrato dal client.
+- **SSL**: adotta le funzioni hash crittograficamente sicure con un segreto per costruire il certificato di autenticità. Il messaggio viene concatenato al certificato e cifrato dal client.
 Si prende il messaggio, si cifra e si manda il cifrato concatenato con l'attestato di autenticità costruito sul messaggio.
 
-- SSL IPsec: protocollo SSL a livello di trasporto (TCP). Vengono creati socket sicuri in cui i messaggi sono autenticati. In fase di invio, il messaggio viene cifrato e autenticato, mentre in fase di ricezione viene controllato l'attestato di autenticità e decifrato il messaggio.
+- **SSL IPsec**: protocollo SSL a livello di trasporto (TCP). Vengono creati socket sicuri in cui i messaggi sono autenticati. In fase di invio, il messaggio viene cifrato e autenticato, mentre in fase di ricezione viene controllato l'attestato di autenticità e decifrato il messaggio.
 La ricezione è efficiente: viene risparmiata una trasformazione una trasformazione. Se il cifrato ha subito delle modifiche, chi riceve verifica il certificato e, se qualche operazione illegale è avvenuta, si evita l'operazione di decifratura.
 
-- SSH: permette di aprire shell remote sicure.
+- **SSH**: permette di aprire shell remote sicure.
 Si prende il messaggio, si cifra e si manda sul canale insicuro il cifrato concatenato con l'attestato di autenticità costruito sul messaggio.
 
-### Anonimato/Identificazione
+### Esempio
+
+
+
+## Anonimato/Identificazione
 
 Altro requisito importante è l'anonimato, opposto all'identificazione.
 
-Per _identificazione_ si intende un insieme di azioni che richiedono di identificare chi sta partecipando a un'interazione (ad esempio per un pagamento o quando si accede a certe risorse, in base alla persona si possono avere tipi di accesso diversi).
+Per _identificazione_ si intende un insieme di azioni che richiedono di identificare chi sta partecipando a un'interazione. Ad esempio, per un pagamento o quando si accede a certe risorse, in base alla persona si possono avere tipi di accesso diversi.
+
+Ad esempio, il voto elettronico o monete elettroniche
 
 Il processo di identificazione ha le seguenti caratteristiche:
 
-- **Efficienza:**: l’identificazione di una entità deve avvenire in maniera _efficiente_ ed in _real-time_.
-
+- **Efficienza**: l’identificazione di una entità deve avvenire in maniera _efficiente_;
+- **real-time**: l'identificazione deve avvenire in un **preciso** istante e non in un instante successivo;
 - **Sicurezza**: possono essere presenti:
   - **Falsi positivi**: una determinata persona ha diritti di accesso, ma non riesce ad accedere. Ciò causa inefficienza;
   - **Falsi negativi**: l'accesso viene effettuato da persone non autorizzate.
 
-Un sistema di identificazione si può basare su 3 proprietà:
+Un sistema di identificazione si può basare su 3 modelli:
 
-- **Conoscenza**: password, pin, chiavi di sicurezza;
-- **Possesso**: carte magnetiche, token, smart card;
-- **Conformità**: dati biometrici come impronte o analisi della retina
+- **Conoscenza**: sistemi che si basano sulla conoscenza di un'informazione. Ad esempio, password, pin, chiavi di sicurezza;
+- **Possesso**: sistemi che si basano sul possesso di un oggetto che solo quella persona può avere. Ad esempio, carte magnetiche, token, smart card;
+- **Conformità**: sistemi che si basano su una caratteristica di un'entità. Ad esempio, dati biometrici come impronte o analisi della retina.
 
-La robustezza di un sistema di identificazione è maggiore se vengono combinati più principi.
+La robustezza di un sistema di identificazione è maggiore se vengono combinati più principi. A seconda dell'informazione che voglio proteggere si sceglierà il sitema più adatto perchè ci sarà un costo computazionale, di gestione etc.
 
 ### Protocollo di identificazione
 
