@@ -210,7 +210,7 @@ A seconda del livello avrò prestazioni, personalizzazione e trasparenza alle ap
 ---
 ## 01.Dati Sicuri
 
-Per proteggere i dati a fronte di possibili attacchi possiamo eseguire o delle singole trasformazioni usando degli *algoritmi* o a volte è necessario un insieme di trasformazioni. In questo caso, ovviamente la sequenza delle operazioni da eseguire non può essere casuale ma ben precisa e parliamo di *protocollo*.
+Per proteggere i dati a fronte di possibili attacchi possiamo eseguire o delle singole trasformazioni usando degli _algoritmi_ o a volte è necessario un insieme di trasformazioni. In questo caso, ovviamente la sequenza delle operazioni da eseguire non può essere casuale ma ben precisa e parliamo di _protocollo_.
 
 Quando progetto un protocollo mi devo chiedere sempre se la sorgente e destinazione siano stati compromessi però nel modello di minaccia più semplice che abbiamo assunto questo problema non c'è.
 
@@ -339,23 +339,69 @@ destinazione riceve `m'`, ricava `H(m')` e va a confrontare `H(m')` con `H(m)`
 che ha ricevuto sul canale sicuro. Se i due valori di hash coincidono allora i
 messaggi sono conformi.
 
-Abbiamo quindi 2 tipi di trasformazioni, encryption ed hash, che possono anche
-essere combinate. Ad esempio per garantire la riservatezza e l'integrità dei
+## Esempio
+
+Abbiamo quindi 2 tipi di trasformazioni, encryption ed hash, che possono anche essere combinate. Ad esempio, per garantire la riservatezza e l'integrità dei
 dati è possibile utilizzarle entrambe in questo modo:
 
-Testo in chiaro concatenato con l'attestazione d'integrità:\
-`p=m||H(m)` 
+`p = m || H(m)` 
 
-Testo cifrato trasmesso:\
-`c=E(p)`
+`c = E(p)`
 
-Testo in chiaro ricevuto:\
-`p*=D(c*)= m*||H*(m)`
+`p* = D(c*) = m* || H*(m)`
 
-Controllo d'integrità:\
-`H*(m)=?H(m*)`
+`H*(m) =? H(m*)`
 
-## Proteggere la proprietà di autenticazione
+Dato che le proprietà da garantire sono due, ho bisogno di combinare più trasformazioni e le regole che devo usare devono essere precise. Per questo ho bisogno di un protocollo. Se hai dubbi, vedi la definizione scritta in precedenza.
+
+Il seguente protocollo è costituito da tre passi:
+- La sorgente esegue due trasformazioni:
+  - Passo 1: la sorgente applica la funzione hash crittograficamente sicura e la concatena con il messaggio.
+  - Passo 2: la sorgente applica la funzione di encryption. Sul canale insicuro viene trasferito c.
+- La destinazione esegue una trasformazione:
+  - Passo 3: la destinazione riceve c. c può essere o quello inviato dalla sorgente o un altro che è stato modificato dall'intruso. Per questo motivo, dato che non abbiamo una certezza, indicheremo c con c*. La destinazione applica la funzione D su c* ottenendo di nuovo `m* || H*(m)`.
+  - Passo 4: Per vedere se il messaggio è integro, devo verificare che la funzione crittograficamente sicura di m* coincide con H*(m). Se non coincidono il messaggio viene scartato. L'intrusore può modificare a caso i bit del cifrato perchè se tutte le proprietà sono rispettate non può fare assolutamente nulla.
+
+Alcune considerazioni:
+- **Efficienza computazionale**: la sorgente effettua due trasformazioni (encryption e la funzione H). La destinazione esegue sempre due trasformazioni (decryption e la funzione H).
+
+## Esempio 2
+
+In questo caso, la proprietà di riservatezza non viene rispettata mentre quella di integrità si:
+
+`p = m`
+
+`c = E(p) || H(m)`
+
+`p* = D(c*) = m* || H*(m)`
+
+`H*(m) =? H(m*)`
+
+Solo il messaggio viene encryptato mentre la funzione hash crittograficamente sicura è nota.
+
+L'intrusore può:
+- Vedendo la stessa H(m) sa che la sorgente sta ritrasmettendo più volte lo stesso messaggio. Dunque, si possono ricavare delle informazioni. Se ad esempio, due innamorati si inviano spesso dei messaggi si iniziano a fare previsioni su quello che si possono mandare;
+- Dato lo stesso messaggio, l'impronta è sempre la stessa, quindi si possono fare dei tentativi. Se ad esempio, queste due persone, si incontrano un giorno in particolare, si può iniziare a calcolarsi la funzione hash crittograficamente sicura di lunedì, poi di martedì e confrontarla con H(m) inviata nel messaggio.
+
+## Esempio 3
+
+In questo caso, la proprietà di integrità non viene rispettata mentre quella di riservatezza si:
+
+`p = m`
+
+`c = E(p) || H(E(p))`
+
+La riservatezza è rispettata perchè a fronte di messaggi uguali ho un H diverso perchè il cifrato è diverso.
+
+In questo caso viene inviato sul canale il messaggio cifrato e l'impronta costruita sul messaggio cifrato.
+
+Un intruso può:
+- modificare E(p) e ottenere E*(p) e sostituire H(E(p)) con H(E*(p)). Se m è un messaggio senza un particolare significato (ad esempio un numero), D(E(p)) restituisce m* e la destinazione potrebbe non accorgersi che m* non è corretto. Se invece m è un messaggio dotato di significato la destinazione potrebbe accorgersi che m* non ha senso e quindi non accettarlo per buono.
+
+Alcune considerazioni:
+- **Efficienza computazionale**: la sorgente effettua due trasformazioni (encryption e la funzione H). La destinazione deve verificare l'integrità (la funzione H). Se non è integro non ha senso effettuare la decryption. Dunque, può risparmiare una trasformazione.
+
+## Proteggere la proprietà di autenticazione (=autenticità?)
 
 Chi riceve un dato è importante che possa sapere chi è stato ad originarlo. L'intruso può creare ad hoc un messaggio, inserirlo nel flusso normale dei dati e spacciarlo come se provenisse dalla sorgente originale. Questo attacco non lo si può prevenire ma solo rilevare. Per garantire l'autenticità di una sorgente, devo costruire una trasformazione `S` che dato un messaggio `m`, deve produrre in uscita un **attestato di autenticità** `c` che rappresenta in maniera non imitabile il messaggio `m` originale. Nessuno deve essere in grado di effettuare questa trasformazione.
 
@@ -366,12 +412,15 @@ La destinazione riceve sia il messaggio che l'attestato di autenticità ed effet
 La trasformazione `S` deve essere segreta perché altrimenti altri potrebbero spacciarsi per quella sorgente. I calcoli per costruire un messaggio autentico devono essere difficili da un punto di vista computazionale.
 Invece, `V` può essere noto perché qualsiasi destinazione deve essere in grado di dirmi se l'attestato è autentico o no.
 
----
-## 29/09/2021
+Alcune considerazioni:
+- A e B non è detto che siano online: B non è detto che sia online perchè può verificarlo in un secondo momento;
+- B = A. Se nel file system voglio che i file siano quelli che ho scritto. Quando faccio logout e login oltre a decryptarli verifico che siano anche autentici.
 
 # 29/09/2021
+<!-- Nooooooo abbiamo fatto una stessa parte! -->
 
-### Garantire la confidenzialità dell'informazione
+<!-- Uguale -->
+## Garantire la confidenzialità dell'informazione
 
 Si cifra il codice con una funzione di Encryption ed una funzione successiva di Decryption.
 
@@ -385,7 +434,8 @@ L'operazione `D` deve essere computazionalmente difficile. L'intrusore non deve 
 La sicurezza perfetta si ha quando, intercettato il chypertext, l’intrusore non riesce ad imparare nulla di più
 rispetto a quello che conosce al momento dell’intercettazione del testo cifrato.
 
-### Garantire l'integrità dell'informazione
+<!-- Uguale -->
+## Garantire l'integrità dell'informazione
 
 Bisogna garantire l’integrità (rilevazione e reazione)
 
@@ -396,7 +446,7 @@ Il disturbo invece non cambia l’ordine dei dati dell’informazione. Tutte le 
 Proteggere l’integrità significa creare delle contromisure per la rilevazione di eventuali modifiche al contenuto del dato originale.
 
 Si utilizza la ridondanza dei dati, cioè insieme all’informazione viene aggiunto un piccolo riassunto (un riassunto di grandi dimensioni causerebbe overhead) che identifica in maniera univoca possibilmente l’informazione. La destinazione riceverà l’informazione più il riassunto che la sorgente ha creato.
- 
+
 Grazie al _riassunto_, si può capire se l'informazione è corretta o se è stata modificata. Il riassunto viene creato con una funzione hash, e per riuscire ad identificare un’informazione in maniera univoca deve essere una funzione hash crittograficamente sicura.
 
 Una funzione hash (M) prende in ingresso un messaggio `m` di lunghezza arbitraria e generano un’uscita chiamata _impronta_, detta anche `H(m)`.
@@ -407,7 +457,8 @@ Per essere _crittograficamente sicura_ una funzione hash deve avere due caratter
 
 - Deve essere resistente alle collisioni. Se due messaggi `m1` e `m2` hanno la stessa impronta (cosa molto possibile poiché lo spazio di input è molto minore dello spazio di output), per un intruso deve essere computazionalmente difficile trovare un messaggio `m2` con impronta `H(m2)` uguale a quella di `m1`, cioè `H(m1)`.
 
-### Garantire autenticità
+<!-- Uguale -->
+## Garantire autenticità
 
 Per garantire autenticità si ricorre all'operazione di firma (Sign), che produce un certificato di autenticità e che viene inserito e inviato insieme al testo dell'informazione eventualmente cifrato. La destinazione avrà una funzione V di Verify (V) utilizzata per verificare se il certificato è effettivamente autentico e per ricavare il mittente.
 
@@ -421,7 +472,9 @@ Vengono quindi rispettati due principi:
 
 Esistono 2 schemi alternativi per realizzare sign-verify: _la firma digitale_ e _hash_.
 
-#### Firma digitale
+## Firma digitale
+
+![firmadigitale](./img/img6.png)
 
 La sorgente prende il messaggio `m` e lo sottopone a una trasformazione `H`, costruendo l’impronta `H(m)`, che garantisce l’integrità. 
 
@@ -430,7 +483,7 @@ La funzione `S` di _sign_ viene eseguita su `H(m)`, e sul canale di comunicazion
 Il canale in questo modo viene reso sicuro e viene garantita anche la non ripudiabilità (la destinazione ottiene il messaggio dal canale non direttamente interpretabile). In questo caso la funzione `S` di Sign è segreta ed è conosciuta solamente dal mittente che _firma_ il messaggio.
 
 
-#### Hash applicata al messaggio concatenato con un segreto S, condiviso tra sorgente e destinazione
+## Hash applicata al messaggio concatenato con un segreto S, condiviso tra sorgente e destinazione
 
 Due entità `A` e `B` (mittente e destinatario) condividano un segreto `s`. `A` calcola `H(m || s)` a partire da `m`, cioè il messaggio che si vuole trasferire, e invia alla destinazione `m || H(m || s)`. 
 
