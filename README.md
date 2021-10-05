@@ -614,14 +614,26 @@ Per garantire alcune proprietà di sicurezza, abbiamo bisogno che le trasformazi
   - No scalabile: non si può pensare questo approccio su grande scala come internet
   - No Certificazione: è bello avere in casa qualcosa di cui non si conosce nulla? Nessuno mi può garantire che quello che sto usando è sicuro
 
-  Dunque, l'approccio usato al giorno d'oggi è il terzo. D'ora in poi l'approccio che useremo è trasformazione nota con parametro segreto (chiave)
+Dunque, l'approccio usato al giorno d'oggi è il terzo. D'ora in poi l'approccio che useremo è trasformazione nota con parametro segreto (chiave)
 
-  ![kronk](/img/img9.png)
+![chiave](/img/img9.png)
 
-  Con T indicheremo la trasformazione che ha funzionamento pubblico (quindi anche l'intrusore)
+- Con T indicheremo la trasformazione che ha funzionamento pubblico (quindi anche l'intrusore) ma i parametri non sono noti (delle trasformazioni E, D e da S);
+- Con k indichiamo la chiave cioè il parametro non noto ed è un parametro di ingresso;
+- Con spazio delle chiavi intendiamo l'insieme delle 2^n possibili configurazioni dove n è il numero di bit. La chiave è costituita da una delle 2^n configurazioni. Più è grande n più è difficile per un intrusore indovinare la chiave.
 
-- **Computazionalmente facile**:
-- **Computazionalmente difficile**:
+## Algoritmo forza bruta
+
+![intrusore](./img/img10.png)
+
+Un intrusore può sempre disporre algoritmo di ricerca esauriente noto come algorimo forza bruta. Se io intrusore non conosco la configurazione scelta dalla sorgente leggittima per il segreto posso esplorare tutto lo spazio delle chiavi. Se n è il numero di bit della chiave e 2^n è il numero totale di configurazioni, dato che non so la chiave provo tutti i tentativi fino a quando non la indovino. Ovviamente devo conoscere la trasformata T. Se il cifrato che ottengo è uguale a quello sul canale vuol dire che sono riuscito a trovare la configurazione corretta.
+
+## relazioni fra le chiavi
+
+In base a come sono fatti i parametri che diamo in pasto agli algoritmi possiamo individuare due famiglie di cifrari:
+- **cifrari a chiavi simmetriche**: le trasformazioni E(), S) e D(), V). La trasformazione E e D sono note. La trasformazione E deve prendere in ingresso il parametro ks mentre la trasformazione D prende come parametro di ingresso kd. Se le chiavi ks e kd sono uguali o sono o uguali o facilmente calcolabili una dall’altra: ks = kd.
+Se prendiamo la coppia del cifrario E e D, quando cifro userò una chiave ks e quando decifro userò ks. Ciò implica che le due entità in gioco conoscano lo stesso segreto. Tuttavia, ks e kd deve essere *segreto*. Questo tipo di cifrario si usa per garantire riservatezza. Caso molto raro è quello di costruire un attestato di autenticità;
+- **cifrari a chiave pubbliche**: le chiavi ks e kd sono diverse e una delle due è difficilemnte calcolabile dall'altra. Questo tipo di cifrario si usa per garantire riservatezza e autenticazione.
 
 ---
 
