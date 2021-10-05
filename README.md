@@ -32,6 +32,8 @@ Esempio: un ponte ha una crepa (vulnerabilità), rischia di crollare (minaccia),
 
 <!-- la tabella a pagina 9 secondo me è utile ma devo ancora capirla-->
 
+<!-- slide 13?>
+
 <!-- dove c'è scritto questa roba kkkkk-->
 ### Qualche concetto (paragrafo da modificare)
 <!--CANCELLEREI QUESTO PARAGRAFO :P-->
@@ -522,7 +524,11 @@ Si prende il messaggio, si cifra e si manda sul canale insicuro il cifrato conca
 
 ### Esempio
 
+slide 11
 
+### Esempio 2
+
+slide 12
 
 ## Anonimato/Identificazione
 
@@ -530,31 +536,40 @@ Altro requisito importante è l'anonimato, opposto all'identificazione.
 
 Per _identificazione_ si intende un insieme di azioni che richiedono di identificare chi sta partecipando a un'interazione. Ad esempio, per un pagamento o quando si accede a certe risorse, in base alla persona si possono avere tipi di accesso diversi.
 
-Ad esempio, il voto elettronico o monete elettroniche
-
 Il processo di identificazione ha le seguenti caratteristiche:
 
 - **Efficienza**: l’identificazione di una entità deve avvenire in maniera _efficiente_;
 - **real-time**: l'identificazione deve avvenire in un **preciso** istante e non in un instante successivo;
 - **Sicurezza**: possono essere presenti:
-  - **Falsi positivi**: una determinata persona ha diritti di accesso, ma non riesce ad accedere. Ciò causa inefficienza;
-  - **Falsi negativi**: l'accesso viene effettuato da persone non autorizzate.
+  - **Falsi positivi**: una determinata persona ha diritti di accesso, ma non riesce ad accedere. Ciò causa inefficienza. Bisogna minimizzare questo numero;
+  - **Falsi negativi**: l'accesso viene effettuato da persone non autorizzate (si spacciano per chi non sono xD). Non bisogna averli.
 
-Un sistema di identificazione si può basare su 3 modelli:
+Un sistema di identificazione si può basare su:
 
 - **Conoscenza**: sistemi che si basano sulla conoscenza di un'informazione. Ad esempio, password, pin, chiavi di sicurezza;
 - **Possesso**: sistemi che si basano sul possesso di un oggetto che solo quella persona può avere. Ad esempio, carte magnetiche, token, smart card;
 - **Conformità**: sistemi che si basano su una caratteristica di un'entità. Ad esempio, dati biometrici come impronte o analisi della retina.
 
+E' possibile che un sistema abbia anche più sistemi di identificazione. Ad esempio, conoscenza e possesso oppure conoscenza, possesso e conformità.
+
+E' importante ricorda che l'identificando e il verificatore debbano essere online: non posso identificare in un secondo momento perchè altrimenti come faccio ad accedere?
+
 La robustezza di un sistema di identificazione è maggiore se vengono combinati più principi. A seconda dell'informazione che voglio proteggere si sceglierà il sitema più adatto perchè ci sarà un costo computazionale, di gestione etc.
+
+<!-- anonimato: ad esempio, il voto elettronico o monete elettroniche-->
 
 ### Protocollo di identificazione
 
+![kronk](/img/img8.png)
+
 Qualunque protocollo di identificazione prevede:
 
-- **Registrazione**: l'identificando sceglierà una prova da dimostrare, e il verificatore registrerà un termine di paragone);
-- **Interrogazione**:
-- **Dimostrazione**: la persona autorizzata deve verificare la propria identità. Il processo deve essere complesso per un eventuale intrusore e semplice per una persona autorizzata.
+- **Registrazione**: l'identificando condivide con il verificatore la prova d'identità. Il verificatore deve memorizzarla perchè quando l'identificando si dovrà identificare la dovrà confrontare. In questa fase, l'identificando dovrà scegliere un qualcosa che solo lui sa e deve usare una funzione F capace di prendere quel segreto che porta alla costruzione della prova d'identità. Il verificatore memorizza il termine di paragone (F(s)). La funzione F cambia a seconda del modello di minaccia. Non è detto che identificando e verificatore abbiano la stessa funzione perchè il verificatore poi potrebbe spacciarsi per lui. Se il verificatore si comporta correttamente in questo caso identificando e verificatore condividono lo stesso segreto s. In caso contrario, l'identificando conoscerà solo lui il segreto e quello che fornirà sarà una prova d'identità che è solo l'identificando è in grado di produrre e il verificatore non potrà costruirne una nuova.
+- **Identificazione**: l'identificando e il verificatore siano entrambi online. Univocità del tempo e dell'entità.
+Questo processo può scomporsi in:
+  - **Dichiarazione**: l'identificando dichiara chi è. L'identificando dovrà effettuare una trasformazione T1,1. Il verificatore eseguirà una trasformazione T1,2 e interroga.
+  - **Interrogazione**: interroga l'identificando per dimostrare che sia davvero lui chi dice di essere
+  - **Dimostrazione**: se l'identificando fornisce la stessa prova d'identità che aveva fornito in fase di registrazione vuol dire che è proprio lui.
 
 ![kronk](/img/kronk.jpeg)
 
@@ -562,14 +577,34 @@ Un intrusore può:
 
 - Dedurre o indovinare la prova di identità;
 - Rubare il dispositivo;
-- Replicare una prova di identità che ha viaggiato sul canale in una legittima transizione di identificazione.
+- Replicare una prova di identità che ha viaggiato sul canale in una legittima transizione di identificazione e riutilizzarla.
 
+Modello di minaccia semplice: verificatore si comporta bene e in questo caso posso memorizzare il segreto
+Modello di minaccia in cui il verificatore non si comporta correttamente: non vogliamo che conosca il segreto. Memorizza una trasformazione del segreto F(s).
+Che caratteristiche deve avere la funzione F?
+Non essere invertibile: l'identificando può generare F(s) mentre il verificatore non riesce a generare F^-1(s)
 
+La trasformazione T3.1 deve essere segreta cioè solo l'identificando deve conoscerla altrimenti tutti si possono spacciarsi per l'identificando.
+
+## Funzioni one-way
+
+Una funzione f è detta unidirezionale se:
+- è invertibile
+- facile da calcolare. dato lo spazio di input x è facile calcolare f(x)
+- è difficile dato f(x) risalire alla x che ha originato l'output
+
+Ad esempio, sono funzioni unidirezionali:
+- la funzione hash crittograficamente sicura;
+- funzione di cifratura: chi non conosce la funzione D è difficile risalire al dato che è stato cifrato;
+- funzione di verifica di firma digitale: la funzione V è facile da eseguire ma chi non conosce la funzione S non è in grado di generare un messaggio correttamente verificabile.
+
+Un altro esempio è l'elenco telefonico: dato un cognome di una persona è facile risalire al numero telefonico. Il contrario invece è assolutamente difficile.
+
+Per garantire alcune proprietà di sicurezza, abbiamo bisogno che le trasformazioni siano unidirezionali. Nella teoria matematica, non esiste una funzione che sia unidirezionale. Nella pratica, invece, sono state individuate molte funzioni che sono candidate ad avere un comportamento di unidirezionalità. Vengono chiamate pseudo-unidirezionali perchè se non si possiede un'informazione non è possibile trovare la funzione inversa.
+
+## Trasformazioni segrete
 
 ---
-AAAAAAAAAAAAAAAAAAAAAAA
-
-
 
 ![marco togni](./img/marco_togni.jpg)
 
