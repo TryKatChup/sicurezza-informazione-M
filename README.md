@@ -723,18 +723,59 @@ Esistono diverse tipologie di attacco:
 
 ![dedurre](./img/img12.png)
 
-- **attacco con solo testo cifrato**: l'intrusore dispone esclusivamente di campioni di testo cifrato. L'intruso può osservare il traffico sul canale insicuro ma dispone solo del traffico cifrato. Si possono fare degli attacchi, ma a seconda di come vengono impiegati i cifrari, l'intrusore può sfruttare ... tecniche e statistiche per effettuare determinati attacchi (avendo il testo cifrato e qualche tecnica o informazione riguardante il cifrario o il parametro stesso, può dedurre delle informazioni sul traffico)
+- **attacco con solo testo cifrato**: l'intrusore dispone esclusivamente di campioni di testo cifrato. L'intruso può osservare il traffico sul canale insicuro ma dispone solo del traffico cifrato. Si possono fare degli attacchi, a seconda di come vengono impiegati i cifrari, l'intrusore può sfruttare conoscenze, ipotesi sul linguaggio di origine che è stato usato per scrivere il messaggio cifrato, può disporre di tecniche e statistiche per effettuare determinati attacchi. Avendo il testo cifrato e queste tecniche può dedurre delle informazioni sul testo originario o sulla chiave stessa
+- **attacco con testo in chiaro noto**: l'intruso ha la fortuna di avere il testo in chiaro del cifrato e il cifrato
+- **attacco con testo in chiaro scelto**: l'intruso sceglie un testo in chiaro e ha la possibilità di ottenere una coppia di testo in chiaro-cifrato ma dove il testo in chiaro l'ha scelto lui ma l'ha fatto cifrare
+- **attacco con testo cifrato scelto** dispone sempre di una coppia testo cifrato-testo scelto, ma l'attaccante a differenza di prima, ha preso un campione di testo cifrato da lui voluto e ha ottenuto un il testo in chiaro corrispondente. E' riuscito a farsi decifrare il testo cifrato dalla sorgente
 
-testo in chiaro noto
+## Contromisura preventiva
 
-attacco con testo in chiaro scelto.
+La contromisura preventiva è fare in modo che l'uscita di un algortimo crittografico deve essere assolutamente aleatorio. Purtroppo, ci sono alcuni algoritmi che impiegati in una certa modalità producono determinismo.
 
+## Teoria della complessità
 
-attacco con testo cifrato scelto (dispone sempre di una coppia testo cifrato-testo scelto, ma l'attaccante si è fatto a differenza di prima, ha preso un campione di testo cifrato e ha ottenuto un campione di testo in chiaro)
+La complessità computazionale può essere determinata con una serie di indicatori:
+- Tempo di esecuzione: ovviamente non è un tempo vero perchè ogni tecnologia introduce un tempo diverso. Per misurare il tempo di esecuzione facciamo riferimento al numero di operazioni eseguite dall'algoritmo per terminare;
+- Memoria occupata dal programma
+- Memoria occupata dai dati
 
+Negli algoritmi di crittografia che vediamo, gli ultimi due parametri non vengono presi in considerazione.
 
+**Tempo di esecuzione di un algoritmo**: numero di operazioni N che occorre eseguire per terminarlo quando il dato d’ingresso è rappresentato da una stringa di n bit (n = log [valore del dato])
 
-vogliamo che l'output di un alg crittografico sia sempre aleatorio, ovvero assuma con egual probabilità tutti i suoi possibili valori
+N = f(n)
+
+Il numero n (dimensione input) incide sul numero di operazioni richieste, in alcuni casi, anche il valore stesso può incidere sul numeero di passi da eseguire. Dunque, a parità di n, si hanno diversi valori di N.
+
+**Tempo di esecuzione nel caso peggiore**: numero massimo di operazioni Nmax che occorre eseguire per qualsiasi dato d’ingresso di n bit
+
+Nmax = f(n)
+
+Si considera la modalità d’incremento di Nmax al crescere senza limiti di n
+
+Se n non è esprimibile analiticamente, bisogna trovare una funzione che approssima l'andamento della funzione
+
+## Classificazione degli algoritmi
+
+- tempo polinomiale:
+T = O(n^t ) con t esponente più grande in g(n), 
+- tempo esponenziale:
+T = O(b^n) , con b costante, o anche T = O(exp (n))
+
+## Classificazione dei problemi
+- facile, se esiste un algoritmo polinomiale in grado di
+risolverlo su una macchina di Turing deterministica;
+- difficile, se non sono stati fino ad ora individuati
+(e probabilmente non saranno mai individuati) algoritmi che lo risolvono in tempo polinomiale
+
+Che cosa interessano a noi questi andamenti?
+Per ottenere sicurezza non ci interessa sapere l'andamento al crescere senza misura di n. A noi interessa:
+- trovare il valore n al di sopra del quale l'andamento diventa esponenziale. Se l'andamento è polinomiale l'intrusore è capace di entrare nel mio sistema
+- non ci interessa difenderci dal caso peggiore ma dal caso migliore. L'intrusore non deve trovarsi a distanze facili
+
+Le unità di misura da adottare sono:
+- anno MIPS: le tecnologie della sicurezza hanno assunto come riferimento un calcolatore in grado di eseguire un milione di istruzioni al secondo. Quindi, il tempo di esecuzione di un attacco è espresso in anni MIPS. Questa unità di misura fa riferimento con la tecnologia perchè a seconda degli elaboratori la soglia può aumentare;
+- Livello di sicurezza: parametro indipendente dalla tecnologia. L'algoritmo di ricerca esauriente risolve ogni problema perchè esplorare lo spazio totale degli input è sempre possibile. Dipende tutto dalla dimensione di input per il quale non ha più senso. Dobbiamo individuare qual è il numero di bit tale per cui l'andamento diventa esponenziale. Quando l'ho individuato quello è il mio livello di sicurezza. Il livello di sicurezza misura il numero di dimensione di input del migliore algoritmo a disposizione dell'intrusore a partire dal quale l'andamento diventa esponenziale.
 
 ---
 
