@@ -625,13 +625,66 @@ Dunque, l'approccio usato al giorno d'oggi è il terzo. D'ora in poi l'approccio
 
 Un intrusore può sempre disporre algoritmo di ricerca esauriente noto come algorimo forza bruta. Se io intrusore non conosco la configurazione scelta dalla sorgente leggittima per il segreto posso esplorare tutto lo spazio delle chiavi. Se n è il numero di bit della chiave e 2^n è il numero totale di configurazioni, dato che non so la chiave provo tutti i tentativi fino a quando non la indovino. Ovviamente devo conoscere la trasformata T. Se il cifrato che ottengo è uguale a quello sul canale vuol dire che sono riuscito a trovare la configurazione corretta.
 
-## relazioni fra le chiavi
+## Relazioni fra le chiavi
 
 In base a come sono fatti i parametri che diamo in pasto agli algoritmi possiamo individuare due famiglie di cifrari:
-- **cifrari a chiavi simmetriche**: le trasformazioni E(), S) e D(), V). La trasformazione E e D sono note. La trasformazione E deve prendere in ingresso il parametro ks mentre la trasformazione D prende come parametro di ingresso kd. Se le chiavi ks e kd sono uguali o sono o uguali o facilmente calcolabili una dall’altra: ks = kd.
-Se prendiamo la coppia del cifrario E e D, quando cifro userò una chiave ks e quando decifro userò ks. Ciò implica che le due entità in gioco conoscano lo stesso segreto. Tuttavia, ks e kd deve essere *segreto*. Questo tipo di cifrario si usa per garantire riservatezza. Caso molto raro è quello di costruire un attestato di autenticità;
-- **cifrari a chiave pubbliche**: le chiavi ks e kd sono diverse e una delle due è difficilemnte calcolabile dall'altra. Questo tipo di cifrario si usa per garantire riservatezza e autenticazione.
-kd è facilmente calcolabile se conosco ks ma dalla chiave kd è difficile risalire alla chiave ks. Se uso un cifrario asimmetrico, la funzione F(kd) è facilmente calcolabile. ks è la chiave segreta e kd è la chiave pubblica.
+- **Cifrari a chiavi simmetriche**: le trasformazioni E(, S) e D(), V). La trasformazione E e D sono note. La trasformazione E deve prendere in ingresso il parametro ks mentre la trasformazione D prende come parametro di ingresso kd. Se le chiavi ks e kd sono uguali o sono uguali o facilmente calcolabili una dall’altra: ks = kd.
+Se prendiamo la coppia del cifrario E e D, quando cifro userò una chiave ks e quando decifro userò ks. Ciò implica che le due entità in gioco conoscano lo stesso segreto. Tuttavia, ks e kd devono essere *segreti*. Questo tipo di cifrario si usa per garantire riservatezza. Caso molto raro è quello di costruire un attestato di autenticità;
+- **Cifrari a chiave pubbliche**: le chiavi ks e kd sono diverse e una delle due è difficilemnte calcolabile dall'altra. Questo tipo di cifrario si usa per garantire riservatezza e autenticazione.
+kd è facilmente calcolabile se conosco ks ma dalla chiave kd è difficile risalire alla chiave ks. Se uso un cifrario asimmetrico, la funzione F(kd) è facilmente calcolabile.
+Con ks è la chiave segreta e kd è la chiave pubblica.
+Ogni entità dispone della conoscenza di due chiavi. Ogni entità ha una chiave segreta se non l'entità proprietà e dispone di una chiave pubblica associata univocamente alla chiave segreta che tutti possono conoscere. E' computazionalmente difficile risalire dalla chiave pubblica la chiave privata.
+
+Funzione di encryption e darò in pasto l'unica chiave che conosco che è associata ad antonio corradi. La chiave pubblica. Alla funzione E darò la chiave pubblica del destinatario. La funzione D, il destinatario può risalire al dato originario perchè è l'unico che conosce la chiave ks univocamente associata. Solo con la chiave ks posso risalire al contenuto originario.
+
+### Proprietà delle chiavi simmetriche
+
+Le chiavi simmetriche devono avere le seguenti proprietà:
+
+- **Robustezza**: un intrusore non deve essere in grado facilmente di individuare la chiave. Se una chiave è formata da n bit, più grande è lo spazio delle chiavi più è difficile individuare i bit corretti. Inoltre, anche il sistema che genera la chiave, la distribuisce, memorizzo deve essere sicuro
+- **Riservatezza**: il sistema deve garantire la riservatezza della chiave perchè le chiavi ks, kd devono essere segrete;
+- **Integrità**: quando decifriamo i dati dobbiamo essere sicuri che la chiave non sia stata alterata altrimenti non riesco a decifrarli
+- **Autenticità**: la chiave è conosciuta dalla sorgente e dalla destinazione (autentica). Sono certo che la chiave è conosciuta da un'entità.
+
+### Proprietà delle chiavi asimmetriche
+
+Le chiavi asimmetriche devono avere le seguenti proprietà:
+
+La chiave pubblica (PU) e chiave privata (SU) devono essere legate da una funzione: se conosco la chiave segreta deve essere per me proprietario per la chiave segreta calcolare la chiave pubblica. Tutti quelli che conoscono la chiave pubblica non devono però risalire alla conoscenza della chiave privata. La funzione deve essere unidirezionale.
+
+- **Riservatezza**: la riservatezza è legata alla chiave privata.
+- **Integrità**: è importante che la chiave privata che sto utilizzando sia quella corretta e non modificata. La chiave pubblica deve essere integra perchè devo essere sicuro che sia quella generata
+- **Autenticità**: per quanto riguarda la chiave pubblica, devo sapere con certezza se appartiene a una determinata entità oppure no. Se non sono certo dell'associazione sto cifrando dei dati non per chi li sto inviando ma per un intrusore.
+
+## Crittanalisi
+
+Ci sono diversi criteri da seguire per non far risalire all'intrusore qual è la chiave:
+
+- Indovinarla
+- Intercettarla
+- Dedurla
+
+<!-- slide 22 -->
+### Indovinare la chiave
+
+E' sempre possibile risalire alla chiave perchè esiste l'attacco di forza bruta. Quello che devo fare è rendere difficile l'individuazione.
+
+<!-- slide 23 slide 24 -->
+Per ridurre l'attacco con forza bruta, devo adottare alcuni accorgimenti:
+- Lo spazio delle chiavi deve essere molto grande (2^n molto grande). Tirare ad indovinare per la teoria della probabilità, se n è il numero di bit che rappresenta il mio segreto, 2^-n è la probabilità che io ci becchi. Se ho a disposizione k tentativi, la probabilità è k*2^-n. più tentativi maggiore è la probabilità di accesso.
+- Limitare il numero di prove che l'intrusore ha a dispoziione: ad esempio il pin del bancomat. Dopo tre accessi si disabilita l'accesso
+- Un altro accorgimento fondamentale è che i simboli che rappresentano la chiave devono essere anche casuali.
+- Se devo proteggere i miei dati, la proprietà di riservatezza è fondamentale. Un certo dato può avere come proprietà di riservatezza una durata limitata nel tempo. Altri dati hanno una durata enorme. In questo caso, quando scelgo una chiave, devo chiedermi per quanto tempo viene utilizzata per cifrare i dati. Se i dati devono essere mantenuti per un periodo molto lungo, bisogna cambiare frequentemente la chiave. In questo modo, riduco la possibilità di ricerca da parte dell'intrusore.
+
+### Intercettare la chiave
+
+Un intrusore non deve intercettare una chiave quando la generazione di una chiave avviene su una CPU sarà lui ad eseguire la generazione e memorizzare la chiave in memoria RAM quando la chiave dovrà essere usata. Ho bisogno anche di un sistema che mi memorizzi la chiave in modo persistente.
+
+L'intercettazione può avvenire nella fase di utilizzo e nella fase di memorizzazione della chiave.
+
+Le trasformazioni che possiamo utilizzare per costruire un sistema di memorizzazione sicuro (Encryption e Decryption). Costruire un sistema di memorizzazione in modo tale che la chiave s, solo il proprietario della chiave segreta deve avere accesso alla cella in cui è memorizzata. Il proprietario quando deve memorizzare la chiave dovrà usare una trasformazione di encryption a cui darà in pasto un ulteriore parametro u. Lo vedremo più avanti questo parametro. La chiave segreta deve essere memorizzata in forma cifrata con un ulteriore parametro u che solo il proprietario conoscerà.
+
+Ogni volta che dovrà accedere alla chiave solo se potrà usare la trasformazione di decryption per ricavare usando u la chiave s.
 
 ---
 
