@@ -685,9 +685,56 @@ Un intrusore non deve intercettare una chiave quando la generazione di una chiav
 
 L'intercettazione può avvenire nella fase di utilizzo e nella fase di memorizzazione della chiave.
 
-Le trasformazioni che possiamo utilizzare per costruire un sistema di memorizzazione sicuro (Encryption e Decryption). Costruire un sistema di memorizzazione in modo tale che la chiave s, solo il proprietario della chiave segreta deve avere accesso alla cella in cui è memorizzata. Il proprietario quando deve memorizzare la chiave dovrà usare una trasformazione di encryption a cui darà in pasto un ulteriore parametro u. Lo vedremo più avanti questo parametro. La chiave segreta deve essere memorizzata in forma cifrata con un ulteriore parametro u che solo il proprietario conoscerà.
+Devo impedire l'accesso alla cella di memoria ma anche nella fase in cui ho acceduto alla mia cella. Solo il proprietario della chiave segreta deve avere accesso alla cella in cui è memorizzata. 
 
 Ogni volta che dovrà accedere alla chiave solo se potrà usare la trasformazione di decryption per ricavare usando u la chiave s.
+
+Se vogliamo garantire anche la comunicazione della chiave tra la forma cifrata deve essere mantenuta anche nella comunicazione tra RAM e CPU (bus di sistema). Evitare l'accesso alla memoria RAM. Nel corso, l'hardware è sicuro ma non è detto che lo sia.
+
+Inoltre, l’unità di elaborazione deve decifrare la chiave, impiegarla nell’esecuzione dell’algoritmo crittografico e cancellare poi accuratamente il dato dalla sua memoria di lavoro.
+
+![intrusore](./img/img11.png)
+
+Come genero le chiavi?
+
+Tramite il componente RNG (Random Number Generator): può generare una sequenza di bit, i cui tutti i bit sono assolutamente casuali e imprevedibili e genera s (parametro segreto). s deve essere mantenuto cifrato quindi uso una funzione di E per mantenere in modo permanente in memoria. E se devo cifrare il mio segreto che cifra i dati? Ho bisogno di un altro parametro k che a sua volta devo memorizzarlo e generarlo in modo sicuro. Un cane che si morde la coda.
+
+a un certo punto posso dire che: quella chiave k non viene memorizzata da nessuna parte, e viene generata a partire da un segreto che conosce il legittimo possessore di quella chiave.
+
+L'untente leggittmo genera un passphrase che dovrà essere aleatoria, la passphrase viene inserita, trasformata con una funzione hash crittoraficamente sicura e si ottiene un'uscita u.
+
+u impronta che viene usata temporaneamente per cifrare s, e usata temporaneamente per decifrare e recuperare il dato dalla cella di memoria in cui è stata memorizzata.
+
+Inoltre, in un sistema crittografico deve comprendere anche una funzione di cancellazione wiper che cancella s ed u non appena sia terminato il loro utilizzo.
+
+La cella di memoria dove contenere le chiavi dove può risiedere?
+- soluzione meno robusta: HDD con CPU + RAM;
+- soluzione intermedia: supporto di memorizzazione: smart card (solo passiva) in cui conservo il segreto. Ho bisogno di un pc per poter eleborare. Quindi il segreto passa per la ram;
+- soluzione sicura: smart card attiva in cui c'è anche una cpu e ram che esegue l'algoritmo di decryption, encryption, sign o verify. Nulla viene eseguito all'interno di un calcolatore.
+
+## Esempio
+
+?
+
+## Deduzione di un segreto dal suo uso
+
+Esistono diverse tipologie di attacco:
+- attacco con testo in chiaro noto: 
+
+![dedurre](./img/img12.png)
+
+- **attacco con solo testo cifrato**: l'intrusore dispone esclusivamente di campioni di testo cifrato. L'intruso può osservare il traffico sul canale insicuro ma dispone solo del traffico cifrato. Si possono fare degli attacchi, ma a seconda di come vengono impiegati i cifrari, l'intrusore può sfruttare ... tecniche e statistiche per effettuare determinati attacchi (avendo il testo cifrato e qualche tecnica o informazione riguardante il cifrario o il parametro stesso, può dedurre delle informazioni sul traffico)
+
+testo in chiaro noto
+
+attacco con testo in chiaro scelto.
+
+
+attacco con testo cifrato scelto (dispone sempre di una coppia testo cifrato-testo scelto, ma l'attaccante si è fatto a differenza di prima, ha preso un campione di testo cifrato e ha ottenuto un campione di testo in chiaro)
+
+
+
+vogliamo che l'output di un alg crittografico sia sempre aleatorio, ovvero assuma con egual probabilità tutti i suoi possibili valori
 
 ---
 
