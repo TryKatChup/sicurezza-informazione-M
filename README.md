@@ -682,9 +682,97 @@ Un intrusore non deve intercettare una chiave quando la generazione di una chiav
 
 L'intercettazione può avvenire nella fase di utilizzo e nella fase di memorizzazione della chiave.
 
-Le trasformazioni che possiamo utilizzare per costruire un sistema di memorizzazione sicuro (Encryption e Decryption). Costruire un sistema di memorizzazione in modo tale che la chiave s, solo il proprietario della chiave segreta deve avere accesso alla cella in cui è memorizzata. Il proprietario quando deve memorizzare la chiave dovrà usare una trasformazione di encryption a cui darà in pasto un ulteriore parametro u. Lo vedremo più avanti questo parametro. La chiave segreta deve essere memorizzata in forma cifrata con un ulteriore parametro u che solo il proprietario conoscerà.
+Devo impedire l'accesso alla cella di memoria ma anche nella fase in cui ho acceduto alla mia cella. Solo il proprietario della chiave segreta deve avere accesso alla cella in cui è memorizzata. 
 
 Ogni volta che dovrà accedere alla chiave solo se potrà usare la trasformazione di decryption per ricavare usando u la chiave s.
+
+Se vogliamo garantire anche la comunicazione della chiave tra la forma cifrata deve essere mantenuta anche nella comunicazione tra RAM e CPU (bus di sistema). Evitare l'accesso alla memoria RAM. Nel corso, l'hardware è sicuro ma non è detto che lo sia.
+
+Inoltre, l’unità di elaborazione deve decifrare la chiave, impiegarla nell’esecuzione dell’algoritmo crittografico e cancellare poi accuratamente il dato dalla sua memoria di lavoro.
+
+![intrusore](./img/img11.png)
+
+Come genero le chiavi?
+
+Tramite il componente RNG (Random Number Generator): può generare una sequenza di bit, i cui tutti i bit sono assolutamente casuali e imprevedibili e genera s (parametro segreto). s deve essere mantenuto cifrato quindi uso una funzione di E per mantenere in modo permanente in memoria. E se devo cifrare il mio segreto che cifra i dati? Ho bisogno di un altro parametro k che a sua volta devo memorizzarlo e generarlo in modo sicuro. Un cane che si morde la coda.
+
+a un certo punto posso dire che: quella chiave k non viene memorizzata da nessuna parte, e viene generata a partire da un segreto che conosce il legittimo possessore di quella chiave.
+
+L'untente leggittmo genera un passphrase che dovrà essere aleatoria, la passphrase viene inserita, trasformata con una funzione hash crittoraficamente sicura e si ottiene un'uscita u.
+
+u impronta che viene usata temporaneamente per cifrare s, e usata temporaneamente per decifrare e recuperare il dato dalla cella di memoria in cui è stata memorizzata.
+
+Inoltre, in un sistema crittografico deve comprendere anche una funzione di cancellazione wiper che cancella s ed u non appena sia terminato il loro utilizzo.
+
+La cella di memoria dove contenere le chiavi dove può risiedere?
+- soluzione meno robusta: HDD con CPU + RAM;
+- soluzione intermedia: supporto di memorizzazione: smart card (solo passiva) in cui conservo il segreto. Ho bisogno di un pc per poter eleborare. Quindi il segreto passa per la ram;
+- soluzione sicura: smart card attiva in cui c'è anche una cpu e ram che esegue l'algoritmo di decryption, encryption, sign o verify. Nulla viene eseguito all'interno di un calcolatore.
+
+## Esempio
+
+?
+
+## Deduzione di un segreto dal suo uso
+
+Esistono diverse tipologie di attacco:
+- attacco con testo in chiaro noto: 
+
+![dedurre](./img/img12.png)
+
+- **attacco con solo testo cifrato**: l'intrusore dispone esclusivamente di campioni di testo cifrato. L'intruso può osservare il traffico sul canale insicuro ma dispone solo del traffico cifrato. Si possono fare degli attacchi, a seconda di come vengono impiegati i cifrari, l'intrusore può sfruttare conoscenze, ipotesi sul linguaggio di origine che è stato usato per scrivere il messaggio cifrato, può disporre di tecniche e statistiche per effettuare determinati attacchi. Avendo il testo cifrato e queste tecniche può dedurre delle informazioni sul testo originario o sulla chiave stessa
+- **attacco con testo in chiaro noto**: l'intruso ha la fortuna di avere il testo in chiaro del cifrato e il cifrato
+- **attacco con testo in chiaro scelto**: l'intruso sceglie un testo in chiaro e ha la possibilità di ottenere una coppia di testo in chiaro-cifrato ma dove il testo in chiaro l'ha scelto lui ma l'ha fatto cifrare
+- **attacco con testo cifrato scelto** dispone sempre di una coppia testo cifrato-testo scelto, ma l'attaccante a differenza di prima, ha preso un campione di testo cifrato da lui voluto e ha ottenuto un il testo in chiaro corrispondente. E' riuscito a farsi decifrare il testo cifrato dalla sorgente
+
+## Contromisura preventiva
+
+La contromisura preventiva è fare in modo che l'uscita di un algortimo crittografico deve essere assolutamente aleatorio. Purtroppo, ci sono alcuni algoritmi che impiegati in una certa modalità producono determinismo.
+
+## Teoria della complessità
+
+La complessità computazionale può essere determinata con una serie di indicatori:
+- Tempo di esecuzione: ovviamente non è un tempo vero perchè ogni tecnologia introduce un tempo diverso. Per misurare il tempo di esecuzione facciamo riferimento al numero di operazioni eseguite dall'algoritmo per terminare;
+- Memoria occupata dal programma
+- Memoria occupata dai dati
+
+Negli algoritmi di crittografia che vediamo, gli ultimi due parametri non vengono presi in considerazione.
+
+**Tempo di esecuzione di un algoritmo**: numero di operazioni N che occorre eseguire per terminarlo quando il dato d’ingresso è rappresentato da una stringa di n bit (n = log [valore del dato])
+
+N = f(n)
+
+Il numero n (dimensione input) incide sul numero di operazioni richieste, in alcuni casi, anche il valore stesso può incidere sul numeero di passi da eseguire. Dunque, a parità di n, si hanno diversi valori di N.
+
+**Tempo di esecuzione nel caso peggiore**: numero massimo di operazioni Nmax che occorre eseguire per qualsiasi dato d’ingresso di n bit
+
+Nmax = f(n)
+
+Si considera la modalità d’incremento di Nmax al crescere senza limiti di n
+
+Se n non è esprimibile analiticamente, bisogna trovare una funzione che approssima l'andamento della funzione
+
+## Classificazione degli algoritmi
+
+- tempo polinomiale:
+T = O(n^t ) con t esponente più grande in g(n), 
+- tempo esponenziale:
+T = O(b^n) , con b costante, o anche T = O(exp (n))
+
+## Classificazione dei problemi
+- facile, se esiste un algoritmo polinomiale in grado di
+risolverlo su una macchina di Turing deterministica;
+- difficile, se non sono stati fino ad ora individuati
+(e probabilmente non saranno mai individuati) algoritmi che lo risolvono in tempo polinomiale
+
+Che cosa interessano a noi questi andamenti?
+Per ottenere sicurezza non ci interessa sapere l'andamento al crescere senza misura di n. A noi interessa:
+- trovare il valore n al di sopra del quale l'andamento diventa esponenziale. Se l'andamento è polinomiale l'intrusore è capace di entrare nel mio sistema
+- non ci interessa difenderci dal caso peggiore ma dal caso migliore. L'intrusore non deve trovarsi a distanze facili
+
+Le unità di misura da adottare sono:
+- anno MIPS: le tecnologie della sicurezza hanno assunto come riferimento un calcolatore in grado di eseguire un milione di istruzioni al secondo. Quindi, il tempo di esecuzione di un attacco è espresso in anni MIPS. Questa unità di misura fa riferimento con la tecnologia perchè a seconda degli elaboratori la soglia può aumentare;
+- Livello di sicurezza: parametro indipendente dalla tecnologia. L'algoritmo di ricerca esauriente risolve ogni problema perchè esplorare lo spazio totale degli input è sempre possibile. Dipende tutto dalla dimensione di input per il quale non ha più senso. Dobbiamo individuare qual è il numero di bit tale per cui l'andamento diventa esponenziale. Quando l'ho individuato quello è il mio livello di sicurezza. Il livello di sicurezza misura il numero di dimensione di input del migliore algoritmo a disposizione dell'intrusore a partire dal quale l'andamento diventa esponenziale.
 
 ---
 
