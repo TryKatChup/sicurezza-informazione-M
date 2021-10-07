@@ -1,0 +1,232 @@
+ 
+asimmetrica: ogni entità dispone di una chiave
+
+i cifrari differiscono nelle proprietà di sicurezza che sono in grado di offrire
+
+simmetrica: impiegati quasis unicamente per la riservatezza (in uncaso particolare anche per autenticazione origine di un dato);
+
+asimmetrica (o chiave pubblica) impiegati per garantire riservatezza, sia autenticazione, sia non ripudio.
+Principalmente utilizzati per autenticazione e non ripudio.
+Motivo legato principalmente all'efficienza.
+
+Come dimensionare una chiave simmetrica? E quanto dev'essere grande una chiave crittografica in cifrario asimmetrico (es chiave pubblica)
+
+nel simmetrico l'obbiettivo dell'intrusore è indovinare qual è la chiave, dato un numero di bit di chiavi.
+L'intrusore ha sempre a disposizione forza bruta (algoritmo di ricerca esauriente)
+
+se noi usiamo trasformazione per proteggere proprietà (es riservatezza) vediamo che l'algoritmo
+
+possiamo usare anche una chiave di dimensione elevatissima che i tempi non cambiano particolarmente (rimane polinomiale).
+
+
+Complessità
+dobbiamo capire qual è il numero di bit di chiavi al di sopra del quale l'algoritmo diventa esponenziale.
+
+Numero di bit di chiave oltre al quale siamo quasi certi che l'attaccante non riesca a risalire alla chiave è >128.
+
+
+Per quanto riguarda chiave asimmetrica
+attaccante può usare forza bruta, oppure
+
+
+algoritmo di fattorizzazione che ha andamento sub-esponenziale
+in cifrari asimmetrici non ci bastano 128 bit
+
+qual è il numero di bit al di sopra del quale questo cifrario è robusto? >2000 bit
+
+
+
+NUOVO PDF
+
+meccanismo di base (generatori di bit casuali)
+
+generatore di bit casuali:
+
+[...]
+
+
+
+RFC:1750 standard per generazione di numeri crittograficamente sicuri
+prevede che il seme sia generato da un true random number generator.
+
+
+
+
+
+
+
+
+
+ore 13:50
+
+funzione hash crittografica: dimensionamento dell'impronta.
+
+Quanti bit deve avere un'impronta per essere sicura (ovvero per essere resistente alle collisioni)
+reesistenza debole e resistenza forte.
+
+LA FORMULA INCAZZATA NON CE LA CHIEDE NON IMPARARLA A MEMORIA, capire il ragionamento
+
+facciamo ipotesi: obbiettivo di capire quanti bit dev'essere lunga l'impronta.
+Qual è la complessita computazionale con cui ci mette un intrusore a trovare una collisione
+
+quanto ci mette a minacciare sicurezza(robustezza?) debole e quanto per quella forte?
+
+
+probabilità di successo dopo k tentativi è proporzionale a
+
+
+
+
+l'impronta dev'essere almeno di 128 bit, altrimenti il numero di tentativi non è considerato un problema computazionalmente infattibile, ma diventa fattibile.
+(le slide sono sbagliate, non è 80, ma 128, anzi oggi almeno 160 bit, per garantire la resistenza debole)
+
+poiché dobbiamogarantire anche la resistenza forte, dobbiamo chiederci: ci bastano 128 bit o 160 per garantire anche la resistenza forte? No.
+
+Per garantirla abbiamo bisogno di un numero di bit di impronta doppio rispetto a quello che garantisce la resistenza debole.
+
+
+
+
+
+
+
+
+CIFRARI
+Quest'anno non affrontiamo la parte di critttografia classica
+
+sul sito del corso (capitolo 3) si parla di crittografia classica
+
+vengono descritte principali tecniche in ambito di crittografia classica e vulnerabilità presentate.
+
+Il risultato a cui si è arrivato è stato quello di dire:
+esiste un unico cirfrario perfetto (one time pad) che prevede uso di una chiave lunga quanto il testo e costituita da simboli scelti a caso e usata una ed una sola volta.
+Questo si considera un cifrario perfetto.
+
+Problema di impiego pratico:
+bisogna disporre di canali sicuri tanti quanti sono i messaggi di cui si dispone.
+
+
+cifrario perfetto ai fini della riservatezza
+
+
+poiché perfetto è solo quello, solitamente si parla di cifrario computazionalmente sicuro: se è possibile risalire da un testo cifrato al testo in chiaro corrispondente, ma ciò richiede una potenza di elaborazione superiore di quella che possiamo pensare a disposizione dell'attaccante (o perché richiede un numero di anni MIPS infattibile, oppure perché richiede capacità di calcolo di cui non può disporre l'attaccante).
+
+Avremo sempre a che fare con cifrari computazionalmente sicuri.
+Per dare sicurezza computazionale a un cifrario non perfetto, noi
+
+
+Principio di Kerckoff
+
+
+Principio di Shannon
+
+
+una trasformazione produce confusione quando la relazione tra chiave e testo cifrato è il più possibile complessa e scorrelata (uscita del cifrario è aleatorio e l'aletorietà non permette di individuare la realzione tra cifrario e chiave usata);
+diffusione: capacità di algoritmo di nascondere la ridondanza del testo, il più possibile nell'uscita dell'algoritmo di cifratura. Ciò impedisce allintrusiore di usare tecniche di analisi statistica.
+
+(per approfondire guardare il capitolo del libro)
+
+se garantita confusione:
+
+
+se garantita diffusione:
+se modifico anche un solo carattere del messaggio in chiaro, la modifica non si percuote nel corrispondente caratteree del cifrato, ma modifica "spalmata" su tutto il cifrato.
+
+
+
+tecnica di sostituzione: garantisce confusione;
+
+tecnica di trasposizione: garantisce diffusione
+
+
+da teoria di shannon deriva che cifrario simmetrico è computazionalmente sicuro se utilizza confusione e diffusione (ovvero se si parla di cifrario composto, che riesce ad usare in maniera iterata sia sostituzione che trasposizione).
+
+Questa teoria ce la ritroveremo in particolare quando vedremo cifrari simmetrici a blocchi
+
+
+Com'è fatto un cifrario simmetrico?
+
+Tipologie (flusso o a blocchi)
+
+e per ciascuna le caratteristiche e come impiegarli in maniera sicura
+
+
+
+impiego più naturale del cifrario simmetrico è ai fini della riservatezza.
+Per questo scopo sono particolarmente efficienti.
+
+
+ho coppia di trasformazione E e D
+
+c è chiave segreta
+
+
+
+esistono 2 famiglie distinte di cifrari: a flusso o a blocchi
+
+flusso si rifà al cifrario perfetto: opera su uno o pochi bit alla volta. Trasforma uno o pochi bit con una regola variabile al progredire del testo. Ambiti di applicabilità? Impiegato in tutte le applicazioni orientate al flusso di dati (app web, telefonia, ecc.), stream.
+
+
+a blocchi si rifà al cifrario composto della teoria di Shannon: a differenza del precedente trasforma con regola fissa (non variabile) blocchi di dati formati da molti bit.
+
+
+Esempi di protocolli che usano cifrari a blocchi: IPSec.
+
+caratteristiche di quello a flusso:
++ veloce di quello a blocco e non introduce rallentamenti
+se non impiegato correttamente è meno sicuro di uno a blocchi non impiegato correttamente.
+
+
+Caratteristiche:
+
+
+
+
+
+
+
+
+CIFRARI A FLUSSO
+un cifrario a flusso si rifà al One Time Pad, che prendeva un bit in chiaro, faceva l'operazione di encryption (somma modulo 2 con bit di chiave aleatoria) e produce in uscita un bit cifrato.
+
+NB: XOR
+
+Operazione di cifratura è XOR:
+
+
+prendo bit in chiaro e lo metto in XOR con bit di chiave. Per questo motivo la chiave ed il messaggio cifrato sarannohi quanto il messaggio in chiaro. NB: la chiave è univoca.
+
+PRNG crittograficamente sicuro che genera un flusso di numeri casuali di chiave.
+
+
+tipi di cifrario a flusso:
+
+- a flusso sincrono (esempi: l'algoritmo RC4, SEAL, A5, ...)
+
+- a flusso autosincronizzante
+
+
+cosa può fare un attaccante:
+-cancellare bit di testo cifrato
+-modificare bit di testo cifrato
+-aggiungere bit di testo cifrato
+
+
+nell'autosincronizzante
+perdita di sincronizzazione è temporanea: rimane finché l'attacco intenzionale rimane nel registro di scorrimento.
+Quando esce da tale registro, si ripristina un normale sincroni
+
+
+
+a flusso sincrono sono più facili da realizzare e meno costosi ai fini che vogliamo
+
+
+
+in cifrario a flusso il requisito FONDAMENTALE è che la chiave sia lunga quanto il testo sia USATA UNA SOLA VOLTA.
+non posso MAI usare lo stesso messaggio di chiave su due messaggi distinti, in quanto in questo caso si potrebbero fare degli attacchi di analisi sui cifrati, sfruttando le proprietà dello XOR.
+
+slide dimostrativa con immagini dove viene mostrato perché (nella seconda riga c'è un errore, dovrebbe essere C2, non C1)
+
+
+
+culo
