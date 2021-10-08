@@ -9,20 +9,31 @@ Il tema della sicurezza informatica è molto importante, in un mondo come quello
 La sicurezza informatica ha quindi lo scopo di proteggere le risorse da accessi indesiderati, garantire la riservatezza delle informazioni, assicurare il funzionamento e la disponibilità dei servizi a fronte di eventi imprevedibili.
 Per essere più precisi, è l’insieme dei prodotti, dei servizi, delle regole organizzative e dei comportamenti individuali che proteggono i sistemi informatici di un’azienda.
 
-### I tre caposaldi della sicurezza informatica (CIA Trade Triangle)
+### La sicurezza è un processo, non un prodotto
 
-Le tre proprietà da garantire per la sicurezza dei dati sono:
+Anche se le app e i dispositivi di sicurezza, come il software antimalware e i firewall, sono essenziali, non è sufficiente collegare questi strumenti per essere sicuri. La sicurezza informatica richiede la creazione di un insieme di processi e procedure ben ponderati. Ad esempio:
 
-- **Confidenzialità**: assicura che solo chi è autorizzato può accedere (in sola lettura) a risorse o sapere almeno che esse esistano;
+- **Backup dei dati**: i dati importanti devono essere archiviati in una posizione sicura, e dovrebbe essere possibile ripristinare una copia integra e verificata di questi dati in caso di problemi;
+- **Buone abitudini informatiche**: come evitare di aprire collegamenti o allegati inattesi che si potrebbero ricevere tramite messaggi di posta elettronica o SMS, anche se sembrano provenire da mittenti attendibili;
+- **Mantenere aggiornato il software**: i sistemi operativi come Windows, MacOS, iOS o Android, nonché le app e i browser devono essere aggiornati con le patch e le correzioni più recenti del produttore;
+- **Usare password complesse e univoche**: le password non devono essere banali o essere riutilizzate in più account;
+- **Usare l'autenticazione a più fattori**: quando possibile, sia a casa che in ufficio, bisogna abilitare l'autenticazione a più fattori per garantire una maggiore sicurezza degli account;
+- **Bloccare i dispositivi**: per accedere, assicurarsi che i dispositivi richiedano una password, un PIN o un'autenticazione biometrica, come l'impronta digitale o il riconoscimento facciale. I dispositivi smarriti o rubati possono essere fantastiche risorse per i criminali, se possono accedere facilmente ai dati di dispositivi non bloccati.
+
+### I tre capisaldi della sicurezza informatica (CIA Trade Triangle)
+
+L'acronimo _CIA_ viene usato per rappresentare le tre proprietà fondamentali della sicurezza informatica:
+
+- **Confidenzialità** o **riservatezza**: assicura che solo chi è autorizzato può accedere (in sola lettura) a risorse o sapere almeno che esse esistano;
 - **Integrità**: solo chi è autorizzato può modificare, eliminare e creare risorse;
 - **Disponibilità**: solo chi è autorizzato può accedere alle risorse senza interferenze ed ostacoli.
 
-A queste tre proprietà se ne aggiungono altre:
+![cia](./img/img1.png)
+
+A queste proprietà se ne possono aggiungere altre come:
 
 - **Autenticità**: si deve effettivamente dimostrare chi è stato a creare il dato o sapere da chi proviene;
 - **Non ridupio**: quando una transazione è conclusa, si deve essere certo di poter attribuire la paternità di quell'operazione su quel dato a qualcuno.
-
-![cia](./img/img1.png)
 
 ### Terminologia
 
@@ -41,15 +52,15 @@ Esempio: un ponte ha una crepa (vulnerabilità), rischia di crollare (minaccia),
 - **Rootkit**: strumenti per accesso privilegiato, nascosti (modifica di un programma, libreria, driver,
 modulo kernel, hypervisor) ed invisibili.
 
-<!--CANCELLEREI QUESTO PARAGRAFO :P-->
+<!--CANCELLEREI QUESTO PARAGRAFO :P
 ### Qualche concetto (paragrafo da modificare)
 - Analisi Valore: quanto valgono i miei dati?
 - Analisi Rischio: Quanto valgono i danni(?)
-- Modello di minaccia: dipende dall'analisi del valore, chi mi attacca e perché
+- Modello di minaccia: dipende dall'analisi del valore, chi mi attacca e perché-->
 
-<!--CANCELLEREI QUESTO PARAGRAFO :P-->
+<!--CANCELLEREI QUESTO PARAGRAFO :P
 ### Poi ha detto qualche vulnerabilità a caso, spiegando bene solo l'IP spoofing e il SYN flooding, ma il resto le ha tralasciate perché sì.
-da scrivere bene dopo <!--QUANDO VUOI...-->
+da scrivere bene dopo--!> <!--QUANDO VUOI...-->
 
 ---
 
@@ -62,7 +73,7 @@ Un calcolatore per essere sicuro lo deve essere sia a livello _hardware_ che a l
 
 Quando parliamo di sicurezza dei dati, faremo un'assunzione fondamentale: l'hardware, il firmware e il sistema operativo sono **sicuri**.
 
-<!-- toglierei questa parte-->
+<!-- toglierei questa parte scritta prima -->
 In questo corso ci si focalizza principalmente sulla _sicurezza dei dati_, che consiste nel garantire i seguenti requisiti fondamentali:
 
 - Confidenzialità;
@@ -70,6 +81,7 @@ In questo corso ci si focalizza principalmente sulla _sicurezza dei dati_, che c
 - Disponibilità;
 - Autenticazione;
 - Non ripudio.
+<!-- -->
 
 <!--NB: la sicurezza HW e FW non è argomento proprio del corso, ma la prof ci ha dato qualche info a riguardo per sapere giusto di cosa stiamo parlando.-->
 
@@ -134,7 +146,7 @@ Esempi di standard internazionali per valutazione e certificazione della sicurez
 
 ### Modello a canale insicuro
 
-D'ora in poi per analizzare e studiare i meccanismi di sicurezza faremo riferimento ad un modello molto specifico, chiamato _modello del canale insicuro_.
+D'ora in poi per analizzare e studiare i meccanismi di sicurezza faremo riferimento ad un modello molto specifico, chiamato _modello a canale insicuro_.
 
 Questo modello prevede che ci sia una sorgente dei dati, una destinazione a cui sono rivolti e che ci sia un canale che mette in comunicazione sorgente con destinazione.
 
@@ -142,7 +154,7 @@ Assumiamo che:
 
 - La sorgente abbia un ambiente sicuro (_hardware_ e sistema operativo sicuri);
 - La destinazione abbia un ambiente sicuro (_hardware_ e sistema operativo sicuri);
-- Il canale sia insicuro, ovvero che sul canale si possano inserire degli intrusori e possono fare degli attacchi passivi e attivi su tale canale
+- Il canale sia insicuro, ovvero che sul canale si possano inserire degli intrusori e possono fare degli attacchi su tale canale.
 
 Definito un modello di questo genere, il nostro obiettivo è garantire che la destinazione possa consumare ed interpretare correttamente i dati inviati dalla sorgente.
 
@@ -169,12 +181,13 @@ Esistono 3 tipologie di contromisure per gli attacchi:
 - **Rilevazione**: si rileva un attacco in corso;
 - **Reazione**: si reagisce dopo che un attacco è già avvenuto.
 
-<!-- confidenziali=riservatezza? -->
 Il tipo di contromisura da adottare va scelta anche in base al sistema e a cosa vogliamo proteggere (nel nostro caso ci interessano i dati). Se ad esempio, i dati sono non confidenziali, non ci interessa se vengono intercettati o no.
+
+La contromisura ha un costo in termini di soldi, di impegno delle risorse informatiche del sistema, di impatto sugli utenti, una sua efficacia (a fronte di una certa minaccia) e suoi negativi effetti collaterali (la creazione di nuove vulnerabilità). Una certa contromisura, quindi, deve essere fatta attentamente, valutando sia la probabilità che si verifichi una certa minaccia in grado di sfruttare una certa vulnerabilità, sia il danno che ne discende. Questa attività è chiamata **analisi del rischio**.
 
 Come ingegneri (LOL https://youtu.be/EOR8Uz27s3Y?t=420), il nostro obiettivo è capire a fronte di più possibilità progettuali, quale ha più senso per il nostro sistema ed i nostri dati da proteggere.
 
-**Possibili contromisure per attacchi passivi**:
+#### Possibili contromisure per attacchi passivi
 
 L’unica contromisura da utilizzare è la prevenzione. Non ha senso utilizzare la tecnica della rilevazione o della reazione perchè quando ci si accorge dell'attacco ormai è troppo tardi e non si può più intervenire. La riservatezza è stata ormai violata. Discorso analogo anche per la reazione.
 
@@ -182,12 +195,12 @@ Si può:
 - **Impedire** l'accesso al canale. Ciò viene implementato tramite l'utilizzo o di canali dedicati, oppure mettendo in piedi meccanismi di controllo dell'accesso, che fanno in modo che ogni volta che una sorgente accede al canale, il  meccanismo chiede di autenticarsi. Per come è realizzata, questa soluzione non è tuttavia nè economicamente sostenibile né scalabile;
 - **Criptare** i dati da inviare, ovvero rendere incomprensibili i dati trasmessi, tranne al destinatario legittimo.
 
-**Possibili contromisure per attacchi attivi**:
+#### Possibili contromisure per attacchi attivi
 
 Le contromisure da adottare sono la rilevazione e la reazione. Non ha senso utilizzare la tecnica preventiva. In linea di principio avrebbe anche senso adottare una contromisura preventiva, in quanto protegge l'autenticità, l'integrità e la riservatezza. Ma l'unico modo per prevenire è quello di controllare l'accesso al canale ma ovviamente è quasi impossibile per i motivi specificati in precedenza.
 
 Si può:
-- Aggiungere un attestato di integrità e di autenticità. In questo caso, la rappresentazione dei dati non è incomprensibile ma al normale flusso dei dati, aggiungo dati in più che permettono alla destinazione di capire se il flusso è integro e autentico, oppure se è stato manomesso.
+- Aggiungere un attestato di integrità e di autenticità. In questo caso, la rappresentazione dei dati non è incomprensibile ma al normale flusso dei dati, aggiungo dati in più che permettono alla destinazione di capire se il flusso è integro e autentico oppure se è stato manomesso.
 
 ### Meccanismi e Servizi di Sicurezza
 
