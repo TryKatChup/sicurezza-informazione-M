@@ -11,11 +11,11 @@ Per essere più precisi, è l’insieme dei prodotti, dei servizi, delle regole 
 
 ### La sicurezza è un processo, non un prodotto
 
-Anche se le app e i dispositivi di sicurezza, come il software antimalware e i firewall, sono essenziali, non è sufficiente collegare questi strumenti per essere sicuri. La sicurezza informatica richiede la creazione di un insieme di processi e procedure ben ponderati. Ad esempio:
+Da un punto di vista _software_, anche se programmi, come l'_antimalware_ e il _firewall_, sono essenziali, non è sufficiente collegarli al nostro sistema operativo per renderlo sicuro. La sicurezza informatica richiede la creazione di un insieme di processi e procedure ben ponderati. Ad esempio:
 
 - **Backup dei dati**: i dati importanti devono essere archiviati in una posizione sicura, e dovrebbe essere possibile ripristinare una copia integra e verificata di questi dati in caso di problemi;
-- **Buone abitudini informatiche**: come evitare di aprire collegamenti o allegati inattesi che si potrebbero ricevere tramite messaggi di posta elettronica o SMS, anche se sembrano provenire da mittenti attendibili;
-- **Mantenere aggiornato il software**: i sistemi operativi come Windows, MacOS, iOS o Android, nonché le app e i browser devono essere aggiornati con le patch e le correzioni più recenti del produttore;
+- **Buone abitudini informatiche**: evitare di aprire collegamenti o allegati inattesi che si potrebbero ricevere tramite messaggi di posta elettronica o SMS, anche se sembrano provenire da mittenti attendibili;
+- **Mantenere aggiornato il software**: i sistemi operativi come Windows, MacOS, iOS o Android, nonché le app e i browser devono essere aggiornati con le _patch_ e le correzioni più recenti del produttore;
 - **Usare password complesse e univoche**: le password non devono essere banali o essere riutilizzate in più account;
 - **Usare l'autenticazione a più fattori**: quando possibile, sia a casa che in ufficio, bisogna abilitare l'autenticazione a più fattori per garantire una maggiore sicurezza degli account;
 - **Bloccare i dispositivi**: per accedere, assicurarsi che i dispositivi richiedano una password, un PIN o un'autenticazione biometrica, come l'impronta digitale o il riconoscimento facciale. I dispositivi smarriti o rubati possono essere fantastiche risorse per i criminali, se possono accedere facilmente ai dati di dispositivi non bloccati.
@@ -33,7 +33,7 @@ L'acronimo _CIA_ viene usato per rappresentare le tre proprietà fondamentali de
 A queste proprietà se ne possono aggiungere altre come:
 
 - **Autenticità**: si deve effettivamente dimostrare chi è stato a creare il dato o sapere da chi proviene;
-- **Non ridupio**: quando una transazione è conclusa, si deve essere certo di poter attribuire la paternità di quell'operazione su quel dato a qualcuno.
+- **Non ridupio**: quando una transazione è conclusa, si deve essere certi di poter attribuire la paternità di quell'operazione su quel dato a qualcuno.
 
 ### Terminologia
 
@@ -44,15 +44,18 @@ A queste proprietà se ne possono aggiungere altre come:
 
 Esempio: un ponte ha una crepa (vulnerabilità), rischia di crollare (minaccia), un peso totale eccessivo sul ponte (attacco), cercare di controllare il numero di veicoli sul ponte (contromisura).
 
-<!-- toglierei questo paragrafo -->
+<!-- toglierei questo paragrafo
 - **Virus**: provoca danni e si replica propagato dagli umani (involontariamente);
 - **Worm**: provoca danni perché si autoreplica (satura risorse) in maniera automatica, senza l'intervento dell'utente;
 - **Trojan (horse)**: vettore di malware, contiene funzionalità aggiuntive impreviste;
 - **Backdoor**: punto di accesso non autorizzato;
 - **Rootkit**: strumenti per accesso privilegiato, nascosti (modifica di un programma, libreria, driver,
-modulo kernel, hypervisor) ed invisibili.
+modulo kernel, hypervisor) ed invisibili.-->
 
 <!--CANCELLEREI QUESTO PARAGRAFO :P
+
+SCRITTO DOPO
+
 ### Qualche concetto (paragrafo da modificare)
 - Analisi Valore: quanto valgono i miei dati?
 - Analisi Rischio: Quanto valgono i danni(?)
@@ -71,9 +74,10 @@ da scrivere bene dopo--!> <!--QUANDO VUOI...-->
 
 Un calcolatore per essere sicuro lo deve essere sia a livello _hardware_ che a livello _software_. Ovviamente questa ipotesi non è sempre verificata, ma in questo corso quando studieremo i servizi e meccanismi di sicurezza lo daremo per scontato.
 
-Quando parliamo di sicurezza dei dati, faremo un'assunzione fondamentale: l'hardware, il firmware e il sistema operativo sono **sicuri**.
+Quando parliamo di sicurezza dei dati, faremo un'assunzione fondamentale: l'_hardware_, il _firmware_ e il sistema operativo sono **sicuri**.
 
-<!-- toglierei questa parte scritta prima -->
+<!-- toglierei questa parte scritta prima
+
 In questo corso ci si focalizza principalmente sulla _sicurezza dei dati_, che consiste nel garantire i seguenti requisiti fondamentali:
 
 - Confidenzialità;
@@ -81,7 +85,7 @@ In questo corso ci si focalizza principalmente sulla _sicurezza dei dati_, che c
 - Disponibilità;
 - Autenticazione;
 - Non ripudio.
-<!-- -->
+-->
 
 <!--NB: la sicurezza HW e FW non è argomento proprio del corso, ma la prof ci ha dato qualche info a riguardo per sapere giusto di cosa stiamo parlando.-->
 
@@ -139,14 +143,14 @@ Si affida a processori specifici l'esecuzione di determinate funzioni di sicurez
 
 ### Valutazione, Certificazione, Enti
 
-Per poter sapere se un prodotto software sia sicuro, ci deve essere qualcuno che lo garantisca.
-In questo caso, occorrono degli enti di certificazione che definiscono delle metodologie con cui andare a verificare che un progetto sia effettivamente sicuro. Applicando questi standard, gli enti ci garantiscono la sicurezza del prodotto che installiamo.
+Per poter sapere se un _prodotto software_ sia sicuro, ci deve essere qualcuno che lo garantisca.
+In questo caso, occorrono degli enti di certificazione che definiscono delle metodologie con cui andare a verificare che un progetto sia effettivamente sicuro. Applicando questi _standard_, gli enti ci garantiscono la sicurezza del prodotto che installiamo.
 
 Esempi di standard internazionali per valutazione e certificazione della sicurezza: Orange book del NCSC, ISO 17799, CINI, CERT, ecc.
 
 ### Modello a canale insicuro
 
-D'ora in poi per analizzare e studiare i meccanismi di sicurezza faremo riferimento ad un modello molto specifico, chiamato _modello a canale insicuro_.
+D'ora in poi per analizzare e studiare i meccanismi di sicurezza faremo riferimento ad un modello molto specifico, chiamato **modello a canale insicuro**.
 
 Questo modello prevede che ci sia una sorgente dei dati, una destinazione a cui sono rivolti e che ci sia un canale che mette in comunicazione sorgente con destinazione.
 
@@ -163,7 +167,7 @@ Definito un modello di questo genere, il nostro obiettivo è garantire che la de
 Gli attacchi si classificano in due tipologie:
 
 - **Passivo**: l'intrusore si inserisce sul canale, ma l'unica cosa che può fare è osservare i dati. Viene minato il requisito di _confidenzialità_;
-- **Attivo**: l'intrusore può accedere al canale ed alterare il normale flusso dei dati. Può:
+- **Attivo**: l'intrusore si inserisce sul canale ed alterare il normale flusso dei dati. Può:
   - **Modificare** il flusso intenzionalmente per cambiare il contenuto dei dati. Viene minato il requisito dell'_integrità_;
   - **Aggiungere** nuove informazioni facendo credere alla destinazione che siano state inviate dalla sorgente leggittima. Viene minato il requisito dell'_autenticità_;
   - **Interrompere** il normale flusso impedendo che i dati arrivino alla destinazione. Viene minato il requisito di _disponibilità_.
@@ -181,9 +185,9 @@ Esistono 3 tipologie di contromisure per gli attacchi:
 - **Rilevazione**: si rileva un attacco in corso;
 - **Reazione**: si reagisce dopo che un attacco è già avvenuto.
 
-Il tipo di contromisura da adottare va scelta anche in base al sistema e a cosa vogliamo proteggere (nel nostro caso ci interessano i dati). Se ad esempio, i dati sono non confidenziali, non ci interessa se vengono intercettati o no.
+Il tipo di contromisura da adottare va scelta anche in base al sistema e a cosa vogliamo proteggere (nel nostro caso ci interessano i dati). Se ad esempio, i dati sono non confidenziali, non ci interessa se vengono intercettati o meno.
 
-La contromisura ha un costo in termini di soldi, di impegno delle risorse informatiche del sistema, di impatto sugli utenti, una sua efficacia (a fronte di una certa minaccia) e suoi negativi effetti collaterali (la creazione di nuove vulnerabilità). Una certa contromisura, quindi, deve essere fatta attentamente, valutando sia la probabilità che si verifichi una certa minaccia in grado di sfruttare una certa vulnerabilità, sia il danno che ne discende. Questa attività è chiamata **analisi del rischio**.
+La contromisura ha un costo in termini di soldi, di impegno delle risorse informatiche del sistema, di impatto sugli utenti, una sua efficacia (a fronte di una certa minaccia) e dei suoi effetti collaterali (la creazione di nuove vulnerabilità). Una certa contromisura, quindi, deve essere fatta attentamente, valutando sia la probabilità che si verifichi una certa minaccia in grado di sfruttare una certa vulnerabilità, sia il danno che ne discende. Questa attività è chiamata **analisi del rischio**.
 
 Come ingegneri (LOL https://youtu.be/EOR8Uz27s3Y?t=420), il nostro obiettivo è capire a fronte di più possibilità progettuali, quale ha più senso per il nostro sistema ed i nostri dati da proteggere.
 
@@ -206,14 +210,14 @@ Si può:
 
 **Meccanismo di Sicurezza**: meccanismo progettato per rilevare/prevenire un attacco, risanare il sistema a seguito di un attacco.
 
-**Servizio di Sicurezza**: software che fa raggiungere una proprietà di sicurezza grazie all'uso di uno o più meccanismi.
+**Servizio di Sicurezza**: _software_ che fa raggiungere una proprietà di sicurezza grazie all'uso di uno o più meccanismi.
 
-Dobbiamo sempre chiederci qual è il livello migliore in cui integriamo i nostri meccanismi e i nostri servizi. Ci sono molti protocolli che forniscono servizi di sicurezza ma si collocano a livelli diversi:
+Dobbiamo sempre chiederci qual è il livello migliore in cui integriamo i meccanismi e i servizi. Ci sono molti protocolli che forniscono servizi di sicurezza ma si collocano a livelli diversi:
 - **IPsec**: livello di rete;
-- **PGP**: livello applicativo;
-- **SSL**: livello di trasporto.
+- **SSL**: livello di trasporto;
+- **PGP**: livello applicativo.
 
-A seconda del livello si avrà una prestazione, personalizzazione e trasparenza diverse. IPsec, PGP e SSL garantiscono tutti la sicurezza dei dati cioè garantiscono le proprietà CIA. A livello di IPsec si parla di autenticità a livello host, non posso dire quali client verranno autenticati. Se lavoro a applicativo posso dire che alcuni dati vengono protetti mentre altri no.
+A seconda del livello si avrà una prestazione, personalizzazione e trasparenza diverse. IPsec, PGP e SSL garantiscono tutti la sicurezza dei dati cioè garantiscono le proprietà _CIA_. A livello di IPsec si parla di autenticità a livello host, non posso dire quali _client_ verranno autenticati. Se lavoro a applicativo posso far proteggere alcuni dati mentre altri no.
 
 ---
 ## 01.Dati Sicuri
