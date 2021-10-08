@@ -222,34 +222,26 @@ A seconda del livello si avrà una prestazione, personalizzazione e trasparenza 
 ---
 ## 01.Dati Sicuri
 
-Per proteggere i dati a fronte di possibili attacchi possiamo eseguire o delle singole trasformazioni usando degli _algoritmi_ o a volte è necessario un insieme di trasformazioni. In questo caso, ovviamente la sequenza delle operazioni da eseguire non può essere casuale ma ben precisa e parliamo di _protocollo_.
+Per proteggere i dati a fronte di eventuali attacchi possiamo eseguire o delle singole trasformazioni usando degli _algoritmi_ o a volte è necessario un insieme di trasformazioni. In questo caso, ovviamente la sequenza delle operazioni da eseguire non può essere casuale ma ben precisa e parliamo di _protocollo_.
 
-Quando progetto un protocollo mi devo chiedere sempre se la sorgente e destinazione siano stati compromessi però nel modello di minaccia più semplice che abbiamo assunto questo problema non c'è.
+Quando progettiamo un protocollo, ci dobbiamo chiedere sempre se la sorgente e destinazione siano stati compromessi, però nel modello di minaccia più semplice che abbiamo assunto questo problema non c'è.
 
-Ad esempio, compro una casa a 100mila euro. Per comprarla introduco un
-protocollo di sicurezza per trasmettere l'informazione della compravendita. Se
-sorgente e destinazione si comportano correttamente, mi basta un protocollo che
-mi garantisca l'integrità di quel dato ma se la sorgente è compromessa, può
-alterare il prezzo. In questo caso il protocollo di protezione deve diventare
-più complesso affinché la sorgente e destinazione possano disconoscere
-l'operazione.
+Ad esempio, compro una casa a cento mila euro. Introduciamo un protocollo di sicurezza per trasmettere l'informazione della compravendita. Se
+sorgente e destinazione si comportano correttamente, ci basta un protocollo che ci garantisca l'integrità di quel dato ma se la sorgente è compromessa, può
+alterare il prezzo. In questo caso, il protocollo di protezione deve diventare più complesso affinché la sorgente e destinazione possano disconoscere l'operazione.
 
-Non è detto che ci sia sempre solo sorgente e destinazione ma in alcuni casi è
-necessario l'intervento di una terza entità che fa da arbitro/giudice. La si può
-usare quando sorgente e destinatari sono malintenzionati.
+Non è detto che ci sia sempre solo sorgente e destinazione ma in alcuni casi è necessario l'intervento di una terza entità che fa da arbitro/giudice. La si può usare quando sorgente e destinatario sono malintenzionati.
 
-Per ottenere la sicurezza dei dati ho bisogno di **ridondanza** sia nello spazio
-che nel tempo. Questo vuol dire che le trasformazioni hanno bisogno di bit in
-più di quelli che servirebbero (ridondanza nello spazio) e la
-sorgente e la destinazione hanno bisogno di più tempo per processarle, sia in
-termini di banda che di calcolo computazionale (ridondanza nel tempo).
+Per ottenere la sicurezza dei dati, abbiamo bisogno di _ridondanza_ sia nello spazio che nel tempo. Questo vuol dire che le trasformazioni hanno bisogno di bit in
+più di quelli che servirebbero (ridondanza nello spazio) e la sorgente e la destinazione hanno bisogno di più tempo per processarle, sia in termini di banda che di calcolo computazionale (ridondanza nel tempo).
 
 ## Crittografia e Crittoanalisi
 
-- **Crittografia**: è la disciplina che studia gli algoritmi che possiamo adottare per proteggere i dati in in termini di riservatezza, autenticità e integrità e per garantire l'identificazione;
-- **Crittoanalisi**: è la disciplina che studia il modo in cui è possibile violare le trasformazioni che proteggono i dati
+**Crittografia**: è la disciplina che studia gli algoritmi che possiamo adottare per proteggere i dati in in termini di riservatezza, autenticità e integrità.
 
-Nel corso studieremo solo la crittografia. Quando studieremo una trasformazione crittografica, dovremmo capire la sua:
+**Crittoanalisi**: è la disciplina che studia il modo in cui è possibile violare le trasformazioni che proteggono i dati.
+
+Nel corso studieremo solo la crittografia. Di una trasformazione crittografica, dovremmo capire la sua:
 - **Efficacia**: quanto è in grado la trasformazione di proteggere quel dato in termini di riservatezza, autenticità e integrità;
 - **Efficienza**: l'overhead associato.
 
@@ -261,98 +253,88 @@ Ci sono tre principi che guidano la progettazione delle trasformazioni:
 - Deve essere impossibile _dedurre_ qual è la trasformazione adottata;
 - Deve essere impossibile _indovinare_ la trasformazione adottata.
 
-Quando dobbiamo progettare una trasformazione bisogna fare in modo che essa sia
-segreta e che l'intruso, che non conosce la trasformazione segreta, non possa
-disporre di un algoritmo alternativo che sia in grado di eseguire la stessa
-trasformazione in un tempo computazionalmente fattibile.
+Quando dobbiamo progettare una trasformazione, bisogna fare in modo che essa sia
+segreta e che l'intruso, che non la conosca, non possa
+disporre di un algoritmo alternativo che sia in grado di eseguire la stessa trasformazione in un tempo computazionalmente fattibile.
 
 ## Proteggere la proprietà di confidenzialità
 
-Come facciamo a progettare una trasformazione capace di rendere confidenziali i dati? La trasformazione deve avere come caratteristica quella di trasformare le informazioni che noi vogliamo proteggere in una rappresentazione che la renda incomprensibile. L'unica identità che può eseguire l'operazione inversa, cioè dal dato incomprensibile al dato originale, è la destinazione. Dunque, la riservatezza la possiamo ottenere con una trasformazione di tipo preventivo in modo che se un intruso accede ai dati non li può capire.
+Per proteggere i dati, la trasformazione di cui abbiamo bisogno, deve avere come caratteristica quella di rappresentare i dati in modo incomprensibile. In questo modo, l'intrusore non sarà in grado di capire i messaggi. Infatti, l'unica identità che può eseguire l'operazione inversa, cioè dal dato incomprensibile al dato originale, è la destinazione. Dunque, la riservatezza la possiamo ottenere con una trasformazione di tipo preventivo in modo che se un intruso accede ai dati non li può capire.
 
 ![confidenzialità](./img/img2.png)
 
 La sorgente `A` non può mettere i dati `m` sul canale insicuro per ovvi motivi
 ma deve prima trasformarli tramite un'encryption `E`. Questa trasformazione la
 conosce solo la sorgente `A` ed è l'unica in grado di eseguirla. Nell'esempio
-della figura i dati `m`, vengono trasformati in dati incomprensibili `c`. Solo
+della figura, i dati `m` vengono trasformati in dati incomprensibili `c`. Solo
 la destinazione `B` li può comprendere perché quando li riceve, deve essere in
-grado tramite la trasformazione di decryption, risalire al contenuto dei dati
+grado tramite la trasformazione di decryption `D`, risalire al contenuto dei dati
 `m`.
 
-La coppia di encryption e decryption costituisce il **cifrario**. L'intruso `I`
-non è in grado di risalire al contenuto per diversi motivi:
+La coppia di encryption e decryption costituisce il _cifrario_. L'intruso `I` non è in grado di risalire al contenuto per diversi motivi:
 - non conosce la trasformazione di encryption;
 - non conosce una trasformazione alternativa ed equivalente a quella di decryption;
-- non può neanche indovinarla perché da un punto di vista computazionale è un'operazione molto costosa.
+-  I calcoli per mettere in chiaro il messaggio senza conoscere l'algoritmo devono essre da un punto di vista computazionale un'operazione molto costosa.
 
-Altro punto importante è che bisogna produrre un **testo cifrato aleatorio**: l'intruso osservando `c` non deve imparare nulla di più di quello che sapeva già. Ad esempio, ho dei  messaggi strutturati che iniziano con "carissimi studenti, carissimi studentesse". Se applico una trasformazione che mi consente di ottenere in uscita la parola "carissimi" riesco a vedere che c'è un pattern tra tutti i messaggi e ciò mi rende il cifrato non perfetto perché io intruso ho un'informazione in più e potrei studiare come fare a capire il resto del messaggio.
+Altro punto importante è che bisogna produrre un _testo cifrato aleatorio_: l'intruso osservando `c` non deve imparare nulla di più di quello che sapeva già. Ad esempio, ho dei  messaggi strutturati che iniziano con "carissimi studenti, carissimi studentesse". Se applico una trasformazione che mi consente di ottenere in uscita la parola "carissimi" riesco a vedere che c'è un pattern tra tutti i messaggi e ciò mi rende il cifrato non perfetto perché l'intruso ha un'informazione in più e potrebbe studiare come fare a capire il resto del messaggio.
 
 Altre considerazioni:
-- Lo schema della figura può essere applicato sia da A verso B che da B verso A (il flusso è bidirezionale);
-- A e B possono essere online contemporaneamente oppure A online e B offline cioè i messaggi possono essere decifrati in momenti diversi;
-- B = A. La sorgente potrebbe coincidere con la destinazione. Se voglio cifrare dei dati sul mio hard disk li cifro per me. Quando faccio il logout dal sistema, li voglio cifrare mentre quando faccio il login li decifro.
+- **Il flusso è bidirezionale**: lo schema della figura può essere applicato sia da A verso B che da B verso A. Ovviamente B avrà l'encryption mentre A la decryption;
+- **A e B non è detto che siano entrambi online**: possono essere online contemporaneamente oppure A online e B offline cioè i messaggi possono essere decifrati in momenti diversi;
+- **B = A**: la sorgente potrebbe coincidere con la destinazione. Vogliamo cifrare dei dati che abbiamo sul nostro hard disk. Quando effettuiamo il logout dal sistema essi vengo cifrati mentre quando facciamo il login li decifriamo.
 
 ## Proteggere la proprietà di integrità
 
-Quando si trasferiscono i dati sul canale, come visto in corsi precedenti, si sa che a causa di disturbi i bit possono mutare. In caso di disturbi, le alterazioni che si possono osservare sono la cancellazione e la modifica di bit. Ci sono dei disturbi che rendono più probabile certi tipi di alterazioni. Infatti, è possibile calcolare la probabilità.
+Quando si trasferiscono i dati sul canale, come visto nel corso di Fondamenti di Telecomunicazioni T, si sa che a causa di disturbi i bit possono mutare. In questo caso, le alterazioni che si osservano sono la cancellazione e la modifica di bit. In presenza di certi disturbi è più probabile che avvengano anche certi tipi di alterazioni di bit per cui è possibile calcolarne la probabilità.
 
-Invece, nell'ambito della sicurezza informatica, non si parla di disturbo ma di attacco intenzionale attivo. Minare l'integrità significa fare un attacco attivo sul canale. L'attacco attivo condivide con i disturbi il fatto di poter modificare e cancellare i messaggi ma è diverso dal disturbo perché aggiunge il problema di alterare l'ordine dei bit.
+Invece, nell'ambito della sicurezza informatica, non si parla di disturbo ma di attacco intenzionale. Minare l'integrità significa fare un attacco attivo sul canale. L'attacco attivo condivide con i disturbi il fatto di poter modificare e cancellare i messaggi ma è diverso perché aggiunge il problema di alterarne l'ordine.
 
-Se nei disturbi c'è una probabilità di alterazione dei dati, ad esempio del 30%, nella sicurezza informatica tutti i bit hanno la stessa probabilità di essere cambiati.
+Se un disturbo ha una probabilità di alterazione dei dati, ad esempio del 30%, nella sicurezza informatica tutti i bit hanno la stessa probabilità di essere cambiati.
 
-Proteggere l'integrità vuol dire costruire delle trasformazioni in grado di rilevare modifiche al contenuto dei dati trasmessi. In questo caso, la contromisura da adottare è quella della rilevazione perché le modifiche ai messaggi sul canale non possono essere evitate ma apportando tecniche in grado di far dire alla destinazione che il messaggio sia stato davvero alterato si riesce a superare questo problema.
+Proteggere l'integrità vuol dire costruire delle trasformazioni in grado di rilevare modifiche al contenuto dei dati trasmessi. In questo caso, la contromisura da adottare è quella della rilevazione perché le modifiche ai messaggi sul canale non possono essere evitate a priori.
 
-Se vogliamo costruire una trasformazione che protegga l'integrità, dobbiamo far si che la sorgente utilizzi ridondanza al messaggio e affianchi al dato iniziale un'informazione aggiuntiva che deve essere costruita opportunamente. Questa informazione aggiuntiva si chiama **riassunto** o **impronta**. La dimensione deve essere limitata perché la si deve poi trasmettere.
+Se vogliamo costruire una trasformazione che protegga l'integrità, dobbiamo far si che la sorgente utilizzi ridondanza al messaggio e affianchi al dato iniziale un'informazione aggiuntiva che deve essere costruita opportunamente. Questa informazione aggiuntiva si chiama _riassunto_ o _impronta_. La sua dimensione deve essere limitata perché la si deve poi trasmettere sul canale.
 
-La sua caratteristica deve essere quella di rappresentare in modo pressocchè univoco il contenuto del messaggio. Al messaggio originale deve corrispondere un unico riassunto. Se i messaggi da inviare sono diversi ovviamente i riassunti devono essere anche loro diversi. La destinazione riceve il dato e il riassunto. Poi ha bisogno di ricalcolare sul dato ricevuto un nuovo riassunto e vede se coincide con quello ricevuto. Se coincidono vuol dire che il dato non è stato alterato.
+La sua caratteristica deve essere quella di rappresentare in modo pressocchè univoco il contenuto del messaggio. Al messaggio originale deve corrispondere un unico riassunto. Se i messaggi da inviare sono diversi ovviamente i riassunti devono essere anche loro diversi. La destinazione riceve il dato e il riassunto. Poi ha bisogno di ricalcolare sul dato ricevuto un nuovo riassunto e vede se coincide con il riassunto ricevuto. Se coincidono vuol dire che il dato non è stato alterato.
 
-E' importante che il riassunto debba avere delle caratteristiche specifiche. Esse si ottengono solo usando **funzioni hash crittograficamente sicure**.
+E' importante che il riassunto debba avere delle caratteristiche ben precise. Esse si ottengono solo usando _funzioni hash crittograficamente sicure_.
 
-In generale, una funzione hash (`H`) è una funzione che prende un dato `m` di lunghezza arbitraria e restituisce in uscita un'impronta `H(m)` di dimensione nettamente inferiore.
+![integrità](./img/img3.png)
 
-A noi non basta avere una qualunque funzione hash, ma è importante che abbia due caratteristiche:
-- **Comportamento da "oracolo casuale"**: se decido che l'impronta sia costituita da `n` bit, le possibili uscite della funzione hash sono `2^n`. Preso il mio messaggio `m`, devo fare in modo che la probabilità che esca un uscita rispetto ad un'altra sia la stessa. Dato un messaggio, non devo sapere che ad esempio la probabilità che esca una determinata impronta sarà al 70% ma la probabilità che mi capiti una configurazione rispetto ad un'altra deve essere la stessa;
-- **Resistente alle collisioni**: è inevitabile che due messaggi diversi abbiano in uscita la stessa impronta perché lo spazio di input è molto più grande dello spazio di output (`m > n`). L'importante è che per un intruso sia computazionalmente difficile individuare due messaggi che abbiano la stessa impronta.
+In generale, una funzione hash `H` è una funzione che prende un dato `m` di lunghezza arbitraria e restituisce in uscita un'impronta `H(m)` di dimensione nettamente inferiore.
+
+A noi non basta avere una qualunque funzione hash, ma è importante che abbia due proprietà:
+
+- **Comportamento da "oracolo casuale"**: se decidiamo che l'impronta sia costituita da `n` bit, le possibili uscite della funzione hash sono `2^n`. Preso il nostro messaggio `m`, dobbiamo fare in modo che la probabilità che esca un uscita rispetto ad un'altra sia la stessa. Dato un messaggio, non devo sapere che, ad esempio, la probabilità che esca una determinata impronta sarà del 70% ma la probabilità che mi capiti una configurazione rispetto ad un'altra deve essere la stessa;
+- **Resistente alle collisioni**: è inevitabile che due messaggi diversi possano avere in uscita la stessa impronta perché lo spazio di input è molto più grande dello spazio di output (`m > n`). L'importante è che per un intruso sia computazionalmente difficile individuare due messaggi che abbiano la stessa impronta.
 
 ![zeus](./img/zeus.jpg)
 
 Queste caratteristiche le si ottengono solo usando **funzioni hash crittograficamente sicure**.
 
-![integrità](./img/img3.png)
-
-Se il mio obiettivo è rilevare i disturbi, posso usare delle funzioni hash che chiamiamo **funzioni hash semplici**. Invece, se il mio obiettivo è la sicurezza informatica, le funzioni hash devono essere crittograficamente sicure e prendono il nome di **funzioni hash sicure** (vedi proprietà scritte in alto).
-
-#### Attestazione di Integrità
+Se il nostro obiettivo è rilevare i disturbi, possiamo usare delle funzioni hash che chiamiamo _funzioni hash semplici_. Invece, se il mio obiettivo è la sicurezza informatica, le funzioni hash devono essere crittograficamente sicure e prendono il nome di _funzioni hash sicure_ (vedi proprietà scritte in alto).
 
 L'obiettivo di un intrusore è quello di trovare un messaggio `m'` che abbia
 `H(m') = H(m)`. Dunque, è fondamentale usare una funzione hash
 crittograficamente sicura che sia resistente alle collisioni.
 
-`A -> B: m||H(M)`
+![attestazioneIntegrità](./img/img4.png)
 
 Supponiamo che `A` metta sul canale insicuro un messaggio `m`, a partire dal
 quale è stato costruito `H(m)` attraverso `H` (una funzione hash
-crittograficamente sicura).\
-`B` deve prendere il messaggio ricevuto, applicargli la funzione hash, che
-conosce anche lui, e verificare che l'hash ricevuto coincida con quello ottenuto
-applicando a sua volta la funzione hash.\
+crittograficamente sicura). `B` deve prendere il messaggio ricevuto, applicargli la funzione hash, che
+conosce anche lui, e verificare che l'hash ricevuto coincida con quello ottenuto.
 Se si equivalgono, il messaggio è stato trasmesso correttamente. In questo modo la
 destinazione è in grado di rilevare se il messaggio ha subito modifiche.
 
-![attestazioneIntegrità](./img/img4.png)
-
-In questo scenario un intruso può sostituire il messaggio (`m`) con un altro
-(`m'`). La sorgente deve utilizzare la funzione `H`, deve costruire il riassunto
+In questo scenario un intruso può sostituire il messaggio `m` con un altro `m'`. La sorgente deve utilizzare la funzione `H`, costruire il riassunto
 univoco e consegnarlo su un canale sicuro. Ad esempio, un canale ad hoc. La
 destinazione riceve `m'`, ricava `H(m')` e va a confrontare `H(m')` con `H(m)`
-che ha ricevuto sul canale sicuro. Se i due valori di hash coincidono allora i
-messaggi sono conformi.
+che ha ricevuto sul canale sicuro. I due valori di hash non coincidono allora i messaggi non sono conformi.
 
-## Esempio
+### Esempio
 
-Abbiamo quindi 2 tipi di trasformazioni, encryption ed hash, che possono anche essere combinate. Ad esempio, per garantire la riservatezza e l'integrità dei
-dati è possibile utilizzarle entrambe in questo modo:
+per ora conosciamo 2 tipi di trasformazioni: encryption/decryption ed hash. Esse possono anche essere combinate. Ad esempio, per garantire la riservatezza e l'integrità dei dati le possiamo usare in questo modo:
 
 `p = m || H(m)` 
 
@@ -375,7 +357,7 @@ Il seguente protocollo è costituito da tre passi:
 Alcune considerazioni:
 - **Efficienza computazionale**: la sorgente effettua due trasformazioni (encryption e la funzione H). La destinazione esegue sempre due trasformazioni (decryption e la funzione H).
 
-## Esempio 2
+### Esempio 2
 
 In questo caso, la proprietà di riservatezza non viene rispettata mentre quella di integrità si:
 
@@ -393,7 +375,7 @@ L'intrusore può:
 - Vedendo la stessa H(m) sa che la sorgente sta ritrasmettendo più volte lo stesso messaggio. Dunque, si possono ricavare delle informazioni. Se ad esempio, due innamorati si inviano spesso dei messaggi si iniziano a fare previsioni su quello che si possono mandare;
 - Dato lo stesso messaggio, l'impronta è sempre la stessa, quindi si possono fare dei tentativi. Se ad esempio, queste due persone, si incontrano un giorno in particolare, si può iniziare a calcolarsi la funzione hash crittograficamente sicura di lunedì, poi di martedì e confrontarla con H(m) inviata nel messaggio.
 
-## Esempio 3
+### Esempio 3
 
 In questo caso, la proprietà di integrità non viene rispettata mentre quella di riservatezza si:
 
@@ -413,7 +395,7 @@ Alcune considerazioni:
 
 ## Proteggere la proprietà di autenticazione (=autenticità?)
 
-Chi riceve un dato è importante che possa sapere chi è stato ad originarlo. L'intruso può creare ad hoc un messaggio, inserirlo nel flusso normale dei dati e spacciarlo come se provenisse dalla sorgente originale. Questo attacco non lo si può prevenire ma solo rilevare. Per garantire l'autenticità di una sorgente, devo costruire una trasformazione `S` che dato un messaggio `m`, deve produrre in uscita un **attestato di autenticità** `c` che rappresenta in maniera non imitabile il messaggio `m` originale. Nessuno deve essere in grado di effettuare questa trasformazione.
+Chi riceve un dato è importante che sappia chi è stato ad originarlo. L'intruso può creare ad hoc un messaggio, inserirlo nel flusso normale dei dati e spacciarlo come se provenisse dalla sorgente originale. Questo attacco non lo si può prevenire ma solo rilevare. Per garantire l'autenticità di una sorgente, dobbiamo costruire una trasformazione `S` che dato un messaggio `m`, deve produrre in uscita un _attestato di autenticità_ `c` che rappresenta in maniera non imitabile il messaggio `m` originale. Nessuno deve essere in grado di effettuare questa trasformazione.
 
 La destinazione riceve sia il messaggio che l'attestato di autenticità ed effettua una trasformazione `V` sull'attestato di autenticità producendo in uscita una risposta che dice se il messaggio è autentico o no. In caso affermativo si recupera il messaggio `m` altrimenti lo si scarta.
 
@@ -423,8 +405,8 @@ La trasformazione `S` deve essere segreta perché altrimenti altri potrebbero sp
 Invece, `V` può essere noto perché qualsiasi destinazione deve essere in grado di dirmi se l'attestato è autentico o no.
 
 Alcune considerazioni:
-- A e B non è detto che siano online: B non è detto che sia online perchè può verificarlo in un secondo momento;
-- B = A. Se nel file system voglio che i file siano quelli che ho scritto. Quando faccio logout e login oltre a decryptarli verifico che siano anche autentici.
+- **A e B non è detto che siano entrambi online**: B può verificare l'autenticità in un secondo momento;
+- **B = A**: se nel file system vogliamo che i file siano davvero quelli che abbiamo scritto, durante la fase di logout e login oltre a decifrarli, verifichiamo che siano anche autentici.
 
 # 29/09/2021
 <!-- Nooooooo abbiamo fatto una stessa parte! -->
