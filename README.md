@@ -5,18 +5,18 @@
 
 ### Scopo della sicurezza informatica
 
-Il tema della sicurezza informatica è molto importante, in un mondo come quello di oggi, dove l'informatica domina buona parte delle relazioni sociali, lavorative, economiche e politiche. Questo tema è ancora più sentito con l'arrivo del COVID in cui il mondo si presta a digitalizzarsi.
+Il tema della sicurezza informatica è molto importante, in un mondo come quello di oggi, dove l'informatica domina buona parte delle relazioni sociali, lavorative, economiche e politiche. Questo tema è ancora più sentito con l'arrivo del _COVID_ in cui il mondo si presta a digitalizzarsi.
 La sicurezza informatica ha quindi lo scopo di proteggere le risorse da accessi indesiderati, garantire la riservatezza delle informazioni, assicurare il funzionamento e la disponibilità dei servizi a fronte di eventi imprevedibili.
 Per essere più precisi, è l’insieme dei prodotti, dei servizi, delle regole organizzative e dei comportamenti individuali che proteggono i sistemi informatici di un’azienda.
 
 ### La sicurezza è un processo, non un prodotto
 
-Da un punto di vista _software_, anche se programmi, come l'_antimalware_ e il _firewall_, sono essenziali, non è sufficiente collegarli al nostro sistema operativo per renderlo sicuro. La sicurezza informatica richiede la creazione di un insieme di processi e procedure ben ponderati. Ad esempio:
+Da un punto di vista software, anche se programmi, come l'_antimalware_ e il _firewall_, sono essenziali, non è sufficiente collegarli al nostro sistema operativo per renderlo sicuro. La sicurezza informatica richiede la creazione di un insieme di processi e procedure ben ponderati. Ad esempio:
 
 - **Backup dei dati**: i dati importanti devono essere archiviati in una posizione sicura, e dovrebbe essere possibile ripristinare una copia integra e verificata di questi dati in caso di problemi;
 - **Buone abitudini informatiche**: evitare di aprire collegamenti o allegati inattesi che si potrebbero ricevere tramite messaggi di posta elettronica o SMS, anche se sembrano provenire da mittenti attendibili;
-- **Mantenere aggiornato il software**: i sistemi operativi come Windows, MacOS, iOS o Android, nonché le app e i browser devono essere aggiornati con le _patch_ e le correzioni più recenti del produttore;
-- **Usare password complesse e univoche**: le password non devono essere banali o essere riutilizzate in più account;
+- **Mantenere aggiornato il software**: i sistemi operativi come _Windows_, _MacOS_, _iOS_ o _Android_, nonché le app e i browser devono essere aggiornati con le patch e le correzioni più recenti del produttore;
+- **Usare password complesse e univoche**: le password non devono essere banali oppure essere riutilizzate in più account;
 - **Usare l'autenticazione a più fattori**: quando possibile, sia a casa che in ufficio, bisogna abilitare l'autenticazione a più fattori per garantire una maggiore sicurezza degli account;
 - **Bloccare i dispositivi**: per accedere, assicurarsi che i dispositivi richiedano una password, un PIN o un'autenticazione biometrica, come l'impronta digitale o il riconoscimento facciale. I dispositivi smarriti o rubati possono essere fantastiche risorse per i criminali, se possono accedere facilmente ai dati di dispositivi non bloccati.
 
@@ -72,9 +72,9 @@ da scrivere bene dopo--!> <!--QUANDO VUOI...-->
 
 ### Calcolatore sicuro
 
-Un calcolatore per essere sicuro lo deve essere sia a livello _hardware_ che a livello _software_. Ovviamente questa ipotesi non è sempre verificata, ma in questo corso quando studieremo i servizi e meccanismi di sicurezza lo daremo per scontato.
+Un calcolatore per essere sicuro lo deve essere sia a livello hardware che a livello software. Ovviamente questa ipotesi non è sempre verificata, ma in questo corso quando studieremo i servizi e meccanismi di sicurezza lo daremo per scontato.
 
-Quando parliamo di sicurezza dei dati, faremo un'assunzione fondamentale: l'_hardware_, il _firmware_ e il sistema operativo sono **sicuri**.
+Quando parliamo di sicurezza dei dati, faremo un'assunzione fondamentale: l'hardware, il firmware e il sistema operativo sono **sicuri**.
 
 <!-- toglierei questa parte scritta prima
 
@@ -143,21 +143,21 @@ Si affida a processori specifici l'esecuzione di determinate funzioni di sicurez
 
 ### Valutazione, Certificazione, Enti
 
-Per poter sapere se un _prodotto software_ sia sicuro, ci deve essere qualcuno che lo garantisca.
-In questo caso, occorrono degli enti di certificazione che definiscono delle metodologie con cui andare a verificare che un progetto sia effettivamente sicuro. Applicando questi _standard_, gli enti ci garantiscono la sicurezza del prodotto che installiamo.
+Per poter sapere se un prodotto software sia sicuro, ci deve essere qualcuno che lo garantisca.
+In questo caso, occorrono degli enti di certificazione che definiscono delle metodologie con cui andare a verificare che un progetto sia effettivamente sicuro. Applicando questi standard, gli enti ci garantiscono la sicurezza del prodotto che installiamo.
 
 Esempi di standard internazionali per valutazione e certificazione della sicurezza: Orange book del NCSC, ISO 17799, CINI, CERT, ecc.
 
 ### Modello a canale insicuro
 
-D'ora in poi per analizzare e studiare i meccanismi di sicurezza faremo riferimento ad un modello molto specifico, chiamato **modello a canale insicuro**.
+D'ora in poi per analizzare e studiare i meccanismi di sicurezza faremo riferimento ad un modello molto specifico, chiamato _modello a canale insicuro_.
 
 Questo modello prevede che ci sia una sorgente dei dati, una destinazione a cui sono rivolti e che ci sia un canale che mette in comunicazione sorgente con destinazione.
 
 Assumiamo che:
 
-- La sorgente abbia un ambiente sicuro (_hardware_ e sistema operativo sicuri);
-- La destinazione abbia un ambiente sicuro (_hardware_ e sistema operativo sicuri);
+- La sorgente abbia un ambiente sicuro (hardware e sistema operativo sicuri);
+- La destinazione abbia un ambiente sicuro (hardware e sistema operativo sicuri);
 - Il canale sia insicuro, ovvero che sul canale si possano inserire degli intrusori e possono fare degli attacchi su tale canale.
 
 Definito un modello di questo genere, il nostro obiettivo è garantire che la destinazione possa consumare ed interpretare correttamente i dati inviati dalla sorgente.
@@ -187,13 +187,13 @@ Esistono 3 tipologie di contromisure per gli attacchi:
 
 Il tipo di contromisura da adottare va scelta anche in base al sistema e a cosa vogliamo proteggere (nel nostro caso ci interessano i dati). Se ad esempio, i dati sono non confidenziali, non ci interessa se vengono intercettati o meno.
 
-La contromisura ha un costo in termini di soldi, di impegno delle risorse informatiche del sistema, di impatto sugli utenti, una sua efficacia (a fronte di una certa minaccia) e dei suoi effetti collaterali (la creazione di nuove vulnerabilità). Una certa contromisura, quindi, deve essere fatta attentamente, valutando sia la probabilità che si verifichi una certa minaccia in grado di sfruttare una certa vulnerabilità, sia il danno che ne discende. Questa attività è chiamata **analisi del rischio**.
+La contromisura ha un costo in termini di soldi, di impegno delle risorse informatiche del sistema, di impatto sugli utenti, una sua efficacia (a fronte di una certa minaccia) e dei suoi effetti collaterali (la creazione di nuove vulnerabilità). Una certa contromisura, quindi, deve essere fatta attentamente, valutando sia la probabilità che si verifichi una certa minaccia in grado di sfruttare una certa vulnerabilità, sia il danno che ne discende. Questa attività è chiamata _analisi del rischio_.
 
 Come ingegneri (LOL https://youtu.be/EOR8Uz27s3Y?t=420), il nostro obiettivo è capire a fronte di più possibilità progettuali, quale ha più senso per il nostro sistema ed i nostri dati da proteggere.
 
 #### Possibili contromisure per attacchi passivi
 
-L’unica contromisura da utilizzare è la prevenzione. Non ha senso utilizzare la tecnica della rilevazione o della reazione perchè quando ci si accorge dell'attacco ormai è troppo tardi e non si può più intervenire. La riservatezza è stata ormai violata. Discorso analogo anche per la reazione.
+L’unica contromisura da utilizzare è la _prevenzione_. Non ha senso utilizzare la tecnica della _rilevazione_ o della _reazione_ perchè quando ci si accorge dell'attacco ormai è troppo tardi e non si può più intervenire. La riservatezza è stata ormai violata. Discorso analogo anche per la _reazione_.
 
 Si può:
 - **Impedire** l'accesso al canale. Ciò viene implementato tramite l'utilizzo o di canali dedicati, oppure mettendo in piedi meccanismi di controllo dell'accesso, che fanno in modo che ogni volta che una sorgente accede al canale, il  meccanismo chiede di autenticarsi. Per come è realizzata, questa soluzione non è tuttavia nè economicamente sostenibile né scalabile;
@@ -201,10 +201,10 @@ Si può:
 
 #### Possibili contromisure per attacchi attivi
 
-Le contromisure da adottare sono la rilevazione e la reazione. Non ha senso utilizzare la tecnica preventiva. In linea di principio avrebbe anche senso adottare una contromisura preventiva, in quanto protegge l'autenticità, l'integrità e la riservatezza. Ma l'unico modo per prevenire è quello di controllare l'accesso al canale ma ovviamente è quasi impossibile per i motivi specificati in precedenza.
+Le contromisure da adottare sono la _rilevazione_ e la _reazione_. Non ha senso utilizzare la tecnica _preventiva_. In linea di principio avrebbe anche senso adottare una contromisura preventiva, in quanto protegge l'autenticità, l'integrità e la riservatezza. Ma l'unico modo per prevenire è quello di controllare l'accesso al canale ma ovviamente è quasi impossibile per i motivi specificati in precedenza.
 
 Si può:
-- Aggiungere un attestato di integrità e di autenticità. In questo caso, la rappresentazione dei dati non è incomprensibile ma al normale flusso dei dati, aggiungo dati in più che permettono alla destinazione di capire se il flusso è integro e autentico oppure se è stato manomesso.
+- **Aggiungere** un attestato di integrità e di autenticità. In questo caso, la rappresentazione dei dati non è incomprensibile ma, al normale flusso dei dati ne aggiungo altri in più che permettono alla destinazione di capire se il flusso è integro e autentico oppure se è stato manomesso.
 
 ### Meccanismi e Servizi di Sicurezza
 
