@@ -506,14 +506,12 @@ slide 12
 
 ## Anonimato/Identificazione
 
-Altro requisito importante è l'anonimato, opposto all'identificazione.
-
-Per _identificazione_ si intende un insieme di azioni che richiedono di identificare chi sta partecipando a un'interazione. Ad esempio, per un pagamento o quando si accede a certe risorse, in base alla persona si possono avere tipi di accesso diversi.
+Per _identificazione_ si intende un insieme di azioni che richiedono di identificare chi sta partecipando a un'interazione. Ad esempio, per un pagamento o quando si vuole accedere a certe risorse. L'opposto dell'identificazione è l'anonimato. <!-- anonimato: ad esempio, il voto elettronico o monete elettroniche-->
 
 Il processo di identificazione ha le seguenti caratteristiche:
 
 - **Efficienza**: l’identificazione di una entità deve avvenire in maniera _efficiente_;
-- **real-time**: l'identificazione deve avvenire in un **preciso** istante e non in un instante successivo;
+- **real-time**: l'identificazione deve avvenire in un **preciso** istante e non in un secondo momento;
 - **Sicurezza**: possono essere presenti:
   - **Falsi positivi**: una determinata persona ha diritti di accesso, ma non riesce ad accedere. Ciò causa inefficienza. Bisogna minimizzare questo numero;
   - **Falsi negativi**: l'accesso viene effettuato da persone non autorizzate (si spacciano per chi non sono xD). Non bisogna averli.
@@ -528,9 +526,7 @@ E' possibile che un sistema abbia anche più sistemi di identificazione. Ad esem
 
 E' importante ricorda che l'identificando e il verificatore debbano essere online: non posso identificare in un secondo momento perchè altrimenti come faccio ad accedere?
 
-La robustezza di un sistema di identificazione è maggiore se vengono combinati più principi. A seconda dell'informazione che voglio proteggere si sceglierà il sitema più adatto perchè ci sarà un costo computazionale, di gestione etc.
-
-<!-- anonimato: ad esempio, il voto elettronico o monete elettroniche-->
+La robustezza di un sistema di identificazione è maggiore se vengono combinati più principi. A seconda dell'informazione che voglio proteggere si sceglierà il sistema più adatto perchè ci sarà un costo computazionale, di gestione etc.
 
 ### Protocollo di identificazione
 
@@ -562,55 +558,50 @@ La trasformazione T3.1 deve essere segreta cioè solo l'identificando deve conos
 
 ## Funzioni one-way
 
-Una funzione f è detta unidirezionale se:
-- è invertibile
-- facile da calcolare. dato lo spazio di input x è facile calcolare f(x)
-- è difficile dato f(x) risalire alla x che ha originato l'output
+Una funzione `f` è detta unidirezionale se:
+- è invertibile;
+- facile da calcolare: dato lo spazio di input `x` è facile calcolare l'uscita `f(x)`;
+- è difficile dato `f(x)` risalire alla `x` che ha originato l'output.
 
-Ad esempio, sono funzioni unidirezionali:
-- la funzione hash crittograficamente sicura;
-- funzione di cifratura: chi non conosce la funzione D è difficile risalire al dato che è stato cifrato;
-- funzione di verifica di firma digitale: la funzione V è facile da eseguire ma chi non conosce la funzione S non è in grado di generare un messaggio correttamente verificabile.
+Ad esempio, sono funzioni unidirezionali la:
+- **Funzione hash crittograficamente sicura**;
+- **Funzione di cifratura**: chi non conosce la funzione `D` è difficile che possa risalire al dato in chiaro;
+- **Funzione di verifica della firma digitale**: la funzione `V` è facile da eseguire ma chi non conosce la funzione `S` non è in grado di generare un messaggio correttamente verificabile.
 
-Un altro esempio è l'elenco telefonico: dato un cognome di una persona è facile risalire al numero telefonico. Il contrario invece è assolutamente difficile.
-
-Per garantire alcune proprietà di sicurezza, abbiamo bisogno che le trasformazioni siano unidirezionali. Nella teoria matematica, non esiste una funzione che sia unidirezionale. Nella pratica, invece, sono state individuate molte funzioni che sono candidate ad avere un comportamento di unidirezionalità. Vengono chiamate pseudo-unidirezionali perchè se non si possiede un'informazione non è possibile trovare la funzione inversa.
+Per garantire alcune proprietà di sicurezza, abbiamo bisogno che le trasformazioni siano unidirezionali. Nella teoria matematica, non esiste una funzione che sia unidirezionale. Nella pratica, invece, sono state individuate molte funzioni che sono candidate ad avere un comportamento di unidirezionalità. Vengono chiamate _pseudo-unidirezionali_ perchè se non si possiede un'informazione, non è possibile trovare la funzione inversa.
 
 ## Trasformazioni segrete
 
-- **Trasformazione segreta**: ad esempio, tutte quelle volte che vogliamo proteggere la riservatezza dei dati (E e D), la trasformazione della sorgente con cui autentico i dati (S), trasformazione con cui genero la prova d'identità. Possiamo avere tre approcci:
-  - macchine a funzionamento segreto: non conoscere come è formata la macchina. Ad esempio, Macchina Enigma. 
-  - Algoritmo: le operazioni stesse sono segrete. Ad esempio, gli algoritmi delle prime SIM, algoritmi USA durante la guerra fredda;
-  - Parametro: la macchina e l'algoritmo sono noti ma un parametro di ingresso dell'algoritmo (chiave crittografica);
+Possiamo avere tre approcci:
+- **Macchine a funzionamento segreto**: non conoscere come è formata la macchina. Ad esempio, la Macchina Enigma;
+- **Algoritmo**: le operazioni sono segrete. Ad esempio, gli algoritmi delle prime SIM, algoritmi USA durante la guerra fredda;
+- **Parametro**: la macchina e l'algoritmo sono noti ma un parametro di ingresso dell'algoritmo è segreto (chiave crittografica).
 
-  I primi due approcci non funzionano molto bene:
-  - No manutenibilità: è impossibile che non si possa violare la segretezza di una macchina o di un algoritmo. Non è immediato ripristinare la sua sicurezza perchè dovrei riprogettare tutto da zero.
-  - No scalabile: non si può pensare questo approccio su grande scala come internet
-  - No Certificazione: è bello avere in casa qualcosa di cui non si conosce nulla? Nessuno mi può garantire che quello che sto usando è sicuro
+I primi due approcci non funzionano molto bene perchè:
+- **No manutenibilità**: è impossibile che non si possa violare la segretezza di una macchina o di un algoritmo. Non è immediato ripristinare la sua sicurezza perchè dovremmo riprogettare tutto da zero;
+- **No scalabilità**: non si può pensare questo approccio su grande scala come internet. Cosa succede se una macchina segreta viene violata?;
+- **No Certificazione**: è bello avere in casa qualcosa di cui non si conosce nulla? E poi chi è che mi garantisce che quello che stiamo usando è davvero sicuro?
 
-Dunque, l'approccio usato al giorno d'oggi è il terzo. D'ora in poi l'approccio che useremo è trasformazione nota con parametro segreto (chiave)
+L'approccio usato al giorno d'oggi, quindi, è il terzo.
 
 ![chiave](/img/img9.png)
 
-- Con T indicheremo la trasformazione che ha funzionamento pubblico (quindi anche l'intrusore) ma i parametri non sono noti (delle trasformazioni E, D e da S);
-- Con k indichiamo la chiave cioè il parametro non noto ed è un parametro di ingresso;
-- Con spazio delle chiavi intendiamo l'insieme delle 2^n possibili configurazioni dove n è il numero di bit. La chiave è costituita da una delle 2^n configurazioni. Più è grande n più è difficile per un intrusore indovinare la chiave.
+- Con `T` indicheremo la trasformazione nota (quindi la conosce anche l'intrusore);
+- Con `k` indichiamo la _chiave_ cioè il parametro non noto ed è un parametro di ingresso;
+- Con spazio delle chiavi intendiamo l'insieme delle `2^n` possibili configurazioni dove `n` è il numero di bit della chiave. La chiave è costituita da una delle `2^n` configurazioni. Più è grande `n` più è difficile per un intrusore indovinare la chiave.
 
 ## Algoritmo forza bruta
 
 ![intrusore](./img/img10.png)
 
-Un intrusore può sempre disporre algoritmo di ricerca esauriente noto come algorimo forza bruta. Se io intrusore non conosco la configurazione scelta dalla sorgente leggittima per il segreto posso esplorare tutto lo spazio delle chiavi. Se n è il numero di bit della chiave e 2^n è il numero totale di configurazioni, dato che non so la chiave provo tutti i tentativi fino a quando non la indovino. Ovviamente devo conoscere la trasformata T. Se il cifrato che ottengo è uguale a quello sul canale vuol dire che sono riuscito a trovare la configurazione corretta.
+Un intrusore può sempre disporre di un _algoritmo di ricerca esauriente_ noto come _algorimo di forza bruta_. Se l'intrusore non conosce la configurazione scelta dalla sorgente leggittima per la chiave, può esplorare tutto lo spazio delle chiavi. Se `n` è il numero di bit della chiave e `2^n` è il numero totale di configurazioni, dato che non sa la chiave prova tutti i tentativi fino a quando non la indovina. Ovviamente deve conoscere la trasformata `T`. Se il cifrato che ottiene è uguale a quello sul canale, vuol dire che è riuscito a trovare la configurazione corretta.
 
 ## Relazioni fra le chiavi
 
 In base a come sono fatti i parametri che diamo in pasto agli algoritmi possiamo individuare due famiglie di cifrari:
-- **Cifrari a chiavi simmetriche**: le trasformazioni E(, S) e D(), V). La trasformazione E e D sono note. La trasformazione E deve prendere in ingresso il parametro ks mentre la trasformazione D prende come parametro di ingresso kd. Se le chiavi ks e kd sono uguali o sono uguali o facilmente calcolabili una dall’altra: ks = kd.
-Se prendiamo la coppia del cifrario E e D, quando cifro userò una chiave ks e quando decifro userò ks. Ciò implica che le due entità in gioco conoscano lo stesso segreto. Tuttavia, ks e kd devono essere *segreti*. Questo tipo di cifrario si usa per garantire riservatezza. Caso molto raro è quello di costruire un attestato di autenticità;
+- **Cifrari a chiavi simmetriche**: le chiavi `ks` e `kd` sono uguali (o derivano facilmente l’una dall’altra). Se prendiamo la coppia del cifrario `E` e `D`, quando cifriamo useremo una chiave ks e quando decifriamo useremo ks. Ciò implica che le due entità in gioco conoscano lo stesso segreto. Dunque, ks e kd devono essere *segreti*. Questo tipo di cifrario si usa per garantire riservatezza. Caso molto raro è quello di costruire un attestato di autenticità;
 - **Cifrari a chiave pubbliche**: le chiavi ks e kd sono diverse e una delle due è difficilemnte calcolabile dall'altra. Questo tipo di cifrario si usa per garantire riservatezza e autenticazione.
-kd è facilmente calcolabile se conosco ks ma dalla chiave kd è difficile risalire alla chiave ks. Se uso un cifrario asimmetrico, la funzione F(kd) è facilmente calcolabile.
-Con ks è la chiave segreta e kd è la chiave pubblica.
-Ogni entità dispone della conoscenza di due chiavi. Ogni entità ha una chiave segreta se non l'entità proprietà e dispone di una chiave pubblica associata univocamente alla chiave segreta che tutti possono conoscere. E' computazionalmente difficile risalire dalla chiave pubblica la chiave privata.
+kd è facilmente calcolabile se conosco ks ma dalla chiave kd è difficile risalire alla chiave ks. Se uso un cifrario asimmetrico, la funzione F(kd) è facilmente calcolabile. ks è la chiave segreta e kd è la chiave pubblica. Ogni entità dispone della conoscenza di due chiavi. Ogni entità ha una chiave segreta se non l'entità proprietà e dispone di una chiave pubblica associata univocamente alla chiave segreta che tutti possono conoscere.
 
 Funzione di encryption e darò in pasto l'unica chiave che conosco che è associata ad antonio corradi. La chiave pubblica. Alla funzione E darò la chiave pubblica del destinatario. La funzione D, il destinatario può risalire al dato originario perchè è l'unico che conosce la chiave ks univocamente associata. Solo con la chiave ks posso risalire al contenuto originario.
 
@@ -618,10 +609,10 @@ Funzione di encryption e darò in pasto l'unica chiave che conosco che è associ
 
 Le chiavi simmetriche devono avere le seguenti proprietà:
 
-- **Robustezza**: un intrusore non deve essere in grado facilmente di individuare la chiave. Se una chiave è formata da n bit, più grande è lo spazio delle chiavi più è difficile individuare i bit corretti. Inoltre, anche il sistema che genera la chiave, la distribuisce, memorizzo deve essere sicuro
-- **Riservatezza**: il sistema deve garantire la riservatezza della chiave perchè le chiavi ks, kd devono essere segrete;
-- **Integrità**: quando decifriamo i dati dobbiamo essere sicuri che la chiave non sia stata alterata altrimenti non riesco a decifrarli
-- **Autenticità**: la chiave è conosciuta dalla sorgente e dalla destinazione (autentica). Sono certo che la chiave è conosciuta da un'entità.
+- **Robustezza**: un intrusore non deve essere in grado facilmente di individuare la chiave. Se una chiave è formata da `n` bit, più grande è lo spazio delle chiavi più è difficile individuare i bit corretti. Inoltre, anche il sistema che genera, distribuisce e memorizza la chiave deve essere sicuro;
+- **Riservatezza**: il sistema deve garantire la riservatezza della chiave perchè le chiavi `ks` e `kd` devono essere segrete;
+- **Integrità**: quando decifriamo i dati dobbiamo essere sicuri che la chiave non sia stata alterata altrimenti non riusciamo a decifrarli;
+- **Autenticità**: la chiave è conosciuta dalla sorgente e dalla destinazione autentica.
 
 ### Proprietà delle chiavi asimmetriche
 
@@ -629,37 +620,37 @@ Le chiavi asimmetriche devono avere le seguenti proprietà:
 
 La chiave pubblica (PU) e chiave privata (SU) devono essere legate da una funzione: se conosco la chiave segreta deve essere per me proprietario per la chiave segreta calcolare la chiave pubblica. Tutti quelli che conoscono la chiave pubblica non devono però risalire alla conoscenza della chiave privata. La funzione deve essere unidirezionale.
 
-- **Riservatezza**: la riservatezza è legata alla chiave privata.
-- **Integrità**: è importante che la chiave privata che sto utilizzando sia quella corretta e non modificata. La chiave pubblica deve essere integra perchè devo essere sicuro che sia quella generata
+- **Riservatezza**: la riservatezza è legata alla chiave privata;
+- **Integrità**: è importante che la chiave privata che stiamo utilizzando sia quella corretta e non modificata. La chiave pubblica deve essere integra perchè devo essere sicuro che sia quella generata;
 - **Autenticità**: per quanto riguarda la chiave pubblica, devo sapere con certezza se appartiene a una determinata entità oppure no. Se non sono certo dell'associazione sto cifrando dei dati non per chi li sto inviando ma per un intrusore.
 
 ## Crittanalisi
 
-Ci sono diversi criteri da seguire per non far risalire all'intrusore qual è la chiave:
+Ci sono diversi criteri da seguire per non far risalire all'intrusore alla chiave:
 
-- Indovinarla
-- Intercettarla
-- Dedurla
+- **Indovinarla**;
+- **Intercettarla**;
+- **Dedurla**.
 
 <!-- slide 22 -->
 ### Indovinare la chiave
 
-E' sempre possibile risalire alla chiave perchè esiste l'attacco di forza bruta. Quello che devo fare è rendere difficile l'individuazione.
+E' sempre possibile risalire alla chiave perchè esiste l'attacco di forza bruta. Quello che dobbiamo fare è rendere difficile l'individuazione.
 
 <!-- slide 23 slide 24 -->
-Per ridurre l'attacco con forza bruta, devo adottare alcuni accorgimenti:
-- Lo spazio delle chiavi deve essere molto grande (2^n molto grande). Tirare ad indovinare per la teoria della probabilità, se n è il numero di bit che rappresenta il mio segreto, 2^-n è la probabilità che io ci becchi. Se ho a disposizione k tentativi, la probabilità è k*2^-n. più tentativi maggiore è la probabilità di accesso.
-- Limitare il numero di prove che l'intrusore ha a dispoziione: ad esempio il pin del bancomat. Dopo tre accessi si disabilita l'accesso
+Per ridurre l'attacco con forza bruta, dobbiamo adottare alcuni accorgimenti:
+- **Lo spazio delle chiavi deve essere molto grande**: se `n` è il numero di bit che rappresenta il mio segreto, `2^-n` è la probabilità di indovinare la chiave. Se ho a disposizione `k` tentativi, la probabilità è `k*2^-n`. Più tentativi si hanno a diposizione, maggiore è la probabilità di individuare la combinazione giusta;
+- **Limitare il numero di prove che l'intrusore ha a dispoziione**: ad esempio il pin del bancomat. Dopo tre accessi si disabilita l'accesso;
 - Un altro accorgimento fondamentale è che i simboli che rappresentano la chiave devono essere anche casuali.
-- Se devo proteggere i miei dati, la proprietà di riservatezza è fondamentale. Un certo dato può avere come proprietà di riservatezza una durata limitata nel tempo. Altri dati hanno una durata enorme. In questo caso, quando scelgo una chiave, devo chiedermi per quanto tempo viene utilizzata per cifrare i dati. Se i dati devono essere mantenuti per un periodo molto lungo, bisogna cambiare frequentemente la chiave. In questo modo, riduco la possibilità di ricerca da parte dell'intrusore.
+- **Proprietà di riservatezza è fondamentale**: un certo dato può avere come proprietà di riservatezza una durata limitata nel tempo. Altri dati hanno una durata enorme. In questo caso, quando scegliamo una chiave, dobbiamo chiederci per quanto tempo viene utilizzata per cifrare i dati. Se i dati devono essere mantenuti per un periodo molto lungo, bisogna cambiare frequentemente la chiave. In questo modo, si riducono le probabilità di individuarla da parte dell'intrusore.
 
 ### Intercettare la chiave
 
-Un intrusore non deve intercettare una chiave quando la generazione di una chiave avviene su una CPU sarà lui ad eseguire la generazione e memorizzare la chiave in memoria RAM quando la chiave dovrà essere usata. Ho bisogno anche di un sistema che mi memorizzi la chiave in modo persistente.
+La CPU si occupa di generare e memorizzare la chiave in memoria RAM quando deve essere usata. Ho bisogno anche di un sistema che mi memorizzi la chiave in modo persistente.
 
-L'intercettazione può avvenire nella fase di utilizzo e nella fase di memorizzazione della chiave.
+L'intercettazione può avvenire sia nella fase di utilizzo che nella fase di memorizzazione della chiave.
 
-Devo impedire l'accesso alla cella di memoria ma anche nella fase in cui ho acceduto alla mia cella. Solo il proprietario della chiave segreta deve avere accesso alla cella in cui è memorizzata. 
+Dobbiamo impedire l'accesso alla cella di memoria ma anche nella fase in cui abbiamo acceduto alla cella. Solo il proprietario della chiave segreta deve avere accesso alla cella in cui è memorizzata.
 
 Ogni volta che dovrà accedere alla chiave solo se potrà usare la trasformazione di decryption per ricavare usando u la chiave s.
 
@@ -669,7 +660,7 @@ Inoltre, l’unità di elaborazione deve decifrare la chiave, impiegarla nell’
 
 ![intrusore](./img/img11.png)
 
-Come genero le chiavi?
+Come si generano le chiavi?
 
 Tramite il componente RNG (Random Number Generator): può generare una sequenza di bit, i cui tutti i bit sono assolutamente casuali e imprevedibili e genera s (parametro segreto). s deve essere mantenuto cifrato quindi uso una funzione di E per mantenere in modo permanente in memoria. E se devo cifrare il mio segreto che cifra i dati? Ho bisogno di un altro parametro k che a sua volta devo memorizzarlo e generarlo in modo sicuro. Un cane che si morde la coda.
 
@@ -690,21 +681,19 @@ La cella di memoria dove contenere le chiavi dove può risiedere?
 
 ?
 
-## Deduzione di un segreto dal suo uso
-
-Esistono diverse tipologie di attacco:
-- attacco con testo in chiaro noto: 
+## Deduzione della chiave
 
 ![dedurre](./img/img12.png)
 
-- **attacco con solo testo cifrato**: l'intrusore dispone esclusivamente di campioni di testo cifrato. L'intruso può osservare il traffico sul canale insicuro ma dispone solo del traffico cifrato. Si possono fare degli attacchi, a seconda di come vengono impiegati i cifrari, l'intrusore può sfruttare conoscenze, ipotesi sul linguaggio di origine che è stato usato per scrivere il messaggio cifrato, può disporre di tecniche e statistiche per effettuare determinati attacchi. Avendo il testo cifrato e queste tecniche può dedurre delle informazioni sul testo originario o sulla chiave stessa
-- **attacco con testo in chiaro noto**: l'intruso ha la fortuna di avere il testo in chiaro del cifrato e il cifrato
-- **attacco con testo in chiaro scelto**: l'intruso sceglie un testo in chiaro e ha la possibilità di ottenere una coppia di testo in chiaro-cifrato ma dove il testo in chiaro l'ha scelto lui ma l'ha fatto cifrare
-- **attacco con testo cifrato scelto** dispone sempre di una coppia testo cifrato-testo scelto, ma l'attaccante a differenza di prima, ha preso un campione di testo cifrato da lui voluto e ha ottenuto un il testo in chiaro corrispondente. E' riuscito a farsi decifrare il testo cifrato dalla sorgente
+Esistono diverse tipologie di attacco:
+- **Attacco con solo testo cifrato**: l'intrusore dispone esclusivamente di campioni di testo cifrato che li preleva dal canale insicuro. L'intrusore può sfruttare conoscenze, ipotesi sul linguaggio di origine che è stato usato per scrivere il messaggio cifrato, può disporre di tecniche e statistiche per effettuare determinati attacchi. Avendo il testo cifrato e queste tecniche può dedurre delle informazioni sul testo originario o sulla chiave stessa;
+- **Attacco con testo in chiaro noto**: l'intrusore ha la fortuna di avere il testo in chiaro del cifrato e il cifrato stesso;
+- **Attacco con testo in chiaro scelto**: l'intrusore sceglie un testo in chiaro e ha la possibilità di cifrarlo. Il testo in chiaro l'ha scelto lui ma riesce a cifrarlo;
+- **Attacco con testo cifrato scelto**: dispone sempre di una coppia testo cifrato-testo scelto, ma l'attaccante a differenza di prima, ha preso un campione di testo cifrato da lui voluto e ha ottenuto il testo in chiaro corrispondente. E' riuscito a farsi decifrare il testo cifrato dalla sorgente.
 
 ## Contromisura preventiva
 
-La contromisura preventiva è fare in modo che l'uscita di un algortimo crittografico deve essere assolutamente aleatorio. Purtroppo, ci sono alcuni algoritmi che impiegati in una certa modalità producono determinismo.
+La contromisura _preventiva_ è fare in modo che l'uscita di un algortimo crittografico debba essere assolutamente aleatorio cioè la probabilità che una variabile assuma un valore sia la stessa. Purtroppo, non è sempre vero perchè ci sono alcuni algoritmi che impiegati in un certe modalità producono determinismo.
 
 ## Teoria della complessità
 
@@ -737,9 +726,11 @@ T = O(n^t ) con t esponente più grande in g(n),
 T = O(b^n) , con b costante, o anche T = O(exp (n))
 
 ## Classificazione dei problemi
-- facile, se esiste un algoritmo polinomiale in grado di
-risolverlo su una macchina di Turing deterministica;
-- difficile, se non sono stati fino ad ora individuati
+
+Un problema si possono classificare in:
+
+- **Facile**: se esiste un algoritmo polinomiale in grado di risolverlo su una macchina di Turing deterministica;
+- **Difficile**: se non sono stati fino ad ora individuati
 (e probabilmente non saranno mai individuati) algoritmi che lo risolvono in tempo polinomiale
 
 Che cosa interessano a noi questi andamenti?
