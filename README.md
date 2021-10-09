@@ -1,24 +1,39 @@
 # Sicurezza dell'informazione 2021-2022
 
 <!--la data da togliereeeeee...tra due mesi viene l'angoscia di vedere quando il corso è iniziato-->
-<!--Perfetto, da non modificare -->
 ## 01.Introduzione (23/09/2021)
 
 ### Scopo della sicurezza informatica
 
-Il tema della sicurezza informatica è molto importante, in un mondo come quello di oggi, dove l'informatica domina buona parte delle relazioni sociali, lavorative, economiche e politiche. Questo tema è ancora più sentito con l'arrivo del COVID in cui il mondo si presta a digitalizzarsi.
+Il tema della sicurezza informatica è molto importante, in un mondo come quello di oggi, dove l'informatica domina buona parte delle relazioni sociali, lavorative, economiche e politiche. Questo tema è ancora più sentito con l'arrivo del _COVID_ in cui il mondo si presta a digitalizzarsi.
 La sicurezza informatica ha quindi lo scopo di proteggere le risorse da accessi indesiderati, garantire la riservatezza delle informazioni, assicurare il funzionamento e la disponibilità dei servizi a fronte di eventi imprevedibili.
 Per essere più precisi, è l’insieme dei prodotti, dei servizi, delle regole organizzative e dei comportamenti individuali che proteggono i sistemi informatici di un’azienda.
 
-### I tre caposaldi della sicurezza informatica (CIA Trade Triangle)
+### La sicurezza è un processo, non un prodotto
 
-Le tre proprietà da garantire per la sicurezza dei dati sono:
+Da un punto di vista software, anche se programmi, come l'_antimalware_ e il _firewall_, sono essenziali, non è sufficiente collegarli al nostro sistema operativo per renderlo sicuro. La sicurezza informatica richiede la creazione di un insieme di processi ben ponderati. Ad esempio:
 
-- **Confidenzialità**: assicura che solo chi è autorizzato può accedere (in sola lettura) a risorse o sapere almeno che esse esistano;
+- **Backup dei dati**: i dati importanti devono essere archiviati in una posizione sicura, e dovrebbe essere possibile ripristinare una copia integra e verificata di questi dati in caso di problemi;
+- **Buone abitudini informatiche**: evitare di aprire collegamenti o allegati inattesi che si potrebbero ricevere tramite messaggi di posta elettronica o SMS, anche se sembrano provenire da mittenti attendibili;
+- **Mantenere aggiornato il software**: i sistemi operativi come _Windows_, _MacOS_, _iOS_ o _Android_, nonché le app e i browser devono essere aggiornati con le patch e le correzioni più recenti del produttore;
+- **Usare password complesse e univoche**: le password non devono essere banali oppure essere riutilizzate in più account;
+- **Usare l'autenticazione a più fattori**: quando possibile, sia a casa che in ufficio, bisogna abilitare l'autenticazione a più fattori per garantire una maggiore sicurezza degli account;
+- **Bloccare i dispositivi**: per accedere, assicurarsi che i dispositivi richiedano una password, un PIN o un'autenticazione biometrica, come l'impronta digitale o il riconoscimento facciale. I dispositivi smarriti o rubati possono essere fantastiche risorse per i criminali, se possono accedere facilmente ai dati di dispositivi non bloccati.
+
+### I tre capisaldi della sicurezza informatica (CIA Trade Triangle)
+
+L'acronimo _CIA_ viene usato per rappresentare le tre proprietà fondamentali della sicurezza informatica:
+
+- **Confidenzialità** (o **riservatezza**): assicura che solo chi è autorizzato può accedere (in sola lettura) a risorse o sapere almeno che esse esistano;
 - **Integrità**: solo chi è autorizzato può modificare, eliminare e creare risorse;
 - **Disponibilità**: solo chi è autorizzato può accedere alle risorse senza interferenze ed ostacoli.
 
 ![cia](./img/img1.png)
+
+A queste proprietà se ne possono aggiungere altre come:
+
+- **Autenticità**: si deve effettivamente dimostrare chi è stato a creare il dato o sapere da chi proviene;
+- **Non ridupio**: quando una transazione è conclusa, si deve essere certi di poter attribuire la paternità di quell'operazione su quel dato a qualcuno.
 
 ### Terminologia
 
@@ -29,27 +44,29 @@ Le tre proprietà da garantire per la sicurezza dei dati sono:
 
 Esempio: un ponte ha una crepa (vulnerabilità), rischia di crollare (minaccia), un peso totale eccessivo sul ponte (attacco), cercare di controllare il numero di veicoli sul ponte (contromisura).
 
+<!-- toglierei questo paragrafo
 - **Virus**: provoca danni e si replica propagato dagli umani (involontariamente);
 - **Worm**: provoca danni perché si autoreplica (satura risorse) in maniera automatica, senza l'intervento dell'utente;
 - **Trojan (horse)**: vettore di malware, contiene funzionalità aggiuntive impreviste;
 - **Backdoor**: punto di accesso non autorizzato;
 - **Rootkit**: strumenti per accesso privilegiato, nascosti (modifica di un programma, libreria, driver,
-modulo kernel, hypervisor) ed invisibili.
+modulo kernel, hypervisor) ed invisibili.-->
 
-<!-- dove c'è scritto questa roba kkkkk-->
+<!--CANCELLEREI QUESTO PARAGRAFO :P
+
+SCRITTO DOPO
+
 ### Qualche concetto (paragrafo da modificare)
-<!--CANCELLEREI QUESTO PARAGRAFO :P-->
-<!-- chi è che ha preso questi appunti? -->
 - Analisi Valore: quanto valgono i miei dati?
 - Analisi Rischio: Quanto valgono i danni(?)
-- Modello di minaccia: dipende dall'analisi del valore, chi mi attacca e perché
+- Modello di minaccia: dipende dall'analisi del valore, chi mi attacca e perché-->
 
-<!-- dove c'è scritto questa roba kkkkk-->
+<!--CANCELLEREI QUESTO PARAGRAFO :P
 ### Poi ha detto qualche vulnerabilità a caso, spiegando bene solo l'IP spoofing e il SYN flooding, ma il resto le ha tralasciate perché sì.
-da scrivere bene dopo <!--QUANDO VUOI...CANCELLEREI ANCHE QUESTO PARAGRAFO :P-->
+da scrivere bene dopo--!> <!--QUANDO VUOI...-->
 
 ---
-<!-- TITOLO FAKE: non ne ho trovata manco una -->
+
 <!-- da togliere per fare il blocco 1 tutto unito -->
 ## 27/09/2021
 
@@ -57,7 +74,9 @@ da scrivere bene dopo <!--QUANDO VUOI...CANCELLEREI ANCHE QUESTO PARAGRAFO :P-->
 
 Un calcolatore per essere sicuro lo deve essere sia a livello hardware che a livello software. Ovviamente questa ipotesi non è sempre verificata, ma in questo corso quando studieremo i servizi e meccanismi di sicurezza lo daremo per scontato.
 
-Quando parliamo di sicurezza dei dati faremo un'assunzione fondamentale: assumeremo che il nostro hardware, firmware e sistema operativo, siano **sicuri**.
+Quando parliamo di sicurezza dei dati, faremo un'assunzione fondamentale: l'hardware, il firmware e il sistema operativo sono **sicuri**.
+
+<!-- toglierei questa parte scritta prima
 
 In questo corso ci si focalizza principalmente sulla _sicurezza dei dati_, che consiste nel garantire i seguenti requisiti fondamentali:
 
@@ -66,14 +85,12 @@ In questo corso ci si focalizza principalmente sulla _sicurezza dei dati_, che c
 - Disponibilità;
 - Autenticazione;
 - Non ripudio.
-
+-->
 
 <!--NB: la sicurezza HW e FW non è argomento proprio del corso, ma la prof ci ha dato qualche info a riguardo per sapere giusto di cosa stiamo parlando.-->
 
 <!--Forse da togliere, non è importante: ci devo pensare (Karina) -->
 ### Sicurezza hardware
-
-<!-- toglierei questa sezione: non viene trattata nel corso e non è oggetto di esame -->
 
 Soprattutto negli ultimi anni, la sicurezza hardware sta emergendo in maniera preponderante; si sono scoperte vulnerabilità a livello di componenti fisici, in particolare:
 
@@ -84,9 +101,8 @@ Soprattutto negli ultimi anni, la sicurezza hardware sta emergendo in maniera pr
 
 L'ambito della sicurezza hardware si occupa di proteggere il calcolatore, ma anche altri dispositivi fisici, da minacce quali furto, danneggiamento o alterazione dei componenti.
 
-### Sicurezza firmware
-
 <!-- toglierei questa sezione: non viene trattata nel corso e non è oggetto di esame -->
+### Sicurezza firmware
 
 Così come l'hardware, anche il firmware deve essere sicuro: ci sono diverse vulnerabilità legate al FW, specialmente recenti (anche in questo caso ci troviamo in un'area in grande espansione, soprattutto nell'ultimo periodo).
 
@@ -127,20 +143,14 @@ Si affida a processori specifici l'esecuzione di determinate funzioni di sicurez
 
 ### Valutazione, Certificazione, Enti
 
-Per poter sapere che un componente di sicurezza sia sicuro, ci deve essere qualcuno che lo garantisca.
-In questo caso, occorrono degli enti di certificazione e degli standard che definiscono delle metodologie con cui andare a verificare che un progetto sia effettivamente sicuro. Applicando questi standard, gli enti ci garantiscono la sicurezza del prodotto che installiamo.
+Per poter sapere se un prodotto software sia sicuro, ci deve essere qualcuno che lo garantisca.
+In questo caso, occorrono degli enti di certificazione che definiscono delle metodologie con cui andare a verificare che un progetto sia effettivamente sicuro. Applicando questi standard, gli enti ci garantiscono la sicurezza del prodotto che installiamo.
 
 Esempi di standard internazionali per valutazione e certificazione della sicurezza: Orange book del NCSC, ISO 17799, CINI, CERT, ecc.
 
-### Terminologia
-
-**Meccanismo di Sicurezza**: meccanismo progettato per rilevare/prevenire un attacco, risanare il sistema a seguito di un attacco.
-
-**Servizio di Sicurezza**: servizio che migliora la sicurezza dell'elaborazione dei dati e del trasferimento delle informazioni.
-
 ### Modello a canale insicuro
 
-D'ora in poi per analizzare e studiare i meccanismi di sicurezza faremo riferimento ad un modello molto specifico, chiamato _modello del canale insicuro_.
+D'ora in poi per analizzare e studiare i meccanismi di sicurezza faremo riferimento ad un modello molto specifico, chiamato _modello a canale insicuro_.
 
 Questo modello prevede che ci sia una sorgente dei dati, una destinazione a cui sono rivolti e che ci sia un canale che mette in comunicazione sorgente con destinazione.
 
@@ -148,97 +158,84 @@ Assumiamo che:
 
 - La sorgente abbia un ambiente sicuro (hardware e sistema operativo sicuri);
 - La destinazione abbia un ambiente sicuro (hardware e sistema operativo sicuri);
-- Il canale sia insicuro, ovvero che sul canale si possano inserire degli intrusori e possono fare degli attacchi passivi e attivi su tale canale
+- Il canale sia insicuro, ovvero che sul canale si possano inserire degli intrusori e possono fare degli attacchi su tale canale.
 
-Definito un modello di questo genere, il nostro obiettivo è garantire che la destinazione possa consumare ed interpretare correttamente i dati inviati dalla sorgente: se la sorgente produce dati con garanzia di autenticità, la destinazione deve poter verificare l'autenticità anche in seguito alla consumazione di tali (non ripudio).
-
-**Mmmm non mi convince la def di non ripudio**
+Definito un modello di questo genere, il nostro obiettivo è garantire che la destinazione possa consumare ed interpretare correttamente i dati inviati dalla sorgente.
 
 ### Classificazione attacchi
 
 Gli attacchi si classificano in due tipologie:
 
-- **Passivo**: l'intrusore si inserisce sul canale, ma l'unica cosa che può fare è intercettare i dati senza alterarne il flusso. Questo canale può essere un bus, un canale interno offline, ma anche un canale diretto. Viene minato il requisito di _disponibilità_.
-<!-- che cosa è un canale interno offline?-->
-- **Attivo**: l'intrusore può accedere al canale ed alterare il normale flusso dei dati. Può:
-  - Modificare/Aggiungere il flusso intenzionalmente per cambiare il contenuto dei dati. Viene minato il requisito dell'_integrità_;
-  <!--- Aggiungere informazioni, in modo da evitare la falsificazione che mina all'integrità dei dati. La destinazione deve avere un controllo che garantisca la legittimità della fonte-->
-  - Interrompere il normale flusso impedendo che i dati arrivino alla destinazione. Viene minato il requisito di _disponibilità_.
-  - Venire a conoscenza del flusso di dati senza modificare il contenuto. È un attacco passivo. Viene minato il requisito della _confidenzialità_.
+- **Passivo**: l'intrusore si inserisce sul canale, ma l'unica cosa che può fare è osservare i dati. Viene minato il requisito di _confidenzialità_;
+- **Attivo**: l'intrusore si inserisce sul canale ed alterare il normale flusso dei dati. Può:
+  - **Modificare** il flusso intenzionalmente per cambiare il contenuto dei dati. Viene minato il requisito dell'_integrità_;
+  - **Aggiungere** nuove informazioni facendo credere alla destinazione che siano state inviate dalla sorgente leggittima. Viene minato il requisito dell'_autenticità_;
+  - **Interrompere** il normale flusso impedendo che i dati arrivino alla destinazione. Viene minato il requisito di _disponibilità_.
 
-<!-- una volta basta e avanza metterlo-->
-<!--Ricapitolando per tipo di attacco e proprietà che mette a rischio):
 
-- **Attacchi passivi**: mina confidenzialità e autenticazione. Autenticazione? DA DOVE ESCE FUORI?
+<!--ho dei dubbi che questo riassunto sia corretto:
+
+- **Attacchi passivi**: mina confidenzialità e autenticazione.
 - **Attacchi attivi**: integrità, autenticità e disponibilità-->
 
 ### Contromisure
 Esistono 3 tipologie di contromisure per gli attacchi:
 
-- **Prevenzione**: tramite cui si previene la possibilità che un dato venga intercettato;
-- **Rilevazione**: tramite cui si rileva un attacco in corso;
-- **Reazione**: tramite cui si reagisce dopo che un attacco è già avvenuto.
+- **Prevenzione**: si previene la possibilità di un attacco;
+- **Rilevazione**: si rileva un attacco in corso;
+- **Reazione**: si reagisce dopo che un attacco è già avvenuto.
 
-Il tipo di contromisura da adottare va scelto anche in base al sistema e a cosa vogliamo proteggere (nel nostro caso ci interessano i dati). Se ad esempio i dati sono non confidenziali, non ci interessa che vengano intercettati. Invece, se i dati non sono riservati, non sarà necessaria la prevenzione.
+Il tipo di contromisura da adottare va scelta anche in base al sistema e a cosa vogliamo proteggere (nel nostro caso ci interessano i dati). Se ad esempio, i dati sono non confidenziali, non ci interessa se vengono intercettati o meno.
+
+La contromisura ha un costo in termini di soldi, di impegno delle risorse informatiche del sistema, di impatto sugli utenti, una sua efficacia (a fronte di una certa minaccia) e dei suoi effetti collaterali (la creazione di nuove vulnerabilità). Una certa contromisura, quindi, deve essere fatta attentamente, valutando sia la probabilità che si verifichi una certa minaccia in grado di sfruttare una certa vulnerabilità, sia il danno che ne discende. Questa attività è chiamata _analisi del rischio_.
 
 Come ingegneri (LOL https://youtu.be/EOR8Uz27s3Y?t=420), il nostro obiettivo è capire a fronte di più possibilità progettuali, quale ha più senso per il nostro sistema ed i nostri dati da proteggere.
 
-**Possibili contromisure per attacchi passivi**:
+#### Possibili contromisure per attacchi passivi
 
-L’unica contromisura da utilizzare è la prevenzione. Non ha senso utilizzare la tecnica della rilevazione in quanto quando lo rilevo ormai è tardi e non ha più senso intervenire perché l’informazione è stata ormai violata.
+L’unica contromisura da utilizzare è la _prevenzione_. Non ha senso utilizzare la tecnica della _rilevazione_ o della _reazione_ perchè quando ci si accorge dell'attacco ormai è troppo tardi e non si può più intervenire. La riservatezza è stata ormai violata. Discorso analogo anche per la _reazione_.
 
-- Impedire l'accesso al canale. Questo viene implementato tramite l'utilizzo o di canali dedicati, oppure mettendo in piedi meccanismi di controllo dell'accesso su larga scala, che fanno in modo che ogni volta che una sorgente accede al canale, il  meccanismo chiede di autenticasi. Per come è realizzata, questa soluzione non è tuttavia economicamente sostenibile né scalabile;
-- Criptare i dati da inviare, ovvero rendere incomprensibili i dati trasmessi, tranne al destinatario legittimo.
+Si può:
+- **Impedire** l'accesso al canale. Ciò viene implementato tramite l'utilizzo o di canali dedicati, oppure mettendo in piedi meccanismi di controllo dell'accesso, che fanno in modo che ogni volta che una sorgente accede al canale, il  meccanismo chiede di autenticarsi. Per come è realizzata, questa soluzione non è tuttavia nè economicamente sostenibile né scalabile;
+- **Criptare** i dati da inviare, ovvero rendere incomprensibili i dati trasmessi, tranne al destinatario legittimo.
 
-**Possibili contromisure per attacchi attivi**:
+#### Possibili contromisure per attacchi attivi
 
-Le contromisure da adottare sono rilevazione e reazione.
+Le contromisure da adottare sono la _rilevazione_ e la _reazione_. Non ha senso utilizzare la tecnica _preventiva_. In linea di principio avrebbe anche senso adottare una contromisura preventiva, in quanto protegge l'autenticità, l'integrità e la riservatezza. Ma l'unico modo per prevenire è quello di controllare l'accesso al canale ma ovviamente è quasi impossibile per i motivi specificati in precedenza.
 
-Contro gli attacchi attivi, in linea di principio avrebbe senso adottare una contromisura preventiva, in quanto protegge l'autenticità, l'integrità e la riservatezza, ma come si può prevenire un attacco al flusso di dati, che è in corso? Possibili modi:
-- Controllo dell'accesso al canale, si può fare ma ovviamente ci sono sempre gli svantaggi specificati in precedenza;
-- Attestazione di integrità e origine. Se è necessaria una contromisura di rilevazione, per permettere alla destinazione di sapere se quel flusso di dati è corretto o no, si può utilizzare un certificato di integrità/autenticità. In questo caso la rappresentazione dei dati non è incomprensibile, ma al normale flusso dei dati aggiungo dati in più che permettono alla destinazione di capire se il flusso è integro e autentico, oppure è stato manomesso. Esistono dei meccanismi crittografici che permettono di ottenerli.
+Si può:
+- **Aggiungere** un attestato di integrità e di autenticità. In questo caso, la rappresentazione dei dati non è incomprensibile ma, al normale flusso dei dati ne aggiungo altri in più che permettono alla destinazione di capire se il flusso è integro e autentico oppure se è stato manomesso.
 
+### Meccanismi e Servizi di Sicurezza
 
-Collocazione dei meccanismi e dei servizi per la sicurezza
-se il meccanismo viene collocato a livello applicativo è molto personalizzabile ma richiede manutenzione
+**Meccanismo di Sicurezza**: meccanismo progettato per rilevare/prevenire un attacco, risanare il sistema a seguito di un attacco.
 
-Trasporto è più trasparente alle applicazioni;
+**Servizio di Sicurezza**: _software_ che fa raggiungere una proprietà di sicurezza grazie all'uso di uno o più meccanismi.
 
-Livello di rete è completamente trasparente, ma è meno personalizzabile rispetto alle esigenze delle applicazioni
+Dobbiamo sempre chiederci qual è il livello migliore in cui integriamo i meccanismi e i servizi. Ci sono molti protocolli che forniscono servizi di sicurezza ma si collocano a livelli diversi:
+- **IPsec**: livello di rete;
+- **SSL**: livello di trasporto;
+- **PGP**: livello applicativo.
 
-A seconda del livello avrò prestazioni, personalizzazione e trasparenza alle applicazioni diverse.
+A seconda del livello si avrà una prestazione, personalizzazione e trasparenza diverse. IPsec, PGP e SSL garantiscono tutti la sicurezza dei dati cioè garantiscono le proprietà _CIA_. A livello di IPsec si parla di autenticità a livello host, non posso dire quali _client_ verranno autenticati. Se lavoro a applicativo posso far proteggere alcuni dati mentre altri no.
 
 ---
 ## 01.Dati Sicuri
 
-Per proteggere i dati a fronte di possibili attacchi possiamo eseguire o delle singole trasformazioni usando degli _algoritmi_ o a volte è necessario un insieme di trasformazioni. In questo caso, ovviamente la sequenza delle operazioni da eseguire non può essere casuale ma ben precisa e parliamo di _protocollo_.
+Per proteggere i dati a fronte di eventuali attacchi occorre utilizzare delle trasformazioni. Queste trasformazioni possono essere costituite da un _algoritmo_ (una sequenza di istruzioni) o da un _protocollo_ (una sequenza ben precisa di operazioni da eseguire).
 
-Quando progetto un protocollo mi devo chiedere sempre se la sorgente e destinazione siano stati compromessi però nel modello di minaccia più semplice che abbiamo assunto questo problema non c'è.
+Quando progettiamo un protocollo, ci dobbiamo chiedere sempre se la sorgente e destinazione siano stati compromessi, ma nel modello di minaccia più semplice che abbiamo assunto questo problema non c'è. Ad esempio, compro una casa a cento mila euro. Introduciamo un protocollo di sicurezza per trasmettere l'informazione della compravendita. Se sorgente e destinazione sono sicuri, ci basta un protocollo che ci garantisca l'integrità di quel dato ma se la sorgente è compromessa il prezzo può essere alterato. In questo caso, il protocollo deve diventare più complesso affinché la sorgente e destinazione possano disconoscere l'operazione.
 
-Ad esempio, compro una casa a 100mila euro. Per comprarla introduco un
-protocollo di sicurezza per trasmettere l'informazione della compravendita. Se
-sorgente e destinazione si comportano correttamente, mi basta un protocollo che
-mi garantisca l'integrità di quel dato ma se la sorgente è compromessa, può
-alterare il prezzo. In questo caso il protocollo di protezione deve diventare
-più complesso affinché la sorgente e destinazione possano disconoscere
-l'operazione.
-
-Non è detto che ci sia sempre solo sorgente e destinazione ma in alcuni casi è
-necessario l'intervento di una terza entità che fa da arbitro/giudice. La si può
-usare quando sorgente e destinatari sono malintenzionati.
-
-Per ottenere la sicurezza dei dati ho bisogno di **ridondanza** sia nello spazio
-che nel tempo. Questo vuol dire che le trasformazioni hanno bisogno di bit in
-più di quelli che servirebbero (ridondanza nello spazio) e la
-sorgente e la destinazione hanno bisogno di più tempo per processarle, sia in
-termini di banda che di calcolo computazionale (ridondanza nel tempo).
+Non è detto che ci sia sempre solo sorgente e destinazione, ma in alcuni casi è necessario l'intervento di una terza entità che fa da arbitro/giudice. La si usa quando una o tutte e due le due entità in gioco sono malintenzionate.
 
 ## Crittografia e Crittoanalisi
 
-- **Crittografia**: è la disciplina che studia gli algoritmi che possiamo adottare per proteggere i dati in in termini di riservatezza, autenticità e integrità e per garantire l'identificazione;
-- **Crittoanalisi**: è la disciplina che studia il modo in cui è possibile violare le trasformazioni che proteggono i dati
+La disciplina che studia gli algoritmi ed i protocolli da svolgere dal lato sorgente e lato destinatario di un canale insicuro è detta Crittologia. A sua volta è formata da due distinte e correlate discipline:
 
-Nel corso studieremo solo la crittografia. Quando studieremo una trasformazione crittografica, dovremmo capire la sua:
+- **Crittografia**: è la disciplina che studia gli algoritmi che possiamo adottare per proteggere i dati in in termini di riservatezza, autenticità e integrità;
+- **Crittoanalisi**: è la disciplina che studia il modo in cui è possibile violare le trasformazioni che proteggono i dati.
+
+Nel corso studieremo solo la crittografia. Di una trasformazione crittografica, dovremmo capire la sua:
 - **Efficacia**: quanto è in grado la trasformazione di proteggere quel dato in termini di riservatezza, autenticità e integrità;
 - **Efficienza**: l'overhead associato.
 
@@ -250,98 +247,73 @@ Ci sono tre principi che guidano la progettazione delle trasformazioni:
 - Deve essere impossibile _dedurre_ qual è la trasformazione adottata;
 - Deve essere impossibile _indovinare_ la trasformazione adottata.
 
-Quando dobbiamo progettare una trasformazione bisogna fare in modo che essa sia
-segreta e che l'intruso, che non conosce la trasformazione segreta, non possa
-disporre di un algoritmo alternativo che sia in grado di eseguire la stessa
-trasformazione in un tempo computazionalmente fattibile.
+Quando dobbiamo progettare una trasformazione, bisogna fare in modo che essa sia
+segreta e che l'intruso, che non la conosca, non possa
+disporre di un algoritmo alternativo che sia in grado di eseguire la stessa trasformazione in un tempo computazionalmente fattibile.
 
 ## Proteggere la proprietà di confidenzialità
 
-Come facciamo a progettare una trasformazione capace di rendere confidenziali i dati? La trasformazione deve avere come caratteristica quella di trasformare le informazioni che noi vogliamo proteggere in una rappresentazione che la renda incomprensibile. L'unica identità che può eseguire l'operazione inversa, cioè dal dato incomprensibile al dato originale, è la destinazione. Dunque, la riservatezza la possiamo ottenere con una trasformazione di tipo preventivo in modo che se un intruso accede ai dati non li può capire.
+Per proteggere i dati, abbiamo bisogno di una trasformata che rende incomprensibile il loro contenuto. In questo modo, l'intrusore non sarà in grado di capire i messaggi. Dunque, la riservatezza la possiamo ottenere con una trasformazione di tipo _preventivo_ in modo che se un intrusore accede ai dati non li può capire.
 
 ![confidenzialità](./img/img2.png)
 
 La sorgente `A` non può mettere i dati `m` sul canale insicuro per ovvi motivi
 ma deve prima trasformarli tramite un'encryption `E`. Questa trasformazione la
 conosce solo la sorgente `A` ed è l'unica in grado di eseguirla. Nell'esempio
-della figura i dati `m`, vengono trasformati in dati incomprensibili `c`. Solo
+della figura, i dati `m` vengono trasformati in dati incomprensibili `c`. Solo
 la destinazione `B` li può comprendere perché quando li riceve, deve essere in
-grado tramite la trasformazione di decryption, risalire al contenuto dei dati
+grado tramite la trasformazione di decryption `D`, risalire al contenuto dei dati
 `m`.
 
-La coppia di encryption e decryption costituisce il **cifrario**. L'intruso `I`
-non è in grado di risalire al contenuto per diversi motivi:
-- non conosce la trasformazione di encryption;
-- non conosce una trasformazione alternativa ed equivalente a quella di decryption;
-- non può neanche indovinarla perché da un punto di vista computazionale è un'operazione molto costosa.
-
-Altro punto importante è che bisogna produrre un **testo cifrato aleatorio**: l'intruso osservando `c` non deve imparare nulla di più di quello che sapeva già. Ad esempio, ho dei  messaggi strutturati che iniziano con "carissimi studenti, carissimi studentesse". Se applico una trasformazione che mi consente di ottenere in uscita la parola "carissimi" riesco a vedere che c'è un pattern tra tutti i messaggi e ciò mi rende il cifrato non perfetto perché io intruso ho un'informazione in più e potrei studiare come fare a capire il resto del messaggio.
+Deve essere rispettata una proprietà:
+- **Sicurezza perfetta**: l'intrusore osservando `c` non deve imparare nulla di più di quello che sapeva già. Ad esempio, ho dei  messaggi strutturati che iniziano con "carissimi studenti, carissimi studentesse". Se applico una trasformazione che mi consente di ottenere in uscita la parola "carissimi" riesco a vedere che c'è un pattern tra tutti i messaggi e ciò mi rende il cifrato non perfetto perché l'intruso ha un'informazione in più e potrebbe studiare come fare a capire il resto del messaggio. E' importante che il testo del cifrato sia aleatorio;
+- **Calcoli impossibili**: i calcoli per mettere in chiaro il messaggio senza conoscere l'algoritmo devono essere da un punto di vista computazionale un'operazione molto onerosa.
 
 Altre considerazioni:
-- Lo schema della figura può essere applicato sia da A verso B che da B verso A (il flusso è bidirezionale);
-- A e B possono essere online contemporaneamente oppure A online e B offline cioè i messaggi possono essere decifrati in momenti diversi;
-- B = A. La sorgente potrebbe coincidere con la destinazione. Se voglio cifrare dei dati sul mio hard disk li cifro per me. Quando faccio il logout dal sistema, li voglio cifrare mentre quando faccio il login li decifro.
+- **Il flusso è bidirezionale**: lo schema della figura può essere applicato sia da A verso B che da B verso A. Ovviamente B avrà l'encryption mentre A la decryption;
+- **A e B non è detto che siano entrambi online**: possono essere online contemporaneamente oppure A online e B offline cioè i messaggi possono essere decifrati in momenti diversi;
+- **B = A**: la sorgente potrebbe coincidere con la destinazione. Ad esempio, vogliamo cifrare dei dati che abbiamo sul nostro hard disk. Quando effettuiamo il logout dal sistema essi vengo cifrati mentre quando facciamo il login li decifriamo.
 
 ## Proteggere la proprietà di integrità
 
-Quando si trasferiscono i dati sul canale, come visto in corsi precedenti, si sa che a causa di disturbi i bit possono mutare. In caso di disturbi, le alterazioni che si possono osservare sono la cancellazione e la modifica di bit. Ci sono dei disturbi che rendono più probabile certi tipi di alterazioni. Infatti, è possibile calcolare la probabilità.
+Quando si trasferiscono i dati sul canale, come visto nel corso di Fondamenti di Telecomunicazioni T, si sa che a causa di disturbi i bit possono mutare. In questo caso, le alterazioni che si osservano sono la cancellazione e la modifica. In presenza di certi disturbi, è più probabile che i bit che cambino siano sempre gli stessi, per cui è possibile calcolare la probabilità.
 
-Invece, nell'ambito della sicurezza informatica, non si parla di disturbo ma di attacco intenzionale attivo. Minare l'integrità significa fare un attacco attivo sul canale. L'attacco attivo condivide con i disturbi il fatto di poter modificare e cancellare i messaggi ma è diverso dal disturbo perché aggiunge il problema di alterare l'ordine dei bit.
+Invece, nell'ambito della sicurezza informatica, non si parla di disturbo ma di attacco intenzionale. Minare l'integrità significa fare un attacco attivo sul canale. L'attacco attivo condivide con i disturbi il fatto di poter modificare e cancellare i messaggi ma è diverso perché aggiunge il problema di cambiare l'ordine dei bit. Ad esempio, se un disturbo ha una probabilità di alterazione dei dati del 30%, nella sicurezza informatica tutti i bit hanno la stessa probabilità di essere cambiati.
 
-Se nei disturbi c'è una probabilità di alterazione dei dati, ad esempio del 30%, nella sicurezza informatica tutti i bit hanno la stessa probabilità di essere cambiati.
+Proteggere l'integrità vuol dire costruire delle trasformazioni in grado di rilevare modifiche al contenuto dei dati trasmessi. In questo caso, la contromisura da adottare è quella della _rilevazione_ perché le modifiche ai messaggi sul canale non possono essere evitate a priori.
 
-Proteggere l'integrità vuol dire costruire delle trasformazioni in grado di rilevare modifiche al contenuto dei dati trasmessi. In questo caso, la contromisura da adottare è quella della rilevazione perché le modifiche ai messaggi sul canale non possono essere evitate ma apportando tecniche in grado di far dire alla destinazione che il messaggio sia stato davvero alterato si riesce a superare questo problema.
+Se vogliamo costruire una trasformazione che protegga l'integrità, dobbiamo far si che la sorgente utilizzi ridondanza al messaggio e affianchi al dato iniziale un'informazione aggiuntiva che deve essere costruita opportunamente. Questa informazione si chiama _riassunto_ o _impronta_. La sua dimensione deve essere inferiore perché la si deve poi trasmettere sul canale.
 
-Se vogliamo costruire una trasformazione che protegga l'integrità, dobbiamo far si che la sorgente utilizzi ridondanza al messaggio e affianchi al dato iniziale un'informazione aggiuntiva che deve essere costruita opportunamente. Questa informazione aggiuntiva si chiama **riassunto** o **impronta**. La dimensione deve essere limitata perché la si deve poi trasmettere.
-
-La sua caratteristica deve essere quella di rappresentare in modo pressocchè univoco il contenuto del messaggio. Al messaggio originale deve corrispondere un unico riassunto. Se i messaggi da inviare sono diversi ovviamente i riassunti devono essere anche loro diversi. La destinazione riceve il dato e il riassunto. Poi ha bisogno di ricalcolare sul dato ricevuto un nuovo riassunto e vede se coincide con quello ricevuto. Se coincidono vuol dire che il dato non è stato alterato.
-
-E' importante che il riassunto debba avere delle caratteristiche specifiche. Esse si ottengono solo usando **funzioni hash crittograficamente sicure**.
-
-In generale, una funzione hash (`H`) è una funzione che prende un dato `m` di lunghezza arbitraria e restituisce in uscita un'impronta `H(m)` di dimensione nettamente inferiore.
-
-A noi non basta avere una qualunque funzione hash, ma è importante che abbia due caratteristiche:
-- **Comportamento da "oracolo casuale"**: se decido che l'impronta sia costituita da `n` bit, le possibili uscite della funzione hash sono `2^n`. Preso il mio messaggio `m`, devo fare in modo che la probabilità che esca un uscita rispetto ad un'altra sia la stessa. Dato un messaggio, non devo sapere che ad esempio la probabilità che esca una determinata impronta sarà al 70% ma la probabilità che mi capiti una configurazione rispetto ad un'altra deve essere la stessa;
-- **Resistente alle collisioni**: è inevitabile che due messaggi diversi abbiano in uscita la stessa impronta perché lo spazio di input è molto più grande dello spazio di output (`m > n`). L'importante è che per un intruso sia computazionalmente difficile individuare due messaggi che abbiano la stessa impronta.
-
-![zeus](./img/zeus.jpg)
-
-Queste caratteristiche le si ottengono solo usando **funzioni hash crittograficamente sicure**.
+Il riassunto non è altro che una _funzione hash crittograficamente sicura_.
 
 ![integrità](./img/img3.png)
 
-Se il mio obiettivo è rilevare i disturbi, posso usare delle funzioni hash che chiamiamo **funzioni hash semplici**. Invece, se il mio obiettivo è la sicurezza informatica, le funzioni hash devono essere crittograficamente sicure e prendono il nome di **funzioni hash sicure** (vedi proprietà scritte in alto).
+In generale, una funzione hash `H` è una funzione che prende un dato `m` di lunghezza arbitraria e restituisce in uscita un'impronta `H(m)`.
 
-#### Attestazione di Integrità
+A noi non basta avere una qualunque funzione hash, ma è importante che abbia due proprietà:
 
-L'obiettivo di un intrusore è quello di trovare un messaggio `m'` che abbia
-`H(m') = H(m)`. Dunque, è fondamentale usare una funzione hash
-crittograficamente sicura che sia resistente alle collisioni.
+- **Comportamento da "oracolo casuale"**: se decidiamo che l'impronta sia costituita da `n` bit, le possibili uscite della funzione hash sono `2^n`. Preso il nostro messaggio `m`, dobbiamo fare in modo che la probabilità che esca un uscita rispetto ad un'altra sia la stessa. Dato un messaggio, non dobbiamo sapere che, ad esempio, la probabilità che esca una determinata impronta sarà del 70% ma la probabilità che mi capiti una configurazione rispetto ad un'altra deve essere la stessa;
+![zeus](./img/zeus.jpg)
+- **Resistente alle collisioni**: è inevitabile che due messaggi diversi possano avere in uscita la stessa impronta perché lo spazio di input è molto più grande dello spazio di output (`m > n`). Ad esempio, se i messaggi sono dieci e il numero di bit è tre, le possibili uscite della funzione hash sono otto e alcuni messaggi avranno sicuramente la stessa impronta. L'importante è che per un intrusore sia computazionalmente difficile individuare due messaggi che abbiano la stessa impronta.
 
-`A -> B: m||H(M)`
+Queste caratteristiche le si ottengono **solo** usando _funzioni hash crittograficamente sicure_.
 
-Supponiamo che `A` metta sul canale insicuro un messaggio `m`, a partire dal
-quale è stato costruito `H(m)` attraverso `H` (una funzione hash
-crittograficamente sicura).\
-`B` deve prendere il messaggio ricevuto, applicargli la funzione hash, che
-conosce anche lui, e verificare che l'hash ricevuto coincida con quello ottenuto
-applicando a sua volta la funzione hash.\
-Se si equivalgono, il messaggio è stato trasmesso correttamente. In questo modo la
-destinazione è in grado di rilevare se il messaggio ha subito modifiche.
+Le funzioni hash possono essere classificate in due categorie:
+- **Funzioni hash semplici**: l’individuazione di due messaggi con la stessa impronta è un calcolo facile (caso disturbi);
+- **Funzioni hash sicure**: se le funzioni hash sono crittograficamente sicure e prendono (vedi proprietà scritte in alto).
 
 ![attestazioneIntegrità](./img/img4.png)
 
-In questo scenario un intruso può sostituire il messaggio (`m`) con un altro
-(`m'`). La sorgente deve utilizzare la funzione `H`, deve costruire il riassunto
-univoco e consegnarlo su un canale sicuro. Ad esempio, un canale ad hoc. La
-destinazione riceve `m'`, ricava `H(m')` e va a confrontare `H(m')` con `H(m)`
-che ha ricevuto sul canale sicuro. Se i due valori di hash coincidono allora i
-messaggi sono conformi.
+L'obiettivo di un intrusore è quello di trovare un messaggio `m'` che abbia `H(m') = H(m)` cioè la stessa impronta del messaggio `m`.
 
-## Esempio
+La sorgente `A` metta sul canale insicuro un messaggio `m` mentre l'impronta `H(m)` deve viaggiare su un canale sicuro per evitare che sia compromessa. `B` deve prendere il messaggio ricevuto, applicargli la funzione hash, che
+conosce anche lui, e verificare che l'hash ricevuto coincida con quello ottenuto.
+Se si equivalgono, il messaggio è stato trasmesso correttamente. In questo modo la
+destinazione è in grado di rilevare se il messaggio ha subito modifiche.
 
-Abbiamo quindi 2 tipi di trasformazioni, encryption ed hash, che possono anche essere combinate. Ad esempio, per garantire la riservatezza e l'integrità dei
-dati è possibile utilizzarle entrambe in questo modo:
+### Esempio
+
+Per ora conosciamo due tipi di trasformazioni: encryption/decryption ed hash. Esse possono anche essere combinate. Ad esempio, per garantire la riservatezza e l'integrità dei dati le possiamo usare in questo modo:
 
 `p = m || H(m)` 
 
@@ -351,20 +323,21 @@ dati è possibile utilizzarle entrambe in questo modo:
 
 `H*(m) =? H(m*)`
 
-Dato che le proprietà da garantire sono due, ho bisogno di combinare più trasformazioni e le regole che devo usare devono essere precise. Per questo ho bisogno di un protocollo. Se hai dubbi, vedi la definizione scritta in precedenza.
+Dato che le proprietà da garantire sono due, abbiamo bisogno di combinare più trasformazioni e le regole che devo usare devono essere precise. Per questo ci serve un protocollo.
 
-Il seguente protocollo è costituito da tre passi:
+Il seguente protocollo è costituito dai seguenti passi:
 - La sorgente esegue due trasformazioni:
-  - Passo 1: la sorgente applica la funzione hash crittograficamente sicura e la concatena con il messaggio.
-  - Passo 2: la sorgente applica la funzione di encryption. Sul canale insicuro viene trasferito c.
+  - **Passo 1**: la sorgente applica la funzione hash crittograficamente sicura e la concatena con il messaggio;
+  - **Passo 2**: la sorgente applica la funzione di encryption. Dato che il messaggio `c` è cifrato, lo si può inviare direttamente sul canale insicuro.
 - La destinazione esegue una trasformazione:
-  - Passo 3: la destinazione riceve c. c può essere o quello inviato dalla sorgente o un altro che è stato modificato dall'intruso. Per questo motivo, dato che non abbiamo una certezza, indicheremo c con c*. La destinazione applica la funzione D su c* ottenendo di nuovo `m* || H*(m)`.
-  - Passo 4: Per vedere se il messaggio è integro, devo verificare che la funzione crittograficamente sicura di m* coincide con H*(m). Se non coincidono il messaggio viene scartato. L'intrusore può modificare a caso i bit del cifrato perchè se tutte le proprietà sono rispettate non può fare assolutamente nulla.
+  - **Passo 3**: la destinazione riceve `c` che può essere, o quello inviato dalla sorgente o un altro che è stato modificato dall'intrusore. Per questo motivo, dato che non abbiamo una certezza, indicheremo il messaggio `c` con `c*`. La destinazione applica la funzione `D` su `c*` ottenendo di nuovo `m* || H*(m)`;
+  - **Passo 4**: Per vedere se il messaggio sia integro, dobbiamo verificare che la funzione crittograficamente sicura `H(m*)` coincida con `H*(m)`. Se non coincidono il messaggio viene scartato.
 
 Alcune considerazioni:
-- **Efficienza computazionale**: la sorgente effettua due trasformazioni (encryption e la funzione H). La destinazione esegue sempre due trasformazioni (decryption e la funzione H).
+- L'intrusore può modificare solo a caso i bit del cifrato perchè se tutte le proprietà sono rispettate (comportamento da "oracolo casuale", resistente alle collisioni, testo cifrato aleatorio) non può fare assolutamente nulla;
+- **Efficienza computazionale**: la sorgente effettua due trasformazioni (encryption e la funzione `H`). La destinazione esegue sempre due trasformazioni (decryption e la funzione `H`).
 
-## Esempio 2
+### Esempio 2
 
 In questo caso, la proprietà di riservatezza non viene rispettata mentre quella di integrità si:
 
@@ -382,7 +355,7 @@ L'intrusore può:
 - Vedendo la stessa H(m) sa che la sorgente sta ritrasmettendo più volte lo stesso messaggio. Dunque, si possono ricavare delle informazioni. Se ad esempio, due innamorati si inviano spesso dei messaggi si iniziano a fare previsioni su quello che si possono mandare;
 - Dato lo stesso messaggio, l'impronta è sempre la stessa, quindi si possono fare dei tentativi. Se ad esempio, queste due persone, si incontrano un giorno in particolare, si può iniziare a calcolarsi la funzione hash crittograficamente sicura di lunedì, poi di martedì e confrontarla con H(m) inviata nel messaggio.
 
-## Esempio 3
+### Esempio 3
 
 In questo caso, la proprietà di integrità non viene rispettata mentre quella di riservatezza si:
 
@@ -402,18 +375,22 @@ Alcune considerazioni:
 
 ## Proteggere la proprietà di autenticazione (=autenticità?)
 
-Chi riceve un dato è importante che possa sapere chi è stato ad originarlo. L'intruso può creare ad hoc un messaggio, inserirlo nel flusso normale dei dati e spacciarlo come se provenisse dalla sorgente originale. Questo attacco non lo si può prevenire ma solo rilevare. Per garantire l'autenticità di una sorgente, devo costruire una trasformazione `S` che dato un messaggio `m`, deve produrre in uscita un **attestato di autenticità** `c` che rappresenta in maniera non imitabile il messaggio `m` originale. Nessuno deve essere in grado di effettuare questa trasformazione.
-
-La destinazione riceve sia il messaggio che l'attestato di autenticità ed effettua una trasformazione `V` sull'attestato di autenticità producendo in uscita una risposta che dice se il messaggio è autentico o no. In caso affermativo si recupera il messaggio `m` altrimenti lo si scarta.
+Chi riceve un dato è importante che sappia chi è stato ad originarlo. L'intrusore può creare ad hoc un messaggio, inserirlo nel normale flusso dei dati e spacciarlo come se provenisse dalla sorgente originale. Questo attacco non lo si può _prevenire_ ma solo _rilevare_.
 
 ![autenticazione](./img/img5.png)
 
-La trasformazione `S` deve essere segreta perché altrimenti altri potrebbero spacciarsi per quella sorgente. I calcoli per costruire un messaggio autentico devono essere difficili da un punto di vista computazionale.
-Invece, `V` può essere noto perché qualsiasi destinazione deve essere in grado di dirmi se l'attestato è autentico o no.
+Per garantire l'autenticità di una sorgente, dobbiamo costruire una trasformazione `S` che dato un messaggio `m`, deve produrre in uscita un _attestato di autenticità_ `c` che rappresenta in maniera non imitabile il messaggio `m` originale. Nessuno deve essere in grado di effettuare questa trasformazione.
+
+La destinazione riceve sia il messaggio che l'attestato di autenticità ed effettua una trasformazione `V` sull'attestato di autenticità producendo in uscita una risposta che dice se il messaggio è autentico o no. In caso affermativo si recupera il messaggio `m` altrimenti lo si scarta.
+
+Devono essere rispettate due proprietà:
+
+- **Trasformazioni segrete**: la trasformazione `S` deve essere segreta perché altrimenti altri potrebbero spacciarsi per quella sorgente. Invece, `V` può essere noto perché qualsiasi destinazione deve essere in grado di dire se l'attestato è autentico o no;
+- **Calcoli impossibili**: i calcoli per costruire un messaggio autentico devono essere difficili da un punto di vista computazionale.
 
 Alcune considerazioni:
-- A e B non è detto che siano online: B non è detto che sia online perchè può verificarlo in un secondo momento;
-- B = A. Se nel file system voglio che i file siano quelli che ho scritto. Quando faccio logout e login oltre a decryptarli verifico che siano anche autentici.
+- **A e B non è detto che siano entrambi online**: B può verificare l'autenticità in un secondo momento;
+- **B = A**: se nel file system vogliamo che i file siano davvero quelli che abbiamo scritto, durante la fase di logout e login oltre a decifrarli, verifichiamo che siano anche autentici.
 
 # 29/09/2021
 <!-- Nooooooo abbiamo fatto una stessa parte! -->
@@ -529,14 +506,12 @@ slide 12
 
 ## Anonimato/Identificazione
 
-Altro requisito importante è l'anonimato, opposto all'identificazione.
-
-Per _identificazione_ si intende un insieme di azioni che richiedono di identificare chi sta partecipando a un'interazione. Ad esempio, per un pagamento o quando si accede a certe risorse, in base alla persona si possono avere tipi di accesso diversi.
+Per _identificazione_ si intende un insieme di azioni che richiedono di identificare chi sta partecipando a un'interazione. Ad esempio, per un pagamento o quando si vuole accedere a certe risorse. L'opposto dell'identificazione è l'anonimato. <!-- anonimato: ad esempio, il voto elettronico o monete elettroniche-->
 
 Il processo di identificazione ha le seguenti caratteristiche:
 
 - **Efficienza**: l’identificazione di una entità deve avvenire in maniera _efficiente_;
-- **real-time**: l'identificazione deve avvenire in un **preciso** istante e non in un instante successivo;
+- **real-time**: l'identificazione deve avvenire in un **preciso** istante e non in un secondo momento;
 - **Sicurezza**: possono essere presenti:
   - **Falsi positivi**: una determinata persona ha diritti di accesso, ma non riesce ad accedere. Ciò causa inefficienza. Bisogna minimizzare questo numero;
   - **Falsi negativi**: l'accesso viene effettuato da persone non autorizzate (si spacciano per chi non sono xD). Non bisogna averli.
@@ -551,9 +526,7 @@ E' possibile che un sistema abbia anche più sistemi di identificazione. Ad esem
 
 E' importante ricorda che l'identificando e il verificatore debbano essere online: non posso identificare in un secondo momento perchè altrimenti come faccio ad accedere?
 
-La robustezza di un sistema di identificazione è maggiore se vengono combinati più principi. A seconda dell'informazione che voglio proteggere si sceglierà il sitema più adatto perchè ci sarà un costo computazionale, di gestione etc.
-
-<!-- anonimato: ad esempio, il voto elettronico o monete elettroniche-->
+La robustezza di un sistema di identificazione è maggiore se vengono combinati più principi. A seconda dell'informazione che voglio proteggere si sceglierà il sistema più adatto perchè ci sarà un costo computazionale, di gestione etc.
 
 ### Protocollo di identificazione
 
@@ -585,55 +558,50 @@ La trasformazione T3.1 deve essere segreta cioè solo l'identificando deve conos
 
 ## Funzioni one-way
 
-Una funzione f è detta unidirezionale se:
-- è invertibile
-- facile da calcolare. dato lo spazio di input x è facile calcolare f(x)
-- è difficile dato f(x) risalire alla x che ha originato l'output
+Una funzione `f` è detta unidirezionale se:
+- è invertibile;
+- facile da calcolare: dato lo spazio di input `x` è facile calcolare l'uscita `f(x)`;
+- è difficile dato `f(x)` risalire alla `x` che ha originato l'output.
 
-Ad esempio, sono funzioni unidirezionali:
-- la funzione hash crittograficamente sicura;
-- funzione di cifratura: chi non conosce la funzione D è difficile risalire al dato che è stato cifrato;
-- funzione di verifica di firma digitale: la funzione V è facile da eseguire ma chi non conosce la funzione S non è in grado di generare un messaggio correttamente verificabile.
+Ad esempio, sono funzioni unidirezionali la:
+- **Funzione hash crittograficamente sicura**;
+- **Funzione di cifratura**: chi non conosce la funzione `D` è difficile che possa risalire al dato in chiaro;
+- **Funzione di verifica della firma digitale**: la funzione `V` è facile da eseguire ma chi non conosce la funzione `S` non è in grado di generare un messaggio correttamente verificabile.
 
-Un altro esempio è l'elenco telefonico: dato un cognome di una persona è facile risalire al numero telefonico. Il contrario invece è assolutamente difficile.
-
-Per garantire alcune proprietà di sicurezza, abbiamo bisogno che le trasformazioni siano unidirezionali. Nella teoria matematica, non esiste una funzione che sia unidirezionale. Nella pratica, invece, sono state individuate molte funzioni che sono candidate ad avere un comportamento di unidirezionalità. Vengono chiamate pseudo-unidirezionali perchè se non si possiede un'informazione non è possibile trovare la funzione inversa.
+Per garantire alcune proprietà di sicurezza, abbiamo bisogno che le trasformazioni siano unidirezionali. Nella teoria matematica, non esiste una funzione che sia unidirezionale. Nella pratica, invece, sono state individuate molte funzioni che sono candidate ad avere un comportamento di unidirezionalità. Vengono chiamate _pseudo-unidirezionali_ perchè se non si possiede un'informazione, non è possibile trovare la funzione inversa.
 
 ## Trasformazioni segrete
 
-- **Trasformazione segreta**: ad esempio, tutte quelle volte che vogliamo proteggere la riservatezza dei dati (E e D), la trasformazione della sorgente con cui autentico i dati (S), trasformazione con cui genero la prova d'identità. Possiamo avere tre approcci:
-  - macchine a funzionamento segreto: non conoscere come è formata la macchina. Ad esempio, Macchina Enigma. 
-  - Algoritmo: le operazioni stesse sono segrete. Ad esempio, gli algoritmi delle prime SIM, algoritmi USA durante la guerra fredda;
-  - Parametro: la macchina e l'algoritmo sono noti ma un parametro di ingresso dell'algoritmo (chiave crittografica);
+Possiamo avere tre approcci:
+- **Macchine a funzionamento segreto**: non conoscere come è formata la macchina. Ad esempio, la Macchina Enigma;
+- **Algoritmo**: le operazioni sono segrete. Ad esempio, gli algoritmi delle prime SIM, algoritmi USA durante la guerra fredda;
+- **Parametro**: la macchina e l'algoritmo sono noti ma un parametro di ingresso dell'algoritmo è segreto (chiave crittografica).
 
-  I primi due approcci non funzionano molto bene:
-  - No manutenibilità: è impossibile che non si possa violare la segretezza di una macchina o di un algoritmo. Non è immediato ripristinare la sua sicurezza perchè dovrei riprogettare tutto da zero.
-  - No scalabile: non si può pensare questo approccio su grande scala come internet
-  - No Certificazione: è bello avere in casa qualcosa di cui non si conosce nulla? Nessuno mi può garantire che quello che sto usando è sicuro
+I primi due approcci non funzionano molto bene perchè:
+- **No manutenibilità**: è impossibile che non si possa violare la segretezza di una macchina o di un algoritmo. Non è immediato ripristinare la sua sicurezza perchè dovremmo riprogettare tutto da zero;
+- **No scalabilità**: non si può pensare questo approccio su grande scala come internet. Cosa succede se una macchina segreta viene violata?;
+- **No Certificazione**: è bello avere in casa qualcosa di cui non si conosce nulla? E poi chi è che mi garantisce che quello che stiamo usando è davvero sicuro?
 
-Dunque, l'approccio usato al giorno d'oggi è il terzo. D'ora in poi l'approccio che useremo è trasformazione nota con parametro segreto (chiave)
+L'approccio usato al giorno d'oggi, quindi, è il terzo.
 
 ![chiave](/img/img9.png)
 
-- Con T indicheremo la trasformazione che ha funzionamento pubblico (quindi anche l'intrusore) ma i parametri non sono noti (delle trasformazioni E, D e da S);
-- Con k indichiamo la chiave cioè il parametro non noto ed è un parametro di ingresso;
-- Con spazio delle chiavi intendiamo l'insieme delle 2^n possibili configurazioni dove n è il numero di bit. La chiave è costituita da una delle 2^n configurazioni. Più è grande n più è difficile per un intrusore indovinare la chiave.
+- Con `T` indicheremo la trasformazione nota (quindi la conosce anche l'intrusore);
+- Con `k` indichiamo la _chiave_ cioè il parametro non noto ed è un parametro di ingresso;
+- Con spazio delle chiavi intendiamo l'insieme delle `2^n` possibili configurazioni dove `n` è il numero di bit della chiave. La chiave è costituita da una delle `2^n` configurazioni. Più è grande `n` più è difficile per un intrusore indovinare la chiave.
 
 ## Algoritmo forza bruta
 
 ![intrusore](./img/img10.png)
 
-Un intrusore può sempre disporre algoritmo di ricerca esauriente noto come algorimo forza bruta. Se io intrusore non conosco la configurazione scelta dalla sorgente leggittima per il segreto posso esplorare tutto lo spazio delle chiavi. Se n è il numero di bit della chiave e 2^n è il numero totale di configurazioni, dato che non so la chiave provo tutti i tentativi fino a quando non la indovino. Ovviamente devo conoscere la trasformata T. Se il cifrato che ottengo è uguale a quello sul canale vuol dire che sono riuscito a trovare la configurazione corretta.
+Un intrusore può sempre disporre di un _algoritmo di ricerca esauriente_ noto come _algorimo di forza bruta_. Se l'intrusore non conosce la configurazione scelta dalla sorgente leggittima per la chiave, può esplorare tutto lo spazio delle chiavi. Se `n` è il numero di bit della chiave e `2^n` è il numero totale di configurazioni, dato che non sa la chiave prova tutti i tentativi fino a quando non la indovina. Ovviamente deve conoscere la trasformata `T`. Se il cifrato che ottiene è uguale a quello sul canale, vuol dire che è riuscito a trovare la configurazione corretta.
 
 ## Relazioni fra le chiavi
 
 In base a come sono fatti i parametri che diamo in pasto agli algoritmi possiamo individuare due famiglie di cifrari:
-- **Cifrari a chiavi simmetriche**: le trasformazioni E(, S) e D(), V). La trasformazione E e D sono note. La trasformazione E deve prendere in ingresso il parametro ks mentre la trasformazione D prende come parametro di ingresso kd. Se le chiavi ks e kd sono uguali o sono uguali o facilmente calcolabili una dall’altra: ks = kd.
-Se prendiamo la coppia del cifrario E e D, quando cifro userò una chiave ks e quando decifro userò ks. Ciò implica che le due entità in gioco conoscano lo stesso segreto. Tuttavia, ks e kd devono essere *segreti*. Questo tipo di cifrario si usa per garantire riservatezza. Caso molto raro è quello di costruire un attestato di autenticità;
+- **Cifrari a chiavi simmetriche**: le chiavi `ks` e `kd` sono uguali (o derivano facilmente l’una dall’altra). Se prendiamo la coppia del cifrario `E` e `D`, quando cifriamo useremo una chiave ks e quando decifriamo useremo ks. Ciò implica che le due entità in gioco conoscano lo stesso segreto. Dunque, ks e kd devono essere *segreti*. Questo tipo di cifrario si usa per garantire riservatezza. Caso molto raro è quello di costruire un attestato di autenticità;
 - **Cifrari a chiave pubbliche**: le chiavi ks e kd sono diverse e una delle due è difficilemnte calcolabile dall'altra. Questo tipo di cifrario si usa per garantire riservatezza e autenticazione.
-kd è facilmente calcolabile se conosco ks ma dalla chiave kd è difficile risalire alla chiave ks. Se uso un cifrario asimmetrico, la funzione F(kd) è facilmente calcolabile.
-Con ks è la chiave segreta e kd è la chiave pubblica.
-Ogni entità dispone della conoscenza di due chiavi. Ogni entità ha una chiave segreta se non l'entità proprietà e dispone di una chiave pubblica associata univocamente alla chiave segreta che tutti possono conoscere. E' computazionalmente difficile risalire dalla chiave pubblica la chiave privata.
+kd è facilmente calcolabile se conosco ks ma dalla chiave kd è difficile risalire alla chiave ks. Se uso un cifrario asimmetrico, la funzione F(kd) è facilmente calcolabile. ks è la chiave segreta e kd è la chiave pubblica. Ogni entità dispone della conoscenza di due chiavi. Ogni entità ha una chiave segreta se non l'entità proprietà e dispone di una chiave pubblica associata univocamente alla chiave segreta che tutti possono conoscere.
 
 Funzione di encryption e darò in pasto l'unica chiave che conosco che è associata ad antonio corradi. La chiave pubblica. Alla funzione E darò la chiave pubblica del destinatario. La funzione D, il destinatario può risalire al dato originario perchè è l'unico che conosce la chiave ks univocamente associata. Solo con la chiave ks posso risalire al contenuto originario.
 
@@ -641,10 +609,10 @@ Funzione di encryption e darò in pasto l'unica chiave che conosco che è associ
 
 Le chiavi simmetriche devono avere le seguenti proprietà:
 
-- **Robustezza**: un intrusore non deve essere in grado facilmente di individuare la chiave. Se una chiave è formata da n bit, più grande è lo spazio delle chiavi più è difficile individuare i bit corretti. Inoltre, anche il sistema che genera la chiave, la distribuisce, memorizzo deve essere sicuro
-- **Riservatezza**: il sistema deve garantire la riservatezza della chiave perchè le chiavi ks, kd devono essere segrete;
-- **Integrità**: quando decifriamo i dati dobbiamo essere sicuri che la chiave non sia stata alterata altrimenti non riesco a decifrarli
-- **Autenticità**: la chiave è conosciuta dalla sorgente e dalla destinazione (autentica). Sono certo che la chiave è conosciuta da un'entità.
+- **Robustezza**: un intrusore non deve essere in grado facilmente di individuare la chiave. Se una chiave è formata da `n` bit, più grande è lo spazio delle chiavi più è difficile individuare i bit corretti. Inoltre, anche il sistema che genera, distribuisce e memorizza la chiave deve essere sicuro;
+- **Riservatezza**: il sistema deve garantire la riservatezza della chiave perchè le chiavi `ks` e `kd` devono essere segrete;
+- **Integrità**: quando decifriamo i dati dobbiamo essere sicuri che la chiave non sia stata alterata altrimenti non riusciamo a decifrarli;
+- **Autenticità**: la chiave è conosciuta dalla sorgente e dalla destinazione autentica.
 
 ### Proprietà delle chiavi asimmetriche
 
@@ -652,37 +620,37 @@ Le chiavi asimmetriche devono avere le seguenti proprietà:
 
 La chiave pubblica (PU) e chiave privata (SU) devono essere legate da una funzione: se conosco la chiave segreta deve essere per me proprietario per la chiave segreta calcolare la chiave pubblica. Tutti quelli che conoscono la chiave pubblica non devono però risalire alla conoscenza della chiave privata. La funzione deve essere unidirezionale.
 
-- **Riservatezza**: la riservatezza è legata alla chiave privata.
-- **Integrità**: è importante che la chiave privata che sto utilizzando sia quella corretta e non modificata. La chiave pubblica deve essere integra perchè devo essere sicuro che sia quella generata
+- **Riservatezza**: la riservatezza è legata alla chiave privata;
+- **Integrità**: è importante che la chiave privata che stiamo utilizzando sia quella corretta e non modificata. La chiave pubblica deve essere integra perchè devo essere sicuro che sia quella generata;
 - **Autenticità**: per quanto riguarda la chiave pubblica, devo sapere con certezza se appartiene a una determinata entità oppure no. Se non sono certo dell'associazione sto cifrando dei dati non per chi li sto inviando ma per un intrusore.
 
 ## Crittanalisi
 
-Ci sono diversi criteri da seguire per non far risalire all'intrusore qual è la chiave:
+Ci sono diversi criteri da seguire per non far risalire all'intrusore alla chiave:
 
-- Indovinarla
-- Intercettarla
-- Dedurla
+- **Indovinarla**;
+- **Intercettarla**;
+- **Dedurla**.
 
 <!-- slide 22 -->
 ### Indovinare la chiave
 
-E' sempre possibile risalire alla chiave perchè esiste l'attacco di forza bruta. Quello che devo fare è rendere difficile l'individuazione.
+E' sempre possibile risalire alla chiave perchè esiste l'attacco di forza bruta. Quello che dobbiamo fare è rendere difficile l'individuazione.
 
 <!-- slide 23 slide 24 -->
-Per ridurre l'attacco con forza bruta, devo adottare alcuni accorgimenti:
-- Lo spazio delle chiavi deve essere molto grande (2^n molto grande). Tirare ad indovinare per la teoria della probabilità, se n è il numero di bit che rappresenta il mio segreto, 2^-n è la probabilità che io ci becchi. Se ho a disposizione k tentativi, la probabilità è k*2^-n. più tentativi maggiore è la probabilità di accesso.
-- Limitare il numero di prove che l'intrusore ha a dispoziione: ad esempio il pin del bancomat. Dopo tre accessi si disabilita l'accesso
+Per ridurre l'attacco con forza bruta, dobbiamo adottare alcuni accorgimenti:
+- **Lo spazio delle chiavi deve essere molto grande**: se `n` è il numero di bit che rappresenta il mio segreto, `2^-n` è la probabilità di indovinare la chiave. Se ho a disposizione `k` tentativi, la probabilità è `k*2^-n`. Più tentativi si hanno a diposizione, maggiore è la probabilità di individuare la combinazione giusta;
+- **Limitare il numero di prove che l'intrusore ha a dispoziione**: ad esempio il pin del bancomat. Dopo tre accessi si disabilita l'accesso;
 - Un altro accorgimento fondamentale è che i simboli che rappresentano la chiave devono essere anche casuali.
-- Se devo proteggere i miei dati, la proprietà di riservatezza è fondamentale. Un certo dato può avere come proprietà di riservatezza una durata limitata nel tempo. Altri dati hanno una durata enorme. In questo caso, quando scelgo una chiave, devo chiedermi per quanto tempo viene utilizzata per cifrare i dati. Se i dati devono essere mantenuti per un periodo molto lungo, bisogna cambiare frequentemente la chiave. In questo modo, riduco la possibilità di ricerca da parte dell'intrusore.
+- **Proprietà di riservatezza è fondamentale**: un certo dato può avere come proprietà di riservatezza una durata limitata nel tempo. Altri dati hanno una durata enorme. In questo caso, quando scegliamo una chiave, dobbiamo chiederci per quanto tempo viene utilizzata per cifrare i dati. Se i dati devono essere mantenuti per un periodo molto lungo, bisogna cambiare frequentemente la chiave. In questo modo, si riducono le probabilità di individuarla da parte dell'intrusore.
 
 ### Intercettare la chiave
 
-Un intrusore non deve intercettare una chiave quando la generazione di una chiave avviene su una CPU sarà lui ad eseguire la generazione e memorizzare la chiave in memoria RAM quando la chiave dovrà essere usata. Ho bisogno anche di un sistema che mi memorizzi la chiave in modo persistente.
+La CPU si occupa di generare e memorizzare la chiave in memoria RAM quando deve essere usata. Ho bisogno anche di un sistema che mi memorizzi la chiave in modo persistente.
 
-L'intercettazione può avvenire nella fase di utilizzo e nella fase di memorizzazione della chiave.
+L'intercettazione può avvenire sia nella fase di utilizzo che nella fase di memorizzazione della chiave.
 
-Devo impedire l'accesso alla cella di memoria ma anche nella fase in cui ho acceduto alla mia cella. Solo il proprietario della chiave segreta deve avere accesso alla cella in cui è memorizzata. 
+Dobbiamo impedire l'accesso alla cella di memoria ma anche nella fase in cui abbiamo acceduto alla cella. Solo il proprietario della chiave segreta deve avere accesso alla cella in cui è memorizzata.
 
 Ogni volta che dovrà accedere alla chiave solo se potrà usare la trasformazione di decryption per ricavare usando u la chiave s.
 
@@ -692,7 +660,7 @@ Inoltre, l’unità di elaborazione deve decifrare la chiave, impiegarla nell’
 
 ![intrusore](./img/img11.png)
 
-Come genero le chiavi?
+Come si generano le chiavi?
 
 Tramite il componente RNG (Random Number Generator): può generare una sequenza di bit, i cui tutti i bit sono assolutamente casuali e imprevedibili e genera s (parametro segreto). s deve essere mantenuto cifrato quindi uso una funzione di E per mantenere in modo permanente in memoria. E se devo cifrare il mio segreto che cifra i dati? Ho bisogno di un altro parametro k che a sua volta devo memorizzarlo e generarlo in modo sicuro. Un cane che si morde la coda.
 
@@ -713,21 +681,19 @@ La cella di memoria dove contenere le chiavi dove può risiedere?
 
 ?
 
-## Deduzione di un segreto dal suo uso
-
-Esistono diverse tipologie di attacco:
-- attacco con testo in chiaro noto: 
+## Deduzione della chiave
 
 ![dedurre](./img/img12.png)
 
-- **attacco con solo testo cifrato**: l'intrusore dispone esclusivamente di campioni di testo cifrato. L'intruso può osservare il traffico sul canale insicuro ma dispone solo del traffico cifrato. Si possono fare degli attacchi, a seconda di come vengono impiegati i cifrari, l'intrusore può sfruttare conoscenze, ipotesi sul linguaggio di origine che è stato usato per scrivere il messaggio cifrato, può disporre di tecniche e statistiche per effettuare determinati attacchi. Avendo il testo cifrato e queste tecniche può dedurre delle informazioni sul testo originario o sulla chiave stessa
-- **attacco con testo in chiaro noto**: l'intruso ha la fortuna di avere il testo in chiaro del cifrato e il cifrato
-- **attacco con testo in chiaro scelto**: l'intruso sceglie un testo in chiaro e ha la possibilità di ottenere una coppia di testo in chiaro-cifrato ma dove il testo in chiaro l'ha scelto lui ma l'ha fatto cifrare
-- **attacco con testo cifrato scelto** dispone sempre di una coppia testo cifrato-testo scelto, ma l'attaccante a differenza di prima, ha preso un campione di testo cifrato da lui voluto e ha ottenuto un il testo in chiaro corrispondente. E' riuscito a farsi decifrare il testo cifrato dalla sorgente
+Esistono diverse tipologie di attacco:
+- **Attacco con solo testo cifrato**: l'intrusore dispone esclusivamente di campioni di testo cifrato che li preleva dal canale insicuro. L'intrusore può sfruttare conoscenze, ipotesi sul linguaggio di origine che è stato usato per scrivere il messaggio cifrato, può disporre di tecniche e statistiche per effettuare determinati attacchi. Avendo il testo cifrato e queste tecniche può dedurre delle informazioni sul testo originario o sulla chiave stessa;
+- **Attacco con testo in chiaro noto**: l'intrusore ha la fortuna di avere il testo in chiaro del cifrato e il cifrato stesso;
+- **Attacco con testo in chiaro scelto**: l'intrusore sceglie un testo in chiaro e ha la possibilità di cifrarlo. Il testo in chiaro l'ha scelto lui ma riesce a cifrarlo;
+- **Attacco con testo cifrato scelto**: dispone sempre di una coppia testo cifrato-testo scelto, ma l'attaccante a differenza di prima, ha preso un campione di testo cifrato da lui voluto e ha ottenuto il testo in chiaro corrispondente. E' riuscito a farsi decifrare il testo cifrato dalla sorgente.
 
 ## Contromisura preventiva
 
-La contromisura preventiva è fare in modo che l'uscita di un algortimo crittografico deve essere assolutamente aleatorio. Purtroppo, ci sono alcuni algoritmi che impiegati in una certa modalità producono determinismo.
+La contromisura _preventiva_ è fare in modo che l'uscita di un algortimo crittografico debba essere assolutamente aleatorio cioè la probabilità che una variabile assuma un valore sia la stessa. Purtroppo, non è sempre vero perchè ci sono alcuni algoritmi che impiegati in un certe modalità producono determinismo.
 
 ## Teoria della complessità
 
@@ -760,9 +726,11 @@ T = O(n^t ) con t esponente più grande in g(n),
 T = O(b^n) , con b costante, o anche T = O(exp (n))
 
 ## Classificazione dei problemi
-- facile, se esiste un algoritmo polinomiale in grado di
-risolverlo su una macchina di Turing deterministica;
-- difficile, se non sono stati fino ad ora individuati
+
+Un problema si possono classificare in:
+
+- **Facile**: se esiste un algoritmo polinomiale in grado di risolverlo su una macchina di Turing deterministica;
+- **Difficile**: se non sono stati fino ad ora individuati
 (e probabilmente non saranno mai individuati) algoritmi che lo risolvono in tempo polinomiale
 
 Che cosa interessano a noi questi andamenti?
