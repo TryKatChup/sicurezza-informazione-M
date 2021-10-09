@@ -33,7 +33,7 @@ L'acronimo _CIA_ viene usato per rappresentare le tre proprietà fondamentali de
 A queste proprietà se ne possono aggiungere altre come:
 
 - **Autenticità**: si deve effettivamente dimostrare chi è stato a creare il dato o sapere da chi proviene;
-- **Non ridupio**: quando una transazione è conclusa, si deve essere certi di poter attribuire la paternità di quell'operazione su quel dato a qualcuno.
+- **Non ridupio**: quando una transazione è conclusa, ad una terza parte si può dimostrare con certezza a chi attribuire l'operazione su quel dato.
 
 ### Terminologia
 
@@ -453,46 +453,47 @@ Esistono 2 schemi alternativi per realizzare sign-verify: _la firma digitale_ e 
 
 ![firmadigitale](./img/img6.png)
 
-La sorgente prende il messaggio `m` e lo sottopone a una trasformazione `H`, costruendo l’impronta `H(m)`, che garantisce l’integrità. <!--Ricordiamo che per garantire solo questa proprietà, l'attestato di integrità viene inviato su un canale sicuro. Però vogliamo garantire sia integrità che autenticazione.-->
-
-La funzione `S` di _sign_ viene eseguita su `H(m)`, e sul canale di comunicazione insicuro viene trasmesso `m` concatenato con `S(H(m))`.
+La sorgente `A` prende il messaggio `m` e lo sottopone a una trasformazione `H`, costruendo l’impronta `H(m)`, che garantisce l’integrità. La funzione `S` di _sign_ viene eseguita su `H(m)`, e sul canale di comunicazione insicuro viene trasmesso `m` concatenato con `S(H(m))`.
 
 <!--aggiunto -->
-La destinazione verifica tramite V che c proviene dalla sorgente leggittima. In questo modo verifico l'autenticità del messaggio. Dato che c contiene H(m) posso verificare anche la proprietà di integrità.
+La destinazione `B` verifica tramite `V` che `c` proviene dalla sorgente leggittima. In questo modo verifico l'autenticità del messaggio. Dato che `c` contiene `H(m)` possiamo verificare anche la proprietà di integrità.
 <!--aggiunto -->
 
-<!--non ripudiabilità: la sorgente a è l'unica che esegue s e non può disconoscere in un secondo momento l'attestato di autenticità-->
+Questo schema ha due vantaggi:
+- Efficienza: la funzione di sign è una trasformazione costosa. Anzichè applicare m direttamente a sign l'applico a H(m) che è più piccola di m. Un'impronta è univoca per questo posso applicarla
+- Avere subito la disponibilità del dato: La funzione di V è onerosa. In questo schema rispetto al precedente posso prendere direttamente m e a mio rischio e pericolo verifico l'autenticità in un secondo momento
 
-<!--Sul canale insicuro possono viaggiare m || c-->
+Questo schema mi da anche il requisito di:
+- non ripudio: dato che la sorgente A è l'unica che esegue S non può disconoscere in un secondo momento l'attestato di autenticità-->
 
-Il canale in questo modo viene reso sicuro e viene garantita anche la non ripudiabilità (la destinazione ottiene il messaggio dal canale non direttamente interpretabile). In questo caso la funzione `S` di Sign è segreta ed è conosciuta solamente dal mittente A che _firma_ il messaggio.
+<!-- Il canale in questo modo viene reso sicuro e viene garantita anche la non ripudiabilità (la destinazione ottiene il messaggio dal canale non direttamente interpretabile). In questo caso la funzione `S` di Sign è segreta ed è conosciuta solamente dal mittente `A` che _firma_ il messaggio. -->
 
 <!-- più corto il titolo secondo me-->
 ### Hash applicata al messaggio concatenato con un segreto S, condiviso tra sorgente e destinazione
 
 ![hashs](./img/img7.png)
 
-Due entità `A` e `B` (mittente e destinatario) condividano un segreto `s`. `A` calcola `H(m || s)` a partire da `m`, cioè il messaggio che si vuole trasferire, e invia alla destinazione `m || H(m || s)`. 
+Due entità `A` e `B` (mittente e destinatario) condividono un segreto `s`. `A` calcola `H(m || s)` a partire da `m`, cioè il messaggio che si vuole trasferire, e invia alla destinazione `m || H(m || s)`. 
 
-La destinazione riceverà il messaggio `m*` e andrò a calcolare `H(m* || s)` e
-se è uguale a quello ricevuto le due proprietà sono state garantite.
+La destinazione riceverà il messaggio `m*` e andrò a calcolare `H(m* || s)` e se è uguale a quello ricevuto le due proprietà sono state garantite.
 
-In questo caso non viene garantito il _non ripudio_, poiché la sorgente `A` potrebbe sospettare che la destinazione `B` si sia costruita da sola un segreto e che la sorgente `A` in realtà non abbia inviato nulla. Questo è dovuto al fatto che `A` e `B` condividono un segreto e quindi non si è in grado di risalire a
+In questo caso **non** viene garantito il _non ripudio_, poiché la sorgente `A` potrebbe sospettare che la destinazione `B` si sia costruita da sola un segreto e che la sorgente `A` in realtà non abbia inviato nulla. Questo è dovuto al fatto che `A` e `B` condividono un segreto e quindi non si è in grado di risalire a
 chi ha effettivamente generato il segreto.
 
-Questo schema risulta essere più efficiente rispetto alla firma digitale, ma potrà essere usato solamente quando si è sicuri del corretto comportamento di `A` e `B`.
-Può essere utilizzato ad esempio con sistemi IoT che richiedono consumi ridotti di batteria e alta efficienza.
+Questo schema risulta essere più efficiente rispetto alla _firma digitale_, ma potrà essere usato solamente quando si è sicuri del corretto comportamento di `A` e `B`.
+Può essere utilizzato, ad esempio, con sistemi IoT che richiedono consumi ridotti di batteria e alta efficienza.
 
 Viceversa, la firma digitale è meno efficiente poiché ha anche la funzione di _sign_ (`S`) ma garantisce il _non ripudio_.
+
+Perchè questo schema è robusto:
+- la funzione H non è invertibile quindi nessuno a parte A o B conosce s. Se fosse invertibile, l'intrusore ricaverebbe s e costruirebbe un attestato di autenticità valido.
 
 #### Esempi di applicazioni di procolli
 
 - **SSL**: adotta le funzioni hash crittograficamente sicure con un segreto per costruire il certificato di autenticità. Il messaggio viene concatenato al certificato e cifrato dal client.
-Si prende il messaggio, si cifra e si manda il cifrato concatenato con l'attestato di autenticità costruito sul messaggio.
-
-- **SSL IPsec**: protocollo SSL a livello di trasporto (TCP). Vengono creati socket sicuri in cui i messaggi sono autenticati. In fase di invio, il messaggio viene cifrato e autenticato, mentre in fase di ricezione viene controllato l'attestato di autenticità e decifrato il messaggio.
-La ricezione è efficiente: viene risparmiata una trasformazione una trasformazione. Se il cifrato ha subito delle modifiche, chi riceve verifica il certificato e, se qualche operazione illegale è avvenuta, si evita l'operazione di decifratura.
-
+Si prende il messaggio, si cifra e si manda il cifrato concatenato con l'attestato di autenticità costruito sul messaggio;
+- **SSL IPsec**: protocollo SSL a livello di trasporto (TCP). Vengono creati socket sicuri in cui i messaggi sono autenticati. In fase di invio, il messaggio viene cifrato e autenticato, mentre in fase di ricezione viene controllato l'attestato di autenticità e decifrato il messaggio;
+La ricezione è efficiente: viene risparmiata una trasformazione una trasformazione. Se il cifrato ha subito delle modifiche, chi riceve verifica il certificato e, se qualche operazione illegale è avvenuta, si evita l'operazione di decifratura;
 - **SSH**: permette di aprire shell remote sicure.
 Si prende il messaggio, si cifra e si manda sul canale insicuro il cifrato concatenato con l'attestato di autenticità costruito sul messaggio.
 
@@ -506,12 +507,12 @@ slide 12
 
 ## Anonimato/Identificazione
 
-Per _identificazione_ si intende un insieme di azioni che richiedono di identificare chi sta partecipando a un'interazione. Ad esempio, per un pagamento o quando si vuole accedere a certe risorse. L'opposto dell'identificazione è l'anonimato. <!-- anonimato: ad esempio, il voto elettronico o monete elettroniche-->
+Per _identificazione_ si intende un insieme di azioni che richiedono di identificare chi sta partecipando a un'interazione. Ad esempio, quando effettuiamo un pagamento o quando si vuole accedere a certe risorse. L'opposto dell'identificazione è l'anonimato. Si usa, ad esempio con le monete elettroniche o con il voto elettrinico.
 
 Il processo di identificazione ha le seguenti caratteristiche:
 
-- **Efficienza**: l’identificazione di una entità deve avvenire in maniera _efficiente_;
-- **real-time**: l'identificazione deve avvenire in un **preciso** istante e non in un secondo momento;
+- **Real-time**: l'identificazione deve avvenire in un **preciso** istante e non in un secondo momento. Non posso identificare in un secondo momento perchè altrimenti come faccio ad accedere?;
+- **Efficienza**: l’identificazione di una entità deve avvenire in maniera _efficiente_ proprio perchè avviene in real-time;
 - **Sicurezza**: possono essere presenti:
   - **Falsi positivi**: una determinata persona ha diritti di accesso, ma non riesce ad accedere. Ciò causa inefficienza. Bisogna minimizzare questo numero;
   - **Falsi negativi**: l'accesso viene effettuato da persone non autorizzate (si spacciano per chi non sono xD). Non bisogna averli.
@@ -522,11 +523,7 @@ Un sistema di identificazione si può basare su:
 - **Possesso**: sistemi che si basano sul possesso di un oggetto che solo quella persona può avere. Ad esempio, carte magnetiche, token, smart card;
 - **Conformità**: sistemi che si basano su una caratteristica di un'entità. Ad esempio, dati biometrici come impronte o analisi della retina.
 
-E' possibile che un sistema abbia anche più sistemi di identificazione. Ad esempio, conoscenza e possesso oppure conoscenza, possesso e conformità.
-
-E' importante ricorda che l'identificando e il verificatore debbano essere online: non posso identificare in un secondo momento perchè altrimenti come faccio ad accedere?
-
-La robustezza di un sistema di identificazione è maggiore se vengono combinati più principi. A seconda dell'informazione che voglio proteggere si sceglierà il sistema più adatto perchè ci sarà un costo computazionale, di gestione etc.
+E' possibile che un sistema abbia anche più sistemi di identificazione. Ad esempio, conoscenza e possesso oppure conoscenza, possesso e conformità. A seconda dell'informazione che vogliamo proteggere si sceglierà il sistema più adatto perchè ci sarà un costo computazionale, di gestione etc.
 
 ### Protocollo di identificazione
 
@@ -559,7 +556,7 @@ La trasformazione T3.1 deve essere segreta cioè solo l'identificando deve conos
 ## Funzioni one-way
 
 Una funzione `f` è detta unidirezionale se:
-- è invertibile;
+- è invertibile (non è detto che non lo sia);
 - facile da calcolare: dato lo spazio di input `x` è facile calcolare l'uscita `f(x)`;
 - è difficile dato `f(x)` risalire alla `x` che ha originato l'output.
 
@@ -599,11 +596,10 @@ Un intrusore può sempre disporre di un _algoritmo di ricerca esauriente_ noto c
 ## Relazioni fra le chiavi
 
 In base a come sono fatti i parametri che diamo in pasto agli algoritmi possiamo individuare due famiglie di cifrari:
-- **Cifrari a chiavi simmetriche**: le chiavi `ks` e `kd` sono uguali (o derivano facilmente l’una dall’altra). Se prendiamo la coppia del cifrario `E` e `D`, quando cifriamo useremo una chiave ks e quando decifriamo useremo ks. Ciò implica che le due entità in gioco conoscano lo stesso segreto. Dunque, ks e kd devono essere *segreti*. Questo tipo di cifrario si usa per garantire riservatezza. Caso molto raro è quello di costruire un attestato di autenticità;
-- **Cifrari a chiave pubbliche**: le chiavi ks e kd sono diverse e una delle due è difficilemnte calcolabile dall'altra. Questo tipo di cifrario si usa per garantire riservatezza e autenticazione.
-kd è facilmente calcolabile se conosco ks ma dalla chiave kd è difficile risalire alla chiave ks. Se uso un cifrario asimmetrico, la funzione F(kd) è facilmente calcolabile. ks è la chiave segreta e kd è la chiave pubblica. Ogni entità dispone della conoscenza di due chiavi. Ogni entità ha una chiave segreta se non l'entità proprietà e dispone di una chiave pubblica associata univocamente alla chiave segreta che tutti possono conoscere.
 
-Funzione di encryption e darò in pasto l'unica chiave che conosco che è associata ad antonio corradi. La chiave pubblica. Alla funzione E darò la chiave pubblica del destinatario. La funzione D, il destinatario può risalire al dato originario perchè è l'unico che conosce la chiave ks univocamente associata. Solo con la chiave ks posso risalire al contenuto originario.
+- **Cifrari a chiavi simmetriche**: le chiavi `ks` e `kd` sono uguali (o derivano facilmente l’una dall’altra). L’unica chiave deve essere mantenuta in modo scrupolosamente segreta. Questo tipo di cifrario si usa per garantire riservatezza. Caso molto raro è quello di costruire un attestato di autenticità;
+- **Cifrari a chiave pubbliche**: le chiavi `ks` e `kd` sono diverse e una delle due è difficilmente calcolabile dall'altra. Questo tipo di cifrario si usa per garantire riservatezza e autenticazione.
+`kd` è facilmente calcolabile se conosco `ks` ma dalla chiave `kd` è difficile risalire alla chiave `ks`. Se usiamo un cifrario asimmetrico, la funzione `F(kd)` è facilmente calcolabile. `ks` è la chiave segreta e `kd` è la chiave pubblica. Se conosco la chiave segreta deve essere per me proprietario per la chiave segreta calcolare la chiave pubblica. Tutti quelli che conoscono la chiave pubblica non devono però risalire alla conoscenza della chiave privata. La funzione deve essere unidirezionale.
 
 ### Proprietà delle chiavi simmetriche
 
@@ -618,11 +614,9 @@ Le chiavi simmetriche devono avere le seguenti proprietà:
 
 Le chiavi asimmetriche devono avere le seguenti proprietà:
 
-La chiave pubblica (PU) e chiave privata (SU) devono essere legate da una funzione: se conosco la chiave segreta deve essere per me proprietario per la chiave segreta calcolare la chiave pubblica. Tutti quelli che conoscono la chiave pubblica non devono però risalire alla conoscenza della chiave privata. La funzione deve essere unidirezionale.
-
 - **Riservatezza**: la riservatezza è legata alla chiave privata;
 - **Integrità**: è importante che la chiave privata che stiamo utilizzando sia quella corretta e non modificata. La chiave pubblica deve essere integra perchè devo essere sicuro che sia quella generata;
-- **Autenticità**: per quanto riguarda la chiave pubblica, devo sapere con certezza se appartiene a una determinata entità oppure no. Se non sono certo dell'associazione sto cifrando dei dati non per chi li sto inviando ma per un intrusore.
+- **Autenticità**: per quanto riguarda la chiave pubblica, devo sapere con certezza se appartiene a una determinata entità oppure no. Se non sono certo dell'associazione, sto cifrando dei dati non per chi li sto inviando ma per un intrusore.
 
 ## Crittanalisi
 
@@ -646,7 +640,7 @@ Per ridurre l'attacco con forza bruta, dobbiamo adottare alcuni accorgimenti:
 
 ### Intercettare la chiave
 
-La CPU si occupa di generare e memorizzare la chiave in memoria RAM quando deve essere usata. Ho bisogno anche di un sistema che mi memorizzi la chiave in modo persistente.
+La CPU si occupa di generare e memorizzare la chiave in memoria RAM quando deve essere usata. Abbiamo bisogno anche di un sistema che mi memorizzi la chiave in modo persistente.
 
 L'intercettazione può avvenire sia nella fase di utilizzo che nella fase di memorizzazione della chiave.
 
@@ -698,17 +692,17 @@ La contromisura _preventiva_ è fare in modo che l'uscita di un algortimo critto
 ## Teoria della complessità
 
 La complessità computazionale può essere determinata con una serie di indicatori:
-- Tempo di esecuzione: ovviamente non è un tempo vero perchè ogni tecnologia introduce un tempo diverso. Per misurare il tempo di esecuzione facciamo riferimento al numero di operazioni eseguite dall'algoritmo per terminare;
-- Memoria occupata dal programma
-- Memoria occupata dai dati
+- **Tempo di esecuzione**: ovviamente non è un tempo _vero_ perchè ogni tecnologia introduce ha un concetto di tempo diverso. Per misurare il tempo di esecuzione facciamo riferimento al numero di operazioni eseguite dall'algoritmo per terminare;
+- **Memoria occupata dal programma**
+- **Memoria occupata dai dati**
 
 Negli algoritmi di crittografia che vediamo, gli ultimi due parametri non vengono presi in considerazione.
 
-**Tempo di esecuzione di un algoritmo**: numero di operazioni N che occorre eseguire per terminarlo quando il dato d’ingresso è rappresentato da una stringa di n bit (n = log [valore del dato])
+**Tempo di esecuzione di un algoritmo**: numero di operazioni `N` che occorre eseguire per terminarlo quando il dato d’ingresso è rappresentato da una stringa di `n` bit (`n = log [valore del dato]`)
 
 N = f(n)
 
-Il numero n (dimensione input) incide sul numero di operazioni richieste, in alcuni casi, anche il valore stesso può incidere sul numeero di passi da eseguire. Dunque, a parità di n, si hanno diversi valori di N.
+Il numero `n` (dimensione input) incide sul numero di operazioni richieste, in alcuni casi, anche il valore stesso può incidere sul numero di passi da eseguire. Dunque, a parità di `n`, si hanno diversi valori di `N`.
 
 **Tempo di esecuzione nel caso peggiore**: numero massimo di operazioni Nmax che occorre eseguire per qualsiasi dato d’ingresso di n bit
 
@@ -720,6 +714,8 @@ Se n non è esprimibile analiticamente, bisogna trovare una funzione che appross
 
 ## Classificazione degli algoritmi
 
+Gli algoritmi possono essere classificati in due categorie:
+
 - tempo polinomiale:
 T = O(n^t ) con t esponente più grande in g(n), 
 - tempo esponenziale:
@@ -727,11 +723,11 @@ T = O(b^n) , con b costante, o anche T = O(exp (n))
 
 ## Classificazione dei problemi
 
-Un problema si possono classificare in:
+Un problema si può classificare in:
 
 - **Facile**: se esiste un algoritmo polinomiale in grado di risolverlo su una macchina di Turing deterministica;
 - **Difficile**: se non sono stati fino ad ora individuati
-(e probabilmente non saranno mai individuati) algoritmi che lo risolvono in tempo polinomiale
+(e probabilmente non saranno mai individuati) algoritmi che lo risolvono in tempo polinomiale.
 
 Che cosa interessano a noi questi andamenti?
 Per ottenere sicurezza non ci interessa sapere l'andamento al crescere senza misura di n. A noi interessa:
@@ -739,8 +735,8 @@ Per ottenere sicurezza non ci interessa sapere l'andamento al crescere senza mis
 - non ci interessa difenderci dal caso peggiore ma dal caso migliore. L'intrusore non deve trovarsi a distanze facili
 
 Le unità di misura da adottare sono:
-- anno MIPS: le tecnologie della sicurezza hanno assunto come riferimento un calcolatore in grado di eseguire un milione di istruzioni al secondo. Quindi, il tempo di esecuzione di un attacco è espresso in anni MIPS. Questa unità di misura fa riferimento con la tecnologia perchè a seconda degli elaboratori la soglia può aumentare;
-- Livello di sicurezza: parametro indipendente dalla tecnologia. L'algoritmo di ricerca esauriente risolve ogni problema perchè esplorare lo spazio totale degli input è sempre possibile. Dipende tutto dalla dimensione di input per il quale non ha più senso. Dobbiamo individuare qual è il numero di bit tale per cui l'andamento diventa esponenziale. Quando l'ho individuato quello è il mio livello di sicurezza. Il livello di sicurezza misura il numero di dimensione di input del migliore algoritmo a disposizione dell'intrusore a partire dal quale l'andamento diventa esponenziale.
+- **anno MIPS**: parametro che dipende dalla tecnologia. Il tempo di esecuzione di un attacco è espresso in anni MIPS. Questa unità di misura fa riferimento a quante istruzioni può elaborare un calcolatore e con il passare degli anni il numero di riferimento aumenta. Attualmente un calcolatore in grado di eseguire un milione di istruzioni al secondo;
+- **Livello di sicurezza**: parametro indipendente dalla tecnologia. L'algoritmo di ricerca esauriente risolve ogni problema perchè esplorare lo spazio totale degli input è sempre possibile. Dipende tutto dalla dimensione di input per il quale non ha più senso. Dobbiamo individuare qual è il numero di bit tale per cui l'andamento diventa esponenziale. Quando l'ho individuato quello è il mio livello di sicurezza. Il livello di sicurezza misura il numero di dimensione di input del migliore algoritmo a disposizione dell'intrusore a partire dal quale l'andamento diventa esponenziale.
 
 ---
 
