@@ -11,7 +11,8 @@ Per essere più precisi, è l’insieme dei prodotti, dei servizi, delle regole 
 
 ### La sicurezza è un processo, non un prodotto
 
-Da un punto di vista software, anche se programmi, come l'_antimalware_ e il _firewall_, sono essenziali, non è sufficiente collegarli al nostro sistema operativo per renderlo sicuro. La sicurezza informatica richiede la creazione di un insieme di processi ben ponderati. Ad esempio:
+Per garantire la sicurezza di un dispositivo non è sufficiente l'utilizzo di software come gli _antivirus_, o di sistemi di difesa, come i _firewall_.
+La sicurezza informatica richiede la creazione di un insieme di processi ben ponderati. Ad esempio:
 
 - **Backup dei dati**: i dati importanti devono essere archiviati in una posizione sicura, e dovrebbe essere possibile ripristinare una copia integra e verificata di questi dati in caso di problemi;
 - **Buone abitudini informatiche**: evitare di aprire collegamenti o allegati inattesi che si potrebbero ricevere tramite messaggi di posta elettronica o SMS, anche se sembrano provenire da mittenti attendibili;
@@ -53,15 +54,6 @@ Esempio: un ponte ha una crepa (vulnerabilità), rischia di crollare (minaccia),
 modulo kernel, hypervisor) ed invisibili.-->
 
 <!--CANCELLEREI QUESTO PARAGRAFO :P
-
-SCRITTO DOPO
-
-### Qualche concetto (paragrafo da modificare)
-- Analisi Valore: quanto valgono i miei dati?
-- Analisi Rischio: Quanto valgono i danni(?)
-- Modello di minaccia: dipende dall'analisi del valore, chi mi attacca e perché-->
-
-<!--CANCELLEREI QUESTO PARAGRAFO :P
 ### Poi ha detto qualche vulnerabilità a caso, spiegando bene solo l'IP spoofing e il SYN flooding, ma il resto le ha tralasciate perché sì.
 da scrivere bene dopo--!> <!--QUANDO VUOI...-->
 
@@ -78,17 +70,6 @@ Quando parliamo di sicurezza dei dati, faremo un'assunzione fondamentale: l'hard
 
 <!-- toglierei questa parte scritta prima
 
-In questo corso ci si focalizza principalmente sulla _sicurezza dei dati_, che consiste nel garantire i seguenti requisiti fondamentali:
-
-- Confidenzialità;
-- Integrità;
-- Disponibilità;
-- Autenticazione;
-- Non ripudio.
--->
-
-<!--NB: la sicurezza HW e FW non è argomento proprio del corso, ma la prof ci ha dato qualche info a riguardo per sapere giusto di cosa stiamo parlando.-->
-
 <!--Forse da togliere, non è importante: ci devo pensare (Karina) -->
 ### Sicurezza hardware
 
@@ -99,47 +80,7 @@ Soprattutto negli ultimi anni, la sicurezza hardware sta emergendo in maniera pr
 - I/O
 - linee di trasmissione
 
-L'ambito della sicurezza hardware si occupa di proteggere il calcolatore, ma anche altri dispositivi fisici, da minacce quali furto, danneggiamento o alterazione dei componenti.
-
-<!-- toglierei questa sezione: non viene trattata nel corso e non è oggetto di esame -->
-### Sicurezza firmware
-
-Così come l'hardware, anche il firmware deve essere sicuro: ci sono diverse vulnerabilità legate al FW, specialmente recenti (anche in questo caso ci troviamo in un'area in grande espansione, soprattutto nell'ultimo periodo).
-
-Esistono diversi meccanismi di analisi del firmware, che si dividono in
-
-- statici
-- dinamici
-
-e che permettono di verificare che il firmware si comporti correttamente.
-
-Il motivo per cui è importante anche la sicurezza del firmware, è dato dal fatto che, partendo dal livello applicativo, per garantirne l'_autenticità_ (ovvero che sia stato sviluppato effettivamente dall'azienda o produttore che l'ha rilasciato) e che non sia stato compromesso (ovvero che non abbia subito modifiche, quali ad esempio iniezione di software malevolo, e quindi che funzioni correttamente), c'è una catena di sicurezza, che segue diversi check:
-
-1) Il primo check che possiamo fare è quello "di più alto livello", che sfrutta l'utilizzo di software antimalware;
-2) Chi garantisce che i software antimalware siano affidabili?
-3) Chi mi garantisce che il sistema operativo non sia stato corrotto?
-4) Prima ancora del sistema operativo viene eseguito il bootloader, che esegue dei controlli di verifica per garantire l'affidabilità del SO;
-5) A loro volta i bootloader potrebbero essere compromessi, dunque serve ancora qualcosa che ci garantisca che la fase di boot sia avvenuta con successo.
-
-Riassumendo (partendo da livello più alto):
-
-- Livello applicativo
-- Sistema operativo
-- Boot
-- Hardware
-
-In linea di principio, per garantire che l'hardware non sia compromesso, tramite il boot, esistono due metodologie:
-
-- **Trusted boot**: tutta la fase di inizializzazione è avvenuta usando piattaforme _trusted_ (ovvero che fanno anche utilizzo di componenti ad hoc (tra cui i processori) anche crittografici, che conservano delle chiavi crittografiche tramite le quali possiamo verificare che tutti i componenti, fra cui il firmware, siano autentici e vengano avviati correttamente.
-
-- **Secure boot**: viene usata un'interfaccia standard UEFI (Unified Extensible Firmware Interface) che garantisce, più a livello software, che la fase di boot avvenga in maniera corretta.
-
-Tre approcci per la rilevazione tempestiva degli errori hardware e firmware:
-
-1) **Trusted computer platform**: grandi aziende (ad esempio IBM, Intel, ecc.) si sono riunite in un'iniziativa (TCPA - Trusted Computing Platform Alliance, che ora è diventata la TCG - Trusted Computing Group) che ha come obiettivo quello di definire degli standard, in grado di impedire tramite chip aggiuntivi (Fritz) e sistemi operativi ad hoc (Nexus) che garantiscono che le configurazioni hardware e software siano avviati correttamente. Ciò garantisce una piattaforma attivata.
-2) **Funzioni e regole di sicurezza**: Come controparte della soluzione precedente, c'è il problema che l'architettura diventa blindata: si è vincolati all'utilizzo di quel particolare chip con quel particolare sistema operativo (Ad esempio Apple). Come possibile alternativa si può ricorrere ad un approccio che consiste nell'utilizzo di sistemi operativi con _estensioni_ di sicurezza (es Unix, SELinux).
-3) **Coprocessori** - Una terza alternativa consiste nell'utilizzo di coprocessori dedicati (anche in ambiente di comunicazioni mobili). 
-Si affida a processori specifici l'esecuzione di determinate funzioni di sicurezza.
+L'ambito della sicurezza hardware si occupa di proteggere il calcolatore, ma anche altri dispositivi fisici, da minacce quali furto, danneggiamento o alterazione dei componenti. Questa parte non verrà trattata nel corso e non sarà oggetto di esame.
 
 ### Valutazione, Certificazione, Enti
 
@@ -150,7 +91,7 @@ Esempi di standard internazionali per valutazione e certificazione della sicurez
 
 ### Modello a canale insicuro
 
-D'ora in poi per analizzare e studiare i meccanismi di sicurezza faremo riferimento ad un modello molto specifico, chiamato _modello a canale insicuro_.
+D'ora in poi per analizzare e studiare i meccanismi di sicurezza si farà riferimento ad un modello molto specifico, chiamato _modello a canale insicuro_.
 
 Questo modello prevede che ci sia una sorgente dei dati, una destinazione a cui sono rivolti e che ci sia un canale che mette in comunicazione sorgente con destinazione.
 
@@ -160,77 +101,72 @@ Assumiamo che:
 - La destinazione abbia un ambiente sicuro (hardware e sistema operativo sicuri);
 - Il canale sia insicuro, ovvero che sul canale si possano inserire degli intrusori e possono fare degli attacchi su tale canale.
 
-Definito un modello di questo genere, il nostro obiettivo è garantire che la destinazione possa consumare ed interpretare correttamente i dati inviati dalla sorgente.
+Definito un modello di questo genere, l'obiettivo finale sarà di garantire che la destinazione possa consumare ed interpretare correttamente i dati inviati dalla sorgente.
 
 ### Classificazione attacchi
 
 Gli attacchi si classificano in due tipologie:
 
-- **Passivo**: l'intrusore si inserisce sul canale, ma l'unica cosa che può fare è osservare i dati. Viene minato il requisito di _confidenzialità_;
-- **Attivo**: l'intrusore si inserisce sul canale ed alterare il normale flusso dei dati. Può:
+- **Passivo**: l'intrusore si inserisce sul canale, osservando i dati trasmessi. Viene minato il requisito di _confidenzialità_;
+- **Attivo**: l'intrusore si inserisce sul canale ed altera il normale flusso dei dati. Può:
   - **Modificare** il flusso intenzionalmente per cambiare il contenuto dei dati. Viene minato il requisito dell'_integrità_;
-  - **Aggiungere** nuove informazioni facendo credere alla destinazione che siano state inviate dalla sorgente leggittima. Viene minato il requisito dell'_autenticità_;
+  - **Aggiungere** nuove informazioni facendo credere alla destinazione che siano state inviate dalla sorgente legittima. Viene minato il requisito dell'_autenticità_;
   - **Interrompere** il normale flusso impedendo che i dati arrivino alla destinazione. Viene minato il requisito di _disponibilità_.
 
 
-<!--ho dei dubbi che questo riassunto sia corretto:
+Riassumendo:
 
-- **Attacchi passivi**: mina confidenzialità e autenticazione.
-- **Attacchi attivi**: integrità, autenticità e disponibilità-->
+- **Attacchi passivi**: mina confidenzialità e autenticazione (esempio: Man In The Middle);
+- **Attacchi attivi**: integrità, autenticità e disponibilità.
 
 ### Contromisure
 Esistono 3 tipologie di contromisure per gli attacchi:
 
 - **Prevenzione**: si previene la possibilità di un attacco;
 - **Rilevazione**: si rileva un attacco in corso;
-- **Reazione**: si reagisce dopo che un attacco è già avvenuto.
+- **Reazione**: si reagisce dopo che un attacco è avvenuto.
 
-Il tipo di contromisura da adottare va scelta anche in base al sistema e a cosa vogliamo proteggere (nel nostro caso ci interessano i dati). Se ad esempio, i dati sono non confidenziali, non ci interessa se vengono intercettati o meno.
+Il tipo di contromisura da adottare viene scelta anche in base al sistema e a cosa si vuole proteggere (nel corso il focus è incentrato sui dati).
 
-La contromisura ha un costo in termini di soldi, di impegno delle risorse informatiche del sistema, di impatto sugli utenti, una sua efficacia (a fronte di una certa minaccia) e dei suoi effetti collaterali (la creazione di nuove vulnerabilità). Una certa contromisura, quindi, deve essere fatta attentamente, valutando sia la probabilità che si verifichi una certa minaccia in grado di sfruttare una certa vulnerabilità, sia il danno che ne discende. Questa attività è chiamata _analisi del rischio_.
+La contromisura ha un costo in termini di soldi, di impegno delle risorse informatiche del sistema, di impatto sugli utenti, una sua efficacia (a fronte di una certa minaccia) e dei suoi effetti collaterali (la creazione di nuove vulnerabilità). Una certa contromisura, quindi, deve essere applicata attentamente, valutando sia la probabilità che si verifichi una certa minaccia in grado di sfruttare una certa vulnerabilità, sia il danno che ne discende. Questa attività è chiamata _analisi del rischio_.
 
-Come ingegneri (LOL https://youtu.be/EOR8Uz27s3Y?t=420), il nostro obiettivo è capire a fronte di più possibilità progettuali, quale ha più senso per il nostro sistema ed i nostri dati da proteggere.
+Come ingegneri (LOL https://youtu.be/EOR8Uz27s3Y?t=420), l'obiettivo è capire a fronte di più possibilità progettuali quale risulti la migliore scelta per garantire la sicurezza del proprio sistema e dei propri dati.
 
 #### Possibili contromisure per attacchi passivi
 
-L’unica contromisura da utilizzare è la _prevenzione_. Non ha senso utilizzare la tecnica della _rilevazione_ o della _reazione_ perchè quando ci si accorge dell'attacco ormai è troppo tardi e non si può più intervenire. La riservatezza è stata ormai violata. Discorso analogo anche per la _reazione_.
+L’unica contromisura da utilizzare è la _prevenzione_. La _rilevazione_ e la _reazione_ di un attacco risulta inutile dopo che quest'ultimo è avvenuto e non si può più intervenire per evitare il danno.
 
 Si può:
-- **Impedire** l'accesso al canale. Ciò viene implementato tramite l'utilizzo o di canali dedicati, oppure mettendo in piedi meccanismi di controllo dell'accesso, che fanno in modo che ogni volta che una sorgente accede al canale, il  meccanismo chiede di autenticarsi. Per come è realizzata, questa soluzione non è tuttavia nè economicamente sostenibile né scalabile;
+- **Impedire** l'accesso al canale. Ciò viene implementato tramite l'utilizzo o di canali dedicati, oppure progettando meccanismi di controllo dell'accesso, in modo che ogni volta che una sorgente accede al canale, il meccanismo chiede di autenticarsi. Questa soluzione non è tuttavia né economicamente sostenibile né scalabile;
 - **Criptare** i dati da inviare, ovvero rendere incomprensibili i dati trasmessi, tranne al destinatario legittimo.
 
 #### Possibili contromisure per attacchi attivi
 
-Le contromisure da adottare sono la _rilevazione_ e la _reazione_. Non ha senso utilizzare la tecnica _preventiva_. In linea di principio avrebbe anche senso adottare una contromisura preventiva, in quanto protegge l'autenticità, l'integrità e la riservatezza. Ma l'unico modo per prevenire è quello di controllare l'accesso al canale ma ovviamente è quasi impossibile per i motivi specificati in precedenza.
+Le contromisure da adottare, a differenza degli attacchi passivi, includono anche la _rilevazione_ e la _reazione_. L'unico modo per prevenire del tutto un attacco attivo è quello di controllare l'accesso al canale, ma ovviamente è quasi impossibile per i motivi specificati in precedenza.
 
 Si può:
 - **Aggiungere** un attestato di integrità e di autenticità. In questo caso, la rappresentazione dei dati non è incomprensibile ma, al normale flusso dei dati ne aggiungo altri in più che permettono alla destinazione di capire se il flusso è integro e autentico oppure se è stato manomesso.
 
-### Meccanismi e Servizi di Sicurezza
-
-**Meccanismo di Sicurezza**: meccanismo progettato per rilevare/prevenire un attacco, risanare il sistema a seguito di un attacco.
-
-**Servizio di Sicurezza**: _software_ che fa raggiungere una proprietà di sicurezza grazie all'uso di uno o più meccanismi.
-
-Dobbiamo sempre chiederci qual è il livello migliore in cui integriamo i meccanismi e i servizi. Ci sono molti protocolli che forniscono servizi di sicurezza ma si collocano a livelli diversi:
+Esistono protocolli che forniscono servizi di sicurezza, ma si collocano a livelli diversi:
 - **IPsec**: livello di rete;
 - **SSL**: livello di trasporto;
 - **PGP**: livello applicativo.
 
-A seconda del livello si avrà una prestazione, personalizzazione e trasparenza diverse. IPsec, PGP e SSL garantiscono tutti la sicurezza dei dati cioè garantiscono le proprietà _CIA_. A livello di IPsec si parla di autenticità a livello host, non posso dire quali _client_ verranno autenticati. Se lavoro a applicativo posso far proteggere alcuni dati mentre altri no.
+A seconda del livello si avrà una prestazione, personalizzazione e trasparenza diverse. IPsec, PGP e SSL garantiscono tutti la sicurezza dei dati cioè garantiscono le proprietà _CIA_. A livello di IPsec si parla di autenticità a livello host, non posso dire quali _client_ verranno autenticati.
 
----
-## 01.Dati Sicuri
+## 01. Dati Sicuri
 
 Per proteggere i dati a fronte di eventuali attacchi occorre utilizzare delle trasformazioni. Queste trasformazioni possono essere costituite da un _algoritmo_ (una sequenza di istruzioni) o da un _protocollo_ (una sequenza ben precisa di operazioni da eseguire).
 
-Quando progettiamo un protocollo, ci dobbiamo chiedere sempre se la sorgente e destinazione siano stati compromessi, ma nel modello di minaccia più semplice che abbiamo assunto questo problema non c'è. Ad esempio, compro una casa a cento mila euro. Introduciamo un protocollo di sicurezza per trasmettere l'informazione della compravendita. Se sorgente e destinazione sono sicuri, ci basta un protocollo che ci garantisca l'integrità di quel dato ma se la sorgente è compromessa il prezzo può essere alterato. In questo caso, il protocollo deve diventare più complesso affinché la sorgente e destinazione possano disconoscere l'operazione.
+<!-- da riscrivere meglio (da Kary) -->
+Quando si progetta un protocollo, si verifica sempre se la sorgente e destinazione siano stati compromessi, ma nel modello di minaccia più semplice che abbiamo assunto questo problema non c'è. Ad esempio, compro una casa a cento mila euro. Introduciamo un protocollo di sicurezza per trasmettere l'informazione della compravendita. Se sorgente e destinazione sono sicuri, ci basta un protocollo che ci garantisca l'integrità di quel dato ma se la sorgente è compromessa il prezzo può essere alterato. In questo caso, il protocollo deve diventare più complesso affinché la sorgente e destinazione possano disconoscere l'operazione.
 
 Non è detto che ci sia sempre solo sorgente e destinazione, ma in alcuni casi è necessario l'intervento di una terza entità che fa da arbitro/giudice. La si usa quando una o tutte e due le due entità in gioco sono malintenzionate.
 
+<!--fine parte da correggere-->
 ## Crittografia e Crittoanalisi
 
-La disciplina che studia gli algoritmi ed i protocolli da svolgere dal lato sorgente e lato destinatario di un canale insicuro è detta Crittologia. A sua volta è formata da due distinte e correlate discipline:
+La disciplina che studia gli algoritmi ed i protocolli da svolgere dal lato sorgente e lato destinatario di un canale insicuro è detta _crittologia_. A sua volta è formata da due distinte e correlate discipline:
 
 - **Crittografia**: è la disciplina che studia gli algoritmi che possiamo adottare per proteggere i dati in in termini di riservatezza, autenticità e integrità;
 - **Crittoanalisi**: è la disciplina che studia il modo in cui è possibile violare le trasformazioni che proteggono i dati.
