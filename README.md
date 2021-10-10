@@ -33,7 +33,7 @@ L'acronimo _CIA_ viene usato per rappresentare le tre proprietà fondamentali de
 A queste proprietà se ne possono aggiungere altre come:
 
 - **Autenticità**: si deve effettivamente dimostrare chi è stato a creare il dato o sapere da chi proviene;
-- **Non ridupio**: quando una transazione è conclusa, si deve essere certi di poter attribuire la paternità di quell'operazione su quel dato a qualcuno.
+- **Non ridupio**: quando una transazione è conclusa, ad una terza parte si può dimostrare con certezza a chi attribuire l'operazione su quel dato.
 
 ### Terminologia
 
@@ -453,46 +453,47 @@ Esistono 2 schemi alternativi per realizzare sign-verify: _la firma digitale_ e 
 
 ![firmadigitale](./img/img6.png)
 
-La sorgente prende il messaggio `m` e lo sottopone a una trasformazione `H`, costruendo l’impronta `H(m)`, che garantisce l’integrità. <!--Ricordiamo che per garantire solo questa proprietà, l'attestato di integrità viene inviato su un canale sicuro. Però vogliamo garantire sia integrità che autenticazione.-->
-
-La funzione `S` di _sign_ viene eseguita su `H(m)`, e sul canale di comunicazione insicuro viene trasmesso `m` concatenato con `S(H(m))`.
+La sorgente `A` prende il messaggio `m` e lo sottopone a una trasformazione `H`, costruendo l’impronta `H(m)`, che garantisce l’integrità. La funzione `S` di _sign_ viene eseguita su `H(m)`, e sul canale di comunicazione insicuro viene trasmesso `m` concatenato con `S(H(m))`.
 
 <!--aggiunto -->
-La destinazione verifica tramite V che c proviene dalla sorgente leggittima. In questo modo verifico l'autenticità del messaggio. Dato che c contiene H(m) posso verificare anche la proprietà di integrità.
+La destinazione `B` verifica tramite `V` che `c` proviene dalla sorgente leggittima. In questo modo verifico l'autenticità del messaggio. Dato che `c` contiene `H(m)` possiamo verificare anche la proprietà di integrità.
 <!--aggiunto -->
 
-<!--non ripudiabilità: la sorgente a è l'unica che esegue s e non può disconoscere in un secondo momento l'attestato di autenticità-->
+Questo schema ha due vantaggi:
+- Efficienza: la funzione di sign è una trasformazione costosa. Anzichè applicare m direttamente a sign l'applico a H(m) che è più piccola di m. Un'impronta è univoca per questo posso applicarla
+- Avere subito la disponibilità del dato: La funzione di V è onerosa. In questo schema rispetto al precedente posso prendere direttamente m e a mio rischio e pericolo verifico l'autenticità in un secondo momento
 
-<!--Sul canale insicuro possono viaggiare m || c-->
+Questo schema mi da anche il requisito di:
+- non ripudio: dato che la sorgente A è l'unica che esegue S non può disconoscere in un secondo momento l'attestato di autenticità-->
 
-Il canale in questo modo viene reso sicuro e viene garantita anche la non ripudiabilità (la destinazione ottiene il messaggio dal canale non direttamente interpretabile). In questo caso la funzione `S` di Sign è segreta ed è conosciuta solamente dal mittente A che _firma_ il messaggio.
+<!-- Il canale in questo modo viene reso sicuro e viene garantita anche la non ripudiabilità (la destinazione ottiene il messaggio dal canale non direttamente interpretabile). In questo caso la funzione `S` di Sign è segreta ed è conosciuta solamente dal mittente `A` che _firma_ il messaggio. -->
 
 <!-- più corto il titolo secondo me-->
 ### Hash applicata al messaggio concatenato con un segreto S, condiviso tra sorgente e destinazione
 
 ![hashs](./img/img7.png)
 
-Due entità `A` e `B` (mittente e destinatario) condividano un segreto `s`. `A` calcola `H(m || s)` a partire da `m`, cioè il messaggio che si vuole trasferire, e invia alla destinazione `m || H(m || s)`. 
+Due entità `A` e `B` (mittente e destinatario) condividono un segreto `s`. `A` calcola `H(m || s)` a partire da `m`, cioè il messaggio che si vuole trasferire, e invia alla destinazione `m || H(m || s)`. 
 
-La destinazione riceverà il messaggio `m*` e andrò a calcolare `H(m* || s)` e
-se è uguale a quello ricevuto le due proprietà sono state garantite.
+La destinazione riceverà il messaggio `m*` e andrò a calcolare `H(m* || s)` e se è uguale a quello ricevuto le due proprietà sono state garantite.
 
-In questo caso non viene garantito il _non ripudio_, poiché la sorgente `A` potrebbe sospettare che la destinazione `B` si sia costruita da sola un segreto e che la sorgente `A` in realtà non abbia inviato nulla. Questo è dovuto al fatto che `A` e `B` condividono un segreto e quindi non si è in grado di risalire a
+In questo caso **non** viene garantito il _non ripudio_, poiché la sorgente `A` potrebbe sospettare che la destinazione `B` si sia costruita da sola un segreto e che la sorgente `A` in realtà non abbia inviato nulla. Questo è dovuto al fatto che `A` e `B` condividono un segreto e quindi non si è in grado di risalire a
 chi ha effettivamente generato il segreto.
 
-Questo schema risulta essere più efficiente rispetto alla firma digitale, ma potrà essere usato solamente quando si è sicuri del corretto comportamento di `A` e `B`.
-Può essere utilizzato ad esempio con sistemi IoT che richiedono consumi ridotti di batteria e alta efficienza.
+Questo schema risulta essere più efficiente rispetto alla _firma digitale_, ma potrà essere usato solamente quando si è sicuri del corretto comportamento di `A` e `B`.
+Può essere utilizzato, ad esempio, con sistemi IoT che richiedono consumi ridotti di batteria e alta efficienza.
 
 Viceversa, la firma digitale è meno efficiente poiché ha anche la funzione di _sign_ (`S`) ma garantisce il _non ripudio_.
+
+Perchè questo schema è robusto:
+- la funzione H non è invertibile quindi nessuno a parte A o B conosce s. Se fosse invertibile, l'intrusore ricaverebbe s e costruirebbe un attestato di autenticità valido.
 
 #### Esempi di applicazioni di procolli
 
 - **SSL**: adotta le funzioni hash crittograficamente sicure con un segreto per costruire il certificato di autenticità. Il messaggio viene concatenato al certificato e cifrato dal client.
-Si prende il messaggio, si cifra e si manda il cifrato concatenato con l'attestato di autenticità costruito sul messaggio.
-
-- **SSL IPsec**: protocollo SSL a livello di trasporto (TCP). Vengono creati socket sicuri in cui i messaggi sono autenticati. In fase di invio, il messaggio viene cifrato e autenticato, mentre in fase di ricezione viene controllato l'attestato di autenticità e decifrato il messaggio.
-La ricezione è efficiente: viene risparmiata una trasformazione una trasformazione. Se il cifrato ha subito delle modifiche, chi riceve verifica il certificato e, se qualche operazione illegale è avvenuta, si evita l'operazione di decifratura.
-
+Si prende il messaggio, si cifra e si manda il cifrato concatenato con l'attestato di autenticità costruito sul messaggio;
+- **SSL IPsec**: protocollo SSL a livello di trasporto (TCP). Vengono creati socket sicuri in cui i messaggi sono autenticati. In fase di invio, il messaggio viene cifrato e autenticato, mentre in fase di ricezione viene controllato l'attestato di autenticità e decifrato il messaggio;
+La ricezione è efficiente: viene risparmiata una trasformazione una trasformazione. Se il cifrato ha subito delle modifiche, chi riceve verifica il certificato e, se qualche operazione illegale è avvenuta, si evita l'operazione di decifratura;
 - **SSH**: permette di aprire shell remote sicure.
 Si prende il messaggio, si cifra e si manda sul canale insicuro il cifrato concatenato con l'attestato di autenticità costruito sul messaggio.
 
@@ -506,12 +507,12 @@ slide 12
 
 ## Anonimato/Identificazione
 
-Per _identificazione_ si intende un insieme di azioni che richiedono di identificare chi sta partecipando a un'interazione. Ad esempio, per un pagamento o quando si vuole accedere a certe risorse. L'opposto dell'identificazione è l'anonimato. <!-- anonimato: ad esempio, il voto elettronico o monete elettroniche-->
+Per _identificazione_ si intende un insieme di azioni che richiedono di identificare chi sta partecipando a un'interazione. Ad esempio, quando effettuiamo un pagamento o quando si vuole accedere a certe risorse. L'opposto dell'identificazione è l'anonimato. Si usa, ad esempio con le monete elettroniche o con il voto elettrinico.
 
 Il processo di identificazione ha le seguenti caratteristiche:
 
-- **Efficienza**: l’identificazione di una entità deve avvenire in maniera _efficiente_;
-- **real-time**: l'identificazione deve avvenire in un **preciso** istante e non in un secondo momento;
+- **Real-time**: l'identificazione deve avvenire in un **preciso** istante e non in un secondo momento. Non posso identificare in un secondo momento perchè altrimenti come faccio ad accedere?;
+- **Efficienza**: l’identificazione di una entità deve avvenire in maniera _efficiente_ proprio perchè avviene in real-time;
 - **Sicurezza**: possono essere presenti:
   - **Falsi positivi**: una determinata persona ha diritti di accesso, ma non riesce ad accedere. Ciò causa inefficienza. Bisogna minimizzare questo numero;
   - **Falsi negativi**: l'accesso viene effettuato da persone non autorizzate (si spacciano per chi non sono xD). Non bisogna averli.
@@ -522,11 +523,7 @@ Un sistema di identificazione si può basare su:
 - **Possesso**: sistemi che si basano sul possesso di un oggetto che solo quella persona può avere. Ad esempio, carte magnetiche, token, smart card;
 - **Conformità**: sistemi che si basano su una caratteristica di un'entità. Ad esempio, dati biometrici come impronte o analisi della retina.
 
-E' possibile che un sistema abbia anche più sistemi di identificazione. Ad esempio, conoscenza e possesso oppure conoscenza, possesso e conformità.
-
-E' importante ricorda che l'identificando e il verificatore debbano essere online: non posso identificare in un secondo momento perchè altrimenti come faccio ad accedere?
-
-La robustezza di un sistema di identificazione è maggiore se vengono combinati più principi. A seconda dell'informazione che voglio proteggere si sceglierà il sistema più adatto perchè ci sarà un costo computazionale, di gestione etc.
+E' possibile che un sistema abbia anche più sistemi di identificazione. Ad esempio, conoscenza e possesso oppure conoscenza, possesso e conformità. A seconda dell'informazione che vogliamo proteggere si sceglierà il sistema più adatto perchè ci sarà un costo computazionale, di gestione etc.
 
 ### Protocollo di identificazione
 
@@ -559,7 +556,7 @@ La trasformazione T3.1 deve essere segreta cioè solo l'identificando deve conos
 ## Funzioni one-way
 
 Una funzione `f` è detta unidirezionale se:
-- è invertibile;
+- è invertibile (non è detto che non lo sia);
 - facile da calcolare: dato lo spazio di input `x` è facile calcolare l'uscita `f(x)`;
 - è difficile dato `f(x)` risalire alla `x` che ha originato l'output.
 
@@ -599,11 +596,10 @@ Un intrusore può sempre disporre di un _algoritmo di ricerca esauriente_ noto c
 ## Relazioni fra le chiavi
 
 In base a come sono fatti i parametri che diamo in pasto agli algoritmi possiamo individuare due famiglie di cifrari:
-- **Cifrari a chiavi simmetriche**: le chiavi `ks` e `kd` sono uguali (o derivano facilmente l’una dall’altra). Se prendiamo la coppia del cifrario `E` e `D`, quando cifriamo useremo una chiave ks e quando decifriamo useremo ks. Ciò implica che le due entità in gioco conoscano lo stesso segreto. Dunque, ks e kd devono essere *segreti*. Questo tipo di cifrario si usa per garantire riservatezza. Caso molto raro è quello di costruire un attestato di autenticità;
-- **Cifrari a chiave pubbliche**: le chiavi ks e kd sono diverse e una delle due è difficilemnte calcolabile dall'altra. Questo tipo di cifrario si usa per garantire riservatezza e autenticazione.
-kd è facilmente calcolabile se conosco ks ma dalla chiave kd è difficile risalire alla chiave ks. Se uso un cifrario asimmetrico, la funzione F(kd) è facilmente calcolabile. ks è la chiave segreta e kd è la chiave pubblica. Ogni entità dispone della conoscenza di due chiavi. Ogni entità ha una chiave segreta se non l'entità proprietà e dispone di una chiave pubblica associata univocamente alla chiave segreta che tutti possono conoscere.
 
-Funzione di encryption e darò in pasto l'unica chiave che conosco che è associata ad antonio corradi. La chiave pubblica. Alla funzione E darò la chiave pubblica del destinatario. La funzione D, il destinatario può risalire al dato originario perchè è l'unico che conosce la chiave ks univocamente associata. Solo con la chiave ks posso risalire al contenuto originario.
+- **Cifrari a chiavi simmetriche**: le chiavi `ks` e `kd` sono uguali (o derivano facilmente l’una dall’altra). L’unica chiave deve essere mantenuta in modo scrupolosamente segreta. Questo tipo di cifrario si usa per garantire riservatezza. Caso molto raro è quello di costruire un attestato di autenticità;
+- **Cifrari a chiave pubbliche**: le chiavi `ks` e `kd` sono diverse e una delle due è difficilmente calcolabile dall'altra. Questo tipo di cifrario si usa per garantire riservatezza e autenticazione.
+`kd` è facilmente calcolabile se conosco `ks` ma dalla chiave `kd` è difficile risalire alla chiave `ks`. Se usiamo un cifrario asimmetrico, la funzione `F(kd)` è facilmente calcolabile. `ks` è la chiave segreta e `kd` è la chiave pubblica. Se conosco la chiave segreta deve essere per me proprietario per la chiave segreta calcolare la chiave pubblica. Tutti quelli che conoscono la chiave pubblica non devono però risalire alla conoscenza della chiave privata. La funzione deve essere unidirezionale.
 
 ### Proprietà delle chiavi simmetriche
 
@@ -618,11 +614,9 @@ Le chiavi simmetriche devono avere le seguenti proprietà:
 
 Le chiavi asimmetriche devono avere le seguenti proprietà:
 
-La chiave pubblica (PU) e chiave privata (SU) devono essere legate da una funzione: se conosco la chiave segreta deve essere per me proprietario per la chiave segreta calcolare la chiave pubblica. Tutti quelli che conoscono la chiave pubblica non devono però risalire alla conoscenza della chiave privata. La funzione deve essere unidirezionale.
-
 - **Riservatezza**: la riservatezza è legata alla chiave privata;
 - **Integrità**: è importante che la chiave privata che stiamo utilizzando sia quella corretta e non modificata. La chiave pubblica deve essere integra perchè devo essere sicuro che sia quella generata;
-- **Autenticità**: per quanto riguarda la chiave pubblica, devo sapere con certezza se appartiene a una determinata entità oppure no. Se non sono certo dell'associazione sto cifrando dei dati non per chi li sto inviando ma per un intrusore.
+- **Autenticità**: per quanto riguarda la chiave pubblica, devo sapere con certezza se appartiene a una determinata entità oppure no. Se non sono certo dell'associazione, sto cifrando dei dati non per chi li sto inviando ma per un intrusore.
 
 ## Crittanalisi
 
@@ -646,7 +640,7 @@ Per ridurre l'attacco con forza bruta, dobbiamo adottare alcuni accorgimenti:
 
 ### Intercettare la chiave
 
-La CPU si occupa di generare e memorizzare la chiave in memoria RAM quando deve essere usata. Ho bisogno anche di un sistema che mi memorizzi la chiave in modo persistente.
+La CPU si occupa di generare e memorizzare la chiave in memoria RAM quando deve essere usata. Abbiamo bisogno anche di un sistema che mi memorizzi la chiave in modo persistente.
 
 L'intercettazione può avvenire sia nella fase di utilizzo che nella fase di memorizzazione della chiave.
 
@@ -698,17 +692,17 @@ La contromisura _preventiva_ è fare in modo che l'uscita di un algortimo critto
 ## Teoria della complessità
 
 La complessità computazionale può essere determinata con una serie di indicatori:
-- Tempo di esecuzione: ovviamente non è un tempo vero perchè ogni tecnologia introduce un tempo diverso. Per misurare il tempo di esecuzione facciamo riferimento al numero di operazioni eseguite dall'algoritmo per terminare;
-- Memoria occupata dal programma
-- Memoria occupata dai dati
+- **Tempo di esecuzione**: ovviamente non è un tempo _vero_ perchè ogni tecnologia introduce ha un concetto di tempo diverso. Per misurare il tempo di esecuzione facciamo riferimento al numero di operazioni eseguite dall'algoritmo per terminare;
+- **Memoria occupata dal programma**
+- **Memoria occupata dai dati**
 
 Negli algoritmi di crittografia che vediamo, gli ultimi due parametri non vengono presi in considerazione.
 
-**Tempo di esecuzione di un algoritmo**: numero di operazioni N che occorre eseguire per terminarlo quando il dato d’ingresso è rappresentato da una stringa di n bit (n = log [valore del dato])
+**Tempo di esecuzione di un algoritmo**: numero di operazioni `N` che occorre eseguire per terminarlo quando il dato d’ingresso è rappresentato da una stringa di `n` bit (`n = log [valore del dato]`)
 
 N = f(n)
 
-Il numero n (dimensione input) incide sul numero di operazioni richieste, in alcuni casi, anche il valore stesso può incidere sul numeero di passi da eseguire. Dunque, a parità di n, si hanno diversi valori di N.
+Il numero `n` (dimensione input) incide sul numero di operazioni richieste, in alcuni casi, anche il valore stesso può incidere sul numero di passi da eseguire. Dunque, a parità di `n`, si hanno diversi valori di `N`.
 
 **Tempo di esecuzione nel caso peggiore**: numero massimo di operazioni Nmax che occorre eseguire per qualsiasi dato d’ingresso di n bit
 
@@ -720,6 +714,8 @@ Se n non è esprimibile analiticamente, bisogna trovare una funzione che appross
 
 ## Classificazione degli algoritmi
 
+Gli algoritmi possono essere classificati in due categorie:
+
 - tempo polinomiale:
 T = O(n^t ) con t esponente più grande in g(n), 
 - tempo esponenziale:
@@ -727,11 +723,11 @@ T = O(b^n) , con b costante, o anche T = O(exp (n))
 
 ## Classificazione dei problemi
 
-Un problema si possono classificare in:
+Un problema si può classificare in:
 
 - **Facile**: se esiste un algoritmo polinomiale in grado di risolverlo su una macchina di Turing deterministica;
 - **Difficile**: se non sono stati fino ad ora individuati
-(e probabilmente non saranno mai individuati) algoritmi che lo risolvono in tempo polinomiale
+(e probabilmente non saranno mai individuati) algoritmi che lo risolvono in tempo polinomiale.
 
 Che cosa interessano a noi questi andamenti?
 Per ottenere sicurezza non ci interessa sapere l'andamento al crescere senza misura di n. A noi interessa:
@@ -739,8 +735,109 @@ Per ottenere sicurezza non ci interessa sapere l'andamento al crescere senza mis
 - non ci interessa difenderci dal caso peggiore ma dal caso migliore. L'intrusore non deve trovarsi a distanze facili
 
 Le unità di misura da adottare sono:
-- anno MIPS: le tecnologie della sicurezza hanno assunto come riferimento un calcolatore in grado di eseguire un milione di istruzioni al secondo. Quindi, il tempo di esecuzione di un attacco è espresso in anni MIPS. Questa unità di misura fa riferimento con la tecnologia perchè a seconda degli elaboratori la soglia può aumentare;
-- Livello di sicurezza: parametro indipendente dalla tecnologia. L'algoritmo di ricerca esauriente risolve ogni problema perchè esplorare lo spazio totale degli input è sempre possibile. Dipende tutto dalla dimensione di input per il quale non ha più senso. Dobbiamo individuare qual è il numero di bit tale per cui l'andamento diventa esponenziale. Quando l'ho individuato quello è il mio livello di sicurezza. Il livello di sicurezza misura il numero di dimensione di input del migliore algoritmo a disposizione dell'intrusore a partire dal quale l'andamento diventa esponenziale.
+- **Anno MIPS**: parametro che dipende dalla tecnologia. Il tempo di esecuzione di un attacco è espresso in anni MIPS. Questa unità di misura fa riferimento a quante istruzioni può elaborare un calcolatore e con il passare degli anni il numero di riferimento aumenta. Attualmente un calcolatore in grado di eseguire un milione di istruzioni al secondo;
+- **Livello di sicurezza**: parametro indipendente dalla tecnologia. L'algoritmo di ricerca esauriente risolve ogni problema perchè esplorare lo spazio totale degli input è sempre possibile. Dipende tutto dalla dimensione di input per il quale non ha più senso. Dobbiamo individuare qual è il numero di bit tale per cui l'andamento diventa esponenziale. Quando l'ho individuato quello è il mio livello di sicurezza. Il livello di sicurezza misura il numero di dimensione di input del migliore algoritmo a disposizione dell'intrusore a partire dal quale l'andamento diventa esponenziale.
+
+![dedurre](./img/img13.png)
+
+Quanto deve essere grande una chiave?
+- In una chiave simmetrica: attacchi possibili: forza bruta. con le tecnologie attuali, siamo quasi certi che l'intrusore usando una chiave a 128 bit non riesce a trovarla
+- In una chiave asimmetrica: attacchi possibili: forza bruta sulla chiave privata o un algoritmo di fattorizzazione della chiave pubblica risalire alla chiave privata. Forza bruta: La chiave segreta deve essere maggiore a 128 bit.
+Algoritmo sub-esponenziale: > 2000 bit
+
+# 02.Datisicuri2 (07-10-2021)
+
+Adesso dobbiamo capire come sono realizzate le scatole nere del capitolo precedente.
+
+Per generare una chiave crittografica è importante che abbia due determinate caratteristiche:
+- Ogni valore deve avere la stessa probabilità di verificarsi;
+- Ogni valore deve essere indipendente dal punto di vista statistico dal precedente e successivo.
+
+Dobbiamo evitare che un intrusore possa riuscire ad ipotizzare come sono fatti i bit.
+
+## True Random Number Generator
+
+Per poter rispettare le proprietà appena citate, abbiamo bisogno di due componenti che si chiamano _Generatori di Numeri Random_. Per testare se davvero questi componenti hanno generato una sequenza di numeri casuali, si usa lo _standard FIPS 140-2_.
+
+Non si possono usare questi generatori per generare gradi quantità di chiavi crittografiche per due motivi:
+- **Bassa frequenza di generazione**: se bisogna generare grandi quantità di chiavi in un tempo brevissimo non è adatto;
+- **Non riproducibilità**: mittente e destinazione devono disporre dello stesso segreto per applicare una determinata trasformazione che protegge una proprietà della sicurezza. Se il mittente genera una chiave deve passarla al destinatario assolutamente altrimenti se il destinatario provasse a generare una chiave non otterrebbe mai la stessa
+
+## Pseudo Random Number Generator
+
+Per superare principalmente il problema della _Non riproducibilità_ si usano questo altro tipo di generatori.
+Componenti che consentono di generare lunghe sequenze di numeri casuali in modo deterministico a partire da un dato iniziale che chiamiamo _seme_. Se il dato iniziale è uguale sia dalla sorgente che dalla destinazione, viene riprodotta la stessa sequenza di bit.
+
+Per generare questa sequenza di numeri possiamo usare degli automi a stati finiti.
+
+Questi generatori ci consentono di avere le seguenti proprietà:
+- **Casualità**: i bit vengono generati casualmente (vedi proprietà in alto)
+- **Riproducibilità**: dallo stesso seme otteniamo la stessa sequenza
+
+Problemi:
+- **Imprevedibilità**: dopo un certo numero di bit è possibile individuare ogni successivo valore.
+
+## Cryptographically Secure PseudoRandom Bit Generator
+
+Nella sicurezza informatica, abbiamo bisogno di _Generatori Pseudo Casuali Crittograficamente Sicuri_.
+
+- **Casualità**: i bit devono essere casuali
+- **Imprevedibilità**: esiste un test Next-bit test che consente di verificare se esiste un algoritmo polinomiale in grado di predire il bit L+1-esimo con probabilità > 0,5.
+- **Indeducibilità**: il seme non deve essere individuato e neanche osservando i bit dell'uscita risalire al seme iniziale. Dunque, è importante che le funzioni siano unidirezionali.
+
+Esistono diversi componenti che sfruttano gli algoritmi di crittografia per produrre in uscita questi bit casuali:
+- Crittografia simmetrica: le proprietà sono solo sperimentalmente verificabili ma hanno alta velocità di generazione delle sequenze di uscita
+- Crittografia asimetrica: si può dimostrare che l'uscita è casuale, imprevedibile e indeducibile ma hanno prestazioni più basse.
+
+## PRNG
+
+E' lo standard di riferimento per la costruzione di _Generatori Pseudo Casuali Crittograficamente Sicuri_. Esso prevede che il seme sia generato da un True Number Generator una tantum. A questo punto il seme viene dato in pasto ad un PRNG (automa a stati finiti) e la funzione deve essere unidirezionale.
+
+## Algoritmi di hash
+
+Le proprietà devono essere:
+- **Efficienza**: deve essere facile da calcolare anche se il messaggio in ingresso è molto lungo
+- Robustezza: possiamo avere due tipi di robustezza:
+  - **Robustezza debole**: dato un input x a cui corrisponde un'impronta H(x), deve essere computazionalmente difficile per l'intrusore trovare un y != x tale per cui H(y) = H(x);
+  - **Robustezza forte**: deve essere difficile trovare una coppia di sua scelta x e y tale per cui abbiamo l'impronta identica H(y) = H(x).
+- **Unidirezionalità**: data un'impronta deve essere computazionalmente difficile risalire al messaggio originario che l'ha generata.
+
+![dedurre](./img/img14.png)
+
+Per garantire efficienza, la maggior parte degli algoritmi utilizzano uno schema di Merkle-Damgard (compressione iterata). Consiste nel prendere il messaggio di lunghezza arbitraria e suddividerlo in blocchi prefissata a seconda dello specifico algoritmo di implementazione di f. Al primo blocco viene applicato a m0 una funzione unidirezionale con le caratteristiche di robustezza, debole e forte alle collisioni e unidirezionalità, applico a m0 di r bit (r>n) al primo passo la funzione f e un vettore di inizializzazione che avrà un valore iniziale. In pipeline, viene poi elaborato il secondo blocco m1 concatenato all'impronta generata al passo precedente. L'impronta h-iesma al passo i-esimo è ottenuta applicando una funzione unidirezionale e resistente alle collisioni, all'impronta ottenuta al passo ottenuto i-1 e al blocco i-1.
+L'impronta finale corrisponde con l'ultima impronta generata dall'ultimo blocco.
+
+Questo schema è soggetto ad un attacco che si chiama _attacco con estensione_.
+
+![dedurre](./img/img15.png)
+
+Dalla sorgente A inviamo un messaggio m concatenato al suo attestato di autenticità costruito con la funzione hash H(s||m) dove s è il segreto condiviso tra mittente e destinatario. Se la funzione hash è implementata secondo lo schema di Merkle-Damgard, l'implementazione è vulnerabile ad un attacco. L'intrusore aggiunge un messaggio m' a quello già esistente. Ora ha bisogno di calcolare il nuovo attestato di autenticitò. L'intrusore sfrutta l'impronta H(s||m) che viene mandata sul canale e anche se non conosce s, riesce ad usare H(s||m) come input dei blocchi f che mi elaborano le impronte sulla parte restante del messaggio m'.
+
+Come si evita il problema:
+- Compressione iterata: l'ultimo blocco prende delle informazioni aggiuntive ad esempio qual è la lunghezza del messaggio. Tuttavia, non è sempre robusto. Se il messaggio non è dotato di significato, l'attacco ha successo.
+
+<!--esempio? -->
+
+![dedurre](./img/img16.png)
+
+Le funzioni non garantiscono sempre la resistenza alle collisioni. Per ridurre questi attacchi, non ci si limita a comprire solo una volta ma lo si fa più volte. La doppia compressione consente alle funzioni hash di avere un comportamento aleatorio.
+
+La resistenza alle collisione è importante:
+- Firma digitale: la firma la si da alla trasformazione S ma all'impronta del messaggio. Se esiste un m' tale per cui H(m) = H(m') non è più valido oppure ?!?!?!?
+
+L'unidirezionalità è importante in due scenari:
+- Firma digitale: un intrusore potrebbe generare tramite un PRNG un r. L'intrusore può sempre calcolare V(r). V è nota a tutti e può calcolare tramite una PU x. L'intrusore vuole generare un r come se fosse stato firmato da una determinata persona. facendo H^-1(x) riesco a trovare un y!?!?!??!?
+
+## Dimensionamento dell'impronta
+
+Quanti bit deve avere un'impronta per essere sicura? Le funzioni devono avere un comportamento aleatorio cioè deve restituire una delle 2^n configurazioni casuali. Quanto tempo ci mette un intrusore per trovare una collisione? Con P1(2^n, 1) = 2^-n la probabilità di un tentativo di trovare una collisione. Se ho k tentativi P1(2^n, k) = 1 - (1-2^-n)^k. Si dimostra che la probabilità dopo k tentativi è proporzionale a k*2^-n. Questo vuol dire che k=S.2^n. L'n per essere esponenziale è 128. Dunque, l'impronta deve essere almeno 128 bit.
+
+Per garantire la resistenza forte non bastano 128 bit. Il numero di bit deve essere il doppio. In realtà, serve quando abbiamo a che fare con la firma digitale, o nel seguente scenario:
+- L'intrusore prepara 2 versioni di un contratto: M-M' in cui collidono. Alla persona fa firmare M che è quello favorevole e l'intrusore cambia contratto con M' tanto hanno la stessa impronta. Per la resistenza forte vedremo che ci vogliono 2^(n/2) tentativi (più facile della debole.)
+
+# 03.Meccanismi Simmetrici
+
+
 
 ---
 
