@@ -804,14 +804,40 @@ Le proprietà devono essere:
 
 ![dedurre](./img/img14.png)
 
-Per garantire efficienza, la maggior parte degli algoritmi utilizzano uno schema di Merkle Damgard. Consiste nel prendere il messaggio di lunghezza arbitraria e suddividerlo in blocchi prefissata a seconda dello specifico algoritmo di implementazione di f. Al primo blocco viene applicato a m0 una funzione unidirezionale con le caratteristiche di robustezza, debole e forte alle collisioni e unidirezionalità, applico a m0 di r bit (r>n) al primo passo la funzione f e un vettore di inizializzazione che avrà un valore iniziale. In pipeline, viene poi elaborato il secondo blocco m1 concatenato all'impronta generata al passo precedente. L'impronta h-iesma al passo i-esimo è ottenuta applicando una funzione unidirezionale e resistente alle collisioni, all'impronta ottenuta al passo ottenuto i-1 e al blocco i-1.
+Per garantire efficienza, la maggior parte degli algoritmi utilizzano uno schema di Merkle-Damgard (compressione iterata). Consiste nel prendere il messaggio di lunghezza arbitraria e suddividerlo in blocchi prefissata a seconda dello specifico algoritmo di implementazione di f. Al primo blocco viene applicato a m0 una funzione unidirezionale con le caratteristiche di robustezza, debole e forte alle collisioni e unidirezionalità, applico a m0 di r bit (r>n) al primo passo la funzione f e un vettore di inizializzazione che avrà un valore iniziale. In pipeline, viene poi elaborato il secondo blocco m1 concatenato all'impronta generata al passo precedente. L'impronta h-iesma al passo i-esimo è ottenuta applicando una funzione unidirezionale e resistente alle collisioni, all'impronta ottenuta al passo ottenuto i-1 e al blocco i-1.
 L'impronta finale corrisponde con l'ultima impronta generata dall'ultimo blocco.
 
 Questo schema è soggetto ad un attacco che si chiama _attacco con estensione_.
 
 ![dedurre](./img/img15.png)
 
-Dalla sorgente A inviamo un messaggio m concatenato al suo attestato di autenticità costruito con la funzione hash H(s||m) dove s è il segreto condiviso tra mittente e destinatario. Se la funzione hash è implementata secondo lo schema di Merkle Damgard, l'implementazione è vulnerabile ad un attacco. L'intrusore aggiunge un messaggio m' a quello già esistente. Ora ha bisogno di calcolare il nuovo attestato di autenticitò. L'intrusore sfrutta l'impronta H(s||m) che viene mandata sul canale e anche se non conosce s, riesce ad usare H(s||m) come input dei blocchi f che mi elaborano le impronte sulla parte restante del messaggio m'.
+Dalla sorgente A inviamo un messaggio m concatenato al suo attestato di autenticità costruito con la funzione hash H(s||m) dove s è il segreto condiviso tra mittente e destinatario. Se la funzione hash è implementata secondo lo schema di Merkle-Damgard, l'implementazione è vulnerabile ad un attacco. L'intrusore aggiunge un messaggio m' a quello già esistente. Ora ha bisogno di calcolare il nuovo attestato di autenticitò. L'intrusore sfrutta l'impronta H(s||m) che viene mandata sul canale e anche se non conosce s, riesce ad usare H(s||m) come input dei blocchi f che mi elaborano le impronte sulla parte restante del messaggio m'.
+
+Come si evita il problema:
+- Compressione iterata: l'ultimo blocco prende delle informazioni aggiuntive ad esempio qual è la lunghezza del messaggio. Tuttavia, non è sempre robusto. Se il messaggio non è dotato di significato, l'attacco ha successo.
+
+<!--esempio? -->
+
+![dedurre](./img/img16.png)
+
+Le funzioni non garantiscono sempre la resistenza alle collisioni. Per ridurre questi attacchi, non ci si limita a comprire solo una volta ma lo si fa più volte. La doppia compressione consente alle funzioni hash di avere un comportamento aleatorio.
+
+La resistenza alle collisione è importante:
+- Firma digitale: la firma la si da alla trasformazione S ma all'impronta del messaggio. Se esiste un m' tale per cui H(m) = H(m') non è più valido oppure ?!?!?!?
+
+L'unidirezionalità è importante in due scenari:
+- Firma digitale: un intrusore potrebbe generare tramite un PRNG un r. L'intrusore può sempre calcolare V(r). V è nota a tutti e può calcolare tramite una PU x. L'intrusore vuole generare un r come se fosse stato firmato da una determinata persona. facendo H^-1(x) riesco a trovare un y!?!?!??!?
+
+## Dimensionamento dell'impronta
+
+Quanti bit deve avere un'impronta per essere sicura? Le funzioni devono avere un comportamento aleatorio cioè deve restituire una delle 2^n configurazioni casuali. Quanto tempo ci mette un intrusore per trovare una collisione? Con P1(2^n, 1) = 2^-n la probabilità di un tentativo di trovare una collisione. Se ho k tentativi P1(2^n, k) = 1 - (1-2^-n)^k. Si dimostra che la probabilità dopo k tentativi è proporzionale a k*2^-n. Questo vuol dire che k=S.2^n. L'n per essere esponenziale è 128. Dunque, l'impronta deve essere almeno 128 bit.
+
+Per garantire la resistenza forte non bastano 128 bit. Il numero di bit deve essere il doppio. In realtà, serve quando abbiamo a che fare con la firma digitale, o nel seguente scenario:
+- L'intrusore prepara 2 versioni di un contratto: M-M' in cui collidono. Alla persona fa firmare M che è quello favorevole e l'intrusore cambia contratto con M' tanto hanno la stessa impronta. Per la resistenza forte vedremo che ci vogliono 2^(n/2) tentativi (più facile della debole.)
+
+# 03.Meccanismi Simmetrici
+
+
 
 ---
 
