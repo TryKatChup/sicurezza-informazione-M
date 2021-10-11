@@ -773,7 +773,47 @@ Per garantire la resistenza forte non bastano 128 bit. Il numero di bit deve ess
 
 # 03.Meccanismi Simmetrici
 
+**Sicurezza computazionale**: un cifrario è detto computazionalmente sicuro se è possibile risalre dal testo cifrato corrispondente al testo in chiaro ma richiede una potenza di elaborazione superiore a quella a disposizione dell'intrusore.
 
+D'ora in poi abbiamo a che fare con cifrari computazionalmente sicuri (e non perfetti che significa?).
+
+Per la teoria dellinformazione sviluppata da Shannon, il cifrario è computazionalmente sicuro se adotta i criteri di:
+- **Confusione**: la relazione tra la chiave e il testo cifrato è più il possibile complessa e scorrelata. L'uscita del cifrario è aleatorio e l'aleatorietà non permette di individuare la relazione tra testo cifrato e la chiave usata.
+- **Diffusione**: la capacità di un algoritmo di nascondere la ridondanza del testo il più possibile nell'uscita dell'algoritmo di cifratura. Se si riesce a nascondere la ridondanza del testo nel cifrato, viene impedito all'intrusore di usare tecniche basate sull'analisi statistica.
+
+Se costruisco un cifrario che usa il principio della confusione, il messaggio cifrato non fornisce informazioni sulla chiave.
+
+Se costruisco un cifrario che usa il principio della diffusione, so che se modifico solo un carattere del messaggio in chiaro, questa modifica sul singolo carattere non si ripercuote nel corrispondente carattere del messaggio cifrato ma provoca una modifica spalmata su tutto il cifrato.
+
+- Tecnica di sostituzione: tecnica che garantisce la confusione.
+- Tecnica di trasposizione: tecninca che garantisce la diffusione.
+
+## Cifrario simmetrico
+
+Dalla teoria di Shannon discende che un cifrario simmerico è computazionalmente sicuro se usa diffusione e sostituzione.
+
+Il cifrario simmetrico vengono utilizzati per garantire riservatezza. In rari casi, viene usato per garantire autenticazione, generatori di numeri pseudo-casuali crittograficamente sicuri e dei protocolli di identificazione.
+
+Esistono come cifrari simmetrici due famiglie distinte:
+- **Cifrario a flusso**: si rifà al cifrario perfetto (one time pad). E' un cifrario che opera su uno o pochi bit alla volta con una regola variabile al progreddire del testo. garantisce la  protezione dei singoli bit di una trasmissione seriale. Ad esempio, nel settore della telefonia, applicazione web etc.
+- **Cifrario a blocchi**: si rifaà al cifrario poligrafico composto visto nella teoria di Shannon. trasforma con una regola fissa ed uno alla volta, blocchi di messaggio formati da molti bit. Ad esempio, protezione di pacchetti, di file, posta elettronica etc.
+
+Un cifrario a flusso, è più veloce di un cifrario a blocchi e non introduce rallentamenti. Se impiegato non correttamente, è meno sicuro di un cifrario a blocchi non impiegato correttamente.
+
+## Cifrario a flusso
+
+Si rifà ad un cifrario one-time pad, prende un bit chiaro, fa l'operazione di encryption e somma modulo 2 con un bit di chiave aleatoria e produce in uscita un bit cifrato.
+
+Encryption e Decryption sono implementati con degli XOR. prendo un bit di testo in chiaro e lo metto in XOR con un bit di chiave. Ad esempio, se il messaggio è lungo 1000 bit, la chiave è lunga 1000 bit. Lo stesso flusso di chiave non può essere impiegato su messaggi diversi. Il flusso di chiave lo genero con un PRNG. In decifrazione, al bit i-esimo del messaggio, deve essere sommato modulo 2 la corrispondente k-iesmo usata in cifratura. Per questo motivo ci deve essere sincronismo tra flusso di chiave tra livello sorgente e livello di chiave.
+
+Perchè non è perfetto?
+Non si può generare un flusso completamente casuale ma dopo un periodo di tempo si ripete. Il seme mi permette di scegliere una sottosequenza a caso all'interno di questo periodo lunghissimo. Il periodo per quanto lungo se si esaurisce si ripete. Per questo motivo è computazionalmente sicuro e non perfetto.
+
+Flusso di chiave: la chiave deve essere lungo quanto il testo, formato da bit psuedo-casuali e la sottosequenza scelta in segreto e a caso all'interno di un periodo lunghissimo.
+
+I cifrari a flusso sincrono si suddividono in:
+- **Cifrario a flusso sincrono**:
+- **Cifrario a flusso autosincronizzante**:
 
 ---
 
