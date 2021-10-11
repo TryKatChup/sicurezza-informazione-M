@@ -796,7 +796,7 @@ Il cifrario simmetrico vengono utilizzati per garantire riservatezza. In rari ca
 
 Esistono come cifrari simmetrici due famiglie distinte:
 - **Cifrario a flusso**: si rifà al cifrario perfetto (one time pad). E' un cifrario che opera su uno o pochi bit alla volta con una regola variabile al progreddire del testo. garantisce la  protezione dei singoli bit di una trasmissione seriale. Ad esempio, nel settore della telefonia, applicazione web etc.
-- **Cifrario a blocchi**: si rifaà al cifrario poligrafico composto visto nella teoria di Shannon. trasforma con una regola fissa ed uno alla volta, blocchi di messaggio formati da molti bit. Ad esempio, protezione di pacchetti, di file, posta elettronica etc.
+- **Cifrario a blocchi**: si rifà al cifrario poligrafico composto visto nella teoria di Shannon. trasforma con una regola fissa ed uno alla volta, blocchi di messaggio formati da molti bit. Ad esempio, protezione di pacchetti, di file, posta elettronica etc.
 
 Un cifrario a flusso, è più veloce di un cifrario a blocchi e non introduce rallentamenti. Se impiegato non correttamente, è meno sicuro di un cifrario a blocchi non impiegato correttamente.
 
@@ -809,11 +809,39 @@ Encryption e Decryption sono implementati con degli XOR. prendo un bit di testo 
 Perchè non è perfetto?
 Non si può generare un flusso completamente casuale ma dopo un periodo di tempo si ripete. Il seme mi permette di scegliere una sottosequenza a caso all'interno di questo periodo lunghissimo. Il periodo per quanto lungo se si esaurisce si ripete. Per questo motivo è computazionalmente sicuro e non perfetto.
 
-Flusso di chiave: la chiave deve essere lungo quanto il testo, formato da bit psuedo-casuali e la sottosequenza scelta in segreto e a caso all'interno di un periodo lunghissimo.
+Flusso di chiave: la chiave deve essere lunga quanto il testo, formato da bit psuedo-casuali e la sottosequenza scelta in segreto e a caso all'interno di un periodo lunghissimo.
 
 I cifrari a flusso sincrono si suddividono in:
-- **Cifrario a flusso sincrono**:
-- **Cifrario a flusso autosincronizzante**:
+- **Cifrario a flusso sincrono**: il flusso di chiave dipende solo dal seme 
+- **Cifrario a flusso autosincronizzante**: lo stato futuro dipende dal seme ma anche dai bit di testo cifrato precedente
+
+Nel flusso sincrono, l'attaccante può effettuare attacchi attivi: modificare, cancellarli o aggiungere bit di testo cifrato.
+
+Caso cifrario a flusso sincrono
+-Se si modifica un bit del cifrato: la destinazione non decifra correttamente un bit perchè è stato cambiato. Si dice che non si ha perdita di sincronismo perchè ki è sempre lo stesso ma la decifrazione non è corretta.
+- Se si cancella un bit: dal punto in poi in cui è stato cancellato il bit, non corrisponderà mai a quelli inviati. Si dice che si ha perdita di sincronismo.
+
+Caso cifrario a flusso autosincronizzante
+- Se si modifica, cancella o elimina un bit del cifrato: si ha una perdita di sincronismo non permanete ma solo di un transitorio. E' il transitorio legato alla dimensione del registro di scorrimento (SHIFT) e quanto il bit modificato/cancellato/inserito rimane dentro a questo registro.
+
+I più usati sono quelli a flusso sincrono perchè i componenti a cifrario a flusso autosincronizzante sono più costosi.
+
+Se si usa lo stesso flusso di chiave su messaggi distinti si possono fare attacchi di analisi sui cifrati perchè si sfrutta la proprietà dell'OXR.
+Ad esempio, si consideri:
+m1 XOR k = c1
+m2 XOR k = c2
+c1 XOR c2 è come fare l'XOR su due messaggi in chiaro:
+m1 XOR m2
+
+Alcune volte, nei protocolli ci si accorge che è possibile sfruttare questa proprietà dell'XOR ed effettuare gli attacchi (es. WEP).
+
+![marco togni](./img/img17.png)
+
+Il vettore di inizializzazione ha una dimensione limitata (24 bit). Dopo 2^24 generazioni, si ha che la chiave si ripete. Inoltre, quando si spegneva, il vettore si inizializzava a zero e poi funzionava ad incremento. Il comportamente è molto prevedibile.
+
+# 11/10/2021
+
+
 
 ---
 
