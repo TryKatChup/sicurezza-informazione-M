@@ -901,6 +901,16 @@ L'OFB si preferisce ad usare quando i canali sono rumorosi perchè la modifica d
 C'è sempre la suddivisione dei blocchi e ogni blocco viene potenzialmente lavorato indipendentemente dagli altri. I bit di testo in chiaro di ogni singolo blocco vengono messi in XOR all'uscita di un cifrario a blocchi che cifra il valore casuale ed imprevedibile do un contatore. Tutti i blocchi successivi, partono dal valore del contatore iniziale incrementato di 1. I blocchi possono lavorare in parallelo sia in fase di E che di D.
 Ad esempio, viene usata su reti ATM.
 
+### Beast Attack (Browser Exploit Against SSL/TLS)
+
+![marco togni](./img/img23.png)
+
+Attacco molto difficile da realizzare. Questo attacco prevede che all'inizio di una connessione TCP, le due parti negozino gli algoritmi di cifratura, le chiave della sessione e i parametri che vengono usati dai cifrari come il vettore di inizializzazione e anche la modalità di cifratura da usare. I dati a livello applicativo ha una certa dimensione viene suddivisa in blocchi perchè va a finire in un pacchetto TCP. Ogni pacchetto poi viene concatenato a quello successivo. Se si usa un cifrario a blocchi CBC, a livello applicativo si avranno vettori di una certa dimensione.
+
+![marco togni](./img/img24.png)
+
+Si vuole osservare le comunicazioni tra due partecipanti e si vuole capire se il mittente vuole.
+
 ---
 
 ![marco togni](./img/marco_togni.jpg)
