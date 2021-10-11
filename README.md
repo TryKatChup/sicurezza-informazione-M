@@ -616,7 +616,7 @@ La cella di memoria dove contenere le chiavi dove può risiedere?
 ![dedurre](./img/img12.png)
 
 Esistono diverse tipologie di attacco:
-- **Attacco con solo testo cifrato**: l'intrusore dispone esclusivamente di campioni di testo cifrato che li preleva dal canale insicuro. L'intrusore può sfruttare conoscenze, ipotesi sul linguaggio di origine che è stato usato per scrivere il messaggio cifrato, può disporre di tecniche e statistiche per effettuare determinati attacchi. Avendo il testo cifrato e queste tecniche può dedurre delle informazioni sul testo originario o sulla chiave stessa;
+- **Attacco con solo testo cifrato**: l'intrusore dispone esclusivamente di testo cifrato che li preleva dal canale insicuro. L'intrusore può sfruttare conoscenze, ipotesi sul linguaggio di origine che è stato usato per scrivere il messaggio cifrato, può disporre di tecniche e statistiche per effettuare determinati attacchi. Avendo il testo cifrato e queste tecniche può dedurre delle informazioni sul testo originario o sulla chiave stessa;
 - **Attacco con testo in chiaro noto**: l'intrusore ha la fortuna di avere il testo in chiaro del cifrato e il cifrato stesso;
 - **Attacco con testo in chiaro scelto**: l'intrusore sceglie un testo in chiaro e ha la possibilità di cifrarlo. Il testo in chiaro l'ha scelto lui ma riesce a cifrarlo;
 - **Attacco con testo cifrato scelto**: dispone sempre di una coppia testo cifrato-testo scelto, ma l'attaccante a differenza di prima, ha preso un campione di testo cifrato da lui voluto e ha ottenuto il testo in chiaro corrispondente. E' riuscito a farsi decifrare il testo cifrato dalla sorgente.
@@ -841,7 +841,40 @@ Il vettore di inizializzazione ha una dimensione limitata (24 bit). Dopo 2^24 ge
 
 # 11/10/2021
 
+## Malleabilità
 
+## Modalità di cifratura
+
+La modalità vista per ora si chiama ECB (Electronic Code Book). Si prende un messaggio, si suddividono in blocchi, e l'ultimo blocco deve essere riempito opportunamente con tecniche di padding. Ad ogni blocco deve essere applicata la cifratura E che trasforma i bit in chiaro in bit cifrato e usa ad ogni blocco di cifratura la stessa identica chiave. Tale modalità di cifratura è fortemente deterministica: a blocchi in chiaro identici corrispondono blocchi cifrati assolutamente identici. I pattern non sono una buona cosa nella sicurezza informatica perchè sono tutte possibili vulnerabilità.
+
+Questa modalità si conserva solo in casi specifici: ad esempio, cifrare delle informazioni che sono già per natura aleatoria.
+
+L'obiettivo, quindi, è quello di trovare modalità di cifrature aleatori. Ad esempio, esistono le modalità CBC, CFB, OFB, CTR.
+
+### Cipher Block Chaining (CBC)
+
+![marco togni](./img/img18.png)
+
+La modalità CBC prende il messaggio in chiaro, lo suddivide in blocchi, l'ultimo blocco sottoposto a padding. Per ogni blocco, il testo in chiaro viene messo in XOR con un altro dato e sottoposto poi alla funzione di cifratura E ottenendo un testo cifrato ci. Solo per quanto riguarda il blocco 1, il testo in chiaro viene dato in XOR con quello che si chiama vettore di inizializzazione. E' un insieme di bit, grande quanto il blocco. Tutti gli altri blocchi al posto del vettore di inizializzazione usano l'uscita del blocco precedente. Per ottenere aleatorietà la si ottine grazie al vettore di inizializzazione.
+
+Le caratteristiche di questo vettore sono:
+- Deve essere casuale;
+- Imprevedibile;
+- Usato una e una sola volta: perchè se ripeto il vettore e si hanno due messaggi uguali, si ottiene lo stesso cifrato.
+
+Se come intrusore, modifica un qualcunque bit di un blocco, l'errore si propaga nei blocchi precedenti. Se questa modalità usata correttamente si ottiene aleatorietà, stessa occupazione di banda ma si perde efficienza perchè si perde il parallelismo. Invece, il parallelismo lo si ottiene in fase di decifrazione se si hanno già tutti i pezzi di cifrato che costituiscono.
+
+### Chipher Feedback (CFB)
+
+![marco togni](./img/img19.png)
+
+Questo schema ricorda un cifrario a flusso. E' come convertire una cifratura a blocchi a una di flusso. Ciò consente di evitare il padding. Si usa, ad esempio, quando si ha una trasmissione carattere per carattere (8 bit alla volta) orientata al flusso di carattere.
+
+### Output Feedback (OFB)
+
+![marco togni](./img/img20.png)
+
+Questo schema ricorda un cifrario a flusso. E' come convertire una cifratura a blocchi a una di flusso. Ciò consente di evitare il padding. Si usa, ad esempio, in una trasmissione di caratteri orientato ad un flusso di dati tipicamente rumorosi come i satelliti.
 
 ---
 
