@@ -870,11 +870,36 @@ Se come intrusore, modifica un qualcunque bit di un blocco, l'errore si propaga 
 
 Questo schema ricorda un cifrario a flusso. E' come convertire una cifratura a blocchi a una di flusso. Ciò consente di evitare il padding. Si usa, ad esempio, quando si ha una trasmissione carattere per carattere (8 bit alla volta) orientata al flusso di carattere.
 
-### Output Feedback (OFB)
+Si parte da un vettore di inizializzazione, non è necessariamente segreto, imprevedibile e usato una sola volta. Serve per inizializzare lo stato di un registro a scorrimento che è costituito da due parti: una parte formata dagli s bit meno significativi e l'altra dai b-s bit più significativi. Il registro a scorrimento viene sottoposto ad una cifratura grazie ad un algoritmo a blocchi (es. ECB) e con la rispettiva chiave. Il cifrato finale è ottenuto mettendo in OXR s bit del testo in chiaro con gli s bit più significati dell'operazione di cifratura. Il risultato è il cifrato costituito da s bit.
+
+Il registro è a scorrimento e lo si fa scorrere di s bit e quindi scorrendo a sinistra deve metterne nel registro altri s. I nuovi bit sono quelli del cifrato del passo precedente. Al passo 2, i b-s bit contengono ancora alcuni vecchi bit del vettore di inizializzazione ma prima o poi i bit di questo vettore vengono buttati fuori.
+
+Questo schema ricorda lo schema a flusso autosincronizzante.
 
 ![marco togni](./img/img20.png)
 
-Questo schema ricorda un cifrario a flusso. E' come convertire una cifratura a blocchi a una di flusso. Ciò consente di evitare il padding. Si usa, ad esempio, in una trasmissione di caratteri orientato ad un flusso di dati tipicamente rumorosi come i satelliti.
+In decifrazione, si procede analogamente. Per decifrare il primo blocco di testo in chiaro bisogna avere il cifrato ottenuto al passo precedente vuol dire scorrere indietro. La prima cosa da fare è partire dall'ultimo blocco e recuperare a ritroso.
+
+In fase di decifrazione, si usa sempre la stessa funzione E cioè l'implementazione dell'algoritmo è la stessa. Non è detto che sia sempre così perchè l'algoritmo D potrebbe essere diverso. In questo caso, si usano circuiti diversi.
+
+### Output Feedback (OFB)
+
+![marco togni](./img/img21.png)
+
+Questo schema ricorda un cifrario a flusso sincrono. E' come convertire una cifratura a blocchi a una di flusso. Ciò consente di evitare il padding. Si usa, ad esempio, in una trasmissione di caratteri orientato ad un flusso di dati tipicamente rumorosi come i satelliti.
+
+Si parte da un vettore di inizializzazione che serve sempre per inizializzare lo stato di un registro. Il registro a scorrimento viene cifrato e gli s bit più significativi dell'output vengono messi in XOR con gli s bit del testo in chiaro. Nel registro a scorrimento va a finire nei bit meno significativi, gli s bit più significativi della funzione di cifratura.
+
+![marco togni](./img/img22.png)
+
+In decifrazione, non si usa la funzione inversa ma si continua ad usare la funzione di encryption.
+
+L'OFB si preferisce ad usare quando i canali sono rumorosi perchè la modifica di un cifrato non si propaga sul blocco successivo.
+
+### Counter (CTR)
+
+C'è sempre la suddivisione dei blocchi e ogni blocco viene potenzialmente lavorato indipendentemente dagli altri. I bit di testo in chiaro di ogni singolo blocco vengono messi in XOR all'uscita di un cifrario a blocchi che cifra il valore casuale ed imprevedibile do un contatore. Tutti i blocchi successivi, partono dal valore del contatore iniziale incrementato di 1. I blocchi possono lavorare in parallelo sia in fase di E che di D.
+Ad esempio, viene usata su reti ATM.
 
 ---
 
