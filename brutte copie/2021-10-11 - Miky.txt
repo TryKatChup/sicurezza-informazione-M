@@ -1,0 +1,289 @@
+ripassino:
+i cifrari simmetrici condividono come caratteristica l'avere una sola chiave.
+
+all'interno di questi esistono 2 famiglie (a flusso e a blocco)
+
+a flusso: utilizzati quando ci sono app orientate al flusso di dati (stream) - usiamo questi perché non introducono rallentamento, perché lavorano su uno o pochi bit alla volta.
+
+
+
+op. di encryption e decryption non è altro che una somma modulo 2 (operazione molto veloce)
+
+
+quando cifrario a flusso è considerato robusto? Crittograficamente sicuro.
+se la chiave è generata con PNRG
+
+
+Noi però introduciamo vulnerabilità nell'implementazione dei protocolli.
+
+Protocollo WEP - esempio di progetto sbagliato, per capire come migliorare e il motivo per cui si è passati ad altre soluzioni
+
+
+vettore di inizializzazione di 24 bit,
+che ovviamente però dopo 24 bit si ripete.
+
+In questo modo il cifrario diventa assolutamente non robusto: a causa delle caratteristiche dell'XOR (ricordare immagine)
+
+facendo XOR tra i cifrati equivale a farlo tra i testi in chiaro, e si possono fare ipotesi per dedurre informazioni.
+
+Ovviamente queste vulnerabilità non sempre possono essere sfruttate con successo, ma ci sono delle condizioni (e non è nemmeno banale).
+Però stiamo violando comunque uno dei pricipi fondamentali della crittografia 
+
+conoscenza a posteriori derivata da ciò che si osserva sul canale, non dev'essere incrementata in base alla conoscenza che si aveva a priori. Non si deve imparare nulla osservando il flusso sul canale di comunicazione!
+
+altro problema: quando si ha a che fare con dei cifrari, bisogna sempre chiedersi per quale impiego stiamo usando un cifrario.
+
+in un cifrario autosincronizzante, qualunque attacco attivo comporta una perdita di sincronismo, legata al re
+
+MALLEA BILITà
+l'integrità nessun cifrario a flusso può garantirla. Ma non ci preoccupa troppo.
+Ci può invece preoccupare la malleabilità: un attaccante può modificare il testo cifrato, sempre, maè grave se lo può modificare in modo tale che il ricevitore 
+
+attaccante non deve poter modificare il testo cifrato in modo da produrre un testo in chiaro con caratteristiche volute.
+
+Il testo in chiaro ottenuto dalla decifrazione dev'essere un messaggio che può aver scelto solo il mittente.
+
+alterare il cifrato in modo da produrre un effetto desiderato sul testo in chiaro originale.
+
+Purtroppo i cifrari a flusso sono vulnerabili sotto questo punto di vista.
+Non sempre è possibile eeffettuare questo attacco,
+
+Se l'attaccante conosce in qualche modo non tutto il messaggio in chiaro che verrà cifrato, ma anche una sola parte, potrebbe scegliere una sequenza di bit opportuna da mettere in XOR col testo cifrato che passa sul canale, in modo tale che quando tale testo cifrato sostituito con testo scelto dall'intrusore, produca effettivamente un testo arbitrario voluto dall'attaccante.
+
+
+slide 9
+I cifrari a flusso giustamente sono consigliati per applicazioni orientati allo stream di dati, ma nulla impedisce di usarli in altri modi, ad esempio scambio di mail.
+
+obbiettivo: far sì che la destinazione riceva una mail con un mittente scelto arbitrariamente.
+
+il destinatario deve trovare quel p tale che in decifrazione il destinatario riceva Eve
+
+
+dove c'è un messaggio strutturato da cifrare, con un cifrario a flusso
+
+
+
+slide 10
+cifrari a flusso che vengono utilizzati attualmente:
+intendiamo i cifrari che servono per l'algoritmo di generazione del flusso di chiave.
+RC4 è un algoritmo di generazione del flusso di chiave, che veniva usato in WEP. Sono state trovate delle vulnerabilità ed è stato sostituito nella maggio parte delle macchine, ma sappiamo che non è così ovunque.
+
+nuovi sono: Salsa, Sosemanuk
+
+funzioni hash, dimostrazioni del perchè il teorema binomiale visto, del perché occorre 2^n anziche 2^n/2 non serve, ma vuole i fondamentali, ad esempi che c'è rapporto tra robo debole vs sistema robo forte.
+
+(Man mano che andiamo avanti vediamo cosa non ha senso studiare a memoria.)
+
+
+
+CIFRARI A BLOCCO
+Operano in modo diverso.
+Prevedono di prendere il messaggio originario e suddividerlo in blocchi di lunghezza predefinita. La lunghezza dipende dallo specifico algoritmo (non ha importanza), ma il principio vale per tutti, ovvero che prendo un messaggio e lo suddivido in blocchi.
+
+L'ultimo blocco contiene completamente o parzialmente i bit del messaggio originario. Se lo contiene completamente contiene comunque dei bit in più di padding per riempire il blocco.
+Come viene riempito l'ultimo blocco è fondamentale, quindi si utilizzano certe tecniche di padding che permettono di non riuscire a fare deduzioni sul messaggio in chiaro.
+
+
+
+sostituzione monoalfabetica ma riduce anzi elimina le problematiche perché non lavora su un singolo bit ma su un blocco, dunque elimina praticamente del tutto la possibilità di fare analisi statistica.
+
+il padding deve seguire degli standard che non studieremo, ma sappiamo che esistono.
+PKCS#5 e PKCS#7
+
+Non azzardiamo mai noi qualcosa, perché dev'essere progettato tutto in maniera corretta.
+
+robustezza di cifrario a blocchi dipende non solo dalla dimensione della chiave ma anche la dimensione del blocco di cifratura.
+Se un blocco è di 64 bit, ovviamente 2^64 sono le possibili uscite.
+Quindi se ho un messaggio molto più lungo
+
+per il paradosso del compleanno sappiamo anche che bastano 2^32 tentativi per trovare una collisione.
+
+
+ogni quanto modificare la chiave dipende dallo scenario applicativo
+e anche per quanto tempo lo scenario di riservatezza dev'essere garantito(?)
+
+possiamo dire che fondamentalmente, quasi ogni cifrario a blocchi segue il modello di funzionamento della rete di Feistel.
+
+Rete che fa riferimento alla teoria di Shannon. La maggiorparte dei cifrari (tranne ultimo standard AES)
+- ogni blocco di testo in chiaro deve produrre un blocco di testo cifrato UNIVOCO, a meno di attacco di collisioni (inevitabile se dimensione del blocco è piccola e dipende da quanto è lungo il messaggio iniziale da cifrare).
+
+modello di riferimento sulla base del quale sono stati costruiti la maggior parte degli algoritmi.
+
+Ogni cifrario a blocchi si divide in 2 algoritmi: quello che implementa la rete di feistel, e ...
+
+NB: non dobbiamo ricordarci quelle formule immense che ci sono ad esempio in cifratura/decifrazione.
+Ricordiamoci semplicemente che è un modello di riferimento a N round in cui ad ogni round i bit vengono sottoposti a permutazione e sostituzione
+
+
+
+slide 15
+Standard AES (Advanced Encryption Standard)
+
+Rijndael(?)
+ricordiamoci che questo algoritmo non segue la rete di feistel.
+Quindi utilizza sempre sostituzione e permutazione, ma in maniera diversa!
+
+
+
+slide 16 (2)
+Modalità di cifratura sono importanti rappresentano uno degli aspetti più importante, perché vedremo che in fase di implementazione aprono a tutta una serie di vulnerabilità
+
+quando chiede modalità di cifratura, non vuole differenza tra cifrario a flusso e cifrario a blocchi: invece, stiamo parlando di cifrario a blocchi e stiamo cercando di capire come implementarlo.
+
+
+quando c'è deterministo, il crittoanalista è felice: ci sono vulnerabilità
+
+se vedo che in due istanti temporali so che è stato impiegato un cifrario a blocchi ad ECB e osservo che vengono mandati due testi cifrati identici, imparo qualcosa!
+
+su un cifrario deterministico, l'attacco con statistica può avere successo.
+
+ECB non va MAI utilizzata, se non in caso in cui ho un solo blocco da cifrare e questo blocco è relativo a un messaggio in chiaro che è di sua natura aleatoria.
+
+Se bisogna trasferire una chiave di sessione, questa viene generata da un PRNG crittograficamente sicuro, in questo caso son bit casuali imprevedibili, dunque il messaggio sarà sicuramente aleatorio.
+In tal caso la sua cifratura può essere eseguita tramite ECB.
+
+Se bisogna cifrare un file, assolutamente no, ad esempio se è un file di testo, in quanto molto probabilmente ci saranno parti (parole) che si ripetono.
+
+Altro problema: malleabilità.
+
+
+quindi nella modalità ECB c'è sempre del padding.
+
+Per quanto riguarda attacchi attivi...
+
+svantaggi: determinismo, padding (necessità di aumentare sempre la dimensione del messaggio originario per riempire il blocco), malleabilità;
+vantaggi: grande efficienza (se si hanno più processori => esecuzione in parallelo), se un attaccante modifica a caso un bit, la propagazione dell'errore confinata al blocco del cifrato (chi decifra si troverà al più un blocco errato).
+
+
+obbiettivo di modalità di cifratura alternative: 
+
+
+prima modalità di cifratura: prndere messaggio, suddividerlo in blocchi, ultimo blocco riempirlo secondo tecniche di padding;
+poi obbiettivo rendere aleatoria l'uscita:
+il cifrato del primo blocco dipende: dal testo in chiaro e dalla chiave, ma anche da un vettore di inizializzazione aleatorio, imprevedibile ed usato una ed una sola volta (ovvero che varia da messaggio a messaggio):
+facciamo in modo che la cifratura di un blocco dipenda anche dal blocco del cifrato al passo precedente,
+
+se ha tutte queste caratteristiche, abbiamo che anche se il messaggio è sempre lo stesso, il cifrato giustamente sarà sempre diverso.
+
+in fase di decifrazione: guardare immagine
+
+vantaggi: aleatorietà (a patto che ilvettore di iniz sia casuale, imprevedibile ed usato una ed una sola volta)
+svantaggi: abbiamo un'operazione di decifratura in pipeline. Se avessi più processori non potrei comunque procedere in parallelo, in quanto ogni cifrato dipende dal precedente; se un attaccante modifica un blocco, tale modifica si propaga anche nei cifrati successivi, che diventano quindi alterati (propagazione dell'errore); c'è il padding.
+
+In fase di decifrazione, in base alla degradazione delle prestazioni:
+si può procedere in parallelo, se si hanno già a disposizione tutti i blocchi di cifrato.
+
+È solo la cifratura che perde parallellismo.
+
+Altra valutazione: se noi avessimo implementazione hardware, a livello di 
+
+se E() e D() non coincidono, bisognerebbe usare due circuiti diversi(?) probabilmente ho scritto una stronzata, non stavo ascoltando bene :)))))))))))))))))))))))
+
+
+
+
+Chipher feedback è come se trasformassero una cifratura a blocchi in una a flussi
+[...]
+
+
+
+
+
+ad ogni clock c'è uno schema di cifrario a flusso
+retroazione con la chiave, non col cifrato.
+
+In termini di propagazione dell'errore c'è un caso distinto.
+
+
+CTR: modalità coutner
+cifratura e decifrazione è 
+
+si applica cifrario a blocchi per generare flusso di chiavii, ma registro a scorrimento contiene lo stato di un contatore (che però dev'essere aleatorio).
+
+messaggio suddiviso a blocco, ogni blocco si va a cifrare con lo stato di un contatore a cui si fa precedere un numero random imprevedibile (questo serve per rendere il contatore imprevedibile, aleatorio).
+
+vantaggi di counter mode: anche questo opera in parallelo (il messaggio in chiaro viene suddiviso in blocchi), quindi sia in fase di cifratura che decifratura si può operare in parallelo.
+
+slide 22
+dobbiamo capire come usare questi strumenti in maniera corretta.
+
+Beast attack browser...
+sfrutta vulnerabilità di protocolli SSL/TLS 1.0 e precedenti
+
+è un esempio di attacco che sfrutta un uso non corretto della modalità CBC (quando è usata correttamente? Quando il vettore di iniz è casuale, imprevedibile ed usato una sola volta).
+
+Questo attacco è stato eseguito per la prima volta nel 2011, anche se la vulnerabilità teorica è stata individuata nel 2000. Non è un attacco facile da mettere in pratica: richiede che un intrusore riesca effettivamente a diventare un man in the middle (cioè che riesca a introdursi nella sessione già avviata tra client e server e riuscire a modificare il flusso di dati).
+Come faccio a sapere se il web server è vulnerabile a tale attacco o meno? Se support SSL/TLS 1.0 lo è; se supporta versioni successive no.
+
+si sfrutta CBC
+
+
+quando si va a spezzare il messaggio per inviarlo con SSL/TLS
+la CBC viene fatta sui pezzi del messaggio, ciascuno dei quali ha bisogno di un vettore di inizializzazione diverso.
+I progettisti hanno pensato che come vettore di inizializzazione di un pacchetto che fa parte di un messaggio, si potesse usare un residuo in termini di bit del cifrato del pacchetto precedente.
+
+Gli ultimi 8 byte vengono usati come vettore di inizializzazione per cifrare il pacchetto successivo.
+
+Così si perde il criterio di imprevedibilità.
+
+
+per capire com'è possibile che l'attacco vada a buon fine, basta vedere la slide su come funziona lo XOR (slide 23 (2))
+
+riservatezza violata sfruttando un uso non corretto della modalità CBC.
+
+NB: ci può chiedere di spiegare questo tipo di attacco (Beast Attack)
+
+L'attacco sfrutta le vulnerabilità di CBC + il fatto che ogni protocollo di rete suddivida in pacchetti.
+
+
+
+razionale: abbiamo requisiti di sicurezza;
+abbiamo visto quali trasf possiamo usare per garantire requisiti + caratteristiche delle trasformazioni (che per noi sono delle black box, sappiamo solo le specifiche);
+questi scatolotti a loro volta aprono delle vulnerabilità che dipendono da uso non corretto di trasformazioni e algoritmi;
+abbiamo visto solo i cifrari E, D, H e PRNG, come scatole aperte. Ci mancano S e V.
+
+Abbiamo quindi visto cifrari simmetrici (che implementano E e D, che possono essere implementati anche con cifrari asimmetrici che vedremo più avanti): algoritmo deve essere robusto, chiave dev'essere dimensionata in modo opportuno, e devono essere impiegate modalità di cifratura corrette.
+
+Perché tutto il sistema dev'essere robusto la chiave dev'essere:
+generata in modo sicuro (PRNG critto-sicuro)
+ma dev'essere anche distribuita in modo sicuro: ci manca la parte sul key management (infrastrutture che servono per gestire la chiave, ovvero: generarla, memorizzazione, dimensionamento, DISTRIBUZIONE).
+
+soluzione che viene in mente è usare canali dedicati, ma ...
+
+
+
+esistono 2 possibilità:
+
+- con precedente KA (Key Agreement):
+...
+vedremo schema basato su master key e uno basato su Key Distribution Center (KDC)
+
+- senza precedente KA:
+Prevedono che la chiave su cui accordarsi sia distribuita senza che ci sia un accordo a priori (di alcun tipo)
+
+slide 29
+master key: prevede che sulla
+
+non è opportuno che A cifri tanti dati con una master key
+il mittente A dovrà inviare a B un flusso di dati
+
+
+
+
+master key viene usata solo per cifrare chiavi di sessione (piccole, cambiano spesso, hanno natura aleatoria).
+
+il meccanismo basta su master key è:
+prendo messaggio M;
+lo cifro con chiave K (chiave di sessione, generato con PRNG critto sicuro lato mittente);
+lato mittente verrà cifrata la chaive K cifrata con master key, e messaggio 
+
+
+questo schema non è moltoscalabile: se abbiamo molti utenti e questi a coppie devono condividere master key specifica (una per ogni coppia), quante ne dobbiamo distribuire? Tantissime, tipo almeno 2 ahah sesso (ordine n^2)
+
+
+Per riuscire a ridurre il numero di chiavi preconcordate, dobbiamo introdurre un elemento in più nel sistema: KDC (key distribution center) che ha il compito di
+ogni utente condivide col centro una chiave (master key: Kat, Kbt, ...).
+In questo modo c'è una sola chiave per ogni utente, ma c'è un elemento in più nel sistema, elemento che è FONDAMENTALE e va assolutamente protetto, e bisogna evitare che venga attaccata, oltre che riesca a mantenere il servizio attivo anche in caso di numerose richieste.
+
+
+
