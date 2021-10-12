@@ -616,7 +616,7 @@ La cella di memoria dove contenere le chiavi dove può risiedere?
 ![dedurre](./img/img12.png)
 
 Esistono diverse tipologie di attacco:
-- **Attacco con solo testo cifrato**: l'intrusore dispone esclusivamente di campioni di testo cifrato che li preleva dal canale insicuro. L'intrusore può sfruttare conoscenze, ipotesi sul linguaggio di origine che è stato usato per scrivere il messaggio cifrato, può disporre di tecniche e statistiche per effettuare determinati attacchi. Avendo il testo cifrato e queste tecniche può dedurre delle informazioni sul testo originario o sulla chiave stessa;
+- **Attacco con solo testo cifrato**: l'intrusore dispone esclusivamente di testo cifrato che li preleva dal canale insicuro. L'intrusore può sfruttare conoscenze, ipotesi sul linguaggio di origine che è stato usato per scrivere il messaggio cifrato, può disporre di tecniche e statistiche per effettuare determinati attacchi. Avendo il testo cifrato e queste tecniche può dedurre delle informazioni sul testo originario o sulla chiave stessa;
 - **Attacco con testo in chiaro noto**: l'intrusore ha la fortuna di avere il testo in chiaro del cifrato e il cifrato stesso;
 - **Attacco con testo in chiaro scelto**: l'intrusore sceglie un testo in chiaro e ha la possibilità di cifrarlo. Il testo in chiaro l'ha scelto lui ma riesce a cifrarlo;
 - **Attacco con testo cifrato scelto**: dispone sempre di una coppia testo cifrato-testo scelto, ma l'attaccante a differenza di prima, ha preso un campione di testo cifrato da lui voluto e ha ottenuto il testo in chiaro corrispondente. E' riuscito a farsi decifrare il testo cifrato dalla sorgente.
@@ -796,7 +796,7 @@ Il cifrario simmetrico vengono utilizzati per garantire riservatezza. In rari ca
 
 Esistono come cifrari simmetrici due famiglie distinte:
 - **Cifrario a flusso**: si rifà al cifrario perfetto (one time pad). E' un cifrario che opera su uno o pochi bit alla volta con una regola variabile al progreddire del testo. garantisce la  protezione dei singoli bit di una trasmissione seriale. Ad esempio, nel settore della telefonia, applicazione web etc.
-- **Cifrario a blocchi**: si rifaà al cifrario poligrafico composto visto nella teoria di Shannon. trasforma con una regola fissa ed uno alla volta, blocchi di messaggio formati da molti bit. Ad esempio, protezione di pacchetti, di file, posta elettronica etc.
+- **Cifrario a blocchi**: si rifà al cifrario poligrafico composto visto nella teoria di Shannon. trasforma con una regola fissa ed uno alla volta, blocchi di messaggio formati da molti bit. Ad esempio, protezione di pacchetti, di file, posta elettronica etc.
 
 Un cifrario a flusso, è più veloce di un cifrario a blocchi e non introduce rallentamenti. Se impiegato non correttamente, è meno sicuro di un cifrario a blocchi non impiegato correttamente.
 
@@ -809,11 +809,107 @@ Encryption e Decryption sono implementati con degli XOR. prendo un bit di testo 
 Perchè non è perfetto?
 Non si può generare un flusso completamente casuale ma dopo un periodo di tempo si ripete. Il seme mi permette di scegliere una sottosequenza a caso all'interno di questo periodo lunghissimo. Il periodo per quanto lungo se si esaurisce si ripete. Per questo motivo è computazionalmente sicuro e non perfetto.
 
-Flusso di chiave: la chiave deve essere lungo quanto il testo, formato da bit psuedo-casuali e la sottosequenza scelta in segreto e a caso all'interno di un periodo lunghissimo.
+Flusso di chiave: la chiave deve essere lunga quanto il testo, formato da bit psuedo-casuali e la sottosequenza scelta in segreto e a caso all'interno di un periodo lunghissimo.
 
 I cifrari a flusso sincrono si suddividono in:
-- **Cifrario a flusso sincrono**:
-- **Cifrario a flusso autosincronizzante**:
+- **Cifrario a flusso sincrono**: il flusso di chiave dipende solo dal seme 
+- **Cifrario a flusso autosincronizzante**: lo stato futuro dipende dal seme ma anche dai bit di testo cifrato precedente
+
+Nel flusso sincrono, l'attaccante può effettuare attacchi attivi: modificare, cancellarli o aggiungere bit di testo cifrato.
+
+Caso cifrario a flusso sincrono
+-Se si modifica un bit del cifrato: la destinazione non decifra correttamente un bit perchè è stato cambiato. Si dice che non si ha perdita di sincronismo perchè ki è sempre lo stesso ma la decifrazione non è corretta.
+- Se si cancella un bit: dal punto in poi in cui è stato cancellato il bit, non corrisponderà mai a quelli inviati. Si dice che si ha perdita di sincronismo.
+
+Caso cifrario a flusso autosincronizzante
+- Se si modifica, cancella o elimina un bit del cifrato: si ha una perdita di sincronismo non permanete ma solo di un transitorio. E' il transitorio legato alla dimensione del registro di scorrimento (SHIFT) e quanto il bit modificato/cancellato/inserito rimane dentro a questo registro.
+
+I più usati sono quelli a flusso sincrono perchè i componenti a cifrario a flusso autosincronizzante sono più costosi.
+
+Se si usa lo stesso flusso di chiave su messaggi distinti si possono fare attacchi di analisi sui cifrati perchè si sfrutta la proprietà dell'OXR.
+Ad esempio, si consideri:
+m1 XOR k = c1
+m2 XOR k = c2
+c1 XOR c2 è come fare l'XOR su due messaggi in chiaro:
+m1 XOR m2
+
+Alcune volte, nei protocolli ci si accorge che è possibile sfruttare questa proprietà dell'XOR ed effettuare gli attacchi (es. WEP).
+
+![marco togni](./img/img17.png)
+
+Il vettore di inizializzazione ha una dimensione limitata (24 bit). Dopo 2^24 generazioni, si ha che la chiave si ripete. Inoltre, quando si spegneva, il vettore si inizializzava a zero e poi funzionava ad incremento. Il comportamente è molto prevedibile.
+
+# 11/10/2021
+
+## Malleabilità
+
+## Modalità di cifratura
+
+La modalità vista per ora si chiama ECB (Electronic Code Book). Si prende un messaggio, si suddividono in blocchi, e l'ultimo blocco deve essere riempito opportunamente con tecniche di padding. Ad ogni blocco deve essere applicata la cifratura E che trasforma i bit in chiaro in bit cifrato e usa ad ogni blocco di cifratura la stessa identica chiave. Tale modalità di cifratura è fortemente deterministica: a blocchi in chiaro identici corrispondono blocchi cifrati assolutamente identici. I pattern non sono una buona cosa nella sicurezza informatica perchè sono tutte possibili vulnerabilità.
+
+Questa modalità si conserva solo in casi specifici: ad esempio, cifrare delle informazioni che sono già per natura aleatoria.
+
+L'obiettivo, quindi, è quello di trovare modalità di cifrature aleatori. Ad esempio, esistono le modalità CBC, CFB, OFB, CTR.
+
+### Cipher Block Chaining (CBC)
+
+![marco togni](./img/img18.png)
+
+La modalità CBC prende il messaggio in chiaro, lo suddivide in blocchi, l'ultimo blocco sottoposto a padding. Per ogni blocco, il testo in chiaro viene messo in XOR con un altro dato e sottoposto poi alla funzione di cifratura E ottenendo un testo cifrato ci. Solo per quanto riguarda il blocco 1, il testo in chiaro viene dato in XOR con quello che si chiama vettore di inizializzazione. E' un insieme di bit, grande quanto il blocco. Tutti gli altri blocchi al posto del vettore di inizializzazione usano l'uscita del blocco precedente. Per ottenere aleatorietà la si ottine grazie al vettore di inizializzazione.
+
+Le caratteristiche di questo vettore sono:
+- Deve essere casuale;
+- Imprevedibile;
+- Usato una e una sola volta: perchè se ripeto il vettore e si hanno due messaggi uguali, si ottiene lo stesso cifrato.
+
+Se come intrusore, modifica un qualcunque bit di un blocco, l'errore si propaga nei blocchi precedenti. Se questa modalità usata correttamente si ottiene aleatorietà, stessa occupazione di banda ma si perde efficienza perchè si perde il parallelismo. Invece, il parallelismo lo si ottiene in fase di decifrazione se si hanno già tutti i pezzi di cifrato che costituiscono.
+
+### Chipher Feedback (CFB)
+
+![marco togni](./img/img19.png)
+
+Questo schema ricorda un cifrario a flusso. E' come convertire una cifratura a blocchi a una di flusso. Ciò consente di evitare il padding. Si usa, ad esempio, quando si ha una trasmissione carattere per carattere (8 bit alla volta) orientata al flusso di carattere.
+
+Si parte da un vettore di inizializzazione, non è necessariamente segreto, imprevedibile e usato una sola volta. Serve per inizializzare lo stato di un registro a scorrimento che è costituito da due parti: una parte formata dagli s bit meno significativi e l'altra dai b-s bit più significativi. Il registro a scorrimento viene sottoposto ad una cifratura grazie ad un algoritmo a blocchi (es. ECB) e con la rispettiva chiave. Il cifrato finale è ottenuto mettendo in OXR s bit del testo in chiaro con gli s bit più significati dell'operazione di cifratura. Il risultato è il cifrato costituito da s bit.
+
+Il registro è a scorrimento e lo si fa scorrere di s bit e quindi scorrendo a sinistra deve metterne nel registro altri s. I nuovi bit sono quelli del cifrato del passo precedente. Al passo 2, i b-s bit contengono ancora alcuni vecchi bit del vettore di inizializzazione ma prima o poi i bit di questo vettore vengono buttati fuori.
+
+Questo schema ricorda lo schema a flusso autosincronizzante.
+
+![marco togni](./img/img20.png)
+
+In decifrazione, si procede analogamente. Per decifrare il primo blocco di testo in chiaro bisogna avere il cifrato ottenuto al passo precedente vuol dire scorrere indietro. La prima cosa da fare è partire dall'ultimo blocco e recuperare a ritroso.
+
+In fase di decifrazione, si usa sempre la stessa funzione E cioè l'implementazione dell'algoritmo è la stessa. Non è detto che sia sempre così perchè l'algoritmo D potrebbe essere diverso. In questo caso, si usano circuiti diversi.
+
+### Output Feedback (OFB)
+
+![marco togni](./img/img21.png)
+
+Questo schema ricorda un cifrario a flusso sincrono. E' come convertire una cifratura a blocchi a una di flusso. Ciò consente di evitare il padding. Si usa, ad esempio, in una trasmissione di caratteri orientato ad un flusso di dati tipicamente rumorosi come i satelliti.
+
+Si parte da un vettore di inizializzazione che serve sempre per inizializzare lo stato di un registro. Il registro a scorrimento viene cifrato e gli s bit più significativi dell'output vengono messi in XOR con gli s bit del testo in chiaro. Nel registro a scorrimento va a finire nei bit meno significativi, gli s bit più significativi della funzione di cifratura.
+
+![marco togni](./img/img22.png)
+
+In decifrazione, non si usa la funzione inversa ma si continua ad usare la funzione di encryption.
+
+L'OFB si preferisce ad usare quando i canali sono rumorosi perchè la modifica di un cifrato non si propaga sul blocco successivo.
+
+### Counter (CTR)
+
+C'è sempre la suddivisione dei blocchi e ogni blocco viene potenzialmente lavorato indipendentemente dagli altri. I bit di testo in chiaro di ogni singolo blocco vengono messi in XOR all'uscita di un cifrario a blocchi che cifra il valore casuale ed imprevedibile do un contatore. Tutti i blocchi successivi, partono dal valore del contatore iniziale incrementato di 1. I blocchi possono lavorare in parallelo sia in fase di E che di D.
+Ad esempio, viene usata su reti ATM.
+
+### Beast Attack (Browser Exploit Against SSL/TLS)
+
+![marco togni](./img/img23.png)
+
+Attacco molto difficile da realizzare. Questo attacco prevede che all'inizio di una connessione TCP, le due parti negozino gli algoritmi di cifratura, le chiave della sessione e i parametri che vengono usati dai cifrari come il vettore di inizializzazione e anche la modalità di cifratura da usare. I dati a livello applicativo ha una certa dimensione viene suddivisa in blocchi perchè va a finire in un pacchetto TCP. Ogni pacchetto poi viene concatenato a quello successivo. Se si usa un cifrario a blocchi CBC, a livello applicativo si avranno vettori di una certa dimensione.
+
+![marco togni](./img/img24.png)
+
+Si vuole osservare le comunicazioni tra due partecipanti e si vuole capire se il mittente vuole.
 
 ---
 
