@@ -843,11 +843,30 @@ Il vettore di inizializzazione ha una dimensione limitata (24 bit). Dopo 2^24 ge
 
 ## Malleabilità
 
+La proprietà di malleabilità consiste nella possibilità di alterare il cifrato in modo da produrre un effetto desiderato sul testo in chiaro originario. Purtroppo, i cifrari a flusso sono vulnerabili a questa proprietà. L'attaccante conosce qualcosa M o una sua parte, il mittente fa M XOR k, l'attaccante prende (M XOR k) XOR p (è scelto dall'attaccante) e sostituisce a quello che viaggiava prima, il nuovo messaggio cifrato cifrato. La destinazione, decifra ((M XOR k) XOR p)) XOR k e quindi si ottiene m XOR p.
+
+E' importante per aver successo, che l'attaccante conosca almeno una parte del messaggio.
+
+Ad esempio, il mittente sta cifrando dei dati strutturati. All'inizio dei questi dati c'è sempre "From". L'attaccante, conosce che il flusso è strutturato. Il suo obiettivo è quello di far spacciare i dati provenienti da un altro mittente.
+
+![marco togni](./img/img25.png)
+
+Ipotiziamo che l'inizio del messaggio sia "From Bob" con rappresentazione esadecimale "42 6F 62". L'obiettivo dell'intrusore è ottenere "From Eve" con rappresentazione esadecimale 45 76 65. Bisogna trovare quel p tale per cui m XOR p = Eve. Dunque, p deve essere "07 19 07".
+Basta osservare solo il comportamento dell'XOR senza sapere niente sulla chiave.
+
 ## Modalità di cifratura
 
-La modalità vista per ora si chiama ECB (Electronic Code Book). Si prende un messaggio, si suddividono in blocchi, e l'ultimo blocco deve essere riempito opportunamente con tecniche di padding. Ad ogni blocco deve essere applicata la cifratura E che trasforma i bit in chiaro in bit cifrato e usa ad ogni blocco di cifratura la stessa identica chiave. Tale modalità di cifratura è fortemente deterministica: a blocchi in chiaro identici corrispondono blocchi cifrati assolutamente identici. I pattern non sono una buona cosa nella sicurezza informatica perchè sono tutte possibili vulnerabilità.
+Nei cifrari a blocco, l'attacco forza bruta a senso perchè è sempre la stessa. Dunque, bisogna dimensionare la chiave almeno con 128 bit.
 
-Questa modalità si conserva solo in casi specifici: ad esempio, cifrare delle informazioni che sono già per natura aleatoria.
+Si prende un messaggio e lo si suddividono in blocchi.
+La lunghezza del blocco dipende dallo specifico algoritmo per cifrare/decifrare i blocchi. L'ultimo blocco contiene i bit del testo in chiaro originario. Se lo contiene completamente viene aggiunto un blocco in più detto blocco di padding. Se i bit del messaggio originario non lo riempono completamente, si arriva a completamento del blocco riempendo opportunamente i restanti bit con tecniche standard. Nella modalità base ECB (Electronic Code Book) prevede di elaborare in parallelo i blocchi m1....mn. Ogni blocco viene dato in pasto alla funzione di encryption e quindi il cifrato non è altro che la concatenazione dei cifrati ottenuti sui singoli blocchi. Tale modalità di cifratura è fortemente deterministica: a blocchi in chiaro identici corrispondono blocchi cifrati assolutamente identici. I pattern non sono una buona cosa nella sicurezza informatica perchè sono tutte possibili vulnerabilità.
+Altro problema è quello della maleabilità: un intrusore è in grado di modificare il testo cifrato in modo tale che la destinazione quando lo decifra ottiene un testo arbitrario da lui scelto? si. ECB è malleabile.
+
+Pro:
+- grande efficienza: CPU parallela
+- se l'intrusore modifica a caso un bit, si dice che la propagazione dell'errore rimane confinata al cifrato. Chi decifra avrà solo un blocco "sbagliato".
+
+Questa modalità si conserva solo in casi specifici: ad esempio, cifrare delle informazioni che sono già per natura aleatoria (es. chiave di sessione).
 
 L'obiettivo, quindi, è quello di trovare modalità di cifrature aleatori. Ad esempio, esistono le modalità CBC, CFB, OFB, CTR.
 
