@@ -636,8 +636,7 @@ La contromisura da adottare è quella _preventiva_: bisogna fare in modo che l'u
 
 ## Teoria della complessità
 
-Finora si è sempre usato i termini di _calcolo facile_ e di _calcolo difficile_ con il loro significato più intuitivo.
-E’ però utile avere a disposizione una definizione rigorosa: per questo motivo si fa riferimento alla _Teoria della complessità_.
+Finora si è sempre usato i termini di _calcolo facile_. E’ però utile avere a disposizione una definizione rigorosa: per questo motivo si fa riferimento alla _Teoria della complessità_.
 
 La complessità computazionale può essere determinata con una serie di indicatori:
 
@@ -649,22 +648,22 @@ Negli algoritmi di crittografia gli ultimi due parametri non sono presi in consi
 
 ### Definizioni
 
-- **Tempo disecuzione di un algoritmo**: si intende il numero di operazioni `N` che occorre eseguire per terminarlo quando il dato d’ingresso è rappresentato da una stringa di `n` bit (`n = log [valore del dato]`).\
+- **Tempo disecuzione di un algoritmo**: si intende il numero di operazioni `N` che occorre eseguire per terminare l'algoritmo quando il dato d’ingresso è rappresentato da una stringa di `n` bit (`n = log [valore del dato]`).\
 \
 Il numero `n` (dimensione input) incide sul numero di operazioni richieste, in alcuni casi, anche il valore stesso può incidere sul numero di passi da eseguire. Dunque, a parità di `n`, si hanno diversi valori di `N`.
 
 - **Tempo di esecuzione nel caso peggiore**: si intende il numero massimo di operazioni `N_max` che occorre eseguire per qualsiasi dato d’ingresso di `n` bit.\
 \
-Quello che si considera è la modalità d’incremento di `N_max` al crescere senza limiti di `n`. Se `n` non è esprimibile analiticamente, bisogna trovare una funzione che approssima l'andamento della funzione. La notazione che si usa è _O grande_ perchè evidenzia come proprio si incrementa il tempo di esecuzione al crescere senza limiti.
+La notazione che si usa è _O grande_ perchè evidenzia come proprio si incrementa il tempo di esecuzione al crescere senza limiti. Se `n` non è esprimibile analiticamente, bisogna trovare una funzione che approssima l'andamento della funzione. 
 
-## Classificazione degli algoritmi
+### Classificazione degli algoritmi
 
 Gli algoritmi possono essere classificati in due categorie:
 
-- **tempo polinomiale**: algoritmo in grado di completare l'elaborazione di una dimensione n di dati in ingresso in un tempo di esecuzione pari a O(n^k) dove k è un numero intero positivo;
-- **tempo esponenziale**: algoritmo in grado di completare l'elaborazione di una dimensione n di dati in ingresso in un tempo di esecuzione pari a O(exp(n)) dove n è la dimensione n di dati in ingresso.
+- **Tempo polinomiale**: algoritmo in grado di completare l'elaborazione di una dimensione `n` di dati in ingresso in un tempo di esecuzione pari a `O(n^k)` dove `k` è un numero intero positivo;
+- **Tempo esponenziale**: algoritmo in grado di completare l'elaborazione di una dimensione `n` di dati in ingresso in un tempo di esecuzione pari a `O(exp(n))` dove `n` è la dimensione `n` di dati in ingresso.
 
-## Classificazione dei problemi
+### Classificazione dei problemi
 
 Un problema si può classificare in:
 
@@ -676,8 +675,8 @@ Un problema si può classificare in:
 
 Per ottenere sicurezza non ci interessa sapere l'andamento al crescere senza misura di n ma interessa:
 
-- trovare il valore n al di sopra del quale l'andamento diventa esponenziale. Se l'andamento è polinomiale l'intrusore è capace di entrare nel sistema. Nel nostro caso la chiave dovrà essere di un numero di bit in modo tale che la ricerca nello spazio delle chiavi diventi esponenziale;
-- non ci interessa difenderci dal caso peggiore ma dal caso migliore. L'intrusore non deve entrare nel sistema facilmente. L'intrusore non si deve trovare di fronte ad istanze del problema di facile soluzione. Ad esempio, i bit della chiave devono essere aleatori.
+- Trovare il valore n al di sopra del quale l'andamento diventa esponenziale. Se l'andamento è polinomiale l'intrusore è capace di entrare nel sistema. Nel nostro caso la chiave dovrà essere di un numero di bit in modo tale che la ricerca nello spazio delle chiavi diventi esponenziale;
+- Non ci interessa difenderci dal caso peggiore ma dal caso migliore. L'intrusore non deve entrare nel sistema facilmente. L'intrusore non si deve trovare di fronte ad istanze del problema di facile soluzione. Ad esempio, i bit della chiave devono essere aleatori.
 
 Le unità di misura da adottare sono:
 
