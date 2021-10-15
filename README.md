@@ -636,35 +636,33 @@ La contromisura da adottare è quella _preventiva_: bisogna fare in modo che l'u
 
 ## Teoria della complessità
 
+Finora si è sempre usato i termini di _calcolo facile_ e di _calcolo difficile_ con il loro significato più intuitivo.
+E’ però utile avere a disposizione una definizione rigorosa: per questo motivo si fa riferimento alla _Teoria della complessità_.
+
 La complessità computazionale può essere determinata con una serie di indicatori:
-- **Tempo di esecuzione**: ovviamente non è un tempo _vero_ perchè ogni tecnologia introduce ha un concetto di tempo diverso. Per misurare il tempo di esecuzione facciamo riferimento al numero di operazioni eseguite dall'algoritmo per terminare;
+
+- **Tempo di esecuzione**: ovviamente non è un tempo _vero_ perchè ogni tecnologia ha un concetto di tempo diverso. Per misurare il tempo di esecuzione si fa riferimento al numero di operazioni eseguite dall'algoritmo per terminare;
 - **Memoria occupata dal programma**
 - **Memoria occupata dai dati**
 
-Negli algoritmi di crittografia che vediamo, gli ultimi due parametri non vengono presi in considerazione.
+Negli algoritmi di crittografia gli ultimi due parametri non sono presi in considerazione.
 
-**Tempo di esecuzione di un algoritmo**: numero di operazioni `N` che occorre eseguire per terminarlo quando il dato d’ingresso è rappresentato da una stringa di `n` bit (`n = log [valore del dato]`)
+### Definizioni
 
-N = f(n)
-
+- **Tempo disecuzione di un algoritmo**: si intende il numero di operazioni `N` che occorre eseguire per terminarlo quando il dato d’ingresso è rappresentato da una stringa di `n` bit (`n = log [valore del dato]`).\
+\
 Il numero `n` (dimensione input) incide sul numero di operazioni richieste, in alcuni casi, anche il valore stesso può incidere sul numero di passi da eseguire. Dunque, a parità di `n`, si hanno diversi valori di `N`.
 
-**Tempo di esecuzione nel caso peggiore**: numero massimo di operazioni Nmax che occorre eseguire per qualsiasi dato d’ingresso di n bit
-
-Nmax = f(n)
-
-Si considera la modalità d’incremento di Nmax al crescere senza limiti di n
-
-Se n non è esprimibile analiticamente, bisogna trovare una funzione che approssima l'andamento della funzione
+- **Tempo di esecuzione nel caso peggiore**: si intende il numero massimo di operazioni `N_max` che occorre eseguire per qualsiasi dato d’ingresso di `n` bit.\
+\
+Quello che si considera è la modalità d’incremento di `N_max` al crescere senza limiti di `n`. Se `n` non è esprimibile analiticamente, bisogna trovare una funzione che approssima l'andamento della funzione. La notazione che si usa è _O grande_ perchè evidenzia come proprio si incrementa il tempo di esecuzione al crescere senza limiti.
 
 ## Classificazione degli algoritmi
 
 Gli algoritmi possono essere classificati in due categorie:
 
-- tempo polinomiale:
-T = O(n^t ) con t esponente più grande in g(n), 
-- tempo esponenziale:
-T = O(b^n) , con b costante, o anche T = O(exp (n))
+- **tempo polinomiale**: algoritmo in grado di completare l'elaborazione di una dimensione n di dati in ingresso in un tempo di esecuzione pari a O(n^k) dove k è un numero intero positivo;
+- **tempo esponenziale**: algoritmo in grado di completare l'elaborazione di una dimensione n di dati in ingresso in un tempo di esecuzione pari a O(exp(n)) dove n è la dimensione n di dati in ingresso.
 
 ## Classificazione dei problemi
 
@@ -674,14 +672,17 @@ Un problema si può classificare in:
 - **Difficile**: se non sono stati fino ad ora individuati
 (e probabilmente non saranno mai individuati) algoritmi che lo risolvono in tempo polinomiale.
 
-Che cosa interessano a noi questi andamenti?
-Per ottenere sicurezza non ci interessa sapere l'andamento al crescere senza misura di n. A noi interessa:
-- trovare il valore n al di sopra del quale l'andamento diventa esponenziale. Se l'andamento è polinomiale l'intrusore è capace di entrare nel mio sistema
-- non ci interessa difenderci dal caso peggiore ma dal caso migliore. L'intrusore non deve trovarsi a distanze facili
+### Complessità e Sicurezza
+
+Per ottenere sicurezza non ci interessa sapere l'andamento al crescere senza misura di n ma interessa:
+
+- trovare il valore n al di sopra del quale l'andamento diventa esponenziale. Se l'andamento è polinomiale l'intrusore è capace di entrare nel sistema. Nel nostro caso la chiave dovrà essere di un numero di bit in modo tale che la ricerca nello spazio delle chiavi diventi esponenziale;
+- non ci interessa difenderci dal caso peggiore ma dal caso migliore. L'intrusore non deve entrare nel sistema facilmente. L'intrusore non si deve trovare di fronte ad istanze del problema di facile soluzione. Ad esempio, i bit della chiave devono essere aleatori.
 
 Le unità di misura da adottare sono:
+
 - **Anno MIPS**: parametro che dipende dalla tecnologia. Il tempo di esecuzione di un attacco è espresso in anni MIPS. Questa unità di misura fa riferimento a quante istruzioni può elaborare un calcolatore e con il passare degli anni il numero di riferimento aumenta. Attualmente un calcolatore in grado di eseguire un milione di istruzioni al secondo;
-- **Livello di sicurezza**: parametro indipendente dalla tecnologia. L'algoritmo di ricerca esauriente risolve ogni problema perchè esplorare lo spazio totale degli input è sempre possibile. Dipende tutto dalla dimensione di input per il quale non ha più senso. Dobbiamo individuare qual è il numero di bit tale per cui l'andamento diventa esponenziale. Quando l'ho individuato quello è il mio livello di sicurezza. Il livello di sicurezza misura il numero di dimensione di input del migliore algoritmo a disposizione dell'intrusore a partire dal quale l'andamento diventa esponenziale.
+- **Livello di sicurezza**: parametro indipendente dalla tecnologia. L'algoritmo di _ricerca esauriente_ risolve ogni problema perchè esplorare lo spazio totale degli input è sempre possibile. Bisogna individuare qual è il numero di bit della chiave tale per cui l'andamento diventa esponenziale.
 
 ![dedurre](./img/img13.png)
 
@@ -690,7 +691,7 @@ Quanto deve essere grande una chiave?
 - In una chiave asimmetrica: attacchi possibili: forza bruta sulla chiave privata o un algoritmo di fattorizzazione della chiave pubblica risalire alla chiave privata. Forza bruta: La chiave segreta deve essere maggiore a 128 bit.
 Algoritmo sub-esponenziale: > 2000 bit
 
-# 02.Datisicuri2 (07-10-2021)
+# 02.Dati Sicuri 2 (07-10-2021)
 
 Adesso dobbiamo capire come sono realizzate le scatole nere del capitolo precedente.
 
