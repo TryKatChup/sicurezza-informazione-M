@@ -380,6 +380,8 @@ Esistono 2 schemi alternativi per realizzare sign-verify: _la firma digitale_ e 
 
 ### Firma digitale
 
+Il primo schema alternativo per realizzare sign-verify è la _firma digitale_.
+
 ![firmadigitale](./img/img6.png)
 
 La sorgente `A` prende il messaggio `m` e lo sottopone a una trasformazione `H`, costruendo l’impronta `H(m)`, che garantisce l’integrità. La funzione `S` di _sign_ viene eseguita su `H(m)`, e sul canale di comunicazione insicuro viene trasmesso `m` concatenato con `S(H(m))`.
@@ -400,6 +402,8 @@ Questo schema mi assicura anche la proprietà di:
 <!-- più corto il titolo secondo me-->
 <!-- Hash del messaggio e di un segreto -->
 ### Hash applicata al messaggio concatenato con un segreto S, condiviso tra sorgente e destinazione
+
+Il secondo schema alternativo per realizzare sign-verify è l'uso di un _hash_.
 
 ![hashs](./img/img7.png)
 
@@ -498,9 +502,11 @@ E' possibile che un sistema abbia anche più sistemi di identificazione. Ad esem
 
 ### Protocollo di identificazione
 
+Un processo d’identificazione avviene tramite l'uso di protocolli.
+
 ![kronk](/img/img8.png)
 
-Qualunque protocollo di identificazione prevede:
+Qualunque protocollo di identificazione prevede due fasi:
 
 - **Registrazione**: durante la registrazione, l’identificando ed il verificatore concordano e memorizzano rispettivamente il dato segreto S con cui l'identificando si farà riconoscere ed il t_ermine di paragone_ T=H(S) che consentirà al verificatore di accertare che l'identificando conosce S.
 - **Identificazione**: l'identificando e il verificatore devono essere entrambi online (univocità del tempo).
@@ -554,9 +560,11 @@ L'approccio usato al giorno d'oggi, quindi, è il terzo.
 
 ## Algoritmo forza bruta
 
+Un intrusore può sempre disporre di un _algoritmo di ricerca esauriente_ noto come _algorimo di forza bruta_.
+
 ![intrusore](./img/img10.png)
 
-Un intrusore può sempre disporre di un _algoritmo di ricerca esauriente_ noto come _algorimo di forza bruta_. Se l'intrusore non conosce la chiave, può esplorare tutto lo spazio delle chiavi. Se `n` è il numero di bit della chiave e `2^n` è il numero totale di configurazioni, prova tutti i tentativi fino a quando non la indovina. Ovviamente deve conoscere la trasformata `T`. Se il cifrato che ottiene è uguale a quello sul canale, vuol dire che è riuscito a trovare la configurazione corretta.
+Se l'intrusore non conosce la chiave, può esplorare tutto lo spazio delle chiavi. Se `n` è il numero di bit della chiave e `2^n` è il numero totale di configurazioni, prova tutti i tentativi fino a quando non la indovina. Ovviamente deve conoscere la trasformata `T`. Se il cifrato che ottiene è uguale a quello sul canale, vuol dire che è riuscito a trovare la configurazione corretta.
 
 ## Relazioni fra le chiavi
 
@@ -691,7 +699,7 @@ Una chiave deve avere come numero minimo di bit:
 
 # 02.Meccanismi di base (07-10-2021)
 
-Le primitive crittografica è la funzione hash sicura, chiamata in causa in moltissimi meccanismi e servizi
+Le primitive crittografiche sono usate in moltissimi meccanismi e servizi.
 
 ## Generatori di numeri casuali
 
@@ -711,13 +719,13 @@ Non si possono usare questi componenti per generare gradi quantità di chiavi cr
 
 Per superare il problema della _non riproducibilità_, si usano questo altri tipi di generatori. Sono componenti che consentono di generare lunghe sequenze di numeri casuali in modo deterministico a partire da un dato iniziale detto _seme_. Per questo motivo si chiamano _pseudo_ perchè se il _seme_ iniziale è uguale sia nella sorgente che nella destinazione, viene riprodotta la stessa sequenza di bit.
 
-Per generare questa sequenza si possono usare degli automi a stati finiti.
+Per generare questa sequenza si possono usare degli automi a stati finiti dove la funzione G e F o solo una delle due deve essere unidirezionale.
 
 Tuttavia, questi componenti non garantiscono _imprevedibilità_ cioè dopo un certo numero di bit è possibile individuare ogni successivo valore.
 
 ### Cryptographically Secure PseudoRandom Bit Generator (CSPRBG)
 
-Nella sicurezza informatica, si ha bisogno che si rispetti una proprietà in più rispetto a quelle citate in precedenza: l'_imprevedibilità_. Un intrusore che è riuscito ad intercettare l’uscita o ad individuare, in tutto o in parte, lo stato del generatore non deve poter dedurre da quale seme sono partiti i calcoli e/o quali saranno i prossimi valori generati.
+Nella sicurezza informatica, si ha bisogno che si rispetti una proprietà in più rispetto a quelle citate in precedenza: l'_imprevedibilità_. Il periodo deve essere lunghissimo e si deve poter scegliere una sottosequenza a caso all'interno di questo periodo. Tuttavia, per quanto lungo il periodo, esso si esaurisce e quindi si ripete.
 
 ![dedurre](./img/img28.png)
 
@@ -731,116 +739,124 @@ La funzione unidirezionale impiegata può sfruttare algoritmi di crittografia pe
 
 Un esempio di PRNG è la classe Secure Random di Java.
 
-### Algoritmi di hash
+## Algoritmi di hash
 
 Un altro componente importante sono le funzioni hash. Gli algoritmi che la realizzano devono presentare le seguenti proprietà:
 
 - **Efficienza**: deve essere facile calcolare l'impronta anche se il messaggio in ingresso è molto lungo
-- **Robustezza**: si possono individuare due tipi di robustezza:
-  - **Robustezza debole**: dato un input x a cui corrisponde un'impronta H(x), deve essere computazionalmente difficile per l'intrusore trovare un y != x tale per cui H(y) = H(x);
-  - **Robustezza forte**: deve essere difficile trovare una coppia di sua scelta x e y tale per cui abbiamo l'impronta identica H(y) = H(x).
+- **Robustezza alle collisioni**: si possono individuare due tipi di robustezza:
+  - **Robustezza debole alle collisioni**: dato un input x a cui corrisponde un'impronta H(x), deve essere computazionalmente difficile per l'intrusore trovare un y != x tale per cui H(y) = H(x);
+  - **Robustezza forte alle collisioni**: deve essere difficile trovare una coppia di sua scelta x e y tale per cui abbiano l'impronta identica H(y) = H(x).
 - **Unidirezionalità**: data un'impronta deve essere computazionalmente difficile risalire al messaggio originario che l'ha generata.
+
+### Efficienza
+
+Per garantire efficienza, la maggior parte degli algoritmi utilizzano uno _schema di Merkle-Damgard_ o _compressione iterata_.
 
 ![dedurre](./img/img14.png)
 
-Per garantire efficienza, la maggior parte degli algoritmi utilizzano uno schema di Merkle-Damgard (compressione iterata). Consiste nel prendere il messaggio di lunghezza arbitraria e suddividerlo in blocchi prefissata a seconda dello specifico algoritmo di implementazione di f. Al primo blocco viene applicato a m0 una funzione unidirezionale con le caratteristiche di robustezza, debole e forte alle collisioni e unidirezionalità, applico a m0 di r bit (r>n) al primo passo la funzione f e un vettore di inizializzazione che avrà un valore iniziale. In pipeline, viene poi elaborato il secondo blocco m1 concatenato all'impronta generata al passo precedente. L'impronta h-iesma al passo i-esimo è ottenuta applicando una funzione unidirezionale e resistente alle collisioni, all'impronta ottenuta al passo ottenuto i-1 e al blocco i-1.
-L'impronta finale corrisponde con l'ultima impronta generata dall'ultimo blocco.
+Consiste nel prendere il messaggio di lunghezza arbitraria e suddividerlo in blocchi di dimensione prefissata a seconda dello specifico algoritmo di implementazione di f. Al primo blocco viene applicato a m0 una funzione unidirezionale con le caratteristiche di robustezza debole e forte alle collisioni e unidirezionalità, si applica a m0 di r bit (r>n n= l'uscita del blocco) la funzione f e un vettore di inizializzazione che avrà un valore iniziale. In uscita viene prodotta un'impronta h1. In pipeline, viene poi elaborato il secondo blocco m1 concatenato all'impronta generata al passo precedente. L'impronta h-iesma è ottenuta applicando una funzione unidirezionale e resistente alle collisioni con input l'impronta ottenuta al passo ottenuto i-1.
+L'impronta finale dell'intero messaggio, corrisponde con l'ultima impronta generata dall'ultimo blocco.
 
 Questo schema è soggetto ad un attacco che si chiama _attacco con estensione_.
 
 ![dedurre](./img/img15.png)
 
-Dalla sorgente A inviamo un messaggio m concatenato al suo attestato di autenticità costruito con la funzione hash H(s||m) dove s è il segreto condiviso tra mittente e destinatario. Se la funzione hash è implementata secondo lo schema di Merkle-Damgard, l'implementazione è vulnerabile ad un attacco. L'intrusore aggiunge un messaggio m' a quello già esistente. Ora ha bisogno di calcolare il nuovo attestato di autenticitò. L'intrusore sfrutta l'impronta H(s||m) che viene mandata sul canale e anche se non conosce s, riesce ad usare H(s||m) come input dei blocchi f che mi elaborano le impronte sulla parte restante del messaggio m'.
+Dalla sorgente A si invia un messaggio m concatenato al suo attestato di autenticità che è costruito con la funzione hash H(s || m) dove s è il segreto condiviso tra mittente e destinatario. Se la funzione hash è implementata secondo lo _schema di Merkle-Damgard_, allora è presenta una vulnerabilità. L'intrusore può inviare un messaggio m' oltre all'm già esistente. Basta che calcoli il nuovo attestato di autenticità. H(s || m) non è altro che l'impronta di uscita dell'ultimo blocco del messaggio m. Mettendola come input di un nuovo blocco f insieme al messaggio dell'intrusore suddiviso in blocchi, si riesce a calcolare il nuovo attestato di auntenticità.
 
-Come si evita il problema:
-- Compressione iterata: l'ultimo blocco prende delle informazioni aggiuntive ad esempio qual è la lunghezza del messaggio. Tuttavia, non è sempre robusto. Se il messaggio non è dotato di significato, l'attacco ha successo.
+Per evitare il problema serve aggiungere all'ultimo blocco delle informazioni aggiuntive ad esempio qual è la lunghezza del messaggio. Chi riceve il messaggio, sa che tecnica è stata usata e quindi in fase di elaborazione ricava le informazioni aggiuntive. Tuttavia, non è sempre robusto.<!--?!? Motivo non capito--> Se il messaggio non è dotato di significato, l'attacco ha successo.
 
-<!--esempio? -->
+### Robustezza alle collisioni
 
-![dedurre](./img/img16.png)
+Le funzioni hash non garantiscono sempre la resistenza alle collisioni. Non ci si limita, quindi, a comprire solo una volta ma questa operazione la si effettua più volte. La doppia compressione consente alle funzioni hash di avere un comportamento aleatorio.
 
-Le funzioni non garantiscono sempre la resistenza alle collisioni. Per ridurre questi attacchi, non ci si limita a comprire solo una volta ma lo si fa più volte. La doppia compressione consente alle funzioni hash di avere un comportamento aleatorio.
+La resistenza alle collisione è fondamentale quando la funzione hash è usata per costruire attestati di autenticità. Ad esempio, in uno schema di firma digitale.
 
-La resistenza alle collisione è importante:
-- Firma digitale: la firma la si da alla trasformazione S ma all'impronta del messaggio. Se esiste un m' tale per cui H(m) = H(m') non è più valido oppure ?!?!?!?
+Inoltre, è importante usare un numero minimo di bit affinchè l'impronta sia resistente alle collisioni deboli e forti. Le funzioni hash devono avere un comportamento aleatorio cioè devono restituire con uguale probabilità una delle 2^n configurazioni.
+
+Un intrusore per trovare una collisione impiega
+
+Si indica con P_1(2^n, 1) = 1/2^n la probabilità di un tentativo di trovare una collisione. La probabilità di insuccesso, quindi, è 1 - 1/2^n. Se si hanno k tentativi, P_k(2^n, k) = 1 - (1 - 1/2^n)^k. Questo vuol dire che k= P_k(2^n, k) * 2^n. 2^n per avere un andamento esponenziale deve essere almeno 128. Dunque, l'impronta deve essere almeno 128 bit.
+
+Per garantire la _resistenza forte_ non bastano 128 bit. Il numero di bit deve essere il doppio. Per la resistenza forte si vedrà che sono necessari 2^(n/2) tentativi. Dunque, è più facile effettuare un attacco rispetto alla resistenza debole.
+
+### Unidirezionalità
 
 L'unidirezionalità è importante in due scenari:
-- Firma digitale: un intrusore potrebbe generare tramite un PRNG un r. L'intrusore può sempre calcolare V(r). V è nota a tutti e può calcolare tramite una PU x. L'intrusore vuole generare un r come se fosse stato firmato da una determinata persona. facendo H^-1(x) riesco a trovare un y!?!?!??!?
-
-## Dimensionamento dell'impronta
-
-Quanti bit deve avere un'impronta per essere sicura? Le funzioni devono avere un comportamento aleatorio cioè deve restituire una delle 2^n configurazioni casuali. Quanto tempo ci mette un intrusore per trovare una collisione? Con P1(2^n, 1) = 2^-n la probabilità di un tentativo di trovare una collisione. Se ho k tentativi P1(2^n, k) = 1 - (1-2^-n)^k. Si dimostra che la probabilità dopo k tentativi è proporzionale a k*2^-n. Questo vuol dire che k=S.2^n. L'n per essere esponenziale è 128. Dunque, l'impronta deve essere almeno 128 bit.
-
-Per garantire la resistenza forte non bastano 128 bit. Il numero di bit deve essere il doppio. In realtà, serve quando abbiamo a che fare con la firma digitale, o nel seguente scenario:
-- L'intrusore prepara 2 versioni di un contratto: M-M' in cui collidono. Alla persona fa firmare M che è quello favorevole e l'intrusore cambia contratto con M' tanto hanno la stessa impronta. Per la resistenza forte vedremo che ci vogliono 2^(n/2) tentativi (più facile della debole.)
+- **Firma digitale**: un intrusore potrebbe generare tramite un PRNG crittograficamente sicuro un r. L'intrusore può sempre calcolare V(r) perchè V è una trasformazione nota a tutti. Tramite la chiave pubblica può calcolare tramite x.
+L'intrusore vuole fare H^-1(x) e trovare un y dotato di significato. La funzione hash non è invertibile quindi un'operazione del genere non può essere effettuata.
+- **Identificazione**: memorizzare un segreto in forma cifrata. La chiave di cifratura è la passhrase che viene sottoposta alla funzione H. Anche in questo caso la funzione hash non deve essere invertibile.
 
 # 03.Meccanismi Simmetrici
 
-**Sicurezza computazionale**: un cifrario è detto computazionalmente sicuro se è possibile risalre dal testo cifrato corrispondente al testo in chiaro ma richiede una potenza di elaborazione superiore a quella a disposizione dell'intrusore.
+Nella crittografia classica, è stato individuato un cifrario perfetto chiamato _One-time pad_. Esso prevede l'uso di una chiave lunga quanto il testo e costituita da simboli tanti quanto il testo e scelti a caso e usata una e una sola volta.
+Tuttavia, il suo impiego nella pratica è molto complicato: se la chiave è lunga quanto il tempo a questo punto vale mandare il messaggio su un canale sicuro e non la chiave. Si dovrebbe disporre di canali sicuri tanto quanti sono i messaggi che si vogliono inviare.
 
-D'ora in poi abbiamo a che fare con cifrari computazionalmente sicuri (e non perfetti che significa?).
+Per questo motivo si parla di _cifrario computazionalmente sicuro_ cioè se è possibile risalre dal testo cifrato corrispondente al testo in chiaro ma richiede una potenza di elaborazione superiore a quella a disposizione dell'intrusore.
 
-Per la teoria dellinformazione sviluppata da Shannon, il cifrario è computazionalmente sicuro se adotta i criteri di:
-- **Confusione**: la relazione tra la chiave e il testo cifrato è più il possibile complessa e scorrelata. L'uscita del cifrario è aleatorio e l'aleatorietà non permette di individuare la relazione tra testo cifrato e la chiave usata.
-- **Diffusione**: la capacità di un algoritmo di nascondere la ridondanza del testo il più possibile nell'uscita dell'algoritmo di cifratura. Se si riesce a nascondere la ridondanza del testo nel cifrato, viene impedito all'intrusore di usare tecniche basate sull'analisi statistica.
+Per la _teoria dell'informazione_ sviluppata da Shannon, il cifrario è computazionalmente sicuro se adotta i criteri di:
 
-Se costruisco un cifrario che usa il principio della confusione, il messaggio cifrato non fornisce informazioni sulla chiave.
+- **Confusione**: il messaggio criptato non deve fornire informazioni sulla chiave cioè il cifrato deve essere aleatorio e l'aleatorietà non permette di individuare la relazione tra testo cifrato e la chiave usata;
+- **Diffusione**: la modifica di un solo carattere del messaggio in chiaro deve provocare una modifica sostanziale del messaggio criptato in modo da non poter usare attacchi con statistica.
 
-Se costruisco un cifrario che usa il principio della diffusione, so che se modifico solo un carattere del messaggio in chiaro, questa modifica sul singolo carattere non si ripercuote nel corrispondente carattere del messaggio cifrato ma provoca una modifica spalmata su tutto il cifrato.
-
-- Tecnica di sostituzione: tecnica che garantisce la confusione.
-- Tecnica di trasposizione: tecninca che garantisce la diffusione.
+Ci sono due tecniche che garantiscono _confusione_ e _diffusione_:
+- **Tecnica di sostituzione**: tecnica che garantisce la confusione;
+- **Tecnica di trasposizione**: tecnica che garantisce la diffusione.
 
 ## Cifrario simmetrico
 
-Dalla teoria di Shannon discende che un cifrario simmerico è computazionalmente sicuro se usa diffusione e sostituzione.
+Dalla _teoria dell'informazione_ di Shannon discende che un _cifrario simmerico_ è computazionalmente sicuro se usa _diffusione_ e _sostituzione_.
 
-Il cifrario simmetrico vengono utilizzati per garantire riservatezza. In rari casi, viene usato per garantire autenticazione, generatori di numeri pseudo-casuali crittograficamente sicuri e dei protocolli di identificazione.
+Il cifrario simmetrico vengono utilizzati per garantire _riservatezza_. In rarissimi casi, viene usato per garantire _autenticazione_, costruire generatori di numeri pseudo-casuali crittograficamente sicuri e dei protocolli di identificazione.
 
 Esistono come cifrari simmetrici due famiglie distinte:
-- **Cifrario a flusso**: si rifà al cifrario perfetto (one time pad). E' un cifrario che opera su uno o pochi bit alla volta con una regola variabile al progreddire del testo. garantisce la  protezione dei singoli bit di una trasmissione seriale. Ad esempio, nel settore della telefonia, applicazione web etc.
-- **Cifrario a blocchi**: si rifà al cifrario poligrafico composto visto nella teoria di Shannon. trasforma con una regola fissa ed uno alla volta, blocchi di messaggio formati da molti bit. Ad esempio, protezione di pacchetti, di file, posta elettronica etc.
 
-Un cifrario a flusso, è più veloce di un cifrario a blocchi e non introduce rallentamenti. Se impiegato non correttamente, è meno sicuro di un cifrario a blocchi non impiegato correttamente.
+- **Cifrario a flusso**: si ispira al cifrario _One-time pad_. E' un cifrario che opera su uno o pochi bit alla volta con una regola variabile al progredire del testo. Garantisce la  protezione dei singoli bit di una trasmissione seriale. Ad esempio, nel settore della telefonia, applicazione web etc;
+- **Cifrario a blocchi**: si ispira al _Cifrario poligrafico_ ed al C_ifrario composto_. Trasforma con una regola fissa blocchi di messaggio formati da molti bit. Ad esempio, protezione di pacchetti, di file, posta elettronica etc.
 
-## Cifrario a flusso
+Un _cifrario a flusso_, è più veloce di un _cifrario a blocchi_ perchè non introduce rallentamenti. Se il _cifrario a flusso_ non è impiegato correttamente, è meno sicuro di un cifrario a blocchi non impiegato correttamente.
 
-Si rifà ad un cifrario one-time pad, prende un bit chiaro, fa l'operazione di encryption e somma modulo 2 con un bit di chiave aleatoria e produce in uscita un bit cifrato.
+### Cifrario a flusso
 
-Encryption e Decryption sono implementati con degli XOR. prendo un bit di testo in chiaro e lo metto in XOR con un bit di chiave. Ad esempio, se il messaggio è lungo 1000 bit, la chiave è lunga 1000 bit. Lo stesso flusso di chiave non può essere impiegato su messaggi diversi. Il flusso di chiave lo genero con un PRNG. In decifrazione, al bit i-esimo del messaggio, deve essere sommato modulo 2 la corrispondente k-iesmo usata in cifratura. Per questo motivo ci deve essere sincronismo tra flusso di chiave tra livello sorgente e livello di chiave.
+Encryption e Decryption sono implementati con degli XOR:
+- **Encryption**: viene preso un bit di testo in chiaro, lo si mette in XOR con un bit di chiave. Ad esempio, se il messaggio è lungo 1000 bit, la chiave deve essere lunga 1000 bit. Lo stesso flusso di chiave non può essere impiegato su messaggi diversi. Dunque, il flusso di chiave lo si genera con un PRNG crittograficamente sicuro.
+- **Decryption**: al bit i-esimo del messaggio, deve essere sommato modulo 2 (XOR) lo stesso k-iesmo bit di chiave usato nella fase di cifratura. Per questo motivo ci deve essere _sincronismo_ tra i flussi di chiave della sorgente e della chiave.
 
-Perchè non è perfetto?
-Non si può generare un flusso completamente casuale ma dopo un periodo di tempo si ripete. Il seme mi permette di scegliere una sottosequenza a caso all'interno di questo periodo lunghissimo. Il periodo per quanto lungo se si esaurisce si ripete. Per questo motivo è computazionalmente sicuro e non perfetto.
+E' bene ricordare che questo cifrario non è perfetto perchè non si può generare un flusso completamente casuale con PNRG crittograficamente sicuro ma dopo un periodo di tempo, seppur lungo, si ripete.
 
-Flusso di chiave: la chiave deve essere lunga quanto il testo, formato da bit psuedo-casuali e la sottosequenza scelta in segreto e a caso all'interno di un periodo lunghissimo.
+Inoltre, il _flusso di chiave_ deve avere le seguenti caratteristiche:
+- la chiave deve essere lunga quanto il testo;
+- formato da bit psuedo-casuali generati da un PNRG crittograficamente sicuro;
+- la sottosequenza scelta deve essere scelta in segreto e a caso all’interno di un periodo lunghissimo.
 
 I cifrari a flusso sincrono si suddividono in:
-- **Cifrario a flusso sincrono**: il flusso di chiave dipende solo dal seme 
-- **Cifrario a flusso autosincronizzante**: lo stato futuro dipende dal seme ma anche dai bit di testo cifrato precedente
 
-Nel flusso sincrono, l'attaccante può effettuare attacchi attivi: modificare, cancellarli o aggiungere bit di testo cifrato.
+- **Cifrario a flusso sincrono**: il flusso di chiave dipende solo dal seme;
+- **Cifrario a flusso autosincronizzante**: lo stato futuro che genera i bit di chiave, dipende dal seme ma anche dai bit di testo cifrato precedenti.
 
-Caso cifrario a flusso sincrono
--Se si modifica un bit del cifrato: la destinazione non decifra correttamente un bit perchè è stato cambiato. Si dice che non si ha perdita di sincronismo perchè ki è sempre lo stesso ma la decifrazione non è corretta.
-- Se si cancella un bit: dal punto in poi in cui è stato cancellato il bit, non corrisponderà mai a quelli inviati. Si dice che si ha perdita di sincronismo.
+Nel _cifrato a flusso sincrono_, l'attaccante può effettuare attacchi attivi: modificare, cancellarli o aggiungere bit di testo cifrato:
+- **Se si modifica un bit del cifrato**: la destinazione non decifra correttamente un bit perchè è stato cambiato. Si dice che non si ha perdita di sincronismo perchè solo il k-iesimo è è stato cambiato ma la decifrazione non è corretta;
+- **Se si cancella/inserisce un bit**: dal punto in poi in cui è stato cancellato il bit, i restanti non corrisponderanno mai a quelli inviati. Si dice che si ha perdita di sincronismo perchè tutti i bit sono da buttare via. 
 
-Caso cifrario a flusso autosincronizzante
-- Se si modifica, cancella o elimina un bit del cifrato: si ha una perdita di sincronismo non permanete ma solo di un transitorio. E' il transitorio legato alla dimensione del registro di scorrimento (SHIFT) e quanto il bit modificato/cancellato/inserito rimane dentro a questo registro.
+Nel _cifrato a flusso sincrono_ l'attaccante può effettuare attacchi attivi:
+- **Se si modifica, cancella o elimina un bit del cifrato**: si ha una perdita di sincronismo ma non permanete, solo di un transitorio. E' il transitorio legato alla dimensione del registro di scorrimento (SHIFT) e da quanto il bit modificato/cancellato/inserito rimane dentro a questo registro.
 
-I più usati sono quelli a flusso sincrono perchè i componenti a cifrario a flusso autosincronizzante sono più costosi.
+I più usati sono quelli a _cifrario flusso sincrono_ perchè i componenti a _cifrario a flusso autosincronizzante_ sono più costosi.
 
-Se si usa lo stesso flusso di chiave su messaggi distinti si possono fare attacchi di analisi sui cifrati perchè si sfrutta la proprietà dell'OXR.
-Ad esempio, si consideri:
-m1 XOR k = c1
-m2 XOR k = c2
+Il requisito fondamentale è che la chiave deve essere usata una e una sola volta. Se si usa lo stesso flusso di chiave su messaggi distinti si possono fare attacchi di analisi sui cifrati perchè si sfruttano le proprietà dell'OXR.
+Ad esempio, si consideri:\
+m1 XOR k = c1\
+m2 XOR k = c2\
 c1 XOR c2 è come fare l'XOR su due messaggi in chiaro:
 m1 XOR m2
 
-Alcune volte, nei protocolli ci si accorge che è possibile sfruttare questa proprietà dell'XOR ed effettuare gli attacchi (es. WEP).
+Alcune volte, nelle implementazioni dei protocolli ci si accorge di questa vulnerabilità e si possono effettuare degli attacchi (es. WEP).
 
 ![marco togni](./img/img17.png)
 
-Il vettore di inizializzazione ha una dimensione limitata (24 bit). Dopo 2^24 generazioni, si ha che la chiave si ripete. Inoltre, quando si spegneva, il vettore si inizializzava a zero e poi funzionava ad incremento. Il comportamente è molto prevedibile.
+L'obiettivo è ottenere un seed variabile ma in realtà questo protocollo presenta alcuni limiti:
+- Il vettore di inizializzazione ha una dimensione limitata (24 bit). Dopo 2^24 generazioni, si ha che la chiave si ripete;
+- Quando si spegneva, il vettore si inizializzava a zero e poi funzionava ad incremento. Il comportamente è molto prevedibile.
 
 # 11/10/2021
 
