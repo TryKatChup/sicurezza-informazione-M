@@ -315,8 +315,7 @@ La destinazione riceve sia il messaggio che l'attestato di autenticità ed effet
 Devono essere rispettate le seguenti proprietà:
 
 - **Calcoli difficili**: dato il messaggio `m` deve essere facile calcolare l'attestato di integrità. L'operazione inversa invece non è fattibile;
-- **Segretezza**: la trasformazione `S` deve essere segreta per la sorgente perché altrimenti altri l'intrusore potrebbe effettuare lui la trasformazione. Invece, `V` può essere noto perché qualsiasi destinazione deve essere in grado di dire se l'attestato è autentico o no;
-- **Calcoli impossibili**: i calcoli per costruire un messaggio autentico senza conoscere la sorgente devono essere difficili da un punto di vista computazionale.
+- **Segretezza**: la trasformazione `S` deve essere segreta per la sorgente perché altrimenti altri l'intrusore potrebbe effettuare lui la trasformazione. Invece, `V` può essere noto perché qualsiasi destinazione deve essere in grado di dire se l'attestato è autentico o no.
 
 Alcune considerazioni:
 
@@ -617,11 +616,11 @@ Esistono diverse celle di memoria dove può risiedere la chiave:
 
 I motivi per cui la soluzione viene classificata come sicura, intermedia e meno robusta si intuiscono leggendo la parte iniziale del paragrafo.
 
-## Esempio
+### Esempio
 
 Un sistema di memorizzazione che salva una chiave su file system prende il nome di _portachiavi_. Tutti i segreti vengono salvati a partire da una passphrase definita dall'utente.
 
-C'è un problema: se si perde la passphrase? Serve un sistema di recovery.
+C'è un problema: se si perde la passphrase? Serve un sistema di _recovery_.
 
 ## Dedurre la chiave
 
@@ -685,64 +684,59 @@ Le unità di misura da adottare sono:
 
 ![dedurre](./img/img13.png)
 
-Quanto deve essere grande una chiave?
-- In una chiave simmetrica: attacchi possibili: forza bruta. con le tecnologie attuali, siamo quasi certi che l'intrusore usando una chiave a 128 bit non riesce a trovarla
-- In una chiave asimmetrica: attacchi possibili: forza bruta sulla chiave privata o un algoritmo di fattorizzazione della chiave pubblica risalire alla chiave privata. Forza bruta: La chiave segreta deve essere maggiore a 128 bit.
-Algoritmo sub-esponenziale: > 2000 bit
+Una chiave deve avere come numero minimo di bit:
 
-# 02.Dati Sicuri 2 (07-10-2021)
+- **In una chiave simmetrica**: se si usa una chiave privata a 128 bit, l'intrusore è difficile che riesca a trovarla perchè l'andamento dell'algoritmo diventa esponenziale;
+- **In una chiave asimmetrica**: in questo caso i bit non possono essere solo di 128 bit perchè l'attacco non è solo quello di forza bruta. Nelle chiavi asimmetriche esistono algoritmi di fattorizzazione che consente di risalire della chiave pubblica alla chiave privata il cui andamento è sub-esponenziale. In questo caso, il numero di bit per evitare attacchi alle chiavi asimmetriche devono essere almeno di 2000 bit.
 
-Adesso dobbiamo capire come sono realizzate le scatole nere del capitolo precedente.
+# 02.Meccanismi di base (07-10-2021)
+
+Le primitive crittografica è la funzione hash sicura, chiamata in causa in moltissimi meccanismi e servizi
+
+## Generatori di numeri casuali
 
 Per generare una chiave crittografica è importante che abbia due determinate caratteristiche:
-- Ogni valore deve avere la stessa probabilità di verificarsi;
-- Ogni valore deve essere indipendente dal punto di vista statistico dal precedente e successivo.
+- Ogni valore deve essere casuale;
+- Ogni valore deve essere indipendente dal punto di vista statistico dal precedente e successivo perchè bisogna evitare che un intrusore possa riuscire ad ipotizzare come sono fatti i bit.
 
-Dobbiamo evitare che un intrusore possa riuscire ad ipotizzare come sono fatti i bit.
+### True Random Number Generator (TRNG)
 
-## True Random Number Generator
+Per poter rispettare le proprietà appena citate, si ha bisogno di componenti che si chiamano _TRNG_.
 
-Per poter rispettare le proprietà appena citate, abbiamo bisogno di due componenti che si chiamano _Generatori di Numeri Random_. Per testare se davvero questi componenti hanno generato una sequenza di numeri casuali, si usa lo _standard FIPS 140-2_.
+Non si possono usare questi componenti per generare gradi quantità di chiavi crittografiche per due motivi:
+- **Bassa frequenza di generazione**: se bisogna generare grandi quantità di chiavi in un tempo brevissimo non sono adatti questi componenti perchè usano ad esempio fenomeni fisici per generarli (decadimento radioattivo, rumore termico etc);
+- **Non riproducibilità**: mittente e destinazione devono disporre dello stesso segreto per applicare una determinata trasformazione. Se il mittente genera una chiave deve passarla al destinatario assolutamente altrimenti se il destinatario provasse a generare una chiave non otterrebbe mai la stessa.
 
-Non si possono usare questi generatori per generare gradi quantità di chiavi crittografiche per due motivi:
-- **Bassa frequenza di generazione**: se bisogna generare grandi quantità di chiavi in un tempo brevissimo non è adatto;
-- **Non riproducibilità**: mittente e destinazione devono disporre dello stesso segreto per applicare una determinata trasformazione che protegge una proprietà della sicurezza. Se il mittente genera una chiave deve passarla al destinatario assolutamente altrimenti se il destinatario provasse a generare una chiave non otterrebbe mai la stessa
+### Pseudo Random Number Generator (PRNG)
 
-## Pseudo Random Number Generator
+Per superare il problema della _non riproducibilità_, si usano questo altri tipi di generatori. Sono componenti che consentono di generare lunghe sequenze di numeri casuali in modo deterministico a partire da un dato iniziale detto _seme_. Per questo motivo si chiamano _pseudo_ perchè se il _seme_ iniziale è uguale sia nella sorgente che nella destinazione, viene riprodotta la stessa sequenza di bit.
 
-Per superare principalmente il problema della _Non riproducibilità_ si usano questo altro tipo di generatori.
-Componenti che consentono di generare lunghe sequenze di numeri casuali in modo deterministico a partire da un dato iniziale che chiamiamo _seme_. Se il dato iniziale è uguale sia dalla sorgente che dalla destinazione, viene riprodotta la stessa sequenza di bit.
+Per generare questa sequenza si possono usare degli automi a stati finiti.
 
-Per generare questa sequenza di numeri possiamo usare degli automi a stati finiti.
+Tuttavia, questi componenti non garantiscono _imprevedibilità_ cioè dopo un certo numero di bit è possibile individuare ogni successivo valore.
 
-Questi generatori ci consentono di avere le seguenti proprietà:
-- **Casualità**: i bit vengono generati casualmente (vedi proprietà in alto)
-- **Riproducibilità**: dallo stesso seme otteniamo la stessa sequenza
+### Cryptographically Secure PseudoRandom Bit Generator (CSPRBG)
 
-Problemi:
-- **Imprevedibilità**: dopo un certo numero di bit è possibile individuare ogni successivo valore.
+Nella sicurezza informatica, si ha bisogno che si rispetti una proprietà in più rispetto a quelle citate in precedenza: l'_imprevedibilità_. Un intrusore che è riuscito ad intercettare l’uscita o ad individuare, in tutto o in parte, lo stato del generatore non deve poter dedurre da quale seme sono partiti i calcoli e/o quali saranno i prossimi valori generati.
 
-## Cryptographically Secure PseudoRandom Bit Generator
+![dedurre](./img/img28.png)
 
-Nella sicurezza informatica, abbiamo bisogno di _Generatori Pseudo Casuali Crittograficamente Sicuri_.
+Questo generatore prevede che il seme sia generato da un _True Number Generator_ una volta sola. A questo punto, il seme viene dato in ingresso ad un _PRNG_ il cui modello è un automa a stati finiti dove la funzione di stato futuro o di uscita deve deve essere unidirezionale.
 
-- **Casualità**: i bit devono essere casuali
-- **Imprevedibilità**: esiste un test Next-bit test che consente di verificare se esiste un algoritmo polinomiale in grado di predire il bit L+1-esimo con probabilità > 0,5.
-- **Indeducibilità**: il seme non deve essere individuato e neanche osservando i bit dell'uscita risalire al seme iniziale. Dunque, è importante che le funzioni siano unidirezionali.
+La funzione unidirezionale impiegata può sfruttare algoritmi di crittografia per produrre in uscita questi bit casuali:
+- **Crittografia simmetrica**: le proprietà sono solo sperimentalmente verificabili ma hanno alta velocità di generazione delle sequenze di uscita;
+- **Crittografia asimetrica**: si può dimostrare teoricamente che l'uscita è casuale, imprevedibile e indeducibile ma hanno prestazioni più basse.
 
-Esistono diversi componenti che sfruttano gli algoritmi di crittografia per produrre in uscita questi bit casuali:
-- Crittografia simmetrica: le proprietà sono solo sperimentalmente verificabili ma hanno alta velocità di generazione delle sequenze di uscita
-- Crittografia asimetrica: si può dimostrare che l'uscita è casuale, imprevedibile e indeducibile ma hanno prestazioni più basse.
+#### Esempio
 
-## PRNG
+Un esempio di PRNG è la classe Secure Random di Java.
 
-E' lo standard di riferimento per la costruzione di _Generatori Pseudo Casuali Crittograficamente Sicuri_. Esso prevede che il seme sia generato da un True Number Generator una tantum. A questo punto il seme viene dato in pasto ad un PRNG (automa a stati finiti) e la funzione deve essere unidirezionale.
+### Algoritmi di hash
 
-## Algoritmi di hash
+Un altro componente importante sono le funzioni hash. Gli algoritmi che la realizzano devono presentare le seguenti proprietà:
 
-Le proprietà devono essere:
-- **Efficienza**: deve essere facile da calcolare anche se il messaggio in ingresso è molto lungo
-- Robustezza: possiamo avere due tipi di robustezza:
+- **Efficienza**: deve essere facile calcolare l'impronta anche se il messaggio in ingresso è molto lungo
+- **Robustezza**: si possono individuare due tipi di robustezza:
   - **Robustezza debole**: dato un input x a cui corrisponde un'impronta H(x), deve essere computazionalmente difficile per l'intrusore trovare un y != x tale per cui H(y) = H(x);
   - **Robustezza forte**: deve essere difficile trovare una coppia di sua scelta x e y tale per cui abbiamo l'impronta identica H(y) = H(x).
 - **Unidirezionalità**: data un'impronta deve essere computazionalmente difficile risalire al messaggio originario che l'ha generata.
