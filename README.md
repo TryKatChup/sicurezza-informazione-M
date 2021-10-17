@@ -699,7 +699,7 @@ Una chiave deve avere come numero minimo di bit:
 
 # 02.Meccanismi di base (07-10-2021)
 
-Le primitive crittografiche sono usate in moltissimi meccanismi e servizi.
+Si è visto come funzionano a livello concettuale le trasformazioni per garantire i requisiti di sicurezza. Adesso si vede come sono costruite perchè se non impiegati correttamenti aprono a diverse vulnerabilità.
 
 ## Generatori di numeri casuali
 
@@ -789,6 +789,10 @@ L'intrusore vuole fare H^-1(x) e trovare un y dotato di significato. La funzione
 
 # 03.Meccanismi Simmetrici
 
+Ora si vede come sono implementati E e D usando cifrari simmetrici.
+
+## Cifrario simmetrico
+
 Nella crittografia classica, è stato individuato un cifrario perfetto chiamato _One-time pad_. Esso prevede l'uso di una chiave lunga quanto il testo e costituita da simboli tanti quanto il testo e scelti a caso e usata una e una sola volta.
 Tuttavia, il suo impiego nella pratica è molto complicato: se la chiave è lunga quanto il tempo a questo punto vale mandare il messaggio su un canale sicuro e non la chiave. Si dovrebbe disporre di canali sicuri tanto quanti sono i messaggi che si vogliono inviare.
 
@@ -803,8 +807,6 @@ Ci sono due tecniche che garantiscono _confusione_ e _diffusione_:
 - **Tecnica di sostituzione**: tecnica che garantisce la confusione;
 - **Tecnica di trasposizione**: tecnica che garantisce la diffusione.
 
-## Cifrario simmetrico
-
 Dalla _teoria dell'informazione_ di Shannon discende che un _cifrario simmerico_ è computazionalmente sicuro se usa _diffusione_ e _sostituzione_.
 
 Il cifrario simmetrico vengono utilizzati per garantire _riservatezza_. In rarissimi casi, viene usato per garantire _autenticazione_, costruire generatori di numeri pseudo-casuali crittograficamente sicuri e dei protocolli di identificazione.
@@ -812,7 +814,7 @@ Il cifrario simmetrico vengono utilizzati per garantire _riservatezza_. In raris
 Esistono come cifrari simmetrici due famiglie distinte:
 
 - **Cifrario a flusso**: si ispira al cifrario _One-time pad_. E' un cifrario che opera su uno o pochi bit alla volta con una regola variabile al progredire del testo. Garantisce la  protezione dei singoli bit di una trasmissione seriale. Ad esempio, nel settore della telefonia, applicazione web etc;
-- **Cifrario a blocchi**: si ispira al _Cifrario poligrafico_ ed al C_ifrario composto_. Trasforma con una regola fissa blocchi di messaggio formati da molti bit. Ad esempio, protezione di pacchetti, di file, posta elettronica etc.
+- **Cifrario a blocchi**: si ispira al _Cifrario poligrafico_ ed al _Cifrario composto_. Trasforma con una regola fissa blocchi di messaggio formati da molti bit. La lunghezza del blocco dipende dallo specifico algoritmo. Ad esempio, protezione di pacchetti, di file, posta elettronica etc.
 
 Un _cifrario a flusso_, è più veloce di un _cifrario a blocchi_ perchè non introduce rallentamenti. Se il _cifrario a flusso_ non è impiegato correttamente, è meno sicuro di un cifrario a blocchi non impiegato correttamente.
 
@@ -822,12 +824,14 @@ Encryption e Decryption sono implementati con degli XOR:
 - **Encryption**: viene preso un bit di testo in chiaro, lo si mette in XOR con un bit di chiave. Ad esempio, se il messaggio è lungo 1000 bit, la chiave deve essere lunga 1000 bit. Lo stesso flusso di chiave non può essere impiegato su messaggi diversi. Dunque, il flusso di chiave lo si genera con un PRNG crittograficamente sicuro.
 - **Decryption**: al bit i-esimo del messaggio, deve essere sommato modulo 2 (XOR) lo stesso k-iesmo bit di chiave usato nella fase di cifratura. Per questo motivo ci deve essere _sincronismo_ tra i flussi di chiave della sorgente e della chiave.
 
-E' bene ricordare che questo cifrario non è perfetto perchè non si può generare un flusso completamente casuale con PNRG crittograficamente sicuro ma dopo un periodo di tempo, seppur lungo, si ripete.
+E' bene ricordare che questo cifrario **non** è perfetto perchè non si può generare un flusso completamente casuale con un PNRG crittograficamente sicuro ma dopo un periodo di tempo, seppur lungo, si ripete.
 
 Inoltre, il _flusso di chiave_ deve avere le seguenti caratteristiche:
 - la chiave deve essere lunga quanto il testo;
 - formato da bit psuedo-casuali generati da un PNRG crittograficamente sicuro;
 - la sottosequenza scelta deve essere scelta in segreto e a caso all’interno di un periodo lunghissimo.
+
+Il testo sarà sicuramente più lungo di 128 bit per cui non ha senso usare l'attacco di forza bruta in questi tipi di cifrari (la chiave è lunga quanto il testo). Inoltre, la chiave varia da messaggio a messaggio.
 
 I cifrari a flusso sincrono si suddividono in:
 
@@ -843,6 +847,10 @@ Nel _cifrato a flusso sincrono_ l'attaccante può effettuare attacchi attivi:
 
 I più usati sono quelli a _cifrario flusso sincrono_ perchè i componenti a _cifrario a flusso autosincronizzante_ sono più costosi.
 
+Per garantire la riservatezza, i cifrari a flusso devono avere certe proprietà e bisogna capire quali sono le loro vulnerabilità.
+
+#### Uso della chiave una sola volta
+
 Il requisito fondamentale è che la chiave deve essere usata una e una sola volta. Se si usa lo stesso flusso di chiave su messaggi distinti si possono fare attacchi di analisi sui cifrati perchè si sfruttano le proprietà dell'OXR.
 Ad esempio, si consideri:\
 m1 XOR k = c1\
@@ -854,100 +862,195 @@ Alcune volte, nelle implementazioni dei protocolli ci si accorge di questa vulne
 
 ![marco togni](./img/img17.png)
 
-L'obiettivo è ottenere un seed variabile ma in realtà questo protocollo presenta alcuni limiti:
+L'obiettivo è ottenere un _seed_ variabile ma in realtà questo protocollo presenta alcuni limiti:
 - Il vettore di inizializzazione ha una dimensione limitata (24 bit). Dopo 2^24 generazioni, si ha che la chiave si ripete;
 - Quando si spegneva, il vettore si inizializzava a zero e poi funzionava ad incremento. Il comportamente è molto prevedibile.
 
 # 11/10/2021
 
-## Malleabilità
+#### Malleabilità
 
-La proprietà di malleabilità consiste nella possibilità di alterare il cifrato in modo da produrre un effetto desiderato sul testo in chiaro originario. Purtroppo, i cifrari a flusso sono vulnerabili a questa proprietà. L'attaccante conosce qualcosa M o una sua parte, il mittente fa M XOR k, l'attaccante prende (M XOR k) XOR p (è scelto dall'attaccante) e sostituisce a quello che viaggiava prima, il nuovo messaggio cifrato cifrato. La destinazione, decifra ((M XOR k) XOR p)) XOR k e quindi si ottiene m XOR p.
+La proprietà di _malleabilità_ consiste nella possibilità di alterare il cifrato in modo da produrre un effetto desiderato sul testo in chiaro originario. Purtroppo, i _cifrari a flusso_ sono vulnerabili a questa proprietà. L'attacco ha successo se e solo se l'attaccante conosce una parte del messaggio `m`.
 
-E' importante per aver successo, che l'attaccante conosca almeno una parte del messaggio.
-
-Ad esempio, il mittente sta cifrando dei dati strutturati. All'inizio dei questi dati c'è sempre "From". L'attaccante, conosce che il flusso è strutturato. Il suo obiettivo è quello di far spacciare i dati provenienti da un altro mittente.
+Il mittente effettua `m XOR k`, l'attaccante prende `(m XOR k) XOR p` dove `p` è scelto da lui e sostituisce il messaggio sul canale con il nuovo messaggio cifrato modificato. La destinazione, decifra `((m XOR k) XOR p)) XOR k` e quindi si ottiene `m XOR p`.
 
 ![marco togni](./img/img25.png)
 
-Ipotiziamo che l'inizio del messaggio sia "From Bob" con rappresentazione esadecimale "42 6F 62". L'obiettivo dell'intrusore è ottenere "From Eve" con rappresentazione esadecimale 45 76 65. Bisogna trovare quel p tale per cui m XOR p = Eve. Dunque, p deve essere "07 19 07".
+Ad esempio, il mittente sta cifrando dei dati strutturati. All'inizio dei questi dati c'è sempre "From". L'attaccante, conosce che il flusso è strutturato. Il suo obiettivo è quello di cambiare la provenienza del messaggio. Si ipotizzi che l'inizio del messaggio sia "From Bob" con rappresentazione esadecimale "42 6F 62". L'obiettivo dell'intrusore è ottenere "From Eve" con rappresentazione esadecimale "45 76 65". Bisogna trovare quel `p` tale per cui `m XOR p = Eve`. Dunque, `p` deve essere "07 19 07".
+
 Basta osservare solo il comportamento dell'XOR senza sapere niente sulla chiave.
 
-## Modalità di cifratura
+### Cifrari a blocco
 
-Nei cifrari a blocco, l'attacco forza bruta a senso perchè è sempre la stessa. Dunque, bisogna dimensionare la chiave almeno con 128 bit.
+Si prende un messaggio e lo si suddividono in blocchi. Se l'ultimo blocco contiene meno bit della lunghezza che dovrebbe avere lo si completa con dei bit di padding.
 
-Si prende un messaggio e lo si suddividono in blocchi.
-La lunghezza del blocco dipende dallo specifico algoritmo per cifrare/decifrare i blocchi. L'ultimo blocco contiene i bit del testo in chiaro originario. Se lo contiene completamente viene aggiunto un blocco in più detto blocco di padding. Se i bit del messaggio originario non lo riempono completamente, si arriva a completamento del blocco riempendo opportunamente i restanti bit con tecniche standard. Nella modalità base ECB (Electronic Code Book) prevede di elaborare in parallelo i blocchi m1....mn. Ogni blocco viene dato in pasto alla funzione di encryption e quindi il cifrato non è altro che la concatenazione dei cifrati ottenuti sui singoli blocchi. Tale modalità di cifratura è fortemente deterministica: a blocchi in chiaro identici corrispondono blocchi cifrati assolutamente identici. I pattern non sono una buona cosa nella sicurezza informatica perchè sono tutte possibili vulnerabilità.
-Altro problema è quello della maleabilità: un intrusore è in grado di modificare il testo cifrato in modo tale che la destinazione quando lo decifra ottiene un testo arbitrario da lui scelto? si. ECB è malleabile.
+La modalità base, chiamata ECB (_Electronic Code Book_) , prevede di elaborare in parallelo i blocchi `m1` fino ad `mn`. Ogni blocco viene dato in pasto alla funzione di encryption e quindi il cifrato non è altro che la concatenazione dei cifrati ottenuti sui singoli blocchi.
 
-Pro:
-- grande efficienza: CPU parallela
-- se l'intrusore modifica a caso un bit, si dice che la propagazione dell'errore rimane confinata al cifrato. Chi decifra avrà solo un blocco "sbagliato".
+L'operazione di cifrare a blocchi ricorda molto la tecnica di base della sostituzione monoalfabetica della crittografia classica ma la rende immune da un attacco con statistiche perchè lavora proprio su blocchi e non su singoli bit.
 
-Questa modalità si conserva solo in casi specifici: ad esempio, cifrare delle informazioni che sono già per natura aleatoria (es. chiave di sessione).
+Nei cifrari a blocco, l'attacco a forza bruta ha senso perchè la chiave è sempre la stessa. Dunque, bisogna dimensionare la chiave almeno con 128 bit.
+
+La chiave deve essere generata da un PNRG crittograficamente sicuro e frequentemente modificata perchè nella modalità ECB, la stessa chiave cifra moltissimi blocchi di testo in chiaro e quindi ci sono più possibilità.
+
+### Modalità di cifratura
+
+Capire quali sono le problematiche di ECB consentono di capire come impiegarlo:
+
+- **La modalità ECB è fortemente deterministica**: a blocchi in chiaro identici corrispondono blocchi cifrati assolutamente identici. Ciò vuol dire che viene inviato lo stesso messaggio e sono informazioni in più che si riescono a capire. Se il messaggio è strutturato l'intrusore può sfruttarlo a suo favore;
+- **Altro problema è quello della maleabilità**: un intrusore è in grado di modificare il testo cifrato in modo tale che la destinazione quando lo decifra ottiene un testo arbitrario da lui scelto perchè se si ha un messaggio strutturato per quanto riguarda una transazione bancaria. Nel primo blocco si ha il mittente, nel secondo il destinatario e nel terzo la cifra da trasferire. L'intrusore, sostituisce al blocco del destinatario, il suo blocco.
+
+Ci sono anche dei vantaggi ad usare questa modalità:
+- **Grande efficienza**: se si dispone di più CPU, l'esecuzione è parallela;
+- **No propagazione dell'errore su tutti i blocchi**: se l'intrusore modifica a caso un bit, si dice che la propagazione dell'errore rimane confinata al cifrato. Chi decifra avrà solo un blocco "sbagliato".
+
+Questa modalità si usa solo in casi specifici: ad esempio, cifrare delle informazioni che sono già per natura aleatoria (es. chiave di sessione).
 
 L'obiettivo, quindi, è quello di trovare modalità di cifrature aleatori. Ad esempio, esistono le modalità CBC, CFB, OFB, CTR.
 
-### Cipher Block Chaining (CBC)
+<!-- Da un punto di vista hardware è possibile che si implementino due circuiti diversi: uno in fase di encryption e l'altro in fase di decryption. Molti algoritmi hanno la stessa E che coincide con D ma se non coincidono si dovrebbe usare due circuiti diversi. -->
+
+#### Cipher Block Chaining (CBC)
+
+Questa modalità consente di ottenere aleatorietà.
 
 ![marco togni](./img/img18.png)
 
-La modalità CBC prende il messaggio in chiaro, lo suddivide in blocchi, l'ultimo blocco sottoposto a padding. Per ogni blocco, il testo in chiaro viene messo in XOR con un altro dato e sottoposto poi alla funzione di cifratura E ottenendo un testo cifrato ci. Solo per quanto riguarda il blocco 1, il testo in chiaro viene dato in XOR con quello che si chiama vettore di inizializzazione. E' un insieme di bit, grande quanto il blocco. Tutti gli altri blocchi al posto del vettore di inizializzazione usano l'uscita del blocco precedente. Per ottenere aleatorietà la si ottine grazie al vettore di inizializzazione.
+La modalità CBC prende il messaggio in chiaro, lo suddivide in blocchi, l'ultimo blocco è sottoposto a padding se necessario. Per ogni blocco, il testo in chiaro viene messo in XOR con un altro dato e sottoposto poi alla funzione di cifratura E ottenendo un testo cifrato c_i. Solo per quanto riguarda il blocco 1, il testo in chiaro viene dato in XOR con quello che si chiama _vettore di inizializzazione_ che è aleatorio ed è diverso da messaggio a messaggio. E' un insieme di bit, grande quanto il blocco.
+
+In fase di decifrazione, le operazioni sono inverse.
 
 Le caratteristiche di questo vettore sono:
-- Deve essere casuale;
-- Imprevedibile;
-- Usato una e una sola volta: perchè se ripeto il vettore e si hanno due messaggi uguali, si ottiene lo stesso cifrato.
+- **Casualità**;
+- **Imprevedibilità**;
+- **Usato una e una sola volta**: perchè se si ripete il vettore e si hanno due messaggi uguali, si ottiene lo stesso cifrato.
 
-Se come intrusore, modifica un qualcunque bit di un blocco, l'errore si propaga nei blocchi precedenti. Se questa modalità usata correttamente si ottiene aleatorietà, stessa occupazione di banda ma si perde efficienza perchè si perde il parallelismo. Invece, il parallelismo lo si ottiene in fase di decifrazione se si hanno già tutti i pezzi di cifrato che costituiscono.
+Svantaggi di questa modalità:
+- In questo caso, non si può procedere in modo parallelo con più CPU perchè è necessario il cifrato del passo precedente in fase ci cifrazione. Invece, il parallelismo lo si ottiene in fase di decifrazione se si hanno già tutti i pezzi di cifrato che costituiscono.
+- Se un attaccante, modifica un qualcunque bit di un blocco, l'errore si propaga nei blocchi successivi.
 
-### Chipher Feedback (CFB)
+Da un punto di vista hardware è possibile che si implementino due circuiti diversi: uno in fase di encryption e l'altro in fase di decryption. Molti algoritmi hanno la E che coincide con D ma se non coincidono si dovrebbe usare due circuiti diversi.
+
+#### Chipher Feedback (CFB)
+
+Questo schema ricorda un cifrario a flusso autosincronizzante. 
 
 ![marco togni](./img/img19.png)
-
-Questo schema ricorda un cifrario a flusso. E' come convertire una cifratura a blocchi a una di flusso. Ciò consente di evitare il padding. Si usa, ad esempio, quando si ha una trasmissione carattere per carattere (8 bit alla volta) orientata al flusso di carattere.
-
-Si parte da un vettore di inizializzazione, non è necessariamente segreto, imprevedibile e usato una sola volta. Serve per inizializzare lo stato di un registro a scorrimento che è costituito da due parti: una parte formata dagli s bit meno significativi e l'altra dai b-s bit più significativi. Il registro a scorrimento viene sottoposto ad una cifratura grazie ad un algoritmo a blocchi (es. ECB) e con la rispettiva chiave. Il cifrato finale è ottenuto mettendo in OXR s bit del testo in chiaro con gli s bit più significati dell'operazione di cifratura. Il risultato è il cifrato costituito da s bit.
+ 
+Si prende un registro a scorrimento è viene inizializzato con un vettore di inizializzazione che è casuale, non necessariamente segreto, imprevedibile e usato una sola volta. Il registro è formato da due parti: una parte formata dagli s bit meno significativi e l'altra dai b-s bit più significativi. A scorrimento vuol dire che ad ogni clock una s bit "escono" dal registro. Il registro a scorrimento viene sottoposto ad una cifratura con la chiave K. L'uscita va a finire in un altro registro a scorrimento che è formato da s bit più significativi e b-s bit meno significativi.
+Il cifrato finale è ottenuto mettendo in OXR s bit del testo in chiaro con gli s bit più significati del vettore a scorrimento di cifratura. Il risultato è il cifrato costituito da s bit.
 
 Il registro è a scorrimento e lo si fa scorrere di s bit e quindi scorrendo a sinistra deve metterne nel registro altri s. I nuovi bit sono quelli del cifrato del passo precedente. Al passo 2, i b-s bit contengono ancora alcuni vecchi bit del vettore di inizializzazione ma prima o poi i bit di questo vettore vengono buttati fuori.
-
-Questo schema ricorda lo schema a flusso autosincronizzante.
 
 ![marco togni](./img/img20.png)
 
 In decifrazione, si procede analogamente. Per decifrare il primo blocco di testo in chiaro bisogna avere il cifrato ottenuto al passo precedente vuol dire scorrere indietro. La prima cosa da fare è partire dall'ultimo blocco e recuperare a ritroso.
 
-In fase di decifrazione, si usa sempre la stessa funzione E cioè l'implementazione dell'algoritmo è la stessa. Non è detto che sia sempre così perchè l'algoritmo D potrebbe essere diverso. In questo caso, si usano circuiti diversi.
+In fase di decifrazione, si usa sempre la stessa funzione E cioè l'implementazione dell'algoritmo è la stessa (stesso circuito hardware).
+
+Si usa, ad esempio, quando si ha una trasmissione carattere per carattere (8 bit alla volta).
+
+Su canali rumorosi dove la modifica dei bit è frequente non è adatto perchè il testo viene poi scartato. <!-- Per le caratteristiche generali di flusso autosincronizzante -->
 
 ### Output Feedback (OFB)
 
+Questo schema ricorda un cifrario a flusso sincrono.
+
 ![marco togni](./img/img21.png)
 
-Questo schema ricorda un cifrario a flusso sincrono. E' come convertire una cifratura a blocchi a una di flusso. Ciò consente di evitare il padding. Si usa, ad esempio, in una trasmissione di caratteri orientato ad un flusso di dati tipicamente rumorosi come i satelliti.
-
-Si parte da un vettore di inizializzazione che serve sempre per inizializzare lo stato di un registro. Il registro a scorrimento viene cifrato e gli s bit più significativi dell'output vengono messi in XOR con gli s bit del testo in chiaro. Nel registro a scorrimento va a finire nei bit meno significativi, gli s bit più significativi della funzione di cifratura.
+Si parte da un vettore di inizializzazione che serve sempre per inizializzare lo stato di un registro a scorrimento. L'uscita del registro a scorrimento viene cifrata per poi essere messa in ingresso ad un altro registro a scorrimento e gli s bit più significativi dell'output vengono messi in XOR con gli s bit del testo in chiaro.
 
 ![marco togni](./img/img22.png)
 
-In decifrazione, non si usa la funzione inversa ma si continua ad usare la funzione di encryption.
+In decifrazione, non si usa la funzione inversa ma si continua ad usare la funzione di encryption (stesso circuito hardware).
 
-L'OFB si preferisce ad usare quando i canali sono rumorosi perchè la modifica di un cifrato non si propaga sul blocco successivo.
+L'OFB si preferisce ad usare quando i canali sono rumorosi (ad esempio i satelliti) perchè la modifica di un cifrato non si propaga sul blocco successivo.
 
 ### Counter (CTR)
 
-C'è sempre la suddivisione dei blocchi e ogni blocco viene potenzialmente lavorato indipendentemente dagli altri. I bit di testo in chiaro di ogni singolo blocco vengono messi in XOR all'uscita di un cifrario a blocchi che cifra il valore casuale ed imprevedibile do un contatore. Tutti i blocchi successivi, partono dal valore del contatore iniziale incrementato di 1. I blocchi possono lavorare in parallelo sia in fase di E che di D.
-Ad esempio, viene usata su reti ATM.
+Questa modalità si applica un cifrario a blocchi per generare un flusso di chiavi ma il registro a scorrimento contiene lo stato di un contatore.
+
+![marco togni](./img/img29.png)
+
+Il  messaggio in chiaro si suddivide in blocchi, ogni blocco viene messo in XOR con un numero di bit di chiave che è generato cifrando con un cifrario a blocchi lo stato di un contatore che deve essere reso aleatorio. L'aleatorietà la si ottiene aggiungendo allo stato di un contatore che ad ogni blocco si incrementa (o, 1, 2 etc). Gli stati sono resi imprevedibili perchè la parte iniziale è riempita da un numero casuale e imprevedibile (seed) generato da un PNRG
+
+I blocchi possono lavorare in parallelo sia in fase di E che di D.
+
+Questo schema viene usato, ad esempio, su reti ATM.
 
 ### Beast Attack (Browser Exploit Against SSL/TLS)
 
+Adesso bisogna capire come usare queste modalità in modo corretto. In questo esempio la modalità CBC non è usata correttamente.
+
+L'intrusore deve riuscire ad entrare in una sessione già avviata tra client e server e alterare il normale flusso dei dati (Man In The Middle). Se la versione di TLS è la 1.0 si rischia di subire questo attacco. E' bene ricordare che l'attacco è molto difficile da realizzare. 
+
 ![marco togni](./img/img23.png)
 
-Attacco molto difficile da realizzare. Questo attacco prevede che all'inizio di una connessione TCP, le due parti negozino gli algoritmi di cifratura, le chiave della sessione e i parametri che vengono usati dai cifrari come il vettore di inizializzazione e anche la modalità di cifratura da usare. I dati a livello applicativo ha una certa dimensione viene suddivisa in blocchi perchè va a finire in un pacchetto TCP. Ogni pacchetto poi viene concatenato a quello successivo. Se si usa un cifrario a blocchi CBC, a livello applicativo si avranno vettori di una certa dimensione.
+All'inizio di una connessione TCP, il client e il server negoziano gli algoritmi di cifratura, la chiave della sessione e i parametri che vengono usati dai cifrari come il vettore di inizializzazione e anche la modalità di cifratura da usare.
+
+I dati a livello applicativo hanno una certa dimensione per cui vengono suddivisi in blocchi perchè vanno a finire in un pacchetto TCP che sono di dimensione inferiore. Ogni pacchetto poi viene concatenato a quello successivo. Se si usa un cifrario a blocchi CBC, a livello applicativo si avranno vettori di una certa dimensione.
+
+A livello applicativo, client e server condividono un vettore di inizializzazione che è casuale, imprevedibile e usato una sola volta. Quando il messaggio viene suddiviso e incapsulato in pacchetti SSL, la modalità CBC viene sui pezzi di messaggio e ogni pezzo di messaggio ha bisogno di un vettore di inizializzazione diverso. Non si può rinegoziare questo vettore di inizializzazione ogni volta perchè ha un costo. Come scelta, è stata adottata di usare come vettore di inizializzazione il residuo in termini di bit del cifrario del pacchetto precedente. Ad esempio, il primo pacchetto ha un cifrato, gli ultimi X byte vengono usati come vettore di inizializzazione per cifrare il pacchetto successivo. Se è così che l'intrusore può prevedere qual è il vettore di inizializzazione che sarà usato nella cifratura di un pacchetto SSL. Cade il requisito di imprevedibilità.
 
 ![marco togni](./img/img24.png)
 
-Si vuole osservare le comunicazioni tra due partecipanti e si vuole capire se il mittente vuole.
+Secondo la classificazione degli attacchi, questo fa parte della categoria _attacco con testo in chiaro scelto_.
+
+Si suppone che ci siano due persone che stanno parlando tra di loro: Luca e Lucia.
+
+Luca inizia sempre la conversazione con "Mia amata Lucia".  Supponiamo che "Mia amata" finisca in un blocco e "Lucia" in un altro. Le operazioni sono le seguenti:
+- "Mia amata" XOR con il vettore di inizializzazione producendo un cifrato;
+- "Lucia" XOR con il cifrato del passo precedente producendo un nuovo cifrato.
+
+![marco togni](./img/img30.png)
+
+L'obiettivo dell'intrusore è cercare di capire se dando un input opportuno al passaggio 3 si ha lo stesso output del blocco 2 così da poter confrontare e dedurre che "Lucia" è stato l'input del blocco 2.
+
+Basta conoscere come si comporta l’XOR, cioè se si fa l'XOR di uno stesso valore due volte, il secondo XOR annulla il primo:
+
+Bisogna eliminare l'effetto K1 perchè è quello che SSL userebbe e vedere se Lucia XOR K mi produce lo stesso cifrato.
+Invece, K è il residuo che Luca ha usato per cifrare Lucia al passo 1.
+
+Lucia XOR K1 XOR K XOR K1 = Lucia XOR K
+
+#### Dimensione della chiave
+
+La dimensione della chiave è importante ma anche la dimensione del blocco che definisce quanti dati possono essere cifrati con la stessa chiave. La cifratura deve essere robusta fino a 2^n input diversi.
+Purtroppo molte modalità di cifratura diventano insicure dopo 2^n/2 cifrature a causa dell’aumento di probabilità di collisioni tra due blocchi di cifrato.
+La collisioni tra due blocchi permette di rivelare l’XOR tra i testi in chiaro dei corrispondenti blocchi. Se l’attaccante riesce a fare ipotesi su un testo in chiaro puo’ recuperare l’altro testo in chiaro.
+
+In questo caso, la modalità CBC è usata perfettamente ma nonostante ciò si va contro a questo attacco: se ci sono due testi uguali cifrati in modalità CBC vuol dire che se si mettono ogni bit in XOR dei due cifrati, si ottiene l'XOR dei due messaggi in chiaro.
+
+## Gestione della chiave
+
+Quando si usano cifrari simmetrici, l'algoritmo deve essere robusto, la chiave deve essere generata, memorizzata e dimensionata in maniera opportuna e devono essere impiegate modalità di cifratura corrette. Se tutto questo è vero resta un problema: la chiave deve essere distribuita in modo sicuro.
+
+Ci sono due famiglie:
+- **Con precedente KA (key agremeent)**: modello che prevede un accordo fuori banda che almeno una volta con canale dedicato qualcosa sia stato distribuito tra mittente e destinatario;
+- **Senza precedente KA**: modello che prevede che non ci sia scambiato niente in precedenza.
+
+### Con precedente KA (key agremeent)
+
+#### Master key
+
+Questo schema prevede che fuori banda e in maniera **assolutamente** robusta sia stata precondivisa una _master key_. Il mittente dovrà inviare alla destinazione molti messaggi cifrati con cifrari simmetrici.
+
+Non è opportuno che A cifri molti dati con questa _master key_ perchè questa chiave meno si cambia meglio è, dato che bisogna creare un canale fuori banda (costo elevato). La master key quindi deve avere una vita lunga. I dati che il mittente A invierà in maniera riservata a B saranno cifrati con _session key_ che cambiano ad ogni sessione. Ovviamente, non si deve aprire un canale di sessione dedicato ma sfruttando la cifratura simmetrica, la _master key_ viene usata solo per cifrare chiavi di sessione.
+
+![marco togni](./img/img31.png)
+
+Lato mittente, si prende il messaggio m, lo si cifra con la _session key_ che viene generata un PRNG crittograficamente sicuro. La _session key_ verrà cifrata tramite la _master key_ e sul canale verrà inviato la _session key_ concatenata al messaggio cifrato.
+
+Il destinatario effettua i passaggi inversi.
+
+Uno svantaggio di questo schema è che non è scalabile: quando il numero di utenti diventa alto il numero di scambi della _master key_ diventa improponibile.
+
+Per ridurre il numero di chiavi pre-concordate in circolazione è quello di introdurre nel sistema una terza entità chiamata _centro di distribuzione delle chiavi_ che ha il compito di distribuire a tutti gli utenti che gestisce.
+
+![marco togni](./img/img32.png)
+
+Ogni utente condivide con il centro di distribuzione la master key. Sarà questa entità che si occupa di generare le chiavi di sessioni k agli utenti che ne fanno richiesta.
+
+Ovviamente il centro di distribuzione dovrà essere sicuro, scalabile etc.
 
 ---
 
