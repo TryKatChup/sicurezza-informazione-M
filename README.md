@@ -1089,7 +1089,7 @@ I problemi del protocollo sono i seguenti:
 
 Quali sono i componenti che meglio si usano per implementare questo protocollo?
 
-- ECB
+- ECB: un intrusore
 - CBC
 
 ---
