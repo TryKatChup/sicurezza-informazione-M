@@ -1052,6 +1052,46 @@ Ogni utente condivide con il centro di distribuzione la master key. Sarà questa
 
 Ovviamente il centro di distribuzione dovrà essere sicuro, scalabile etc.
 
+## KDC 14-10-2021
+
+E' un protocollo di distribuzione di chiave il cui modello è stato usato in altri servizi, che non fanno distribuzione di chiave, che servono per identificare (es. Kerberos).
+
+![marco togni](./img/img33.png)
+
+Il mittente A ha condiviso con il centro di distribuzione la _master key_ KA mentre B ha condiviso la _master key_ KB. Tutto in maniera assolutamente sicura.
+
+- A deve comunicare a KDC che ha bisogno di una chiave. Invia un messaggio specificando chi è il mittente, con chi vuole comunicare e un numero random imprevedibile e unico ad ogni sessione R_a che ha lo scopo di _sfida_ per vedere se T è davvero il centro di distribuzione;
+- T riceva il messaggio e risponde inviando un messaggio cifrato Questo messaggio non è altro che la concatenazione della chiave KA, il destinatario B, la chiave di sessione k e la chiave di sessione k concatenata con A cifrata con dalla master key di B. Per cifrare il messaggio si usa la chiave KA in modo tale che si dimostra che T sia a conoscenza della chiave;
+- A riceve il messaggio e lo decifra ottenendo Ra (sa che è davvero T con cui sta comunicando), il destinatario B, la chiave di sessione k e Ekb(A || k). E' ovvio che A non sappia decifrarlo ma lo deve inviare a B per passargli la chiave k. Tanto solo B può decifrarlo.
+
+Un attaccante può:
+- **Modificare a caso un bit del messaggio sul canale**: si invalida solo la sessione perchè il messaggio è aleatorio e non la riservatezza;
+- **Effettuare un attacco con replica**: replica significa inoltrare lo stesso messaggio
+  - punto 1: Ra non può replicarlo perchè è sempre diverso e anche se fosse servirebbe a poco. T non controlla che Ra è sempre diverso ma genera una chiave di sessione ogni volta diversa e quindi l'intrusore non può decifrarla
+  - punto 3: la replica ha successo se l'intrusore è risalito a una parte di k. Se per qualche motivo k è noto, si possono estrarre altre informazioni da B inviando dei messaggi. Ovviamente saranno cifrati i messaggi ma può sempre fare altri ragionamenti.
+
+Per questo motivo il protocollo non può essere costituito solo da 3 passi ma si devono aggiungere altri step:
+
+- B invia un messaggio per indicare che la chiave k è stata ricevuta davvero. Solo B è in grado di decifrare e risalire a k e per questo motivo si è sicuri che sia stato B a generarlo. Dentro questo messaggio c'è un numero random Rb.
+- A decifra il messaggio appena ricevuto, e spedisce il messaggio cifrato con all'interno Rb - 1 in modo che B sia sicuro che sia A il mittente.
+
+Per evitare che l'intrusore conosca la chiave k, bisogna tenere traccia delle chiavi di sessione già utilizzate. B quando riceve il messaggio 3, preleva k e verifica se il messaggio è stato già inviato o no da parte di A. (MA questo schema non lo prevede)
+
+Per evitare che l'intrusore conosca qualcosa sulla chiave o la chiave stessa, si limita la validità temporale.
+
+I problemi del protocollo sono i seguenti:
+- Overhed di comunicazione perchè è installata una terza entità;
+- Gestire la memoria sicura;
+- Rendere il servizio sempre disponibile;
+- Scalabile.
+
+### Esercizio
+
+Quali sono i componenti che meglio si usano per implementare questo protocollo?
+
+- ECB
+- CBC
+
 ---
 
 ![marco togni](./img/marco_togni.jpg)
