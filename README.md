@@ -1089,8 +1089,20 @@ I problemi del protocollo sono i seguenti:
 
 Quali sono i componenti che meglio si usano per implementare questo protocollo?
 
-- ECB: un intrusore
-- CBC
+- **ECB**: si sfrutta il determinismo e la malleabilità di questa modalità:
+  - L'intrusore si mette in ascolto sul canale perchè vuole avviare la comunicazione dei passi 3, 4 e 5 come se fosse la sorgente leggittima. Per farlo deve sostanzialmente sostituire due blocchi Ekb(A||k) e Eka(..);
+  -  l'intrusore intercetta un messaggio del passo 2 tra A e T;
+  - Da una sessione precedente, si conserva Ekb(A). Il messaggio Ekb(A || k) che può essere riscritto come Ekb(A) || Ekb(k);
+  - Avvia il protocollo tra C (intrusore) e T per ottenere una chiave k1;
+  - al passo 3, si inserisce sulla sessione di A che al posto di inviare il messaggio Ekb(A || k) -> Ekb(A) || Ekb(k) lo sostituisce. Ha il blocco Ekb(A) perchè lo ha conservato da una sessione passata e lo concatena con Ekb(k1);
+  - al passo 4, B risponde al messaggio perchè è stato costruito;
+  - al passo 5, dato che l'intrusore conosce k1 riesce a decifrarlo.
+
+  E' difficile effettuare session injection, l'attacco prevede di aprire in una nuova da parte dell'intrusore e di prendere e modificare i messaggi.
+
+2.32.22
+
+- **CBC**:
 
 ---
 
