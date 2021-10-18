@@ -1,0 +1,103 @@
+ 
+
+
+
+ il protocollo è robusto: concettualmente non ci sono vuln di robustezza.
+
+non c'è neanche possibilità di replica.
+
+
+
+
+
+passiamo a modello che non prevede a priori il
+
+Diffie-hellman key agreement
+
+non prevede a priori distr di segreti.
+
+esempio tipico:
+protocollo diffie hellman
+
+
+differenza: non ho bisogno di scambi precedenti, ma una coppia di utenti può concordare segreto usando canale insicuro, scambiandosi info ma sempre su canale insicuro
+
+non c'è bisogno per chiave di sessione di usare a priori canali dedicati.
+
+aumenta scalabilità in modo significativo.
+
+
+prendiamo per buone delle definizioni e dei teoremi, che non andremo a dimostrare.
+
+si basa su problemi difficili della teoria dei numeri. Primo esempio di cifrario asimmetrico
+
+problema difficile: problema del logaritmo discreto.
+
+le due entità stabiliscono e si scambiano su canale insicuro un numero primo grande e noto.
+
+(almeno 360 cifre decimali)
+
+poi, per arrivare a concordare lo stesso segreto, devono concordare sul generatore del numero primo. Un generatore di numero primo G (è un numero)
+
+
+
+vediamo come applicare tale teorema. A noi interesserà, date ste definizioni e sto problema, dovremo trovare un numero primo grande.
+come faccio a eseguire le operazioni in modo efficiente?
+
+A e B devono concordare una chiave kA e kB (kA definisce A, kB definisce B), l'obbiettivo è che kA == kB.
+Devono ottenere, tramite dei calcoli, la stessa chiave lato A e lato B.
+
+I numeri primi P e generatore sono prefissati (sono noti), possono essere scambiati sul canale, e ovviamente non devono essere modificati.
+
+Il fatto di conoscerli non compromette la robustezza dello scambio.
+Una volta che sia A e B conoscono p e g:
+A genera un numero a caso xA, randomico ma compreso tra 1 e p-1.
+B fa la stessa cosa.
+
+Poi, entrambi, localmente eseguono un calcolo (A esegue l'esponenziazione modulare, ovvero yA - chiamato esponente pubblico, che ha ottenuto facendo g^xA, e riducendo a modulo il risultato, modP)
+
+B fa la stessa cosa, ma esponenziando il generatore per xB: g^xB.
+
+Dopodiché cosa si scambiano sul canale insicuro?
+A invia yA, B invia yB
+
+yA viene ricevuto da B e yB viene ricevuto da A.
+
+Li chiamiamo parametri pubblici perché sono osservabili da tutti.
+
+A prende yB ricevuto e lo esponenzia nuovamente a xA
+e viceversa
+
+così facendo si ottiene che kA = kB
+
+
+
+stiamo ipotizzando che A sia realmente A e B
+
+non attribuisce nessuna autenticità al parametro y che viene distribuito.
+
+Per questo motivo si chiama protocollo "anonimo": non si ha nessuna garanzia su chi ha generato y e chi lo ha inviato.
+
+Se A non è chi dice di essere, B potrebbe concordare con A (in eraltà intrusore) uan chiave e cominciare ad usarla inviando messaggi segreti.
+
+Il protocollo serve solo per condividere la chiave.
+Non dà alcuna garanzia di auteneticità delle parti.
+
+Se B è veramente sicuro che di là ci sia veramente A, concorderà effettivamente la chiave (kA = kB), altrimenti non c'è alcuna garanzia.
+
+Non dà certezza su chi sia il mittente che ha inviato yA o yB.
+
+Prima variante, non molto adottabile su larga scala è chiamata "variante di DH/ElGamal"
+che prevede che ci sia un canale dedicato, per la distribuzione di y.
+Così facendo si assicura autenticità di y.
+
+
+
+Robustezza di DH:
+se A e B sono autentici, concordano lo stesso segreto.
+
+Un ulteriore attacco viene dal man-in-the-middle, che può intercettare yA, yB, ma non riesca a risalire a xA/ xB, perché dovrebbe riuscire a calcolare il logaritmo discreto. Questo è un problema computazionalmente difficile (si può fare ma per farlo si ha a disposizione solo un algoritmo esponenziale o pseudo-esponenziale)
+
+
+
+
