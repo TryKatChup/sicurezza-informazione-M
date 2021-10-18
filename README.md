@@ -1106,6 +1106,84 @@ Quali sono i componenti che meglio si usano per implementare questo protocollo?
 
 ---
 
+### 18/10/2021 (da scrivere meglio)
+
+### KDC esempio alternativo presentato in classe
+
+In fase di implementazione potremo avere inserito vulnerabilità.
+
+Anche nell'esercizio prposto dobbiamo chiederci se:
+
+  - È concettualmente corretto;
+  - Non si capisce nulla.
+
+Il protocollo viene concluso nel momento in cui arriva il messaggio 4. B deve ricevvere da A il messaggio 
+Il protocollo è robusto, dal punto di vista concettuale non ci sono vuln. Non c'è possibilità di replica, perché un intrusore non può utilizzare il messaggio del passo 1, perché anche se fosse stato intercettato, T genera comunque una nuova chiave. Quindi se come intrusore replico il passaggio 1, T comunque genera una nuova chiave. Il protocollo viene riavviato e ogni nuova sessione viene generata una nuova chiave K.
+
+
+Ma allora DOVE STA IL PROBLEMA?????????
+
+Dobbiamo vedere i problemi legati a overhead ed efficienza. È IMPORTANTE VALUTARE L'OVERHEAD DELLA TERZA PARTEEEEEEEE
+Deve essere capace di elaborare richieste concorrenti
+
+
+Bisogna valutare i dispositivi che utilizzano il protocollo. A o B potrebbero essere dispositivi mobili o embedded, e quindi potrebbero esserci:
+- problemi di batteria
+- problemi prestazionali
+
+A seconda dello scenario, quindi, è necessario valutare l'utilizzo delle risorse.
+
+---
+
+Modello completamente diverso che non prevede distribuzione a priori di segreti
+Protocollo di firma Diffie-Hellman: in questo caso non ho bisogno di accordi precedenti rispetto a KDC. Può concordare un segreto scambiandosi info su un canale insicuro. La scalabilità aumenta in maniera significativa.
+
+Si basa sulla difficoltà del calcolo dei logaritmi discreti. (Vedi slide...PS: meglio internet kkkkkk)
+Obiettivo: trovare un numero primo grande.
+
+In cosa cosiste il protocollo:
+A e B devono concordare una chiave KA e KB, obiettivo KA deve essere uguale a KB
+I numeri primi e il generatore sono scambiati e noti sul canale.
+A genera un numero a caso che è compreso tra 1 a p-1 random. Entrambi localmente eseguono un calcolo: ....
+
+NON CI SIAMO :(
+
+ODDDIOOO MI SONO PERSO
+
+GLI APPUNTI PIU' BRUTTI CHE ESISTANO
+
+RIP
+
+---
+
+Violando all'integrità si può risalre al testo in chiaro?
+Scenario:
+
+Supponiamo che stiamo usando un protocollo TCP. C'è la macchina sorgente che ha cifrato dei dati e usando il protocollo TCP e riservati alla porta 80. Come sorgente vogliamo che i dati siano resi disponibili sulla porta 80. L'intrusore si è messo in ascolto sulla porta 25. Uno scenario concreto di attacco:
+supponiamo che ci sia un end user che abbia installato Ipsec. C'è un canale sicuro reso sicuro tramite Ipsec (rende sicuro a livello tcp).
+
+Se avanzano altri MMs
+
+Se no ho un sacco di cioccolato nella scatola dei dolci di casa mia e ho anche le patatine al ketchup
+E ho anche i salatini
+E ho anche le nuvole di drago ai gamberi (secondo me sono i più buoni snack salati di sempre)
+
+Se no guardo cosa ho, ho una miniera di dolci che devo ancora finire
+
+Ho anche le palline di lindt con dentro la farcitura al gelee al lampone e mirtillo rosso
+
+Voglio la pausa
+
+Voglio i soldi
+Voglio il tutoraggio
+Voglio stalkerare i gestionali con uno scopo
+Voglio farcela
+Voglio finire il progetto
+
+
+
+---
+
 ![marco togni](./img/marco_togni.jpg)
 
 ---
