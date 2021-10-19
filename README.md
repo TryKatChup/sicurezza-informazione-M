@@ -1162,26 +1162,6 @@ Scenario:
 Supponiamo che stiamo usando un protocollo TCP. C'è la macchina sorgente che ha cifrato dei dati e usando il protocollo TCP e riservati alla porta 80. Come sorgente vogliamo che i dati siano resi disponibili sulla porta 80. L'intrusore si è messo in ascolto sulla porta 25. Uno scenario concreto di attacco:
 supponiamo che ci sia un end user che abbia installato Ipsec. C'è un canale sicuro reso sicuro tramite Ipsec (rende sicuro a livello tcp).
 
-Se avanzano altri MMs
-
-Se no ho un sacco di cioccolato nella scatola dei dolci di casa mia e ho anche le patatine al ketchup
-E ho anche i salatini
-E ho anche le nuvole di drago ai gamberi (secondo me sono i più buoni snack salati di sempre)
-
-Se no guardo cosa ho, ho una miniera di dolci che devo ancora finire
-
-Ho anche le palline di lindt con dentro la farcitura al gelee al lampone e mirtillo rosso
-
-Voglio la pausa
-
-Voglio i soldi
-Voglio il tutoraggio
-Voglio stalkerare i gestionali con uno scopo
-Voglio farcela
-Voglio finire il progetto
-
-
-
 ---
 
 ![marco togni](./img/marco_togni.jpg)
