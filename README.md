@@ -923,8 +923,10 @@ In fase di decifrazione, le operazioni sono inverse.
 
 Le caratteristiche di questo vettore sono:
 - **Casualità**;
-- **Imprevedibilità**;
+- **Imprevedibilità** (altrimenti viola confidenzialità);
 - **Usato una e una sola volta**: perchè se si ripete il vettore e si hanno due messaggi uguali, si ottiene lo stesso cifrato.
+
+Il vettore non deve essere necessariamente segreto. Sicuramente aumenta la robustezza ma non è un requisito necessario.
 
 Svantaggi di questa modalità:
 - In questo caso, non si può procedere in modo parallelo con più CPU perchè è necessario il cifrato del passo precedente in fase ci cifrazione. Invece, il parallelismo lo si ottiene in fase di decifrazione se si hanno già tutti i pezzi di cifrato che costituiscono.
@@ -949,7 +951,9 @@ In decifrazione, si procede analogamente. Per decifrare il primo blocco di testo
 
 In fase di decifrazione, si usa sempre la stessa funzione E cioè l'implementazione dell'algoritmo è la stessa (stesso circuito hardware).
 
-Si usa, ad esempio, quando si ha una trasmissione carattere per carattere (8 bit alla volta).
+Si usa, ad esempio, quando si ha una trasmissione carattere per carattere (8 bit alla volta). Inoltre, il vettore deve essere necessariamente imprevedibile.
+
+Il vettore non deve essere necessariamente segreto. Sicuramente aumenta la robustezza ma non è un requisito necessario.
 
 Su canali rumorosi dove la modifica dei bit è frequente non è adatto perchè il testo viene poi scartato. <!-- Per le caratteristiche generali di flusso autosincronizzante -->
 
@@ -964,6 +968,8 @@ Si parte da un vettore di inizializzazione che serve sempre per inizializzare lo
 ![marco togni](./img/img22.png)
 
 In decifrazione, non si usa la funzione inversa ma si continua ad usare la funzione di encryption (stesso circuito hardware).
+
+Il vettore non deve essere necessariamente segreto. Sicuramente aumenta la robustezza ma non è un requisito necessario. Inoltre, il vettore non deve essere necessariamente imprevedibile ma unico perchè si ha un problema di confidenzialità se la chiave è usata più volte.
 
 L'OFB si preferisce usarlo quando i canali sono rumorosi (ad esempio i satelliti) perchè la modifica di un cifrato non si propaga sul blocco successivo.
 
@@ -1102,17 +1108,128 @@ Quali sono i componenti che meglio si usano per implementare questo protocollo?
 
   E' difficile effettuare session injection, l'attacco prevede di aprire in una nuova da parte dell'intrusore e di prendere e modificare i messaggi.
 
-da 2.32.22
+da 2.32.22 in poi
 
 - **CBC**: da fare
 
-### 18/10/2021 
+## 18/10/2021 
 
+da 0 a 1.00.00 esercizio
 
+### Integrità e confidenzialità
 
-![marco togni](./img/marco_togni.jpg)
+L'attaccante può effettuare attacchi attivi. L'obiettivo è vedere se violando l'integrità si riesce a risalire al testo in chiaro cioè se si viola anche la proprietà di riservatezza.
+
+#### Esempio
+
+Si suppone che si stia usando un protocollo TCP. La macchina sorgente ha cifrato dei dati, vengono inviati usando il protocollo IPsec e ricevuti dalla macchina gateway che è in ascolto sulla porta 80. L'intrusore è in ascolto sulla porta 25 sul gateway.
+
+![marco togni](./img/img36.png)
+
+L'obiettivo è quello di non smistare i dati sulla porta 80 ma sulla porta 25. Quando i dati vengono decifrati, il vettore di inizializzazione viene messo in XOR con il primo blocco di messaggi cifrati. L'intrusore basta che modifichi il vettore di inizializzazione originario in un vettore che mandato in XOR con il blocco di cifrato restituisca 25 al posto di 80. Il vettore di inizializzazione viene cambiato in IV' XOR 80 XOR 25.
+
+Se si vuole richiedere solo integrità si usa MAC (Message Autenthication Code).
+Se il messaggio richiede integrità ma non confidenzialità bisogna usare un cifrario simmetrico nella modalità _authenticated encryption_.
+
+### Autenticazione di m con E(m)?
+
+Un cifrario simmetrico, si può usare la cifratura come meccanismo di autenticazione dell'origine di un messaggio?
+
+Decifrando un messaggio con una chiave, si può confidare dal vero mittente con cui si condivide questa chiave? Questo è vero solo in scenari favorevoli:
+- Il testo deve essere dotato di significato: basta che una modifica di pochi bit alteri completamente il significato del messaggio (non sempre così)
+- Un intrusore non può effettuare attacchi attivi: quindi non modificando il testo, solo chi ha mandato il testo è davvero lui la sorgente leggittima
+
+Si riprende lo schema come garantire integrità e autenticità: - HMAC (funzioni hash crittograficamente sicure). Sottopone a due compressioni per ridurre l'attacco con estensione, il messaggio concatenato con il segreto
+- MAC (Message Autenthication Code)
+
+Un primo modo per costruire raw CBC-MAC che sfrutti un cifrario simmetrico in modalità CBC:
+
+![marco togni](./img/img37.png)
+
+Si prende il messaggio originario, lo si suddivide in blocchi. Ogni blocco viene dato in XOR al cifrato precedente dove al primo passo, il blocco viene messo in XOR con un vettore di inizializzazione (0). Ai fini della confidenzialità non importa avere un vettore imprevedibile, assolutamente casuale e usato una sola volta. L'uscita dell'ultimo blocco non è altro che l'attestato di autenticità e integrità. Questa modalità diventa deterministica appunto perchè il vettore è 0.
+
+![marco togni](./img/img38.png)
+
+Questa implementazione non è corretta. Quello che si usa è encrypted CBC-MAC. Questa modalità prende l'ultimo blocco cifrato che viene sottoposto ad un'ulteriore operazione di cifratura però con una chiave diversa.
+
+Si suppone di avere adottato una modalità di cifratura raw CBC-MAC. Uno schema a cascata introduce sempre un problema a cascata con estensione. Se il messaggio è lungo un blocco il raw CBC-MAC si può usare. Il problema è che i messaggi sono di lunghezza arbitraria (da più blocchi). L'intrusore può:
+- Scegliere un messaggio di 1 blocco arbitrario m
+- La sorgente legittima crea il tag t su m E(k, m)
+- Usare t come tag su un messaggio di due blocchi fatto così: (m, t XOR m)
+
+E(m, t XOR m) -> E(k, E(k, m) XOR t XOR m) -> E(k, t XOR t XOR m) -> E(k, m) -> t
+
+L'intrusore è in grado di proporre un attestato di autenticità valido su due blocchi. Se non c'è un controllo sulla lunghezza del messaggio, l'intrusore è in grado di fare un attacco con estensione.
+
+Per rendere il MAC  robusto è necessario inserire un padding. Le possibili soluzioni sono:
+- Fare un padding con tutti zeri: il problema è:
+m | 0000 se si calcola m su E su questo messaggio si ottiene un tag t
+m 00 | 00 se si calcola m su E su questo messaggio si ottiene un tag t1
+t = t1. Se il trasferimento sono 100 dollari è come fare 10000
+- Standard ISO: mettere 1 che indica l'inizio del padding con tanti zeri. Bisogna ricordarsi di mettere anche altri pad "100...00".
+CMAC: le API devono essere già corrette senza che il programmatore si ricordi di inserire il padding nel modo corretto.
+
+### authenticated encryption
+
+Garantisce confidenzialità contro un avversario che effettua un attacco attivo capace di decifrare alcuni testi cifrati (previene attacchi con testi cifrati scelti)
+
+Problemi:
+- Non previene attacchi di replay: si possono riproporre messaggi come se provenissero dalla stessa sorgente
+- Non contrasta attacchi side channels (timing): <!--impedisce di modificare il cifrato in maniera di risalire al testo in chiaro: def del secondo punto?-->
+
+Authenticated Encryption (AE) è un concetto introdotto nel 2000. Prima Il programmatore aveva il compito di combinare le API......e non tutte le combinazioni forniscono AE...
+
+![marco togni](./img/img39.png)
+
+Per tutte le implementazioni per motivi di efficienza, viene usato l'HMAC e non l'encrypted CBC-MAC
+
+- SSL: autenticatore sul messaggio, si cifra tutto (messaggio + autenticatore);
+- IPsec: si cifra + si costruisce il MAC sul cifrato
+- SSH: si cifra + si costruisce l'autenticatore sul messaggio in chiaro
+
+L'opzione 3 viene scartata: qualche bit del testo in chiaro per come funziona le funzione hash crittograficamente sicura, potrebbe anche rimanere anche nell'attestato di autenticità, ma visto che qui bisogna proteggere sia autenticità che integrità è importante che non riveli neanche nessuna informazione sul messaggio in chiaro ( non si può perdere la proprietà di riservatezza).
+
+La soluzione ottimale è SSL perchè se il messaggio non è integro ed autentico non lo si va a decifrare. Nel secondo caso, si deve lo stesso decifrare per poi calcolare integrità ed autenticità.
+
+Esistono degli standard per ottenere authenticated encryption. A seconda della modalità di cifratura che si sta usando si possono avere degli attacchi. La modalità MAC-then-Encrypt (SSL) non è sempre robusta nelle implementazioni anche se a livello concettuale va bene (es. modalità CBC). Gli standard a prescindere dalla modalità di cifratura usata funzionano sempre bene e utizzano la modalità Encrypt-then-MAC.
+
+### Esempio
+
+E' possibile trovare questo problema nelle vecchie versioni di TLS. Supponiamo che mittente e destinatario abbiano negoziato la modalità CBC per negoziare i dati. Nel protocollo, viene eseguito MAC-then-Encrypt cioè viene preso m, viene calcolato HMAC su m, m || HMAC viene sottoposto a CBC.
+
+TLS ha un pacchetto formato da type, version, lenght, data, MAC, padding e tutto è cifrato. Nel padding, viene scritto i byte che sono stati riempiti. Esempio, 3 byte, il padding sarà 3 3 3.
+
+Se c'era stato in decifrazione un errore legato al padding veniva restituito "padding error". Se invece veniva scartato il pacchetto TLS perchè non era integro/autentico veniva restituito "MAC error". L'intrusore osservando questi messaggi sa cosa è successo.
+
+Un attaccante può fare il seguente attacco (padding oracle):
+- L'attaccante invia un testo cifrato scelto e può sapere se gli ultimi byte relativi a un padding validi o no.
+
+Tuttavia, in SSL, anche se sono stati rimossi questi errori è possibile effettuare un attacco di timing attack: si osservano i tempi di decifrazione. Se la risposta arriva subito vuol dire che l'errore è relativo al padding altrimenti è un errore di decifrazione.
+
+![marco togni](./img/img40.png)
+
+Bisogna adottare la modalità MAC-then-encrypt. Il testo sorgente è cifrato è costituito da tre blocchi: c0, c1 e c2. L'attaccante intercetta il cifrato e vuole decifrare solo m1.
+
+Toglie c2 e fa in modo che la destinazione decifri un testo cifrato scelto. Suppone che l'ultimo byte di m1 è 1 (quindi il padding). L'intrusore modifica l'ultimo byte di c0 e lo modifica (ad hoc perchè non conosce il cifrato) 
+
+da 2.16.36
+
+### Integrità & Origine & Non ripudio
+
+Il cifrario simmetrico non garantisce autenticazione (solo in sotto scenari). Confidenzialità: se l'intrusore fa attacchi passivi va bene altrimenti non viene garantita la proprietà. In questo caso bisogna usare authenticated encryption.
+
+Se si dispone solo di un cifrario simmetrico, si può garantire non ripudio? Si, ma è complesso
+
+La firma digitale è un concetto ad alto livello che garantisce non ripudio. Le proprietà di un servizio di firma digitale su un dato sono:
+- Consente a chiunque di identificare univocamente il firmatario perchè per dire ch è stata una determinata persona a firmare
+- Non poter essere imitata da un impostare: un intrusore non deve imitare la firma
+- Non poter essere trasportata da un messaggio ad un altro: se la sorgente usa dei bit che rappresentano una firma, questi non possono essere presi e spostati su un altro messaggio.
+- Non poter essere ripudiata dall'autore
+- Rendere inalterabile il messaggio in cui è stata apposta: quel contenuto deve essere conforme per quello che è stato firmato.
 
 ---
+![marco togni](./img/marco_togni.jpg)
+
 ![cyber sesso](https://user-images.githubusercontent.com/56556806/134823047-da26060a-3813-4e73-a13c-256bcd0483c4.png)
 
 # How I Defeated Fascism with the Power of Love
