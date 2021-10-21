@@ -1227,10 +1227,65 @@ La firma digitale è un concetto ad alto livello che garantisce non ripudio. Le 
 - Non poter essere ripudiata dall'autore
 - Rendere inalterabile il messaggio in cui è stata apposta: quel contenuto deve essere conforme per quello che è stato firmato.
 
+# 21-10-2021
+
+E' necessario inserire una terza entità (come un notaio). Come costruire il servizio di firma digitale con un cifrario simmetrico:
+
+Ci sono A e B, T è la terza parte. Ci sono delle chiavi precondivise tra A e B e questa terza parte. A quando vuole inviare un documento firmato digitalmente, deposita il documento alla terza parte. T invierà ad A la ricevuta ad A. A invierà il contratto comn la ricevuta a B e B verifica con T la verifica del documento.
+
+## Registro Atti Privati
+
+Chiede solo le considerazioni e non il funzionamento. Ma che significa?
+
+Con questo protocollo si risolvono i problemi del ripudio e della falsificazione ma si introducono altre problematiche:
+
+- Autorità sempre online
+- Collo di bottiglia
+- Fidarsi dalla terza parte
+- Amministrare le chiavi in modo robusto altrimenti viene compromesso il servizio
+
+# Meccanismi asimmetrici
+
+Obiettivo è capire quali trasformazioni si possono implementare.
+
+Viene usata per generatori numeri pseudo-casuali, cifrari che garantiscono riservatezza, schemi di meccanismi di firma digitale e qualunque protocollo di identificazione/autenticazione. Viene usata soprattutto con schemi di firma digitale. Non viene utilizzata per motivi di efficienza per costruire PNRG e cifrari.
+
+## Come distribuire le chiavi pubbliche in modo sicuro
+
+Autenticità: vuol dire che è una sequenza di bit associata a uno specifico utente e non ad un altro
+
+Bisogna di usare una chiave pubblica bisogna essere certi dell'identità del proprietario e di verificarla. Si immagini l'utlizzo per motivi di confidenzialità: Se si deve cifrare i dati per Luca, si deve prendere la chiave pubblica di Luca, darla in pasto alla funzione di encryption e Luca usera la chiave privata e sulla funzione di decruption.
+
+Verifica: se Luca vuole firmare un documento darà in pasto alla trasformazione V e verifica l'autenticità ma se la sequenza di bit non appartiene a Luca vuol dire che è un intrusore ad averla cambiata.
+
+Esempio attacco uomo in mezzo
+
+Si deve costruire un'infrastruttore che consente di memorizzare le chiavi pubbliche e chiunque le prelevi appartenga a qualcuno. Si usa una terza parte autorità di certificazione che si assume la responsabilità di dire che una sequenza di bit appartiene ad un utente.
+
+L'autorità di certificazione ha il ruolo di dire che una seuqenza di bit che appartiene a Luca la certifica e chiunque può verificarla per dire che è autentica.
+
+Come è formato l'attestato: è una struttura che contiene al minimo, mnme proprietario, chiave pubblica e la firma sulle due informazioni. Come ogni struttura dati, devono essere interoperabili e quindi esistere uno standard di rappresentazione in modo che tutti gli applicativi possano interpretare (X.509). Di seguito:
+- versione dello standard
+- numero seriale del certificato: ogni certificato ha un numero univoco che lo identifica. La terza parte è globale? No, non è pensabile che ci sia una terza parte globale ma tante terze parti che si fanno garante del proprio dominio
+- Algoritmo: quale algoritmo è stato usato per implementare la trasformata V.
+- Quale nome è della terza parte: es. Posteitaliane ma come organizzazione potrebbe avere più nomi
+- a
+- : contengono le info relative alla chiave
+- Campo di validità temporale: quanto è valido quel certificato.
+- Campi aggiuntivi:
+- estensione: rende flessibile ai fini applicativi il certificato
+
+Che cosa è una directory? Capace di memorizzare grandi quantità di dati e di scalabilità. X.500. Può essere integrato con PKI.
+
+prima fase: come l'utente diventa certificato. Quali sono gli aspetti importanti che hanno un impatto sulla sicurezza. L'utente deve generare una coppia di chiavi.
+
+Esistono diversi modelli gestionali che supportano la richiesta di certificato:
+- La generazione delle chiavi, avvenga sull'autorità di autorizzazione. L'utente dice
+
 ---
 ![marco togni](./img/marco_togni.jpg)
 
-![cyber sesso](https://user-images.githubusercontent.com/56556806/134823047-da26060a-3813-4e73-a13c-256bcd0483c4.png)
+<!--![cyber sesso](https://user-images.githubusercontent.com/56556806/134823047-da26060a-3813-4e73-a13c-256bcd0483c4.png)-->
 
 # How I Defeated Fascism with the Power of Love
 
