@@ -848,9 +848,16 @@ Nel _cifrato a flusso autosincronizzante_ l'attaccante può effettuare attacchi 
 
 I più usati sono quelli a _cifrario flusso sincrono_ perchè i componenti a _cifrario a flusso autosincronizzante_ sono più costosi.
 
-### Uso della chiave una sola volta
+### Possibili vulnerabilità
+
+Per garantire la _riservatezza_, i cifrari a flusso devono avere certe proprietà e bisogna capire quali sono le loro vulnerabilità.
+
+#### Uso della chiave una sola volta
 
 Il requisito fondamentale è che la chiave deve essere usata una e una sola volta. Se si usa lo stesso flusso di chiave su messaggi distinti si possono fare attacchi di analisi sui cifrati perchè si sfruttano le proprietà dell'`XOR`.
+
+![marco togni](./img/img41.png)
+
 Ad esempio, si consideri:\
 `m1 XOR k = c1`
 
@@ -858,7 +865,7 @@ Ad esempio, si consideri:\
 
 Fare `c1 XOR c2` è come fare l'`XOR` su due messaggi in chiaro: `m1 XOR m2`.
 
-#### Esempio
+##### Esempio
 
 Alcune volte, nelle implementazioni dei protocolli ci si accorge di questa vulnerabilità e di conseguenza, si possono effettuare degli attacchi (es. il protocollo WEP).
 
@@ -872,44 +879,49 @@ L'obiettivo è ottenere un _seed_ variabile ma in realtà questo protocollo pres
 
 #### Malleabilità
 
-La proprietà di _malleabilità_ consiste nella possibilità di alterare il cifrato in modo da produrre un effetto desiderato sul testo in chiaro originario. Purtroppo, i _cifrari a flusso_ sono vulnerabili a questa proprietà. L'attacco ha successo se e solo se l'attaccante conosce una parte del messaggio `m`.
+La proprietà di _malleabilità_ consiste nella possibilità di alterare il cifrato in modo da produrre un effetto desiderato sul testo in chiaro originario. L'attacco ha successo se e solo se l'attaccante conosce una parte del messaggio `m`.
 
 Il mittente effettua `m XOR k`, l'attaccante prende `(m XOR k) XOR p` dove `p` è scelto da lui e sostituisce il messaggio sul canale con il nuovo messaggio cifrato modificato. La destinazione, decifra `((m XOR k) XOR p)) XOR k` e quindi non sarebbe altro che fare `m XOR p`.
 
+Lo XOR è commutativo! Fare `(m XOR k) XOR p` è lo stesso di `(m XOR p) XOR k`. Fare le tabelle di verità per credere!
+
 ![marco togni](./img/img25.png)
 
-Ad esempio, il mittente sta cifrando dei dati strutturati. All'inizio di questi dati, c'è sempre "From". L'attaccante, conosce che il flusso è strutturato. Il suo obiettivo è quello di cambiare la provenienza del messaggio. Si ipotizzi che l'inizio del messaggio sia "From Dario" con rappresentazione esadecimale "44 61 72 69 6F". L'obiettivo dell'intrusore è ottenere "From Lucia" con rappresentazione esadecimale "4C 75 63 69 61". Bisogna trovare quel `p` tale per cui `m XOR p = Lucia`. Dunque, `p` deve essere "08 14 11 00 0E".
+Ad esempio, il mittente sta cifrando dei dati strutturati. All'inizio di questi dati, c'è sempre la parola "From". L'attaccante, conosce che il flusso è strutturato. Il suo obiettivo è quello di cambiare la provenienza del messaggio `m`. Si ipotizzi che l'inizio del messaggio sia "From Dario" con rappresentazione esadecimale "44 61 72 69 6F". L'obiettivo dell'intrusore è ottenere "From Lucia" con rappresentazione esadecimale "4C 75 63 69 61". Bisogna trovare quel `p` tale per cui `m XOR p = Lucia`. Dunque, `p` deve essere "08 14 11 00 0E".
 
-Basta osservare solo il comportamento dell'XOR senza sapere niente sulla chiave.
+## Cifrari a blocchi
 
-### Cifrari a blocchi
+La modalità base per effettuare Encryption E e decryption D prende il nome di ECB.
+
+### Electronic Code Book (ECB)
 
 Si prende un messaggio e lo si suddividono in blocchi. Se l'ultimo blocco contiene meno bit della lunghezza che dovrebbe avere lo si completa con dei bit di padding.
 
 ![marco togni](./img/img35.png)
 
-La modalità base, chiamata ECB (_Electronic Code Book_), prevede di elaborare in parallelo i blocchi `m1` fino ad `mn`. Ogni blocco viene dato in pasto alla funzione di encryption e quindi il cifrato non è altro che la concatenazione dei cifrati ottenuti sui singoli blocchi.
+Ogni blocco viene dato in pasto alla funzione di encryption `E` e quindi il testo cifrato non è altro che la concatenazione dei cifrati ottenuti dai singoli blocchi.
 
 L'operazione di cifrare a blocchi ricorda molto la tecnica di base della sostituzione monoalfabetica della crittografia classica ma la rende immune da un attacco con statistiche perchè lavora proprio su blocchi e non su singoli bit.
 
 Nei cifrari a blocco, l'attacco con forza bruta ha senso perchè la chiave è sempre la stessa. Dunque, bisogna dimensionare la chiave almeno con 128 bit.
 
-La chiave deve essere generata da un PNRG crittograficamente sicuro e modificata frequentemente perchè nella modalità ECB, la stessa chiave cifra moltissimi blocchi di testo in chiaro e quindi ci sono più possibilità.
+La chiave deve essere generata da un PNRG crittograficamente sicuro e modificata frequentemente perchè nella modalità ECB, la stessa chiave cifra moltissimi blocchi di testo in chiaro e quindi ci sono più possibilità di individuarla.
 
-#### Modalità di cifratura
+Vantaggi:
 
-Capire quali sono le problematiche di ECB consentono di meglio come impiegarlo:
-
-- **La modalità ECB è fortemente deterministica**: a blocchi in chiaro identici corrispondono blocchi cifrati assolutamente identici. Ciò vuol dire che se viene inviato lo stesso messaggio, queste sono informazioni in più che si riescono a capire. Se il messaggio è strutturato l'intrusore può sfruttarlo a suo favore;
-- **Altro problema è quello della maleabilità**: un intrusore è in grado di modificare il testo cifrato in modo tale che la destinazione quando lo decifra ottiene un testo arbitrario da lui scelto perchè se si ha un messaggio strutturato per quanto riguarda una transazione bancaria. Nel primo blocco si ha il mittente, nel secondo il destinatario e nel terzo la cifra da trasferire. L'intrusore, sostituisce al blocco del destinatario, il suo blocco. Ad esempio, mittente "Luca", destinatario "Lucia" e somma da trasferire "100", l'attaccante basta che sostituisce "Lucia" con il suo nome.
-
-Ci sono anche dei vantaggi ad usare questa modalità:
 - **Grande efficienza**: se si dispone di più CPU, l'esecuzione è parallela;
-- **No propagazione dell'errore su tutti i blocchi**: se l'intrusore modifica a caso un bit, si dice che la propagazione dell'errore rimane confinata al cifrato. Chi decifra avrà solo un blocco "sbagliato".
+- **No propagazione dell'errore**: se l'intrusore modifica a caso un bit, si dice che la propagazione dell'errore rimane confinata a quel blocco. Chi decifra avrà solo un blocco "sbagliato".
 
-Questa modalità si usa solo in casi specifici: ad esempio, cifrare delle informazioni che sono già per natura aleatoria (es. chiave di sessione).
+Svantaggi:
 
-L'obiettivo, quindi, è quello di trovare modalità di cifrature aleatori. Ad esempio, esistono le modalità CBC, CFB, OFB, CTR.
+- **Determinismo**: a blocchi in chiaro identici corrispondono blocchi cifrati assolutamente identici. Ciò vuol dire che se viene inviato lo stesso messaggio, queste sono informazioni in più che si riescono a capire. Se il messaggio è strutturato l'intrusore può sfruttarlo a suo favore;
+- **Maleabilità**: un intrusore è in grado di modificare il testo cifrato in modo tale che la destinazione quando lo decifra ottiene un testo da lui scelto. Ad esempio, si consideri una transazione bancaria. Nel primo blocco si ha il mittente, nel secondo il destinatario e nel terzo la cifra da trasferire. L'intrusore, sostituisce al blocco del destinatario, il suo. Se il mittente è "Luca", il destinatario è "Lucia" e la somma da trasferire "100", l'attaccante basta che sostituisce "Lucia" con il suo nome.
+
+Questa modalità si usa solo in casi specifici: ad esempio, cifrare delle informazioni che sono già per natura aleatoria. Ad esempio, una chiave di sessione.
+
+### Modalità di cifratura
+
+L'obiettivo, quindi, è quello di trovare modalità di cifrature aleatorie. Ad esempio, esistono le modalità CBC, CFB, OFB, CTR.
 
 <!-- Da un punto di vista hardware è possibile che si implementino due circuiti diversi: uno in fase di encryption e l'altro in fase di decryption. Molti algoritmi hanno la stessa E che coincide con D ma se non coincidono si dovrebbe usare due circuiti diversi. -->
 
@@ -930,7 +942,8 @@ Le caratteristiche di questo vettore sono:
 
 Il vettore non deve essere necessariamente segreto. Sicuramente aumenta la robustezza ma non è un requisito necessario.
 
-Svantaggi di questa modalità:
+Svantaggi:
+
 - In questo caso, non si può procedere in modo parallelo con più CPU perchè è necessario il cifrato del passo precedente in fase ci cifrazione. Invece, il parallelismo lo si ottiene in fase di decifrazione se si hanno già tutti i pezzi di cifrato che costituiscono.
 - Se un attaccante, modifica un qualcunque bit di un blocco, l'errore si propaga nei blocchi successivi.
 
