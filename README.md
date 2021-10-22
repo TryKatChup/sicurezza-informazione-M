@@ -556,7 +556,7 @@ L'approccio usato al giorno d'oggi, quindi, è il terzo.
 
 - Con `T` si indica la trasformazione nota (quindi la conosce anche l'intrusore);
 - Con `k` indichiamo la _chiave_ cioè il parametro non noto ed è un parametro di ingresso;
-- Con _spazio delle chiavi_ si intende l'insieme delle $ 2^{n} $ possibili configurazioni dove `n` è il numero di bit della chiave. La chiave è costituita da una delle $ 2^{n} $ configurazioni. Più è grande `n` più è difficile per un intrusore indovinare la chiave.
+- Con _spazio delle chiavi_ si intende l'insieme delle ![formula](https://render.githubusercontent.com/render/math?math=\color{red}\2^n) possibili configurazioni dove `n` è il numero di bit della chiave. La chiave è costituita da una delle ![formula](https://render.githubusercontent.com/render/math?math=\color{red}\2^n) configurazioni. Più è grande `n` più è difficile per un intrusore indovinare la chiave.
 
 ## Algoritmo forza bruta
 
