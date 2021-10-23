@@ -556,7 +556,7 @@ L'approccio usato al giorno d'oggi, quindi, è il terzo.
 
 - Con `T` si indica la trasformazione nota (quindi la conosce anche l'intrusore);
 - Con `k` indichiamo la _chiave_ cioè il parametro non noto ed è un parametro di ingresso;
-- Con _spazio delle chiavi_ si intende l'insieme delle `2^n` possibili configurazioni dove `n` è il numero di bit della chiave. La chiave è costituita da una delle `2^n` configurazioni. Più è grande `n` più è difficile per un intrusore indovinare la chiave.
+- Con _spazio delle chiavi_ si intende l'insieme delle ![formula](https://render.githubusercontent.com/render/math?math=\color{red}\2^n) possibili configurazioni dove `n` è il numero di bit della chiave. La chiave è costituita da una delle ![formula](https://render.githubusercontent.com/render/math?math=\color{red}\2^n) configurazioni. Più è grande `n` più è difficile per un intrusore indovinare la chiave.
 
 ## Algoritmo forza bruta
 
@@ -564,7 +564,7 @@ Un intrusore può sempre disporre di un _algoritmo di ricerca esauriente_ noto c
 
 ![intrusore](./img/img10.png)
 
-Se l'intrusore non conosce la chiave, può esplorare tutto lo spazio delle chiavi. Se `n` è il numero di bit della chiave e `2^n` è il numero totale di configurazioni, prova tutti i tentativi fino a quando non la indovina. Ovviamente deve conoscere la trasformata `T`. Se il cifrato che ottiene è uguale a quello sul canale, vuol dire che è riuscito a trovare la configurazione corretta.
+Se l'intrusore non conosce la chiave, può esplorare tutto lo spazio delle chiavi. Se `n` è il numero di bit della chiave e $ 2^{n} $ è il numero totale di configurazioni, prova tutti i tentativi fino a quando non la indovina. Ovviamente deve conoscere la trasformata `T`. Se il cifrato che ottiene è uguale a quello sul canale, vuol dire che è riuscito a trovare la configurazione corretta.
 
 ## Relazioni fra le chiavi
 
@@ -602,7 +602,7 @@ Ci sono diversi criteri da seguire per non far risalire all'intrusore la chiave:
 ### Indovinare la chiave
 
 E' sempre possibile risalire alla chiave perchè esiste l'attacco con _forza bruta_. Per ridurre questo attacco si devono adottare alcuni accorgimenti:
-- **Lo spazio delle chiavi deve essere molto grande**: se `n` è il numero di bit che rappresenta la chiave, `2^n` è l'insieme delle possibili configurazioni. Più è grande `n` più è difficile per un intrusore indovinare la chiave;
+- **Lo spazio delle chiavi deve essere molto grande**: se `n` è il numero di bit che rappresenta la chiave, $ 2^{n} $ è l'insieme delle possibili configurazioni. Più è grande `n` più è difficile per un intrusore indovinare la chiave;
 - **I bit devono essere casuali**: i bit possono essere anche tanti ma devono essere anche scelti a caso. Non ci deve essere un pattern;
 - **Limitare il numero di prove che l'intrusore ha a dispoziione**: ad esempio il pin del bancomat. Dopo tre accessi si disabilita l'accesso;
 - **Cambiare frequentemente la chiave**: quando si sceglie una chiave, ci si deve chiedere sempre per quanto tempo viene utilizzata per cifrare i dati. Se i dati devono essere mantenuti per un periodo molto lungo, bisogna cambiare frequentemente la chiave. In questo modo, si riducono le probabilità di individuarla da parte dell'intrusore.
@@ -655,11 +655,11 @@ Negli algoritmi di crittografia gli ultimi due parametri non sono presi in consi
 
 ### Definizioni
 
-- **Tempo disecuzione di un algoritmo**: si intende il numero di operazioni `N` che occorre eseguire per terminare l'algoritmo quando il dato d’ingresso è rappresentato da una stringa di `n` bit (`n = log [valore del dato]`).\
+- **Tempo disecuzione di un algoritmo**: si intende il numero di operazioni `N` che occorre eseguire per terminare l'algoritmo quando il dato d’ingresso è rappresentato da una stringa di `n` bit `n = log [valore del dato]`).\
 \
 Il numero `n` (dimensione input) incide sul numero di operazioni richieste, in alcuni casi, anche il valore stesso può incidere sul numero di passi da eseguire. Dunque, a parità di `n`, si hanno diversi valori di `N`.
 
-- **Tempo di esecuzione nel caso peggiore**: si intende il numero massimo di operazioni `N_max` che occorre eseguire per qualsiasi dato d’ingresso di `n` bit.\
+- **Tempo di esecuzione nel caso peggiore**: si intende il numero massimo di operazioni $ N_{max} $ che occorre eseguire per qualsiasi dato d’ingresso di `n` bit.\
 \
 La notazione che si usa è _O grande_ perchè evidenzia come proprio si incrementa il tempo di esecuzione al crescere senza limiti. Se `n` non è esprimibile analiticamente, bisogna trovare una funzione che approssima l'andamento della funzione. 
 
@@ -667,8 +667,8 @@ La notazione che si usa è _O grande_ perchè evidenzia come proprio si incremen
 
 Gli algoritmi possono essere classificati in due categorie:
 
-- **Tempo polinomiale**: algoritmo in grado di completare l'elaborazione di una dimensione `n` di dati in ingresso in un tempo di esecuzione pari a `O(n^k)` dove `k` è un numero intero positivo;
-- **Tempo esponenziale**: algoritmo in grado di completare l'elaborazione di una dimensione `n` di dati in ingresso in un tempo di esecuzione pari a `O(exp(n))` dove `n` è la dimensione `n` di dati in ingresso.
+- **Tempo polinomiale**: algoritmo in grado di completare l'elaborazione di una dimensione `n` di dati in ingresso in un tempo di esecuzione pari a $ O(n^{k}) $ dove `k` è un numero intero positivo;
+- **Tempo esponenziale**: algoritmo in grado di completare l'elaborazione di una dimensione `n` di dati in ingresso in un tempo di esecuzione pari a $ O(e^{n}) $ dove `n` è la dimensione `n` di dati in ingresso.
 
 ### Classificazione dei problemi
 
@@ -699,7 +699,7 @@ Una chiave deve avere come numero minimo di bit:
 
 # 02.Meccanismi di base (07-10-2021)
 
-Si è visto come funzionano a livello concettuale le trasformazioni per garantire i requisiti di sicurezza. Adesso si vede come sono costruite perchè se non vengono impiegate correttamente aprono a diverse vulnerabilità.
+Si è visto come funzionano a livello concettuale le trasformazioni per garantire i requisiti di sicurezza. Adesso si vedono come sono costruite perchè se non vengono impiegate correttamente aprono a diverse vulnerabilità.
 
 ## Generatori di numeri casuali
 
@@ -741,7 +741,7 @@ Un esempio di PRNG è la classe Secure Random di Java.
 
 ## Algoritmi di hash
 
-Gli algoritmi che la realizzano devono presentare le seguenti proprietà:
+Gli algoritmi che realizzano la funzione hash devono presentare le seguenti proprietà:
 
 - **Efficienza**: deve essere facile calcolare l'impronta anche se il messaggio in ingresso è molto lungo;
 - **Robustezza alle collisioni**: si possono individuare due tipi di robustezza:
@@ -755,14 +755,14 @@ Per garantire efficienza, la maggior parte degli algoritmi utilizzano uno _schem
 
 ![dedurre](./img/img14.png)
 
-Consiste nel prendere il messaggio di lunghezza arbitraria e suddividerlo in blocchi di dimensione prefissata a seconda dello specifico algoritmo di implementazione di `f`. Al primo blocco viene applicato a `m0` una funzione unidirezionale con le caratteristiche di robustezza debole, forte alle collisioni e unidirezionalità. Si applica a `m0` formato da `r` bit (`r>n` dove `n` è l'uscita del blocco) la funzione `f` e un vettore di inizializzazione che avrà un valore iniziale. In uscita, viene prodotta un'impronta `h1`. In pipeline, viene poi elaborato il secondo blocco `m1` concatenato all'impronta generata al passo precedente. L'impronta `h`-iesma è ottenuta applicando una funzione `f` all'impronta ottenuta al passo ottenuto `i-1` con il messaggio `h`-iesmo.
+Consiste nel prendere il messaggio di lunghezza arbitraria e suddividerlo in blocchi di dimensione prefissata a seconda dello specifico algoritmo di implementazione di `f`. Si applica a `m0` formato da `r` bit (`r>n` dove `n` è l'uscita del blocco) la funzione `f` (che ha le caratteristiche di robustezza debole, forte alle collisioni e unidirezionalità) e un vettore di inizializzazione che avrà un valore iniziale. In uscita, viene prodotta un'impronta `h1`. In pipeline, viene poi elaborato il secondo blocco `m1` concatenato all'impronta generata al passo precedente. L'impronta `h`-iesma è ottenuta applicando una funzione `f` all'impronta ottenuta al passo ottenuto `i-1` con il messaggio `h`-iesmo.
 L'impronta finale dell'intero messaggio, corrisponde con l'ultima impronta generata dall'ultimo blocco.
 
 Questo schema è soggetto ad un attacco che si chiama _attacco con estensione_.
 
 ![dedurre](./img/img15.png)
 
-Dalla sorgente `A` si invia un messaggio `m` concatenato al suo attestato di autenticità che è costruito con la funzione hash `H(s || m)` dove `s` è il segreto condiviso tra mittente e destinatario. Se la funzione hash è implementata secondo lo _schema di Merkle-Damgard_, allora è presenta una vulnerabilità. L'intrusore può inviare un messaggio `m'` oltre all'`m` già esistente. `H(s || m)` non è altro che l'impronta di uscita dell'ultimo blocco del messaggio `m`. Mettendola come input di un nuovo blocco `f` insieme al messaggio dell'intrusore suddiviso in blocchi, si riesce a calcolare il nuovo attestato di auntenticità.
+Dalla sorgente `A` si invia un messaggio `m` concatenato al suo attestato di autenticità che è costruito con la funzione hash `H(s || m)` dove `s` è il segreto condiviso tra mittente e destinatario. Se la funzione hash è implementata secondo lo _schema di Merkle-Damgard_, allora è presenta una vulnerabilità. L'intrusore può inviare un messaggio `m'` oltre a quello `m` già esistente. `H(s || m)` non è altro che l'impronta di uscita dell'ultimo blocco del messaggio `m`. Mettendola come input di un nuovo blocco `f` insieme al messaggio dell'intrusore suddiviso in blocchi, si riesce a calcolare il nuovo attestato di auntenticità.
 
 Per evitare il problema serve aggiungere all'ultimo blocco delle informazioni aggiuntive, ad esempio, qual è la lunghezza del messaggio. Chi riceve il messaggio, sa che tecnica è stata usata e quindi in fase di elaborazione ricava le informazioni aggiuntive. Tuttavia, non è sempre robusto.<!--?!? Motivo non capito--> Se il messaggio non è dotato di significato, l'attacco ha successo.
 
@@ -774,7 +774,7 @@ La resistenza alle collisione è fondamentale quando la funzione hash è usata p
 
 Inoltre, è importante usare un numero minimo di bit affinchè l'impronta sia resistente alle collisioni deboli e forti. Le funzioni hash devono avere un comportamento aleatorio cioè devono restituire con uguale probabilità una delle 2^n configurazioni.
 
-Si indica con P_1(2^n, 1) = 1/2^n la probabilità di un tentativo di trovare una collisione. La probabilità di insuccesso, quindi, è 1 - 1/2^n. Se si hanno k tentativi, P_k(2^n, k) = 1 - (1 - 1/2^n)^k. Questo vuol dire che k= P_k(2^n, k) * 2^n. 2^n per avere un andamento esponenziale deve essere almeno 128. Dunque, l'impronta deve essere almeno 128 bit.
+Si indica con $ P_1(2^{n}, 1) = \frac{1}{2^n} $ la probabilità di un tentativo di trovare una collisione. La probabilità di insuccesso, quindi, è 1 - 1/2^n. Se si hanno k tentativi, P_k(2^n, k) = 1 - (1 - 1/2^n)^k. Questo vuol dire che k= P_k(2^n, k) * 2^n. 2^n per avere un andamento esponenziale deve essere almeno 128. Dunque, l'impronta deve essere almeno 128 bit.
 
 Per garantire la _resistenza forte_ non bastano 128 bit. Il numero di bit deve essere il doppio perchè per la resistenza forte si vedrà che sono necessari 2^(n/2) tentativi. Dunque, è più facile effettuare un attacco rispetto alla resistenza debole.
 
@@ -791,10 +791,9 @@ Ora si vede come sono implementati `E` e `D` usando cifrari simmetrici.
 
 ## Cifrario simmetrico
 
-Nella crittografia classica, è stato individuato un cifrario perfetto chiamato _One-time pad_. Esso prevede l'uso di una chiave lunga quanto il testo in chiaro ed è usata una e una sola volta.
-Tuttavia, il suo impiego nella pratica è molto complicato: se la chiave è lunga quanto il testo, a questo punto vale mandare il messaggio su un canale sicuro e non la chiave. Si dovrebbe disporre di canali sicuri tanti quanti sono i messaggi che si vogliono inviare.
+Nella crittografia classica, è stato individuato un cifrario perfetto chiamato _One-time pad_. Il cifrario perfetto è per definizione un algoritmo in grado di occultare il testo in chiaro escludendo ogni tipo di attacco, ne segue che un testo cifrato con un cifrario perfetto non può essere letto in nessun modo se non si è in possesso della chiave di cifratura unica per decifrarlo. Tuttavia, il suo impiego nella pratica è molto complicato.
 
-Per questo motivo si parla di _cifrario computazionalmente sicuro_ cioè se è possibile risalre dal testo cifrato corrispondente al testo in chiaro ciò richiede una potenza di elaborazione superiore a quella a disposizione dell'intrusore.
+Per questo motivo si parla di _cifrario computazionalmente sicuro_ cioè per risalre dal testo cifrato al testo in chiaro corrispondente si ha bisogno di una potenza di elaborazione superiore a quella a disposizione dell'intrusore.
 
 Per la _teoria dell'informazione_ sviluppata da Shannon, il cifrario è computazionalmente sicuro se adotta i criteri di:
 
@@ -816,98 +815,113 @@ Esistono come cifrari simmetrici due famiglie distinte:
 
 Un _cifrario a flusso_, è più veloce di un _cifrario a blocchi_ perchè non introduce rallentamenti. Se il _cifrario a flusso_ non è impiegato correttamente, è meno sicuro di un cifrario a blocchi non impiegato correttamente.
 
-### Cifrario a flusso
+## Cifrario a flusso
 
-Encryption e Decryption sono implementati con degli XOR:
+Encryption `E` e decryption `D` sono implementati con degli `XOR`:
 
 ![dedurre](./img/img34.png)
 
-- **Encryption**: viene preso il bit i-esimo di testo in chiaro, lo si mette in XOR con il bit k-iesmo di chiave. Lo stesso flusso di chiave non può essere impiegato su messaggi diversi. Dunque, il flusso di chiave lo si genera con un PRNG crittograficamente sicuro;
-- **Decryption**: al bit i-esimo del messaggio, deve essere sommato modulo 2 (XOR) lo stesso k-iesmo bit di chiave usato nella fase di cifratura.
+- **Encryption**: viene preso il bit i-esimo di testo in chiaro `m`, lo si mette in XOR con il bit i-esmo della chiave `k`. Lo stesso flusso di chiave non può essere impiegato su messaggi diversi e lo si genera con un PRNG crittograficamente sicuro;
+- **Decryption**: al bit i-esimo del messaggio cifrato `c`, deve essere sommato modulo 2 (`XOR`) lo stesso i-esmo bit di chiave `k` usato nella fase di cifratura.
 
 Per questo motivo ci deve essere _sincronismo_ tra i flussi di chiave della sorgente e della chiave.
 
 E' bene ricordare che questo cifrario **non** è perfetto perchè non si può generare un flusso completamente casuale con un PNRG crittograficamente sicuro ma dopo un periodo di tempo, seppur lungo, si ripete.
 
-Il testo sarà sicuramente più lungo di 128 bit per cui non ha senso usare l'attacco di forza bruta in questi tipi di cifrari (la chiave è lunga quanto il testo). Inoltre, la chiave varia da messaggio a messaggio.
+Il testo cifrato `c` sarà sicuramente più lungo di 128 bit per cui non ha senso usare l'attacco di forza bruta perchè in questi tipi di cifrari, la chiave è lunga quanto il testo. Inoltre, la chiave varia da messaggio a messaggio.
 
-I cifrari a flusso sincrono si suddividono in:
+I cifrari a flusso si suddividono in:
 
 - **Cifrario a flusso sincrono**: il flusso di chiave dipende solo dal seme;
-- **Cifrario a flusso autosincronizzante**: lo stato futuro che genera i bit di chiave, dipende dal seme ma anche dai bit di testo cifrato precedenti.
+- **Cifrario a flusso autosincronizzante**: il flusso di chiave dipende dal seme ma anche dai bit di testo cifrato precedenti.
 
-#### Cifrario a flusso sincrono vs Cifrario a flusso autosincronizzante
+### Cifrario a flusso sincrono vs Cifrario a flusso autosincronizzante
 
-Nel _cifrato a flusso sincrono_, l'attaccante può effettuare attacchi attivi: modificare, cancellarli o aggiungere bit di testo cifrato:
-- **Se si modifica un bit del cifrato**: la destinazione non decifra correttamente un bit perchè è stato cambiato. Si dice che non si ha perdita di sincronismo perchè solo il k-iesimo è è stato cambiato ma la decifrazione non è corretta;
+Nel _cifrato a flusso sincrono_, l'attaccante può effettuare attacchi attivi:
+
+- **Se si modifica un bit del cifrato**: la destinazione non decifra correttamente un bit perchè è stato cambiato. Si dice che non si ha perdita di sincronismo perchè solo il i-esimo è è stato cambiato. Tuttavia, la decifrazione non è corretta;
 - **Se si cancella/inserisce un bit**: dal punto in poi in cui è stato cancellato il bit, i restanti non corrisponderanno mai a quelli inviati. Si dice che si ha perdita di sincronismo perchè tutti i bit sono da buttare via.
 
-Nel _cifrato a flusso sincrono autosincronizzante_ l'attaccante può effettuare attacchi attivi:
+Nel _cifrato a flusso autosincronizzante_ l'attaccante può effettuare attacchi attivi:
+
 - **Se modifica, cancella o elimina un bit del cifrato**: si ha una perdita di sincronismo ma non permanete, solo di un transitorio. Il transitorio è legato alla dimensione del registro di scorrimento (SHIFT) e da quanto il bit modificato/cancellato/inserito rimane dentro a questo registro.
 
 I più usati sono quelli a _cifrario flusso sincrono_ perchè i componenti a _cifrario a flusso autosincronizzante_ sono più costosi.
+
+### Possibili vulnerabilità
 
 Per garantire la _riservatezza_, i cifrari a flusso devono avere certe proprietà e bisogna capire quali sono le loro vulnerabilità.
 
 #### Uso della chiave una sola volta
 
-Il requisito fondamentale è che la chiave deve essere usata una e una sola volta. Se si usa lo stesso flusso di chiave su messaggi distinti si possono fare attacchi di analisi sui cifrati perchè si sfruttano le proprietà dell'OXR.
-Ad esempio, si consideri:\
-m1 XOR k = c1\
-m2 XOR k = c2\
-c1 XOR c2 è come fare l'XOR su due messaggi in chiaro:
-m1 XOR m2
+Il requisito fondamentale è che la chiave deve essere usata una e una sola volta. Se si usa lo stesso flusso di chiave su messaggi distinti si possono fare attacchi di analisi sui cifrati perchè si sfruttano le proprietà dell'`XOR`.
 
-Alcune volte, nelle implementazioni dei protocolli ci si accorge di questa vulnerabilità e si possono effettuare degli attacchi (es. WEP).
+![marco togni](./img/img41.png)
+
+Ad esempio, si consideri:\
+`m1 XOR k = c1`
+
+`m2 XOR k = c2`
+
+Fare `c1 XOR c2` è come fare l'`XOR` su due messaggi in chiaro: `m1 XOR m2`.
+
+##### Esempio
+
+Alcune volte, nelle implementazioni dei protocolli ci si accorge di questa vulnerabilità e di conseguenza, si possono effettuare degli attacchi (es. il protocollo WEP).
 
 ![marco togni](./img/img17.png)
 
 L'obiettivo è ottenere un _seed_ variabile ma in realtà questo protocollo presenta alcuni limiti:
-- Il vettore di inizializzazione ha una dimensione limitata (24 bit). Dopo 2^24 generazioni, si ha che la chiave si ripete;
+- Il vettore di inizializzazione ha una dimensione limitata (24 bit). Dopo $ 2^{24} $ generazioni si ha che la chiave si ripete;
 - Quando si spegneva, il vettore si inizializzava a zero e poi funzionava ad incremento. Il comportamente è molto prevedibile.
 
 # 11/10/2021
 
 #### Malleabilità
 
-La proprietà di _malleabilità_ consiste nella possibilità di alterare il cifrato in modo da produrre un effetto desiderato sul testo in chiaro originario. Purtroppo, i _cifrari a flusso_ sono vulnerabili a questa proprietà. L'attacco ha successo se e solo se l'attaccante conosce una parte del messaggio `m`.
+La proprietà di _malleabilità_ consiste nella possibilità di alterare il cifrato in modo da produrre un effetto desiderato sul testo in chiaro originario. L'attacco ha successo se e solo se l'attaccante conosce una parte del messaggio `m`.
 
 Il mittente effettua `m XOR k`, l'attaccante prende `(m XOR k) XOR p` dove `p` è scelto da lui e sostituisce il messaggio sul canale con il nuovo messaggio cifrato modificato. La destinazione, decifra `((m XOR k) XOR p)) XOR k` e quindi non sarebbe altro che fare `m XOR p`.
 
+Lo XOR è commutativo! Fare `(m XOR k) XOR p` è lo stesso di `(m XOR p) XOR k`. Fare le tabelle di verità per credere!
+
 ![marco togni](./img/img25.png)
 
-Ad esempio, il mittente sta cifrando dei dati strutturati. All'inizio di questi dati, c'è sempre "From". L'attaccante, conosce che il flusso è strutturato. Il suo obiettivo è quello di cambiare la provenienza del messaggio. Si ipotizzi che l'inizio del messaggio sia "From Dario" con rappresentazione esadecimale "44 61 72 69 6F". L'obiettivo dell'intrusore è ottenere "From Lucia" con rappresentazione esadecimale "4C 75 63 69 61". Bisogna trovare quel `p` tale per cui `m XOR p = Lucia`. Dunque, `p` deve essere "08 14 11 00 0E".
+Ad esempio, il mittente sta cifrando dei dati strutturati. All'inizio di questi dati, c'è sempre la parola "From". L'attaccante, conosce che il flusso è strutturato. Il suo obiettivo è quello di cambiare la provenienza del messaggio `m`. Si ipotizzi che l'inizio del messaggio sia "From Dario" con rappresentazione esadecimale "44 61 72 69 6F". L'obiettivo dell'intrusore è ottenere "From Lucia" con rappresentazione esadecimale "4C 75 63 69 61". Bisogna trovare quel `p` tale per cui `m XOR p = Lucia`. Dunque, `p` deve essere "08 14 11 00 0E".
 
-Basta osservare solo il comportamento dell'XOR senza sapere niente sulla chiave.
+## Cifrari a blocchi
 
-### Cifrari a blocchi
+La modalità base per effettuare Encryption E e decryption D prende il nome di ECB.
+
+### Electronic Code Book (ECB)
 
 Si prende un messaggio e lo si suddividono in blocchi. Se l'ultimo blocco contiene meno bit della lunghezza che dovrebbe avere lo si completa con dei bit di padding.
 
 ![marco togni](./img/img35.png)
 
-La modalità base, chiamata ECB (_Electronic Code Book_), prevede di elaborare in parallelo i blocchi `m1` fino ad `mn`. Ogni blocco viene dato in pasto alla funzione di encryption e quindi il cifrato non è altro che la concatenazione dei cifrati ottenuti sui singoli blocchi.
+Ogni blocco viene dato in pasto alla funzione di encryption `E` e quindi il testo cifrato non è altro che la concatenazione dei cifrati ottenuti dai singoli blocchi.
 
 L'operazione di cifrare a blocchi ricorda molto la tecnica di base della sostituzione monoalfabetica della crittografia classica ma la rende immune da un attacco con statistiche perchè lavora proprio su blocchi e non su singoli bit.
 
 Nei cifrari a blocco, l'attacco con forza bruta ha senso perchè la chiave è sempre la stessa. Dunque, bisogna dimensionare la chiave almeno con 128 bit.
 
-La chiave deve essere generata da un PNRG crittograficamente sicuro e modificata frequentemente perchè nella modalità ECB, la stessa chiave cifra moltissimi blocchi di testo in chiaro e quindi ci sono più possibilità.
+La chiave deve essere generata da un PNRG crittograficamente sicuro e modificata frequentemente perchè nella modalità ECB, la stessa chiave cifra moltissimi blocchi di testo in chiaro e quindi ci sono più possibilità di individuarla.
 
-#### Modalità di cifratura
+Vantaggi:
 
-Capire quali sono le problematiche di ECB consentono di meglio come impiegarlo:
-
-- **La modalità ECB è fortemente deterministica**: a blocchi in chiaro identici corrispondono blocchi cifrati assolutamente identici. Ciò vuol dire che se viene inviato lo stesso messaggio, queste sono informazioni in più che si riescono a capire. Se il messaggio è strutturato l'intrusore può sfruttarlo a suo favore;
-- **Altro problema è quello della maleabilità**: un intrusore è in grado di modificare il testo cifrato in modo tale che la destinazione quando lo decifra ottiene un testo arbitrario da lui scelto perchè se si ha un messaggio strutturato per quanto riguarda una transazione bancaria. Nel primo blocco si ha il mittente, nel secondo il destinatario e nel terzo la cifra da trasferire. L'intrusore, sostituisce al blocco del destinatario, il suo blocco. Ad esempio, mittente "Luca", destinatario "Lucia" e somma da trasferire "100", l'attaccante basta che sostituisce "Lucia" con il suo nome.
-
-Ci sono anche dei vantaggi ad usare questa modalità:
 - **Grande efficienza**: se si dispone di più CPU, l'esecuzione è parallela;
-- **No propagazione dell'errore su tutti i blocchi**: se l'intrusore modifica a caso un bit, si dice che la propagazione dell'errore rimane confinata al cifrato. Chi decifra avrà solo un blocco "sbagliato".
+- **No propagazione dell'errore**: se l'intrusore modifica a caso un bit, si dice che la propagazione dell'errore rimane confinata a quel blocco. Chi decifra avrà solo un blocco "sbagliato".
 
-Questa modalità si usa solo in casi specifici: ad esempio, cifrare delle informazioni che sono già per natura aleatoria (es. chiave di sessione).
+Svantaggi:
 
-L'obiettivo, quindi, è quello di trovare modalità di cifrature aleatori. Ad esempio, esistono le modalità CBC, CFB, OFB, CTR.
+- **Determinismo**: a blocchi in chiaro identici corrispondono blocchi cifrati assolutamente identici. Ciò vuol dire che se viene inviato lo stesso messaggio, queste sono informazioni in più che si riescono a capire. Se il messaggio è strutturato l'intrusore può sfruttarlo a suo favore;
+- **Maleabilità**: un intrusore è in grado di modificare il testo cifrato in modo tale che la destinazione quando lo decifra ottiene un testo da lui scelto. Ad esempio, si consideri una transazione bancaria. Nel primo blocco si ha il mittente, nel secondo il destinatario e nel terzo la cifra da trasferire. L'intrusore, sostituisce al blocco del destinatario, il suo. Se il mittente è "Luca", il destinatario è "Lucia" e la somma da trasferire "100", l'attaccante basta che sostituisce "Lucia" con il suo nome.
+
+Questa modalità si usa solo in casi specifici: ad esempio, cifrare delle informazioni che sono già per natura aleatoria. Ad esempio, una chiave di sessione.
+
+### Modalità di cifratura
+
+L'obiettivo, quindi, è quello di trovare modalità di cifrature aleatorie. Ad esempio, esistono le modalità CBC, CFB, OFB, CTR.
 
 <!-- Da un punto di vista hardware è possibile che si implementino due circuiti diversi: uno in fase di encryption e l'altro in fase di decryption. Molti algoritmi hanno la stessa E che coincide con D ma se non coincidono si dovrebbe usare due circuiti diversi. -->
 
@@ -928,7 +942,8 @@ Le caratteristiche di questo vettore sono:
 
 Il vettore non deve essere necessariamente segreto. Sicuramente aumenta la robustezza ma non è un requisito necessario.
 
-Svantaggi di questa modalità:
+Svantaggi:
+
 - In questo caso, non si può procedere in modo parallelo con più CPU perchè è necessario il cifrato del passo precedente in fase ci cifrazione. Invece, il parallelismo lo si ottiene in fase di decifrazione se si hanno già tutti i pezzi di cifrato che costituiscono.
 - Se un attaccante, modifica un qualcunque bit di un blocco, l'errore si propaga nei blocchi successivi.
 
