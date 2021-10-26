@@ -155,7 +155,7 @@ Per proteggere i dati a fronte di eventuali attacchi occorre utilizzare delle tr
 
 ![cia](./img/img26.png)
 
-L'_algoritmo_ è una singola trasformazione cioè è una sequenza di istruzioni. Ad esempio, il blocco Ts o Td.
+L'_algoritmo_ è una singola trasformazione cioè è una sequenza di istruzioni. Ad esempio, il blocco `Ts` o `Td`.
 
 ![cia](./img/img27.png)
 
@@ -199,7 +199,7 @@ della figura, i dati `m` vengono trasformati in dati incomprensibili `c`. La des
 Devono essere rispettate le seguenti proprietà:
 
 - **Segretezza**: la trasformazione `E` e `D` sono conosciute solo rispettivamente dalla sorgente e dal destinatario quindi per i tre principi di difesa, non è possibile risalire al messaggio in chiaro;
-- **Calcoli difficili**: dato il messaggio `m` deve essere facile calcolare il messaggio cifrato. L'operazione inversa invece non è fattibile.
+- **Calcoli difficili**: dato il messaggio `m` deve essere facile calcolare il messaggio cifrato. L'operazione inversa, se non si conosce la trasformata di `D`, non è fattibile.
 
 Altre considerazioni:
 - **Il flusso è bidirezionale**: lo schema della figura può essere applicato sia da `A` verso B che da `B` verso `A`. Ovviamente `B` avrà l'encryption mentre `A` la decryption;
@@ -210,22 +210,21 @@ Altre considerazioni:
 
 Proteggere l'integrità vuol dire costruire delle trasformazioni in grado di rilevare modifiche al contenuto dei dati trasmessi. In questo caso, la contromisura da adottare è quella della _rilevazione_ perché le modifiche ai messaggi sul canale non possono essere evitate a priori.
 
-Se vogliamo costruire una trasformazione che protegga l'integrità, dobbiamo far si che la sorgente utilizzi ridondanza al messaggio e affianchi al dato iniziale un'informazione aggiuntiva che deve essere costruita opportunamente. Questa informazione si chiama _riassunto_ o _impronta_. La sua dimensione deve essere inferiore perché la si deve poi trasmettere sul canale.
+Se si vuole costruire una trasformazione che protegga l'integrità, bisogna far si che la sorgente utilizzi ridondanza al messaggio e affianchi al dato iniziale un'informazione aggiuntiva che deve essere costruita opportunamente. Questa informazione si chiama _riassunto_ o _impronta_. La sua dimensione deve essere inferiore perché la si deve poi trasmettere sul canale.
 
-Il riassunto non è altro che una _funzione hash crittograficamente sicura_.
+Il riassunto lo si calcola tramite una funzione hash.
 
 ![integrità](./img/img3.png)
 
 In generale, una funzione hash `H` è una funzione che prende un dato `m` di lunghezza arbitraria e restituisce in uscita un'impronta `H(m)`.
 
-A noi non basta avere una qualunque funzione hash, ma è importante che abbia due proprietà:
+Non basta averne una qualunque, ma è importante che essa sia _crittograficamente sicura_ e abbia le seguenti proprietà:
 
 - **Calcoli difficili**: dato il messaggio `m` deve essere facile calcolare la sua impronta. L'operazione inversa invece non è fattibile;
-- **Comportamento da "oracolo casuale"**: se decidiamo che l'impronta sia costituita da `n` bit, le possibili uscite della funzione hash sono `2^n`. Preso il nostro messaggio `m`, dobbiamo fare in modo che la probabilità che esca un uscita rispetto ad un'altra sia la stessa.
+- **Comportamento da "oracolo casuale"**: se si decide che l'impronta sia costituita da `n` bit, le possibili uscite della funzione hash sono `2^n`. Preso il messaggio `m`, bisogna fare in modo che la probabilità che esca un uscita rispetto ad un'altra sia la stessa;
 ![zeus](./img/zeus.jpg)
-- **Resistente alle collisioni**: è inevitabile che due messaggi diversi possano avere in uscita la stessa impronta perché lo spazio di input è molto più grande dello spazio di output (`m > n`). Ad esempio, se i messaggi sono dieci e il numero di bit è tre, le possibili uscite della funzione hash sono otto e alcuni messaggi avranno sicuramente la stessa impronta. L'importante è che per un intrusore sia difficilissimo individuare due messaggi che abbiano la stessa impronta.
-
-Queste caratteristiche le si ottengono **solo** usando _funzioni hash crittograficamente sicure_.
+- **Resistente alle collisioni**: per un intrusore deve essere difficilissimo individuare due messaggi che abbiano la stessa impronta.
+E' inevitabile che due messaggi diversi possano avere in uscita la stessa impronta perché lo spazio di input è molto più grande dello spazio di output (`m > n`). Ad esempio, se i messaggi sono dieci e il numero di bit è tre, le possibili uscite della funzione hash sono otto e alcuni messaggi avranno sicuramente la stessa impronta.
 
 Le funzioni hash possono essere classificate in due categorie:
 
@@ -234,7 +233,7 @@ Le funzioni hash possono essere classificate in due categorie:
 
 ![attestazioneIntegrità](./img/img4.png)
 
-La sorgente `A` mette sul canale insicuro un messaggio `m` mentre l'impronta `H(m)` deve viaggiare su un canale sicuro per evitare che un intrusore possa sostituire `m` con un altro messaggio `m'` e di conseguenza sostituire anche `H(m')`. `B` deve prendere il messaggio ricevuto, applicargli la funzione hash, che conosce anche lui, e verificare che l'hash ricevuto coincida con quello ottenuto.
+La sorgente `A` mette sul canale insicuro un messaggio `m` mentre l'impronta `H(m)` deve viaggiare su un canale sicuro per evitare che un intrusore possa sostituire `m` con un altro messaggio `m'` e di conseguenza sostituire anche `H(m)` con `H(m')`. `B` deve prendere il messaggio ricevuto, applicargli la funzione hash, che conosce anche lui, e verificare che l'hash ricevuto coincida con quello ottenuto.
 Se si equivalgono, il messaggio è stato trasmesso correttamente. In questo modo la
 destinazione è in grado di rilevare se il messaggio ha subito modifiche.
 
@@ -250,19 +249,18 @@ Le trasformazioni possono essere combinate fra di loro. Ad esempio, per garantir
 
 `H*(m) =? H(m*)`
 
-Dato che le proprietà da garantire sono due, abbiamo bisogno di combinare più trasformazioni e le regole che devo usare devono essere precise. Per questo ci serve un protocollo.
+Le regole che si devono usare devono essere eseguite in un determinato ordine per cui si ha bisogno di un protocollo. Il seguente protocollo è costituito dai questi passi:
 
-Il seguente protocollo è costituito dai seguenti passi:
 - La sorgente esegue due trasformazioni:
-  - **Passo 1**: la sorgente applica la funzione hash crittograficamente sicura e la concatena con il messaggio;
-  - **Passo 2**: la sorgente applica la funzione di encryption. Dato che il messaggio `c` è cifrato, lo si può inviare direttamente sul canale insicuro.
-- La destinazione esegue una trasformazione:
-  - **Passo 3**: la destinazione riceve `c` che può essere, o quello inviato dalla sorgente o un altro che è stato modificato dall'intrusore. Per questo motivo, dato che non abbiamo una certezza, indicheremo il messaggio `c` con `c*`. La destinazione applica la funzione `D` su `c*` ottenendo di nuovo `m* || H*(m)`;
-  - **Passo 4**: Per vedere se il messaggio sia integro, dobbiamo verificare che la funzione crittograficamente sicura `H(m*)` coincida con `H*(m)`. Se non coincidono il messaggio viene scartato.
+  - **Passo 1**: viene applicata la funzione hash crittograficamente sicura e la si concatena con il messaggio;
+  - **Passo 2**: viene applicata la funzione di encryption `E`. Dato che il messaggio `c` è cifrato, lo si può inviare direttamente sul canale insicuro.
+- La destinazione esegue due trasformazioni:
+  - **Passo 3**: la destinazione riceve `c` che può essere, o quello inviato dalla sorgente o un altro che è stato modificato dall'intrusore. Per questo motivo, dato che non si ha la certezza, si indica il messaggio `c` con `c*`. La destinazione applica la funzione `D` su `c*` ottenendo di nuovo `m* || H*(m)`;
+  - **Passo 4**: per vedere se il messaggio sia integro, dobbiamo verificare che la funzione crittograficamente sicura `H(m*)` coincida con `H*(m)`. Se non coincidono il messaggio viene scartato.
 
 Alcune considerazioni:
-- L'intrusore può modificare solo a caso i bit del cifrato perchè se tutte le proprietà sono rispettate (comportamento da "oracolo casuale", resistente alle collisioni, testo cifrato aleatorio) non può fare assolutamente nulla;
-- Da un punto di vista computazionale, la sorgente effettua due trasformazioni (encryption e la funzione `H`). La destinazione esegue sempre due trasformazioni (decryption e la funzione `H`).
+- L'intrusore può modificare solo a caso i bit del cifrato ma calcolarsi l'operazione inversa senza conoscere la trasformata `D` è difficilissimo;
+- Da un punto di vista computazionale, la sorgente effettua due trasformazioni (encryption `E` e la funzione `H`). La destinazione esegue sempre due trasformazioni (decryption `D` e la funzione `H`).
 
 ### Esempio 2
 
@@ -272,17 +270,21 @@ In questo caso, l'integrità è rispettata mentre la riservatezza no:
 
 `c = E(p) || H(m)`
 
-`p* = D(c*) = m* || H*(m)`
+`p* = D(c*) = E*(p) || H*(m)`
+
+`m* = D(E*(p))`
 
 `H*(m) =? H(m*)`
 
-L'integrità è rispettata. perchè:
-- **Modificare bit di E(p)**: se si cambiano dei bit di E(p) a caso è difficile che corrisponda la stessa impronta per la proprietà alla _resistenza alle collisioni_;
-- **Modificare i bit H(m)**: H(m) corrisponde poi ad un altro messaggio per la resistenza alle collisioni;
-- **Modificare E(p) e H(m)**: la probabilità è bassissima che il messaggio modificato corrisponda proprio a quell'impronta che è anch'essa modificata.
+L'integrità è rispettata perchè se si modificano i bit di:
+
+- **E(p)**: se si cambiano dei bit di E(p) a caso è difficile che corrisponda la stessa impronta per la proprietà alla _resistenza alle collisioni_;
+- **H(m)**: H(m) corrisponde poi ad un altro messaggio per la resistenza alle collisioni;
+- **E(p) e H(m)**: la probabilità è bassissima che il messaggio modificato corrisponda proprio a quell'impronta che è anch'essa modificata.
 
 La riservatezza, invece, non è rispettata perchè:
-- Ad esempio, l'intrusore sa che Rebecca Montanari sta trasmettendo dei dati a un'altra persona. Ha a disposizione tantissime informazioni di contesto. Dato che E(m) è impossibile che lo sappia, da un messaggio in chiaro riesce a calcolarsi l'impronta H(m). Se nota che l'impronta è la stessa, la riservatezza del messaggio è violata.
+
+- Premessa, l'intrusore ha a disposizione tantissime informazioni di contesto. L'intrusore sa che Luca (nome di fantasia) sta trasmettendo dei dati alla sua amata Lucia. Dato che `E(m)` è impossibile che lo sappia, da un messaggio scelto in chiaro `m'` si può calcolare l'impronta `H(m')`. Se nota che l'impronta è la stessa, la riservatezza del messaggio è violata.
 
 ### Esempio 3
 
@@ -292,15 +294,23 @@ In questo caso, la proprietà di integrità non viene rispettata mentre quella d
 
 `c = E(p) || H(E(p))`
 
+`p* = D(c*) = E*(p) || H*(E(p))`
+
+`m* = D(E*(p))`
+
+`H*(E(p)) =? H(E(m*))`
+
 La riservatezza è verificata perchè:
-- Da E(p) non si può risalire alla trasformata originale
-- La funzione H non è invertibile e anche se lo fosse non si riuscirebbe poi a confrontare l'impronta m scelta dall'intrusore con quella H(E(p)) perchè manca la parte di cifratura del messaggio.
+
+- Non si riuscirebbe poi a confrontare l'impronta `H(m')` scelta dall'intrusore con quella `H(E(p))` perchè manca la parte di cifratura del messaggio.
 
 L'integrità non è garantita:
-- L'intrusore può modificare E(p) e ottenere E*(p) e sostituire H(E(p)) con H(E*(p)). Se m è un messaggio senza un particolare significato (ad esempio un numero), D(E(p)) restituisce m* e la destinazione potrebbe non accorgersi che m* non sia corretto. Se invece m è un messaggio dotato di significato la destinazione potrebbe accorgersi che m* non ha senso e quindi non accettarlo per buono.
+
+- L'intrusore può modificare `E(p)` e ottenere `E*(p)` e sostituire `H(E(p))` con `H(E*(p))`. Se `m` è un messaggio senza un particolare significato (ad esempio un numero), `D(E(p))` restituisce `m*` e la destinazione potrebbe non accorgersi che `m*` non sia corretto. Se invece `m` è un messaggio dotato di significato la destinazione potrebbe accorgersi che `m*` non ha senso e quindi non accettarlo per buono.
 
 Alcune considerazioni:
-- Da un punto di vista computazionale, la sorgente effettua due trasformazioni (encryption e la funzione H). La destinazione deve verificare l'integrità (la funzione H). Se il messaggio non è integro non ha senso effettuare la decryption. Dunque, può risparmiare una trasformazione.
+
+- Da un punto di vista computazionale, la sorgente effettua due trasformazioni (encryption `E` e la funzione `H`). La destinazione deve verificare l'integrità (la funzione `H`). Se il messaggio non è integro non ha senso effettuare la decryption `D`. Dunque, può risparmiare una trasformazione.
 
 ## Proteggere la proprietà di autenticazione (=autenticità?)
 
@@ -308,7 +318,7 @@ Chi riceve un dato è importante che sappia chi è stato ad originarlo. L'intrus
 
 ![autenticazione](./img/img5.png)
 
-Per garantire l'autenticità di una sorgente, dobbiamo costruire una trasformazione `S` che dato un messaggio `m`, deve produrre in uscita un _attestato di autenticità_ `c` che rappresenta in maniera non imitabile il messaggio `m` originale.
+Per garantire l'autenticità di una sorgente, si deve costruire una trasformazione `S` che dato un messaggio `m`, deve produrre in uscita un _attestato di autenticità_ `c` che rappresenta in maniera non imitabile il messaggio `m` originale.
 
 La destinazione riceve sia il messaggio che l'attestato di autenticità ed effettua una trasformazione `V` sull'attestato di autenticità producendo in uscita una risposta che dice se il messaggio è autentico o no. In caso affermativo si recupera il messaggio `m` altrimenti lo si scarta.
 
