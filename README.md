@@ -320,11 +320,11 @@ Chi riceve un dato è importante che sappia chi è stato ad originarlo. L'intrus
 
 Per garantire l'autenticità di una sorgente, si deve costruire una trasformazione `S` che dato un messaggio `m`, deve produrre in uscita un _attestato di autenticità_ `c` che rappresenta in maniera non imitabile il messaggio `m` originale.
 
-La destinazione riceve sia il messaggio che l'attestato di autenticità ed effettua una trasformazione `V` sull'attestato di autenticità producendo in uscita una risposta che dice se il messaggio è autentico o no. In caso affermativo si recupera il messaggio `m` altrimenti lo si scarta.
+La destinazione riceve sia il messaggio `m` che l'attestato di autenticità `c` ed effettua una trasformazione `V` sull'attestato di autenticità producendo in uscita una risposta che dice se il messaggio è autentico o no. In caso affermativo si recupera il messaggio `m` altrimenti lo si scarta.
 
 Devono essere rispettate le seguenti proprietà:
 
-- **Calcoli difficili**: dato il messaggio `m` deve essere facile calcolare l'attestato di integrità. L'operazione inversa invece non è fattibile;
+- **Calcoli difficili**: dato il messaggio `m` deve essere facile calcolare l'attestato di integrità `c`. L'operazione inversa invece non è fattibile;
 - **Segretezza**: la trasformazione `S` deve essere segreta per la sorgente perché altrimenti altri l'intrusore potrebbe effettuare lui la trasformazione. Invece, `V` può essere noto perché qualsiasi destinazione deve essere in grado di dire se l'attestato è autentico o no.
 
 Alcune considerazioni:
@@ -390,21 +390,20 @@ Esistono 2 schemi alternativi per realizzare sign-verify: _la firma digitale_ e 
 
 ### Firma digitale
 
-Il primo schema alternativo per realizzare sign-verify è la _firma digitale_.
+Il primo schema alternativo per realizzare Sign-Verify è la _firma digitale_.
 
 ![firmadigitale](./img/img6.png)
 
 La sorgente `A` prende il messaggio `m` e lo sottopone a una trasformazione `H`, costruendo l’impronta `H(m)`, che garantisce l’integrità. La funzione `S` di _sign_ viene eseguita su `H(m)`, e sul canale di comunicazione insicuro viene trasmesso `m` concatenato con `S(H(m))`.
 
-<!--aggiunto -->
 La destinazione `B` verifica tramite `V` che `c` proviene dalla sorgente leggittima. In questo modo verifico l'autenticità del messaggio. Dato che `c` contiene `H(m)` possiamo verificare anche la proprietà di integrità.
-<!--aggiunto -->
 
 Questo schema ha due vantaggi:
-- **Efficienza**: la funzione di sign `S` è una trasformazione costosa. Anzichè applicare `m` direttamente a sign, l'applico a `H(m)` che è più piccola di `m`. Si può applicare anche all'impronta perchè è univoca per la proprietà di resistenza alle collisioni;
-- **Avere subito la disponibilità del dato**: La funzione di `V` è onerosa. In questo schema rispetto al precedente, posso prendere direttamente `m` e a mio rischio e pericolo, verifico l'autenticità in un secondo momento.
 
-Questo schema mi assicura anche la proprietà di:
+- **Efficienza**: la funzione di sign `S` è una trasformazione costosa. Anzichè applicare `m` direttamente a sign, l'applico a `H(m)` che è più piccola di `m`. Si può applicare anche all'impronta perchè è univoca per la proprietà di resistenza alle collisioni;
+- **Avere subito la disponibilità del dato**: Si può prendere direttamente `m` a mio rischio e pericolo e si verifica l'autenticità in un secondo momento per come è fatto lo schema a blocchi.
+
+Questo schema assicura anche la proprietà di:
 - **Non ripudio**: dato che la sorgente `A` è l'unica che esegue `S` non può disconoscere in un secondo momento l'attestato di autenticità.
 
 <!-- Il canale in questo modo viene reso sicuro e viene garantita anche la non ripudiabilità (la destinazione ottiene il messaggio dal canale non direttamente interpretabile). In questo caso la funzione `S` di Sign è segreta ed è conosciuta solamente dal mittente `A` che _firma_ il messaggio. -->
@@ -413,7 +412,7 @@ Questo schema mi assicura anche la proprietà di:
 <!-- Hash del messaggio e di un segreto -->
 ### Hash applicata al messaggio concatenato con un segreto S, condiviso tra sorgente e destinazione
 
-Il secondo schema alternativo per realizzare sign-verify è l'uso di un _hash_.
+Il secondo schema alternativo per realizzare Sign-Verify è l'uso di un _hash_.
 
 ![hashs](./img/img7.png)
 
@@ -428,10 +427,11 @@ In questo caso **non** viene garantito il _non ripudio_, poiché la sorgente `A`
 Questo schema risulta essere più efficiente rispetto alla _firma digitale_, ma potrà essere usato solamente quando si è sicuri del corretto comportamento di `A` e `B`.
 Può essere utilizzato, ad esempio, con sistemi IoT che richiedono consumi ridotti di batteria e alta efficienza.
 
-Viceversa, la firma digitale è meno efficiente poiché ha anche la funzione di _sign_ (`S`) ma garantisce il _non ripudio_.
+Viceversa, la firma digitale è meno efficiente poiché ha anche la funzione di _sign_ `S` ma garantisce il _non ripudio_.
 
-Perchè questo schema è robusto:
-- la funzione H non è invertibile quindi nessuno a parte A o B conosce s. Se fosse invertibile, l'intrusore ricaverebbe s e costruirebbe un attestato di autenticità valido.
+Questo schema è robusto:
+
+- la funzione `H` non è invertibile quindi nessuno a parte `A` o `B` conosce `s`. Se fosse invertibile, l'intrusore ricaverebbe `s` e costruirebbe un attestato di autenticità valido.
 
 ### Esempio
 
@@ -831,12 +831,10 @@ Encryption `E` e decryption `D` sono implementati con degli `XOR`:
 
 ![dedurre](./img/img34.png)
 
-- **Encryption**: viene preso il bit i-esimo di testo in chiaro `m`, lo si mette in XOR con il bit i-esmo della chiave `k`. Lo stesso flusso di chiave non può essere impiegato su messaggi diversi e lo si genera con un PRNG crittograficamente sicuro;
+- **Encryption**: viene preso il bit i-esimo di testo in chiaro `m`, lo si mette in `XOR` con il bit i-esmo della chiave `k`. Lo stesso flusso di chiave non può essere impiegato su messaggi diversi e lo si genera con un PRNG crittograficamente sicuro;
 - **Decryption**: al bit i-esimo del messaggio cifrato `c`, deve essere sommato modulo 2 (`XOR`) lo stesso i-esmo bit di chiave `k` usato nella fase di cifratura.
 
 Per questo motivo ci deve essere _sincronismo_ tra i flussi di chiave della sorgente e della chiave.
-
-E' bene ricordare che questo cifrario **non** è perfetto perchè non si può generare un flusso completamente casuale con un PNRG crittograficamente sicuro ma dopo un periodo di tempo, seppur lungo, si ripete.
 
 Il testo cifrato `c` sarà sicuramente più lungo di 128 bit per cui non ha senso usare l'attacco di forza bruta perchè in questi tipi di cifrari, la chiave è lunga quanto il testo. Inoltre, la chiave varia da messaggio a messaggio.
 
@@ -854,7 +852,7 @@ Nel _cifrato a flusso sincrono_, l'attaccante può effettuare attacchi attivi:
 
 Nel _cifrato a flusso autosincronizzante_ l'attaccante può effettuare attacchi attivi:
 
-- **Se modifica, cancella o elimina un bit del cifrato**: si ha una perdita di sincronismo ma non permanete, solo di un transitorio. Il transitorio è legato alla dimensione del registro di scorrimento (SHIFT) e da quanto il bit modificato/cancellato/inserito rimane dentro a questo registro.
+- **Se modifica, cancella o elimina un bit del cifrato**: si ha una perdita di sincronismo ma non permanete, solo di un transitorio. Il transitorio è legato alla dimensione del registro di scorrimento (SHIFT) perchè dipende da quanti cicli, il bit modificato/cancellato/inserito rimane dentro a questo registro.
 
 I più usati sono quelli a _cifrario flusso sincrono_ perchè i componenti a _cifrario a flusso autosincronizzante_ sono più costosi.
 
@@ -882,7 +880,7 @@ Alcune volte, nelle implementazioni dei protocolli ci si accorge di questa vulne
 ![marco togni](./img/img17.png)
 
 L'obiettivo è ottenere un _seed_ variabile ma in realtà questo protocollo presenta alcuni limiti:
-- Il vettore di inizializzazione ha una dimensione limitata (24 bit). Dopo $ 2^{24} $ generazioni si ha che la chiave si ripete;
+- Il vettore di inizializzazione ha una dimensione limitata (24 bit). Dopo 2^{24} generazioni si ha che il seed si ripete;
 - Quando si spegneva, il vettore si inizializzava a zero e poi funzionava ad incremento. Il comportamente è molto prevedibile.
 
 # 11/10/2021
@@ -901,7 +899,7 @@ Ad esempio, il mittente sta cifrando dei dati strutturati. All'inizio di questi 
 
 ## Cifrari a blocchi
 
-La modalità base per effettuare Encryption E e decryption D prende il nome di ECB.
+La modalità base per effettuare Encryption `E` e decryption `D` prende il nome di ECB.
 
 ### Electronic Code Book (ECB)
 
@@ -915,7 +913,7 @@ L'operazione di cifrare a blocchi ricorda molto la tecnica di base della sostitu
 
 Nei cifrari a blocco, l'attacco con forza bruta ha senso perchè la chiave è sempre la stessa. Dunque, bisogna dimensionare la chiave almeno con 128 bit.
 
-La chiave deve essere generata da un PNRG crittograficamente sicuro e modificata frequentemente perchè nella modalità ECB, la stessa chiave cifra moltissimi blocchi di testo in chiaro e quindi ci sono più possibilità di individuarla.
+La chiave deve essere modificata frequentemente perchè nella modalità ECB, la stessa chiave cifra moltissimi blocchi di testo in chiaro e quindi ci sono più possibilità di individuarla.
 
 Vantaggi:
 
@@ -941,9 +939,9 @@ Questa modalità consente di ottenere aleatorietà.
 
 ![marco togni](./img/img18.png)
 
-La modalità CBC prende il messaggio in chiaro, lo suddivide in blocchi, l'ultimo blocco è sottoposto a padding se necessario. Per ogni blocco, il testo in chiaro viene messo in XOR con un altro dato e sottoposto poi alla funzione di cifratura E ottenendo un testo cifrato c_i. Solo per quanto riguarda il blocco 1, il testo in chiaro viene dato in XOR con quello che si chiama _vettore di inizializzazione_ che è aleatorio ed è diverso da messaggio a messaggio. E' un insieme di bit, grande quanto il blocco.
+La modalità CBC prende il messaggio in chiaro, lo suddivide in blocchi, l'ultimo blocco è sottoposto a padding se necessario. Per ogni blocco, il testo in chiaro viene messo in `XOR` con un altro dato e sottoposto poi alla funzione di cifratura `E` ottenendo un testo cifrato c_i. Solo per quanto riguarda il blocco 1, il testo in chiaro viene dato in `XOR` con quello che si chiama _vettore di inizializzazione_ che è aleatorio ed è diverso da messaggio a messaggio. E' un insieme di bit, grande quanto il blocco.
 
-In fase di decifrazione, le operazioni sono inverse.
+In fase di decifrazione `D`, le operazioni sono inverse.
 
 Le caratteristiche di questo vettore sono:
 - **Casualità**;
@@ -954,7 +952,7 @@ Il vettore non deve essere necessariamente segreto. Sicuramente aumenta la robus
 
 Svantaggi:
 
-- In questo caso, non si può procedere in modo parallelo con più CPU perchè è necessario il cifrato del passo precedente in fase ci cifrazione. Invece, il parallelismo lo si ottiene in fase di decifrazione se si hanno già tutti i pezzi di cifrato che costituiscono.
+- In questo caso, non si può procedere in modo parallelo con più CPU perchè è necessario il cifrato del passo precedente in fase ci cifrazione. Invece, il parallelismo lo si ottiene in fase di decifrazione se si hanno già tutti i pezzi di cifrato che costituiscono;
 - Se un attaccante, modifica un qualcunque bit di un blocco, l'errore si propaga nei blocchi successivi.
 
 Da un punto di vista hardware è possibile che si implementino due circuiti diversi: uno in fase di encryption e l'altro in fase di decryption. Molti algoritmi hanno la E che coincide con D ma se non coincidono si dovrebbe usare due circuiti diversi.
@@ -965,8 +963,8 @@ Questo schema ricorda un _cifrario a flusso autosincronizzante_.
 
 ![marco togni](./img/img19.png)
 
-Si prende un registro a scorrimento che viene inizializzato con un vettore di inizializzazione che è casuale, non necessariamente segreto, imprevedibile e usato una sola volta. Il registro è formato da due parti: una parte formata dagli s bit meno significativi e l'altra dai b-s bit più significativi. A scorrimento vuol dire che ad ogni clock b-s bit "escono" dal registro. Il registro a scorrimento viene sottoposto ad una cifratura con la chiave K. L'uscita va a finire in un altro registro a scorrimento che è formato da s bit più significativi e b-s bit meno significativi.
-Il cifrato finale è ottenuto mettendo in OXR s bit del testo in chiaro con gli s bit più significati del vettore a scorrimento di cifratura. Il risultato è il cifrato costituito da s bit.
+Si prende un registro a scorrimento che viene inizializzato con un vettore di inizializzazione che è casuale, non necessariamente segreto, imprevedibile e usato una sola volta. Il registro è formato da due parti: una parte formata dagli s bit meno significativi e l'altra dai b-s bit più significativi. A scorrimento vuol dire che ad ogni clock s bit "escono" dal registro. Il registro a scorrimento viene sottoposto ad una cifratura con la chiave `K`. L'uscita va a finire in un altro registro a scorrimento che è formato da s bit più significativi e b-s bit meno significativi.
+Il cifrato finale è ottenuto mettendo in `XOR` s bit del testo in chiaro con gli s bit più significati del vettore a scorrimento di cifratura. Il risultato è il cifrato costituito da s bit.
 
 Al passo 2, i b-s bit contengono ancora alcuni vecchi bit del vettore di inizializzazione ma prima o poi i bit di questo vettore vengono buttati fuori.
 
@@ -974,25 +972,25 @@ Al passo 2, i b-s bit contengono ancora alcuni vecchi bit del vettore di inizial
 
 In decifrazione, si procede analogamente. Per decifrare il primo blocco di testo in chiaro bisogna avere il cifrato ottenuto al passo precedente vuol dire scorrere indietro. La prima cosa da fare è partire dall'ultimo blocco e recuperare a ritroso.
 
-In fase di decifrazione, si usa sempre la stessa funzione E cioè l'implementazione dell'algoritmo è la stessa (stesso circuito hardware).
+In fase di decifrazione, si usa sempre la stessa funzione `E` cioè l'implementazione dell'algoritmo è la stessa (stesso circuito hardware).
 
-Si usa, ad esempio, quando si ha una trasmissione carattere per carattere (8 bit alla volta). Inoltre, il vettore deve essere necessariamente imprevedibile.
+Inoltre, il vettore deve essere necessariamente imprevedibile.
 
 Il vettore non deve essere necessariamente segreto. Sicuramente aumenta la robustezza ma non è un requisito necessario.
 
-Su canali rumorosi dove la modifica dei bit è frequente non è adatto perchè il testo viene poi scartato. <!-- Per le caratteristiche generali di flusso autosincronizzante -->
+Su canali rumorosi dove la modifica dei bit è frequente non è adatto perchè il testo viene poi scartato. Si usa, ad esempio, quando si ha una trasmissione carattere per carattere (8 bit alla volta). <!-- Per le caratteristiche generali di flusso autosincronizzante -->
 
 ### Output Feedback (OFB)
 
-Questo schema ricorda un cifrario a flusso sincrono.
+Questo schema ricorda un _cifrario a flusso sincrono_.
 
 ![marco togni](./img/img21.png)
 
-Si parte da un vettore di inizializzazione che serve sempre per inizializzare lo stato di un registro a scorrimento. L'uscita del registro a scorrimento viene cifrata per poi essere messa in ingresso ad un altro registro a scorrimento e gli s bit più significativi dell'output vengono messi in XOR con gli s bit del testo in chiaro.
+Si parte da un vettore di inizializzazione che serve sempre per inizializzare lo stato di un registro a scorrimento. L'uscita del registro a scorrimento viene cifrata per poi essere messa in ingresso ad un altro registro a scorrimento e gli s bit più significativi dell'output vengono messi in `XOR` con gli s bit del testo in chiaro.
 
 ![marco togni](./img/img22.png)
 
-In decifrazione, non si usa la funzione inversa ma si continua ad usare la funzione di encryption (stesso circuito hardware).
+In decifrazione, non si usa la funzione inversa ma si continua ad usare la funzione di encryption `E` (stesso circuito hardware).
 
 Il vettore non deve essere necessariamente segreto. Sicuramente aumenta la robustezza ma non è un requisito necessario. Inoltre, il vettore non deve essere necessariamente imprevedibile ma unico perchè si ha un problema di confidenzialità se la chiave è usata più volte.
 
@@ -1006,7 +1004,7 @@ Questa modalità si applica un cifrario a blocchi per generare un flusso di chia
 
 Il  messaggio in chiaro si suddivide in blocchi, ogni blocco viene messo in XOR con un numero di bit di chiave che è generato cifrando con un cifrario a blocchi lo stato di un contatore che deve essere reso aleatorio. L'aleatorietà la si ottiene aggiungendo allo stato di un contatore che ad ogni blocco si incrementa (o, 1, 2 etc). Gli stati sono resi imprevedibili perchè la parte iniziale è riempita da un numero casuale e imprevedibile (seed) generato da un PNRG
 
-I blocchi possono lavorare in parallelo sia in fase di E che di D.
+I blocchi possono lavorare in parallelo sia in fase di `E` che di `D`.
 
 Questo schema viene usato, ad esempio, su reti ATM.
 
