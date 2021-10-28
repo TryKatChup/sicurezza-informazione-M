@@ -841,7 +841,12 @@ Il testo cifrato `c` sarà sicuramente più lungo di 128 bit per cui non ha sens
 I cifrari a flusso si suddividono in:
 
 - **Cifrario a flusso sincrono**: il flusso di chiave dipende solo dal seme;
+
+  ![dedurre](./img/img43.png)
+
 - **Cifrario a flusso autosincronizzante**: il flusso di chiave dipende dal seme ma anche dai bit di testo cifrato precedenti.
+
+  ![dedurre](./img/img42.png)
 
 ### Cifrario a flusso sincrono vs Cifrario a flusso autosincronizzante
 
@@ -891,7 +896,7 @@ La proprietà di _malleabilità_ consiste nella possibilità di alterare il cifr
 
 Il mittente effettua `m XOR k`, l'attaccante prende `(m XOR k) XOR p` dove `p` è scelto da lui e sostituisce il messaggio sul canale con il nuovo messaggio cifrato modificato. La destinazione, decifra `((m XOR k) XOR p)) XOR k` e quindi non sarebbe altro che fare `m XOR p`.
 
-Lo XOR è commutativo! Fare `(m XOR k) XOR p` è lo stesso di `(m XOR p) XOR k`. Fare le tabelle di verità per credere!
+Fare le tabelle di verità per credere!
 
 ![marco togni](./img/img25.png)
 
@@ -925,7 +930,7 @@ Svantaggi:
 - **Determinismo**: a blocchi in chiaro identici corrispondono blocchi cifrati assolutamente identici. Ciò vuol dire che se viene inviato lo stesso messaggio, queste sono informazioni in più che si riescono a capire. Se il messaggio è strutturato l'intrusore può sfruttarlo a suo favore;
 - **Maleabilità**: un intrusore è in grado di modificare il testo cifrato in modo tale che la destinazione quando lo decifra ottiene un testo da lui scelto. Ad esempio, si consideri una transazione bancaria. Nel primo blocco si ha il mittente, nel secondo il destinatario e nel terzo la cifra da trasferire. L'intrusore, sostituisce al blocco del destinatario, il suo. Se il mittente è "Luca", il destinatario è "Lucia" e la somma da trasferire "100", l'attaccante basta che sostituisce "Lucia" con il suo nome.
 
-Questa modalità si usa solo in casi specifici: ad esempio, cifrare delle informazioni che sono già per natura aleatoria. Ad esempio, una chiave di sessione.
+Questa modalità si usa solo in casi specifici: ad esempio, cifrare delle informazioni che sono già per natura aleatoria e ci deve essere solo un blocco! Ad esempio, una chiave di sessione.
 
 ### Modalità di cifratura
 
@@ -961,12 +966,16 @@ Da un punto di vista hardware è possibile che si implementino due circuiti dive
 
 Questo schema ricorda un _cifrario a flusso autosincronizzante_. 
 
+![marco togni](./img/img44.png)
+
+Nel dettaglio, può essere rappresentato nel seguente modo:
+
 ![marco togni](./img/img19.png)
 
 Si prende un registro a scorrimento che viene inizializzato con un vettore di inizializzazione che è casuale, non necessariamente segreto, imprevedibile e usato una sola volta. Il registro è formato da due parti: una parte formata dagli s bit meno significativi e l'altra dai b-s bit più significativi. A scorrimento vuol dire che ad ogni clock s bit "escono" dal registro. Il registro a scorrimento viene sottoposto ad una cifratura con la chiave `K`. L'uscita va a finire in un altro registro a scorrimento che è formato da s bit più significativi e b-s bit meno significativi.
 Il cifrato finale è ottenuto mettendo in `XOR` s bit del testo in chiaro con gli s bit più significati del vettore a scorrimento di cifratura. Il risultato è il cifrato costituito da s bit.
 
-Al passo 2, i b-s bit contengono ancora alcuni vecchi bit del vettore di inizializzazione ma prima o poi i bit di questo vettore vengono buttati fuori.
+Al passo 2, i b-s bit contengono ancora alcuni vecchi bit del vettore di inizializzazione ma prima o poi i bit di questo vettore vengono buttati fuori. I blocchi non prevedono padding.
 
 ![marco togni](./img/img20.png)
 
@@ -978,15 +987,19 @@ Inoltre, il vettore deve essere necessariamente imprevedibile.
 
 Il vettore non deve essere necessariamente segreto. Sicuramente aumenta la robustezza ma non è un requisito necessario.
 
-Su canali rumorosi dove la modifica dei bit è frequente non è adatto perchè il testo viene poi scartato. Si usa, ad esempio, quando si ha una trasmissione carattere per carattere (8 bit alla volta). <!-- Per le caratteristiche generali di flusso autosincronizzante -->
+Si usa, ad esempio, quando si ha una trasmissione carattere per carattere (8 bit alla volta). <!-- Per le caratteristiche generali di flusso autosincronizzante -->
 
 ### Output Feedback (OFB)
 
 Questo schema ricorda un _cifrario a flusso sincrono_.
 
+![marco togni](./img/img45.png)
+
+Nel dettaglio, può essere rappresentato nel seguente modo:
+
 ![marco togni](./img/img21.png)
 
-Si parte da un vettore di inizializzazione che serve sempre per inizializzare lo stato di un registro a scorrimento. L'uscita del registro a scorrimento viene cifrata per poi essere messa in ingresso ad un altro registro a scorrimento e gli s bit più significativi dell'output vengono messi in `XOR` con gli s bit del testo in chiaro.
+Si parte da un vettore di inizializzazione che serve sempre per inizializzare lo stato di un registro a scorrimento. L'uscita del registro a scorrimento viene cifrata per poi essere messa in ingresso ad un altro registro a scorrimento e gli s bit più significativi dell'output vengono messi in `XOR` con gli s bit del testo in chiaro. I blocchi non prevedono padding.
 
 ![marco togni](./img/img22.png)
 
@@ -998,7 +1011,7 @@ L'OFB si preferisce usarlo quando i canali sono rumorosi (ad esempio i satelliti
 
 ### Counter (CTR)
 
-Questa modalità si applica un cifrario a blocchi per generare un flusso di chiavi ma il registro a scorrimento contiene lo stato di un contatore.
+Questa modalità si applica un cifrario a blocchi per generare un flusso di chiavi ma il registro a scorrimento contiene lo stato di un contatore. I blocchi non prevedono padding.
 
 ![marco togni](./img/img29.png)
 
@@ -1012,24 +1025,27 @@ Questo schema viene usato, ad esempio, su reti ATM.
 
 Adesso bisogna capire come usare queste modalità in modo corretto. In questo esempio la modalità CBC non è usata correttamente.
 
-L'intrusore deve riuscire ad entrare in una sessione già avviata tra client e server e alterare il normale flusso dei dati (Man In The Middle). Se la versione di TLS è la 1.0 si rischia di subire questo attacco. E' bene ricordare che l'attacco è molto difficile da realizzare. 
+E' bene ricordare che l'attacco è molto difficile da realizzare.
+L'intrusore deve riuscire ad entrare in una sessione già avviata tra client e server e alterare il normale flusso dei dati (attacco _Man In The Middle_). Se la versione di TLS è la 1.0 si rischia di subire questo attacco.
 
 ![marco togni](./img/img23.png)
 
 All'inizio di una connessione TCP, il client e il server negoziano gli algoritmi di cifratura, la chiave della sessione e i parametri che vengono usati dai cifrari come il vettore di inizializzazione e anche la modalità di cifratura da usare.
 
-I dati a livello applicativo hanno una certa dimensione per cui vengono suddivisi in blocchi perchè vanno a finire in un pacchetto TCP che sono di dimensione inferiore. Ogni pacchetto poi viene concatenato a quello successivo. Se si usa un cifrario a blocchi CBC, a livello applicativo si avranno vettori di una certa dimensione.
+I dati a livello applicativo hanno una certa dimensione per cui vengono suddivisi in blocchi perchè vanno a finire in un pacchetto SSL il cui payload è di dimensione inferiore. Ogni pacchetto poi viene concatenato a quello successivo.
 
-A livello applicativo, client e server condividono un vettore di inizializzazione che è casuale, imprevedibile e usato una sola volta. Quando il messaggio viene suddiviso e incapsulato in pacchetti SSL, la modalità CBC viene applicata sui pezzi di messaggio e ogni pezzo di messaggio ha bisogno di un vettore di inizializzazione diverso. Non si può rinegoziare questo vettore di inizializzazione ogni volta perchè ha un costo. Come scelta, è stata adottata di usare come vettore di inizializzazione il residuo in termini di bit del cifrario del pacchetto precedente. Ad esempio, il primo pacchetto ha un cifrato, gli ultimi X byte vengono usati come vettore di inizializzazione per cifrare il pacchetto successivo. In questo modo, l'intrusore può prevedere qual è il vettore di inizializzazione che sarà usato nella cifratura di un pacchetto SSL. Cade il requisito di imprevedibilità.
+A livello applicativo, client e server condividono un vettore di inizializzazione che è casuale, imprevedibile e usato una sola volta. Quando il messaggio viene suddiviso e incapsulato in pacchetti SSL, la modalità CBC viene applicata sui pezzi di messaggio e ogni pacchetto ha bisogno di un vettore di inizializzazione diverso. Non si può rinegoziare questo vettore di inizializzazione ogni volta perchè ha un costo. Come scelta, è stata adottata di usare come vettore di inizializzazione il residuo in termini di bit del cifrario del pacchetto precedente. Ad esempio, il primo pacchetto ha un cifrato, gli ultimi X byte vengono usati come vettore di inizializzazione per cifrare il pacchetto successivo. In questo modo, l'intrusore può prevedere qual è il vettore di inizializzazione che sarà usato nella cifratura di un pacchetto SSL. Cade il requisito di imprevedibilità dal secondo pacchetto in poi.
 
 ![marco togni](./img/img24.png)
+
+Se il vettore di inizializzazione non è imprevedibile si incorre a questo tipo di attacco.
 
 Secondo la classificazione degli attacchi, questo fa parte della categoria _attacco con testo in chiaro scelto_.
 
 Si suppone che ci siano due persone che stanno parlando tra di loro: Luca e Lucia.
 
 Luca inizia sempre la conversazione con "Mia amata Lucia".  Supponiamo che "Mia amata" finisca in un blocco e "Lucia" in un altro. Le operazioni sono le seguenti:
-- "Mia amata" XOR con il vettore di inizializzazione producendo un cifrato;
+- "Mia amata" XOR con il vettore di inizializzazione casuale, imprevedibile e usato una e una sola volta, producendo un cifrato;
 - "Lucia" XOR con il cifrato del passo precedente producendo un nuovo cifrato.
 
 ![marco togni](./img/img30.png)
@@ -1038,18 +1054,24 @@ L'obiettivo dell'intrusore è cercare di capire se dando un input opportuno al p
 
 Basta conoscere come si comporta l’XOR, cioè se si fa l'XOR di uno stesso valore due volte, il secondo XOR annulla il primo:
 
+? XOR K1
+
 Bisogna eliminare l'effetto K1 perchè è quello che SSL userebbe e vedere se Lucia XOR K mi produce lo stesso cifrato.
-Invece, K è il residuo che Luca ha usato per cifrare Lucia al passo 1.
+K è il residuo che Luca ha usato per cifrare Lucia al passo 1:
 
-Lucia XOR K1 XOR K XOR K1 = Lucia XOR K
+(Lucia XOR K1 XOR K) XOR K1
 
-#### Dimensione della chiave
+Lucia XOR K1 XOR K XOR K1
 
-La dimensione della chiave è importante ma anche la dimensione del blocco che definisce quanti dati possono essere cifrati con la stessa chiave. La cifratura deve essere robusta fino a 2^n input diversi.
-Purtroppo molte modalità di cifratura diventano insicure dopo 2^n/2 cifrature a causa dell’aumento di probabilità di collisioni tra due blocchi di cifrato.
-La collisioni tra due blocchi permette di rivelare l’XOR tra i testi in chiaro dei corrispondenti blocchi. Se l’attaccante riesce a fare ipotesi su un testo in chiaro puo’ recuperare l’altro testo in chiaro.
+Lucia XOR K
 
-In questo caso, la modalità CBC è usata perfettamente ma nonostante ciò si va contro a questo attacco: se ci sono due testi uguali cifrati in modalità CBC vuol dire che se si mettono ogni bit in XOR dei due cifrati, si ottiene l'XOR dei due messaggi in chiaro.
+#### Dimensione del blocco
+
+Non solo la dimensione della chiave è importante ma anche la dimensione del blocco perchè definisce quanti sono i dati possono essere cifrati con la stessa chiave. La cifratura deve essere robusta fino a 2^n input diversi.
+Purtroppo molte modalità di cifratura diventano insicure dopo 2^n/2 cifrature a causa dell’aumento di probabilità di collisioni tra due blocchi di cifrato per il paradosso del compleanno.
+Con 64 bit c'è questa problematica.
+
+La modalità CBC è usata ma nonostante ciò si va contro a questo attacco: se ci sono due testi uguali cifrati in modalità CBC vuol dire che se si mettono ogni bit in XOR dei due cifrati, si ottiene l'XOR dei due messaggi in chiaro. Si guardi paragrafo precedente sulla malleabilità.
 
 ## Gestione della chiave
 
@@ -1269,25 +1291,31 @@ Con questo protocollo si risolvono i problemi del ripudio e della falsificazione
 
 # Meccanismi asimmetrici
 
-Obiettivo è capire quali trasformazioni si possono implementare.
-
-Viene usata per generatori numeri pseudo-casuali, cifrari che garantiscono riservatezza, schemi di meccanismi di firma digitale e qualunque protocollo di identificazione/autenticazione. Viene usata soprattutto con schemi di firma digitale. Non viene utilizzata per motivi di efficienza per costruire PNRG e cifrari.
+Viene usata per generatori numeri pseudo-casuali, cifrari che garantiscono riservatezza, schemi di meccanismi di firma digitale che garantisca il non-ripudio e qualunque protocollo di identificazione/autenticazione. Viene usata soprattutto con schemi di firma digitale. Non viene utilizzata per motivi di efficienza per costruire PNRG e cifrari.
 
 ## Come distribuire le chiavi pubbliche in modo sicuro
 
-Autenticità: vuol dire che è una sequenza di bit associata a uno specifico utente e non ad un altro
+Autenticità: vuol dire che è una sequenza di bit associata a uno specifico utente e non ad un altro.
 
-Bisogna di usare una chiave pubblica bisogna essere certi dell'identità del proprietario e di verificarla. Si immagini l'utlizzo per motivi di confidenzialità: Se si deve cifrare i dati per Luca, si deve prendere la chiave pubblica di Luca, darla in pasto alla funzione di encryption e Luca usera la chiave privata e sulla funzione di decruption.
+Bisogna di usare una chiave pubblica bisogna essere certi dell'identità del proprietario e di verificarla. Si immagini l'utlizzo per motivi di confidenzialità: se si deve cifrare i dati per Luca, si deve prendere la chiave pubblica di Luca, darla in pasto alla funzione di encryption E e Luca userà la chiave privata sulla funzione di decryption. Se Luca usa una chiave pubblica che appartiene ad un altra persona, vuol dire cifrare i dati per l'intrusore.
 
-Verifica: se Luca vuole firmare un documento darà in pasto alla trasformazione V e verifica l'autenticità ma se la sequenza di bit non appartiene a Luca vuol dire che è un intrusore ad averla cambiata.
+Lo stesso vale per l'operazione di verifica: se Luca vuole firmare un documento, lo darà in pasto alla trasformazione V. Se la sequenza di bit non appartiene a Luca vuol dire che è un intrusore ad averla cambiata.
 
-Esempio attacco uomo in mezzo
+### Autorità di certificazione
 
-Si deve costruire un'infrastruttore che consente di memorizzare le chiavi pubbliche e chiunque le prelevi appartenga a qualcuno. Si usa una terza parte autorità di certificazione che si assume la responsabilità di dire che una sequenza di bit appartiene ad un utente.
+Si deve costruire un'infrastruttura che consente di memorizzare le chiavi pubbliche e chiunque le prelevi è certo che la chiave pubblica appartenga a qualcuno.
 
-L'autorità di certificazione ha il ruolo di dire che una seuqenza di bit che appartiene a Luca la certifica e chiunque può verificarla per dire che è autentica.
+Si usa una terza parte detta _autorità di certificazione_ che si assume la responsabilità di dire che una sequenza di bit appartiene ad un certo utente.
 
-Come è formato l'attestato: è una struttura che contiene al minimo, mnme proprietario, chiave pubblica e la firma sulle due informazioni. Come ogni struttura dati, devono essere interoperabili e quindi esistere uno standard di rappresentazione in modo che tutti gli applicativi possano interpretare (X.509). Di seguito:
+L'_autorità di certificazione_ ha il ruolo di dire se una sequenza di bit appartiene a Luca, la firmi e chiunque può verificare l'attestato di autenticità per affermare che è autentica.
+
+### Certificato a chiave pubblica
+
+Un certificato è una struttura dati che contiene informazioni
+
+![marco togni](./img/img46.png)
+
+Come ogni struttura dati, devono essere interoperabili e quindi esistere uno standard di rappresentazione in modo che tutti gli applicativi possano interpretare (X.509). Di seguito:
 - versione dello standard
 - numero seriale del certificato: ogni certificato ha un numero univoco che lo identifica. La terza parte è globale? No, non è pensabile che ci sia una terza parte globale ma tante terze parti che si fanno garante del proprio dominio
 - Algoritmo: quale algoritmo è stato usato per implementare la trasformata V.
