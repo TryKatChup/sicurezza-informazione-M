@@ -1274,6 +1274,8 @@ La firma digitale è un concetto ad alto livello che garantisce non ripudio. Le 
 
 # 21-10-2021
 
+00-54.00 rivedere questa parte!
+
 E' necessario inserire una terza entità (come un notaio). Come costruire il servizio di firma digitale con un cifrario simmetrico:
 
 Ci sono A e B, T è la terza parte. Ci sono delle chiavi precondivise tra A e B e questa terza parte. A quando vuole inviare un documento firmato digitalmente, deposita il documento alla terza parte. T invierà ad A la ricevuta ad A. A invierà il contratto comn la ricevuta a B e B verifica con T la verifica del documento.
@@ -1291,47 +1293,189 @@ Con questo protocollo si risolvono i problemi del ripudio e della falsificazione
 
 # Meccanismi asimmetrici
 
-Viene usata per generatori numeri pseudo-casuali, cifrari che garantiscono riservatezza, schemi di meccanismi di firma digitale che garantisca il non-ripudio e qualunque protocollo di identificazione/autenticazione. Viene usata soprattutto con schemi di firma digitale. Non viene utilizzata per motivi di efficienza per costruire PNRG e cifrari.
+Viene usata per costruire generatori di numeri pseudo-casuali, cifrari che garantiscono riservatezza, schemi di meccanismi di firma digitale che garantiscano il non-ripudio e qualunque protocollo di identificazione/autenticazione. In particolare, viene usata soprattutto con schemi di firma digitale. Non viene utilizzata per motivi di efficienza per costruire cifrari con PNRG crittocraficamente sicuri.
+
+Rispetto ai cifrari simmetrici, si inizia a vedere la distribuzione delle chiavi perchè per poterli usare in modo efficace bisogna capire prima l'infrastruttura.
 
 ## Come distribuire le chiavi pubbliche in modo sicuro
 
-Autenticità: vuol dire che è una sequenza di bit associata a uno specifico utente e non ad un altro.
+Quandi si usa una chiave pubblica bisogna essere certi dell'identità del proprietario e quindi poterla verificare. Si immagini l'utlizzo della chiave per motivi di confidenzialità: se si deve cifrare i dati per Luca, si deve prendere la chiave pubblica di Luca, darla in pasto alla funzione di encryption E e poi Luca userà la chiave privata sulla funzione di decryption. Se si usa una chiave pubblica che appartiene ad un altra persona e non a Luca, vuol dire cifrare i dati probabilmente per un intrusore.
 
-Bisogna di usare una chiave pubblica bisogna essere certi dell'identità del proprietario e di verificarla. Si immagini l'utlizzo per motivi di confidenzialità: se si deve cifrare i dati per Luca, si deve prendere la chiave pubblica di Luca, darla in pasto alla funzione di encryption E e Luca userà la chiave privata sulla funzione di decryption. Se Luca usa una chiave pubblica che appartiene ad un altra persona, vuol dire cifrare i dati per l'intrusore.
-
-Lo stesso vale per l'operazione di verifica: se Luca vuole firmare un documento, lo darà in pasto alla trasformazione V. Se la sequenza di bit non appartiene a Luca vuol dire che è un intrusore ad averla cambiata.
+Lo stesso vale per l'operazione di verifica: se Luca vuole firmare un documento, lo darà in pasto alla trasformazione V. Se la sequenza di bit che arriva al destinatario non appartiene a Luca, vuol dire che è un intrusore ad averla cambiata.
 
 ### Autorità di certificazione
 
-Si deve costruire un'infrastruttura che consente di memorizzare le chiavi pubbliche e chiunque le prelevi è certo che la chiave pubblica appartenga a qualcuno.
+L'obiettivo è costruire un'infrastruttura che consenta di memorizzare le chiavi pubbliche e chiunque le prelevi è certo che la chiave pubblica appartenga a chi dice di essere. Si usa, quindi, una terza parte detta _autorità di certificazione_.
 
-Si usa una terza parte detta _autorità di certificazione_ che si assume la responsabilità di dire che una sequenza di bit appartiene ad un certo utente.
-
-L'_autorità di certificazione_ ha il ruolo di dire se una sequenza di bit appartiene a Luca, la firmi e chiunque può verificare l'attestato di autenticità per affermare che è autentica.
+L'_autorità di certificazione_ ha il ruolo di dire se una sequenza di bit appartiene a Luca, la firma e chiunque può verificare l'attestato di autenticità per affermare che la chiave pubblica è autentica.
 
 ### Certificato a chiave pubblica
 
-Un certificato è una struttura dati che contiene informazioni
+Un certificato è una struttura dati le cui informazioni minime che deve per forza contenere sono:
+
+- nome del proprietario della chiave pubblica
+- chiave pubblica
+- firma su queste due informazioni
+
+Come ogni struttura dati, per essere usati su larga scala, deve essere interoperabili e quindi esistere uno standard di rappresentazione in modo che tutti gli applicativi possano interpretare. Questo standard si chiama X.509.
 
 ![marco togni](./img/img46.png)
 
-Come ogni struttura dati, devono essere interoperabili e quindi esistere uno standard di rappresentazione in modo che tutti gli applicativi possano interpretare (X.509). Di seguito:
-- versione dello standard
-- numero seriale del certificato: ogni certificato ha un numero univoco che lo identifica. La terza parte è globale? No, non è pensabile che ci sia una terza parte globale ma tante terze parti che si fanno garante del proprio dominio
-- Algoritmo: quale algoritmo è stato usato per implementare la trasformata V.
-- Quale nome è della terza parte: es. Posteitaliane ma come organizzazione potrebbe avere più nomi
-- a
-- : contengono le info relative alla chiave
-- Campo di validità temporale: quanto è valido quel certificato.
-- Campi aggiuntivi:
-- estensione: rende flessibile ai fini applicativi il certificato
+Le informazioni sono le seguenti:
+- Versione dello standard: al momento le versioni dello standard sono 3 (1, 2 e 3);
+- Numero seriale del certificato: ogni certificato ha un numero univoco che lo identifica all'interno della terza parte. Non è pensabile che ci sia una terza parte globale ma tante terze parti che si fanno garante del proprio dominio;
+- Algoritmo: quale algoritmo della trasformata V è stato usato dalla terza parte per costruire l'attestato di autenticità;
+- Iusser Name: quale nome è della terza parte ed è interpretabile dall'essere umano. Ad esempio, Posteitaliane in quanto organizzazione potrebbe avere più nomi. Posteitaliane per la pubblica amministeazione e Posteitaliane per i privati;
+- Period of validity: dice quanto è valido il certificato da usare. La terza parte non assume a vita per un tempo illimitato che a Luca corrisponde una stringa di bit. Si assume legalmente la responsabilità. Se qualcosa va storto pagherà i danni economici conseguenti all'uso scorretto del certificato. Ad esempio, per un anno quell'associazione è corretta. Se durante questo anno va storto nelle clausole contrattuali sarà responsabile la terza parte;
+- Subject Name: possessore del certificato
+- Subject's public key info: stringa bit che corrisponde alla chiave pubblica
+- Estensione: Campi aggiuntivo. rende flessibile ai fini applicativi il certificato. Se distribuisco in una repository pubblica un certificato, può servire il certificato qual è il ruolo di Luca o il suo indirizzo di lavoro, email istituizione? A volte si usa questo campo per aggiungere info a livello applicativo.
 
-Che cosa è una directory? Capace di memorizzare grandi quantità di dati e di scalabilità. X.500. Può essere integrato con PKI.
+La firma viene fatta su tutte le informazioni della struttura dati perchè deve essere garantita l'autenticità, tranne il campo estensione perchè queste informazioni sono da verificare e non è detto che siano corrette.
 
-prima fase: come l'utente diventa certificato. Quali sono gli aspetti importanti che hanno un impatto sulla sicurezza. L'utente deve generare una coppia di chiavi.
+Tutte le volte che si aggiungono campi bisogna chiedersi se sono necessarie perchè si aggiunge un overhead di rete, di memorizzazione. 
 
-Esistono diversi modelli gestionali che supportano la richiesta di certificato:
-- La generazione delle chiavi, avvenga sull'autorità di autorizzazione. L'utente dice
+### PKI (Public Key Infrastructure)
+
+con PKI si intende un'infrastruttura costituita da un insieme di componenti che serve per gestire il ciclo di vita delle chiavi pubbliche. Senza questa architettura non si possono usare i cifrari asimmetrici su larga scala. Da un punto di vista architetturale i componenti sono i seguenti:
+
+- **CA**: autorità di certificazione;
+- **RA**: autorità di registrazione;
+- **Directory**: repository in cui si trovano tutti i certificati.
+
+<!--Gli utenti possono usufruire di molteplici servizi: possibilità di ottenere un certificato a chiave pubblica, di rinnovarlo quando scade, revocare un certificato quando sono cambiate informazioni, compromesso etc.
+
+Fase di inizializzazione:
+Un utente all'inizio deve farsi identificare, una volta identificato ottenere dall'autorità di certificazione un certificato. Una volta ottenuto dovrà essere pubblicato su un sistema di Directory
+
+Fase a regime:
+Gli utenti interagiscono con un sistema di Directory per ottenere i certificati degli altri utenti che si sono già registrati.
+
+L'autorità di certificazione gestisce le operazioni di amministrazione del certificato, deve poter revocare il certificato e deve pubblicare un'informazione relativa la revoca di quel certificato.-->
+
+### Directory
+
+Esiste uno standard X.500 che può essere usato per integrato nell'infrastruttura PKI.
+
+Consente di creare un sistema di Directory distribuito capace di garantire alte prestazioni e alta disponibilità.
+
+![marco togni](./img/img48.jpg)
+
+Dato che è distribuito, ci sono diversi nodi: DSA (Directory Service Agent) che gestisce un sottoinsieme di informazioni e quando un utente detto DUA chiede informazioni al proprio DSA e se non ha le informazioni richieste, si coordina con gli altri DSA per ottenere le informazioni richieste.
+
+Inoltre, può differenziare tra accesso anonimo e accesso autenticato. Un certificato anonimo va bene per i certificati perchè le informazioni non è critica ma per sua natura deve essere pubblica.
+
+![marco togni](./img/img47.png)
+
+Un Directory X.500 prevede di memorizzare le informazioni secondo un modello concettuale che ruota attorno a due concetti:
+- Oggetto: definisce quali attributi sono richiesti e consentiti in una entry;
+- Attributi: è formato da una coppia chiave-valore. Ogni attributo ha un tipo e uno o più valori
+
+Il modello informativo è incentrato sulle entry, che sono composte da attributi; ogni entry è associata a una classe di oggetti che descrive diversi gli attributi e i valori che dovrebbe contenere.
+
+Le entry all'interno di una directory sono memorizzate secondo una schema gerarchico a File System.
+
+Esempio di schema:
+
+![marco togni](./img/img49.png)
+
+Sono utenti che appartengono ad una multinazionale. A livello concettuale è stato deciso di rappresentare nel seguente modo:
+
+Si vuole dare le informazioni a livello geografico. Ad esempio in Canada che è la radice, si ha l'organizzazione e a sua volta ci sono le sedi fino ad arrivare ai dipendenti specifici. Le informazioni sono organizzate sotto forma di entry e sono organizzate gerarchicamente e ogni entry ha un suo nome.
+
+X.500 definisce come devono essere organizzati lato server i DSA mentre lato client come accedere alla directory. Il protocollo di accesso alla directory è LDAP. Ad esempio, per l'autenticazione in UNIBO si usa questo protocollo.
+
+### Richiesta di un certificato
+
+Il protocollo che consente ad un utente di registrarsi a un PKI è il seguente:
+
+Inizializzazione:
+Luca deve generare una coppia di chiavi, deve farsi identificare da una registration authority e Luca quando deve richiedere un certificato:
+- chi riceve la richiesta di certificato, ci deve essere il nome del richiedente perchè deve essere verificato chi dice di essere;
+- Nella richiesta, Luca possiede effettivamente la sua chiave privata?
+Come si garantisce di possedere effettivamente la chiave privata:
+
+
+### Protocolli di gestione
+
+Esistono diversi modelli con cui è possibile mettere in piedi infrastrutture di chiave pubblica che supportino le richieste di certificato:
+
+- **Schema centralizzato**: prevede che ci sia solo utente finale e un'autorità di ceritificazione (CA). La generazione delle chiavi avviene direttamente da parte dell'autorità di certificazione;
+- **Schema a tre parti**: prevede che ci sia l'utente, un RA e una CA.
+
+### Schema centralizzato
+
+Da punto di vista operativo questo schema non viene mai usato. Questo modello può andare bene se si vuole realizzare solo un servizio di cifratura: un'azienda con i suoi dipendenti aziendali:
+  - **Vantaggi**: una CA interna salva la chiave privata e distribuisce la coppia di chiavi ai dipendenti che la utilizzano poi per scambiare informazioni. L'azienda è proprietaria dei dati e in questo modo può risalire a tutti i dati in caso se la chiave privata venga persa;
+  - **Svantaggi**:
+    - il supporto al non ripudio non è garantito perchè la chiave privata l'ha due entità diverse. Per questo motivo non la si può usare come firma digitale.
+    - La CA è contattata da tutti gli utenti è quindi c'è un certo carico ma soprattutto c'è una porta in ascolto. Meno la CA ha aperte porte aperte verso l'esterno meglio è perchè ha la coppia di chiavi con cui rilascia i certificati.
+
+### Schema a tre parti
+
+I modelli a tre parti, possono prevedere diverse alternative:
+
+- L'utente comunica solo con la RA che a sua volta comunica solo con la CA. L'utente avvia il processo di generazione delle chiavi, si deve far identificare di persona dalla RA. Ad esempio, per ritirare il badge ci si presenta di persona per farselo rilasciare (sorta di RA). RA a questo punto, se l'utente si identifica e trova il possesso della chiave privata, invia una richiesta alla CA chiedendo di rilasciare il certificato e lo restituisce alla RA che a sua volta lo restituisce all'utente.
+
+La normativa italiana prevede che la chiave segreta sia generata dall'utente perchè deve avere il controllo pieno. Da un punto di vista tecnico la generazione può avvenire in due modi:
+- Viene chiesto un certificato fisicamente: ci si reca dalla RA che restituisce un modulo crittografico ma vuoto. L'utente in sua presenza avvia la generazione della coppia di chiavi. Il modulo crittografico è collegato ad esempio tramite una seriale a una smart card e al software della RA e restituisce la coppia di chiavi. Successivamente, l'utente cambia il PIN iniziale. L'identificazione è verificata. Questo modello ha un rallentamento perchè bisogna fare numerosi passaggi e c'è una fase in cui la chiave privata non è di proprietà dell'utente.
+![img](./img/img50.png)
+- Viene chiesto un certificato da remoto: prevede che l'utente sia stato identificato una volta dalla RA. RA rilascia un autenticatore che lo si conserva fino al momento del bisogno. Al momento dell'identificazione si genera una chiave pubblica da remoto e la si invia alla RA oppure direttamente alla CA. RA/CA deve identificare e poi verificare che l'utente abbia davvero la chiave segreta corrispondente e invia il certificato. (lo standard IAK)
+![img](./img/img51.png)
+Il protocollo 
+Quando si fa una richiesta autenticata, l'utente deve aver ricevuto fuori banda un autenticatore iniziale, dopo deve aver generato le chiavi e deve aver creato una richiesta di certificato. La richiesta deve essere autenticata e si deve dimostrare di avere la chiave segreta.
+
+### Prova di possesso (POP)
+
+E' fondamentale garantirla perchè ovviamente se non si avessero le garanzie della prova di possesso:
+- Luca mette sul canale la chaive pubblica ma l'intrusore mette la sua chiave. La CA prende la stringa di bit che ha generato l'intrusore e produce un certificato. Chinque vuole parlare con Luca in realtà parla con l'intrusore.
+- L'intrusore manda una richiesta a nome di Luca, la CA prende la stringa di bit generata e la registra come appartenete a Luca anche se non è davvero lui.
+
+La prova di possesso si può realizzare in vari modi:
+- Da un punto di vista concettuale, si dovrebbe prendere il documento, appendere il certificato e dopo firmare tutto però questo a livello applicativo significa costruire applicazioni che prevedono la prova di possesso del certificato a tempo di firma. Ma può essere molto oneroso
+- Si mette la prova di possesso già al rilascio del certificato. Controllo a livello di infrastruttura
+- Metodi fuori banda:
+- Metodi online
+
+### Revoca di un certificato
+
+Un'infrastruttura deve gestire anche la revoca di un certificato. Lo si deve revocare quando succede qualcosa di sbagliato durante la validità temporale del certificato:
+- Può capitare che un utente non sia più fidato e quindi non si accetta più niente da lui
+- Un certificato presenta delle informazioni che sono cambiate e quindi bisogna costruirne uno nuovo.
+
+### Modelli di notifica della revoca
+
+Un criterio con cui vengono classificati i modelli è il seguente:
+
+- **Modello pull**: ci sono gli utenti che accedono alla directory e ritrovano le informazioni quando si accedono. Le informazioni vengono _tirate_
+- **Modello push**: quando un certificato viene revocato, gli utenti ricevono la notifica.
+
+Un secondo criterio si basa se si ha una connessione oppure no:
+
+- **Schemi on-line**: consente di verificare lo stato di verifica di revoca online
+  - Online Certificate Status Protocol
+- **Schemi off-line**: consente di verificare lo stato di verifica di revoca offline
+  - Certificate Revocation List
+  - Certificate Revocation Tree
+
+I modelli push non sono molto implementati perchè sono piuttosto complessi. Bisogna vedere se un utente è mobile/stazionario etc. Quindi, si preferiscono i modelli push.
+
+### CRL (Certificate Revocation List)
+
+Per rendere partecipi tutti gli utenti che una chiave non deve essere più usata, CA mantiene on-line una lista autenticata dei certificati revocati (CRL).
+
+E' un modello pull il cui funzionamento è off-line.
+
+![marco togni](./img/img52.png)
+
+La Certificate List è composta da alcuni campi che riguardano la revoca:
+
+- **revocation date**: numero seriale del certificato. Il numero seriale è un ID univoco. In generale, in questo campo si potrebbe inserire:
+  - **chiave pubblica**
+  - **nome del possessore**: il nome del possessore non è una buona idea perchè ad un nome possono essere associate più chiavi quindi non si sa quale è stata la chiave revocata.
+  - **id univoco**: tra tutti i certificati si sa a quale chiave appartiene in modo semplice
+- **This Update Date** e **Next Update Date**: l'autorità di certificazione emette a scadenze temporali, ad esempio, con scandenza bisettimanale, ogni ora etc, la lista di revoca. Le informazioni contenute in questa struttura dati valgono dal valore di "This Update Date", fino a "Next Update Date". Non valgono nè prima nè dopo. La lista di revoca viene pubblicata sulla Directory e verrà sostituita/affiancata (dipende dalla politica della CA) all'istante di tempo Next Update Date. Se questa lista viene pubblicata su una directory, sarà l'utente finale tramite il protocollo LDAP a recuperare la lista di revoca e può decidere se conservarla in locale fino al prossimo aggiornamento. Questa è una decisione lato cliente. Si può verificare lo stato di revoca in maniera offline.
+Problema di freschezza delle informazioni: se in quell'arco temporale, un altro certificato viene revocato, come fa l'utente finale a saperlo? Deve solo aspettare l'aggiornamento successivo. Se si deve sapere in tempo reale in tempo reale non è l'opzione migliore.
 
 ---
 ![marco togni](./img/marco_togni.jpg)
