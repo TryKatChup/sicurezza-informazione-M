@@ -5,15 +5,15 @@
 
 ### Scopo della sicurezza informatica
 
-Il tema della sicurezza informatica è molto importante, in un mondo come quello di oggi, dove l'informatica domina buona parte delle relazioni sociali, lavorative, economiche e politiche. Questo tema è ancora più sentito con l'arrivo del _COVID_ in cui il mondo si presta a digitalizzarsi.
-La sicurezza informatica ha quindi lo scopo di proteggere le risorse da accessi indesiderati, garantire la riservatezza delle informazioni, assicurare il funzionamento e la disponibilità dei servizi a fronte di eventi imprevedibili.
+Il tema della sicurezza informatica è molto importante, in un mondo come quello di oggi, dove l'informatica domina buona parte delle relazioni sociali, lavorative, economiche e politiche. Questo tema è ancora più sentito con l'arrivo del COVID in cui il mondo si presta a digitalizzarsi.
+Lo scopo della sicurezza informatica è di proteggere le risorse da accessi indesiderati, garantire la riservatezza delle informazioni, assicurare il funzionamento e la disponibilità dei servizi a fronte di eventi imprevedibili.
 Per essere più precisi, è l’insieme dei prodotti, dei servizi, delle regole organizzative e dei comportamenti individuali che proteggono i sistemi informatici di un’azienda.
 
 ### I tre capisaldi della sicurezza informatica (CIA Trade Triangle)
 
 L'acronimo _CIA_ viene usato per rappresentare le tre proprietà fondamentali della sicurezza informatica:
 
-- **Confidenzialità** (o **riservatezza**): assicura che solo chi è autorizzato può accedere (in sola lettura) a risorse o sapere almeno che esse esistano;
+- **Confidenzialità** (o **riservatezza**): solo chi è autorizzato può accedere (in sola lettura) a risorse o sapere almeno che esse esistano;
 - **Integrità**: solo chi è autorizzato può modificare, eliminare e creare risorse;
 - **Disponibilità**: solo chi è autorizzato può accedere alle risorse senza interferenze ed ostacoli.
 
@@ -21,64 +21,38 @@ L'acronimo _CIA_ viene usato per rappresentare le tre proprietà fondamentali de
 
 A queste proprietà se ne possono aggiungere altre come:
 
-- **Autenticità**: si deve effettivamente dimostrare chi è stato a creare il dato o sapere da chi proviene;
-- **Non ridupio**: quando una qualsiasi operazione sul dato è avvenuta, a posteriori, ad una terza parte si può dimostrare con certezza la paternità di quell'operazione.
+- **Autenticità**: occorre effettivamente dimostrare chi è stato a creare il dato o sapere da chi proviene;
+- **Non ridupio**: quando una qualsiasi operazione sul dato è conclusa, si può dimostrare con certezza a una terza parte la paternità di quell'operazione.
 
 ### Terminologia
 
 - **Vulnerabilità**: punto debole del sistema che può rendere realizzabile una minaccia;
-- **Minaccia**: un atto ostile intenzionale o meno che ha un qualsiasi effetto negativo sulle risorse o sugli utenti del sistema;
-- **Attacco**: qualsiasi azione che usa una vulnerabilità per concretizzare una minaccia;
+- **Minaccia**: atto ostile intenzionale o meno che ha un qualsiasi effetto negativo sulle risorse o sugli utenti del sistema;
+- **Attacco**: qualsiasi azione che sfrutta una vulnerabilità per concretizzare una minaccia;
 - **Contromisura**: azione, dispositivo, procedura o tecnica che consente di rimuovere o ridurre una vulnerabilità.
 
-Esempio: un ponte ha una crepa (vulnerabilità), rischia di crollare (minaccia), un peso totale eccessivo sul ponte (attacco), cercare di controllare il numero di veicoli sul ponte (contromisura).
+Esempio:
 
-<!-- toglierei questo paragrafo
-- **Virus**: provoca danni e si replica propagato dagli umani (involontariamente);
-- **Worm**: provoca danni perché si autoreplica (satura risorse) in maniera automatica, senza l'intervento dell'utente;
-- **Trojan (horse)**: vettore di malware, contiene funzionalità aggiuntive impreviste;
-- **Backdoor**: punto di accesso non autorizzato;
-- **Rootkit**: strumenti per accesso privilegiato, nascosti (modifica di un programma, libreria, driver,
-modulo kernel, hypervisor) ed invisibili.-->
+- Un ponte ha una crepa (vulnerabilità);
+- Rischia di crollare (minaccia);
+- Un peso totale eccessivo sul ponte (attacco);
+- Cercare di controllare il numero di veicoli sul ponte (contromisura).
 
-<!--CANCELLEREI QUESTO PARAGRAFO :P
-### Poi ha detto qualche vulnerabilità a caso, spiegando bene solo l'IP spoofing e il SYN flooding, ma il resto le ha tralasciate perché sì.
-da scrivere bene dopo--!> <!--QUANDO VUOI...-->
-
----
-
-<!-- da togliere per fare il blocco 1 tutto unito -->
 ## 27/09/2021
 
 ### Calcolatore sicuro
 
-Un calcolatore per essere sicuro lo deve essere sia a livello hardware che a livello software. Ovviamente questa ipotesi non è sempre verificata, ma in questo corso quando studieremo i servizi e meccanismi di sicurezza lo daremo per scontato.
+La sicurezza di un calcolatore deve essere garantita sia a livello hardware che a livello software. Ovviamente questa ipotesi non è sempre verificata, ma in questo corso quando studieremo i servizi e meccanismi di sicurezza lo daremo per scontato.
 
 <!-- differenza tra servizi e meccanismo di sicurezza -->
 
 Quando parliamo di sicurezza dei dati, faremo un'assunzione fondamentale: l'hardware, il firmware e il sistema operativo sono **sicuri**.
 
-<!-- se è stato tolto il firmware toglierei anche questo-->
-### Sicurezza hardware
-
-Soprattutto negli ultimi anni, la sicurezza hardware sta emergendo in maniera preponderante; si sono scoperte vulnerabilità a livello di componenti fisici, in particolare:
-
-- Memorie
-- Periferiche
-- I/O
-- linee di trasmissione
-
-L'ambito della sicurezza hardware si occupa di proteggere il calcolatore, ma anche altri dispositivi fisici, da minacce quali furto, danneggiamento o alterazione dei componenti. Questa parte non verrà trattata nel corso e non sarà oggetto di esame.
-<!-- se è stato tolto il firmware toglierei anche questo-->
-
-<!-- toglierei anche questo -->
 ### Valutazione, Certificazione, Enti
 
-Per poter sapere se un prodotto software sia sicuro, ci deve essere qualcuno che lo garantisca.
-In questo caso, occorrono degli enti di certificazione che definiscono delle metodologie con cui andare a verificare che un progetto sia effettivamente sicuro. Applicando questi standard, gli enti ci garantiscono la sicurezza del prodotto che installiamo.
+Gli enti di certificazione definiscono delle metodologie che consentono di verificare che un progetto sia effettivamente sicuro. Applicando questi standard, gli enti garantiscono la sicurezza del prodotto che installiamo.
 
 Esempi di standard internazionali per valutazione e certificazione della sicurezza: Orange book del NCSC, ISO 17799, CINI, CERT, ecc.
-<!-- toglierei anche questo -->
 
 ### Modello a canale insicuro
 
@@ -88,9 +62,9 @@ Questo modello prevede che ci sia una sorgente dei dati, una destinazione a cui 
 
 Assumiamo che:
 
-- La sorgente abbia un ambiente sicuro (hardware e sistema operativo sicuri);
-- La destinazione abbia un ambiente sicuro (hardware e sistema operativo sicuri);
-- Il canale sia insicuro, ovvero che sul canale si possano inserire degli intrusori e possono fare degli attacchi su tale canale.
+- La sorgente sia in un ambiente sicuro (hardware e sistema operativo sicuri);
+- La destinazione sia in un ambiente sicuro (hardware e sistema operativo sicuri);
+- Il canale sia insicuro, ovvero la possibilità di presenza di intrusori che possano fare degli attacchi su tale canale.
 
 Definito un modello di questo genere, l'obiettivo finale sarà di garantire che la destinazione possa consumare ed interpretare correttamente i dati inviati dalla sorgente.
 
@@ -98,20 +72,14 @@ Definito un modello di questo genere, l'obiettivo finale sarà di garantire che 
 
 Gli attacchi si classificano in due tipologie:
 
-- **Passivo**: l'intrusore si inserisce sul canale e osserva solo i dati trasmessi. Ad esempio, se il canale è un cavo di rete, si usa uno sniffer. Viene minato il requisito di _confidenzialità_;
+- **Passivo**: l'intrusore si inserisce sul canale e osserva solo i dati trasmessi. Ad esempio, se il canale è un cavo di rete, si usa uno _sniffer_. Viene minato il requisito di _confidenzialità_;
 - **Attivo**: l'intrusore si inserisce sul canale ed altera il normale flusso dei dati. Può:
   - **Modificare** il flusso intenzionalmente per cambiare il contenuto dei dati. Viene minato il requisito dell'_integrità_;
   - **Aggiungere** nuove informazioni facendo credere alla destinazione che siano state inviate dalla sorgente legittima. Viene minato il requisito dell'_autenticità_;
   - **Interrompere** il normale flusso impedendo che i dati arrivino alla destinazione. Viene minato il requisito di _disponibilità_.
 
+### Contromisure e analisi del rischio
 
-<!-- Riassumendo:
-
-non ha detto niente del genere 
-- **Attacchi passivi**: mina confidenzialità e autenticazione (esempio: Man In The Middle);
-- **Attacchi attivi**: integrità, autenticità e disponibilità.-->
-
-### Contromisure
 Esistono 3 tipologie di contromisure per gli attacchi:
 
 - **Prevenzione**: si previene la possibilità di un attacco;
@@ -120,34 +88,32 @@ Esistono 3 tipologie di contromisure per gli attacchi:
 
 Il tipo di contromisura da adottare viene scelta anche in base al sistema e a cosa si vuole proteggere (nel corso il focus è incentrato sui dati).
 
-La contromisura ha un costo in termini di soldi, di impegno delle risorse informatiche del sistema, di impatto sugli utenti, una sua efficacia (a fronte di una certa minaccia) e dei suoi effetti collaterali (la creazione di nuove vulnerabilità). Una certa contromisura, quindi, deve essere applicata attentamente, valutando sia la probabilità che si verifichi una certa minaccia in grado di sfruttare una certa vulnerabilità, sia il danno che ne discende. Questa attività è chiamata _analisi del rischio_.
+La contromisura ha:
 
-Come ingegneri (LOL https://youtu.be/EOR8Uz27s3Y?t=420), l'obiettivo è capire a fronte di più possibilità progettuali quale risulti la migliore scelta per garantire la sicurezza del proprio sistema e dei propri dati.
+- Un costo in termini economici, di impegno delle risorse informatiche del sistema, di impatto sugli utenti;
+- Una sua efficacia (a fronte di una certa minaccia) e dei suoi effetti collaterali (la creazione di nuove vulnerabilità).
+
+Una certa contromisura, quindi, deve essere applicata attentamente, valutando sia la probabilità che si verifichi una certa minaccia in grado di sfruttare una certa vulnerabilità, sia il danno che ne discende. Questa attività è chiamata _analisi del rischio_.
+
+Come i [veri ingegneri dimostrano](https://youtu.be/EOR8Uz27s3Y?t=420), l'obiettivo è capire a fronte di più possibilità progettuali quale risulti la migliore scelta per garantire la [sicurezza](https://twitter.com/AndreaDraghetti/status/1455576154425933828) del proprio [sistema](https://raidforums.com/Thread-Italy-s-Ministery-of-Healthcare-hacked-and-Blackmails-WhiteHatsicurezza) e dei propri dati.
 
 #### Possibili contromisure per attacchi passivi
 
-L’unica contromisura da utilizzare è la _prevenzione_. La _rilevazione_ e la _reazione_ risultano inutili dopo che l'attacco è avvenuto perchè ormai l'intrusore ha intercettato i messaggi.
+L’unica contromisura da utilizzare è la _prevenzione_. La _rilevazione_ e la _reazione_ risultano inutili dopo che l'attacco è avvenuto poiché l'intrusore ha intercettato i messaggi.
 
 Si può:
-- **Impedire** l'accesso al canale. Ciò viene implementato tramite l'utilizzo o di canali dedicati, oppure progettando meccanismi di controllo dell'accesso, in modo che ogni volta che una sorgente accede al canale, il meccanismo chiede di autenticarsi. Questa soluzione non è tuttavia né economicamente sostenibile né scalabile;
-- **Criptare** i dati da inviare, ovvero rendere incomprensibili i dati trasmessi, tranne al destinatario legittimo.
+
+- **Impedire** l'accesso al canale. Ciò viene implementato tramite l'utilizzo o di canali dedicati, oppure progettando meccanismi di controllo dell'accesso, in modo che ogni volta che una sorgente accede al canale, sia prevista l'autenticazione del cliente. Questa soluzione non è tuttavia né economicamente sostenibile né scalabile;
+- **Cifrare** i dati da inviare, ovvero rendere incomprensibili i dati trasmessi, tranne al destinatario legittimo.
 
 #### Possibili contromisure per attacchi attivi
 
-Le contromisure da adottare, a differenza degli attacchi passivi, includono anche la _rilevazione_ e la _reazione_. L'unico modo per _prevenire_ un attacco attivo è quello di controllare l'accesso al canale, ma ovviamente è quasi impossibile per i motivi specificati in precedenza. Questa contromisura, quindi, non viene usata.
+Le contromisure da adottare, a differenza degli attacchi passivi, includono anche la _rilevazione_ e la _reazione_. L'unico modo per _prevenire_ un attacco attivo è quello di controllare l'accesso al canale. Tuttavia, è quasi impossibile per i motivi specificati in precedenza. Questa contromisura, quindi, non viene usata.
 
 Si può:
-- **Aggiungere** un attestato di integrità e di autenticità. Sul cananle, oltre al messaggio si inviano queste due informazioni in più che consentono alla destinazione di capire se il flusso dei messaggi è integro e autentico oppure se è stato manomesso (integrità e autenticità).
-- **Impedire** l'interruzione del flusso di dati. Non sono meccanismi crittografici. Se la sorgente invia un numero di messaggi, la destinazione conteggia che sono arrivati effettivamente quel numero (disponibilità).
 
-<!--### Servizi di sicurezza
-
-Esistono protocolli che forniscono servizi di sicurezza, ma si collocano a livelli diversi:
-- **IPsec**: livello di rete;
-- **SSL**: livello di trasporto;
-- **PGP**: livello applicativo.
-
-A seconda del livello si avrà una prestazione, personalizzazione e trasparenza diverse. IPsec, PGP e SSL garantiscono tutti la sicurezza dei dati cioè garantiscono le proprietà _CIA_. A livello di IPsec si parla di autenticità a livello host, non posso dire quali client verranno autenticati.-->
+- **Aggiungere** un attestato di integrità e di autenticità. In questo modo la destinazione è in grado di comprendere se il flusso dei messaggi è integro e autentico oppure se è stato manomesso (integrità e autenticità);
+- **Impedire** l'interruzione del flusso di dati. La destinazione si assicura che il numero corretto di messaggi siano stati ricevuti (disponibilità).
 
 ## 01. Dati Sicuri
 
@@ -155,56 +121,64 @@ Per proteggere i dati a fronte di eventuali attacchi occorre utilizzare delle tr
 
 ![cia](./img/img26.png)
 
-L'_algoritmo_ è una singola trasformazione cioè è una sequenza di istruzioni. Ad esempio, il blocco `Ts` o `Td`.
+L'_algoritmo_ è una sequenza di istruzioni, e rappresenta una singola trasformazione (blocco `Ts` o `Td`).
 
 ![cia](./img/img27.png)
 
-Nei casi complessi, è necessario che si eseguano più trasformazioni e la loro sequenza da eseguire deve essere ben precisa. In questo caso, si parla di _protocollo_.
+Nei casi complessi, è necessario che si eseguano più trasformazioni e la sequenza da eseguire deve essere ben precisa. In questo caso, si parla di _protocollo_.
 
-Non è detto che ci sia sempre solo sorgente e destinazione, ma in alcuni casi è necessario l'intervento di una terza entità che fa da _arbitro_/_giudice_. La si usa quando una o tutte e due le due entità in gioco sono malintenzionate.
+In alcuni casi è necessario l'intervento di una terza entità che operi da _arbitro_/_giudice_.
 
 ## Come rendere sicuri i dati
 
-La tecnica che può rendere i dati sicuri è quella di impiegare una codifica ridondante ai dati. Ad esempio, quando bisogna rendere incomprensibili i dati, si paga un costo in più in termini di overhead sia di banda che di processamento (ridondanza temporale) e in alcuni casi, la trasformazione aggiunge bit in più rispetto alla lunghezza del messaggio originario (ridondanza spaziale). Se si usa un attestato di integrità o di originalità, si aggiunge sia ridondanza in termini di spazio che in termini di tempo.
+La sicurezza dei dati può essere garantita tramite l'impiego di una codifica ridondante dei dati, che consiste nell'aggiunta di bit in più rispetto alla lunghezza del messaggio originario (ridondanza spaziale).
 
-<!--fine parte da correggere-->
+Nel caso si voglia garantire autenticità e integrità si utilizza un attestato di integrità o di originalità. In tal casi si ha ridondanza in termini di:
+
+- Spazio, necessario per la memorizzazione;
+- Tempo, maggiore tempo di trasferimento.
+
 ## Crittografia e Crittoanalisi
 
-La disciplina che studia gli algoritmi ed i protocolli da svolgere dal lato sorgente e lato destinatario di un canale insicuro è detta _crittologia_. A sua volta è formata da due distinte e correlate discipline:
+La disciplina che studia gli algoritmi ed i protocolli da applicare dal lato sorgente e lato destinatario di un canale insicuro è detta _crittologia_. A sua volta è formata da due distinte e correlate discipline:
 
-- **Crittografia**: è la disciplina che studia gli algoritmi che possiamo adottare per proteggere i dati in in termini di riservatezza, autenticità e integrità;
-- **Crittoanalisi**: è la disciplina che studia il modo in cui è possibile rompere le trasformazioni che proteggono i dati in in termini di riservatezza, autenticità e integrità.
+- **Crittografia**: è la disciplina che studia gli algoritmi che si possono adottare per proteggere i dati in in termini di riservatezza, autenticità e integrità;
+- **Crittoanalisi**: è la disciplina che studia il modo in cui è possibile rompere le trasformazioni che proteggono i dati in termini di riservatezza, autenticità e integrità.
 
-Nel corso studieremo solo la crittografia.
+Nel corso si studierà solo crittografia.
 
 ## I principi della difesa
 
 Ci sono tre principi che guidano la progettazione:
 
-- **Deve essere impossibile _sapere_ la trasformata/i calcoli da parte dell'intrusore**;
-- **Deve essere impossibile _dedurre_ la trasformata/i calcoli da parte dell'intrusore**;
-- **Deve essere impossibile _indovinare_ la trasformata/i calcoli da parte dell'intrusore**.
+- Deve essere impossibile _sapere_ la trasformata/i calcoli da parte dell'intrusore;
+- Deve essere impossibile _dedurre_ la trasformata/i calcoli da parte dell'intrusore;
+- Deve essere impossibile _indovinare_ la trasformata/i calcoli da parte dell'intrusore.
 
 ## Proteggere la proprietà di confidenzialità
 
-Per proteggere i dati, abbiamo bisogno di una trasformata che rende incomprensibile il loro contenuto. In questo modo, l'intrusore non sarà in grado di capire i messaggi. Dunque, la riservatezza la possiamo ottenere con una trasformazione di tipo _preventivo_ in modo che se un intrusore accede ai dati non li può capire.
+Per proteggere i dati abbiamo bisogno di una trasformata che renda incomprensibile il contenuto. In questo modo, l'intrusore non sarà in grado di capire i messaggi.
+La riservatezza si ottiene con una trasformazione di tipo _preventivo_: l'intrusore che accede ai dati non sarà in grado di comprenderli.
 
 ![confidenzialità](./img/img2.png)
 
-La sorgente `A` non può mettere i dati `m` sul canale insicuro per ovvi motivi
-ma deve prima trasformarli tramite un'encryption `E`. Questa trasformazione la
-conosce solo la sorgente `A` ed è l'unica in grado di eseguirla. Nell'esempio
-della figura, i dati `m` vengono trasformati in dati incomprensibili `c`. La destinazione `B` riceve `c` e tramite la trasformazione di decryption `D`, risalire al contenuto dei dati `m`.
+Ad esempio:
+
+- La sorgente `A` non può inserire i dati `m` sul canale insicuro, ma deve prima trasformarli tramite un'encryption `E`;
+- Questa trasformazione è conosciuta solo dalla sorgente `A` ed è l'unica in grado di eseguirla;
+- I dati `m` vengono trasformati in dati incomprensibili `c`;
+- La destinazione `B` riceve `c` e tramite la trasformazione di decryption `D`, risale al contenuto dei dati `m`.
 
 Devono essere rispettate le seguenti proprietà:
 
 - **Segretezza**: la trasformazione `E` e `D` sono conosciute solo rispettivamente dalla sorgente e dal destinatario quindi per i tre principi di difesa, non è possibile risalire al messaggio in chiaro;
-- **Calcoli difficili**: dato il messaggio `m` deve essere facile calcolare il messaggio cifrato. L'operazione inversa, se non si conosce la trasformata di `D`, non è fattibile.
+- **Calcoli difficili**: dato il messaggio `m` deve essere facile calcolare il messaggio cifrato. L'operazione inversa, se non si conosce la trasformata di `D`, deve essere computazionalmente difficile..
 
 Altre considerazioni:
-- **Il flusso è bidirezionale**: lo schema della figura può essere applicato sia da `A` verso B che da `B` verso `A`. Ovviamente `B` avrà l'encryption mentre `A` la decryption;
-- **A e B non è detto che siano entrambi online**: possono essere online contemporaneamente oppure A online e B offline cioè i messaggi possono essere decifrati in momenti diversi;
-- **B = A**: la sorgente potrebbe coincidere con la destinazione. Ad esempio, vogliamo cifrare dei dati che abbiamo sul nostro hard disk. Quando effettuiamo il logout dal sistema essi vengo cifrati mentre quando facciamo il login li decifriamo.
+
+- **Il flusso è bidirezionale**: lo schema della figura può essere applicato sia da `A` verso `B` che da `B` verso `A`. Ovviamente `B` potrà eseguire l'operazione di encryption, mentre `A` di decryption;
+- **A e B non è detto che siano entrambi online**: possono essere online contemporaneamente oppure A online e B offline. I messaggi possono essere decifrati in momenti diversi;
+- **B = A**: la sorgente potrebbe coincidere con la destinazione. Ad esempio, vogliamo cifrare dei dati che abbiamo sul nostro hard disk. Quando effettuiamo il logout dal sistema essi vengono cifrati mentre quando effettuiamo il login li decifriamo.
 
 ## Proteggere la proprietà di integrità
 
@@ -221,10 +195,16 @@ In generale, una funzione hash `H` è una funzione che prende un dato `m` di lun
 Non basta averne una qualunque, ma è importante che essa sia _crittograficamente sicura_ e abbia le seguenti proprietà:
 
 - **Calcoli difficili**: dato il messaggio `m` deve essere facile calcolare la sua impronta. L'operazione inversa invece non è fattibile;
-- **Comportamento da "oracolo casuale"**: se si decide che l'impronta sia costituita da `n` bit, le possibili uscite della funzione hash sono `2^n`. Preso il messaggio `m`, bisogna fare in modo che la probabilità che esca un uscita rispetto ad un'altra sia la stessa;
+- **Comportamento da "oracolo casuale"**: se si decide che l'impronta sia costituita da `n` bit, le possibili uscite della funzione hash sono `2^n`. Preso il messaggio `m`, bisogna fare in modo che la probabilità che esca un uscita rispetto ad un'altra sia la stessa. Inoltre, se la domanda viene ripetuta, la risposta sarà la medesima, dato che è stata assegnata precedentemente dall'oracolo.
+
 ![zeus](./img/zeus.jpg)
+
 - **Resistente alle collisioni**: per un intrusore deve essere difficilissimo individuare due messaggi che abbiano la stessa impronta.
-E' inevitabile che due messaggi diversi possano avere in uscita la stessa impronta perché lo spazio di input è molto più grande dello spazio di output (`m > n`). Ad esempio, se i messaggi sono dieci e il numero di bit è tre, le possibili uscite della funzione hash sono otto e alcuni messaggi avranno sicuramente la stessa impronta.
+È inevitabile che due messaggi diversi possano avere in uscita la stessa impronta perché lo spazio di input è molto più grande dello spazio di output (`m > n`). Per un intrusore deve essere computazionalmente difficile trovare un messaggio `m2` con impronta `H(m2)` uguale a quella di `m1`, cioè `H(m1)`.
+
+Ad esempio, se i messaggi sono dieci e il numero di bit è tre, le possibili uscite della funzione hash sono otto e alcuni messaggi avranno sicuramente la stessa impronta.
+
+ <!--> Fine 3/11 correzione ore 13:52 <-->
 
 Le funzioni hash possono essere classificate in due categorie:
 
@@ -276,13 +256,13 @@ In questo caso, l'integrità è rispettata mentre la riservatezza no:
 
 `H*(m) =? H(m*)`
 
-L'integrità è rispettata perchè se si modificano i bit di:
+L'integrità è rispettata perché se si modificano i bit di:
 
 - **E(p)**: se si cambiano dei bit di E(p) a caso è difficile che corrisponda la stessa impronta per la proprietà alla _resistenza alle collisioni_;
 - **H(m)**: H(m) corrisponde poi ad un altro messaggio per la resistenza alle collisioni;
 - **E(p) e H(m)**: la probabilità è bassissima che il messaggio modificato corrisponda proprio a quell'impronta che è anch'essa modificata.
 
-La riservatezza, invece, non è rispettata perchè:
+La riservatezza, invece, non è rispettata perché:
 
 - Premessa, l'intrusore ha a disposizione tantissime informazioni di contesto. L'intrusore sa che Luca (nome di fantasia) sta trasmettendo dei dati alla sua amata Lucia. Dato che `E(m)` è impossibile che lo sappia, da un messaggio scelto in chiaro `m'` si può calcolare l'impronta `H(m')`. Se nota che l'impronta è la stessa, la riservatezza del messaggio è violata.
 
@@ -300,9 +280,9 @@ In questo caso, la proprietà di integrità non viene rispettata mentre quella d
 
 `H*(E(p)) =? H(E(m*))`
 
-La riservatezza è verificata perchè:
+La riservatezza è verificata perché:
 
-- Non si riuscirebbe poi a confrontare l'impronta `H(m')` scelta dall'intrusore con quella `H(E(p))` perchè manca la parte di cifratura del messaggio.
+- Non si riuscirebbe poi a confrontare l'impronta `H(m')` scelta dall'intrusore con quella `H(E(p))` perché manca la parte di cifratura del messaggio.
 
 L'integrità non è garantita:
 
@@ -333,47 +313,7 @@ Alcune considerazioni:
 - **B = A**: se nel file system vogliamo che i file siano davvero quelli che abbiamo scritto, durante la fase di logout e login oltre a decifrarli, verifichiamo che siano anche autentici.
 
 # 29/09/2021
-<!-- Nooooooo abbiamo fatto una stessa parte! -->
 
-<!-- Uguale -->
-## Garantire la confidenzialità dell'informazione
-
-Si cifra il codice con una funzione di Encryption ed una funzione successiva di Decryption.
-
-`E -> Encryption`
-
-`D -> Decryption`
-
-`Plaintext -> E -> Chypertext -> D -> Plaintext`
-
-L'operazione `D` deve essere computazionalmente difficile. L'intrusore non deve essere in grado di ricavare il testo in chiaro, poiché decifrare i dati deve essere computazionalmente difficile.
-La sicurezza perfetta si ha quando, intercettato il chypertext, l’intrusore non riesce ad imparare nulla di più
-rispetto a quello che conosce al momento dell’intercettazione del testo cifrato.
-
-<!-- Uguale -->
-## Garantire l'integrità dell'informazione
-
-Bisogna garantire l’integrità (rilevazione e reazione)
-
-Con un attacco attivo si possono cancellare e modificare i dati, oltre che modificarne anche l’ordine.
-
-Il disturbo invece non cambia l’ordine dei dati dell’informazione. Tutte le alterazioni avvengono con uguale probabilità.
-
-Proteggere l’integrità significa creare delle contromisure per la rilevazione di eventuali modifiche al contenuto del dato originale.
-
-Si utilizza la ridondanza dei dati, cioè insieme all’informazione viene aggiunto un piccolo riassunto (un riassunto di grandi dimensioni causerebbe overhead) che identifica in maniera univoca possibilmente l’informazione. La destinazione riceverà l’informazione più il riassunto che la sorgente ha creato.
-
-Grazie al _riassunto_, si può capire se l'informazione è corretta o se è stata modificata. Il riassunto viene creato con una funzione hash, e per riuscire ad identificare un’informazione in maniera univoca deve essere una funzione hash crittograficamente sicura.
-
-Una funzione hash (M) prende in ingresso un messaggio `m` di lunghezza arbitraria e generano un’uscita chiamata _impronta_, detta anche `H(m)`.
-
-Per essere _crittograficamente sicura_ una funzione hash deve avere due caratteristiche principali:
-
-- Deve avere un comportamento da _oracolo casuale_, cioè rispondere a ogni domanda con una risposta casuale scelta uniformemente dal suo dominio di uscita. Se la domanda viene ripetuta, la risposta sarà la medesima, dato che è stata assegnata precedentemente dall'oracolo.
-
-- Deve essere resistente alle collisioni. Se due messaggi `m1` e `m2` hanno la stessa impronta (cosa molto possibile poiché lo spazio di input è molto minore dello spazio di output), per un intruso deve essere computazionalmente difficile trovare un messaggio `m2` con impronta `H(m2)` uguale a quella di `m1`, cioè `H(m1)`.
-
-<!-- Uguale -->
 ## Garantire autenticità
 
 Per garantire autenticità si ricorre all'operazione di firma (Sign), che produce un certificato di autenticità e che viene inserito e inviato insieme al testo dell'informazione eventualmente cifrato. La destinazione avrà una funzione V di Verify (V) utilizzata per verificare se il certificato è effettivamente autentico e per ricavare il mittente.
@@ -400,7 +340,7 @@ La destinazione `B` verifica tramite `V` che `c` proviene dalla sorgente leggitt
 
 Questo schema ha due vantaggi:
 
-- **Efficienza**: la funzione di sign `S` è una trasformazione costosa. Anzichè applicare `m` direttamente a sign, l'applico a `H(m)` che è più piccola di `m`. Si può applicare anche all'impronta perchè è univoca per la proprietà di resistenza alle collisioni;
+- **Efficienza**: la funzione di sign `S` è una trasformazione costosa. Anzichè applicare `m` direttamente a sign, l'applico a `H(m)` che è più piccola di `m`. Si può applicare anche all'impronta perché è univoca per la proprietà di resistenza alle collisioni;
 - **Avere subito la disponibilità del dato**: Si può prendere direttamente `m` a mio rischio e pericolo e si verifica l'autenticità in un secondo momento per come è fatto lo schema a blocchi.
 
 Questo schema assicura anche la proprietà di:
@@ -476,7 +416,7 @@ In questo caso, si invia un messaggio che rispetta le proprietà di riservatezza
 
 In fase di invio, il messaggio viene cifrato e autenticato, mentre in fase di ricezione viene controllato l'attestato di autenticità e decifrato il messaggio.
 
-Questo schema viene usato dal protocollo IPsec. E' un protocollo SSL a livello di trasporto (TCP). Vengono creati socket sicuri in cui i messaggi sono autenticati.
+Questo schema viene usato dal protocollo IPsec. È un protocollo SSL a livello di trasporto (TCP). Vengono creati socket sicuri in cui i messaggi sono autenticati.
 
 La ricezione è efficiente: viene risparmiata una trasformazione. Se il cifrato ha subito delle modifiche, chi riceve verifica il certificato e, se qualche operazione illegale è avvenuta, si evita l'operazione di decifratura.
 
@@ -496,8 +436,8 @@ Per _identificazione_ si intende un insieme di azioni che richiedono di identifi
 
 Il processo di identificazione ha le seguenti caratteristiche:
 
-- **Real-time**: l'identificazione deve avvenire in un **preciso** istante e non in un secondo momento. Non posso identificare in un secondo momento perchè altrimenti come si fa a sapere che l'identificando è davvero lui? L'unico modo sarebbe quello di prolungare la procedura nel tempo;
-- **Efficienza**: l’identificazione di una entità deve avvenire in maniera _efficiente_ proprio perchè avviene in real-time;
+- **Real-time**: l'identificazione deve avvenire in un **preciso** istante e non in un secondo momento. Non posso identificare in un secondo momento perché altrimenti come si fa a sapere che l'identificando è davvero lui? L'unico modo sarebbe quello di prolungare la procedura nel tempo;
+- **Efficienza**: l’identificazione di una entità deve avvenire in maniera _efficiente_ proprio perché avviene in real-time;
 - **Sicurezza**: possono essere presenti:
   - **Falsi positivi**: una determinata persona ha diritti di accesso, ma non riesce ad accedere. Ciò causa inefficienza. Bisogna minimizzare questo numero;
   - **Falsi negativi**: l'accesso viene effettuato da persone non autorizzate (si spacciano per chi non sono xD). Non bisogna avere questi casi.
@@ -508,7 +448,7 @@ Un sistema di identificazione si può basare su:
 - **Possesso**: sistemi che si basano sul possesso di un oggetto che solo quella persona può avere. Ad esempio, carte magnetiche, token, smart card;
 - **Conformità**: sistemi che si basano su una caratteristica di un'entità. Ad esempio, dati biometrici come impronte o analisi della retina, dati comportamentali come quanti login fa durante il giorno, quante volte entra ed esce dall'ufficio etc.
 
-E' possibile che un sistema abbia anche più sistemi di identificazione. Ad esempio, conoscenza e possesso oppure conoscenza, possesso e conformità. A seconda dell'informazione che vogliamo proteggere si sceglierà il sistema più adatto perchè ci sarà un costo computazionale, di gestione etc.
+È possibile che un sistema abbia anche più sistemi di identificazione. Ad esempio, conoscenza e possesso oppure conoscenza, possesso e conformità. A seconda dell'informazione che vogliamo proteggere si sceglierà il sistema più adatto perché ci sarà un costo computazionale, di gestione etc.
 
 ### Protocollo di identificazione
 
@@ -546,7 +486,7 @@ Ad esempio, sono funzioni unidirezionali la:
 - **Funzione di cifratura**;
 - **Funzione di autenticazione**.
 
-Nella teoria matematica, non esistono funzioni che siano unidirezionali. Nella pratica, invece, sono state individuate molte funzioni che sono candidate ad avere un comportamento di unidirezionalità. Vengono chiamate _pseudo-unidirezionali_ perchè se non si possiede un'informazione, non è possibile trovare la funzione inversa.
+Nella teoria matematica, non esistono funzioni che siano unidirezionali. Nella pratica, invece, sono state individuate molte funzioni che sono candidate ad avere un comportamento di unidirezionalità. Vengono chiamate _pseudo-unidirezionali_ perché se non si possiede un'informazione, non è possibile trovare la funzione inversa.
 
 ## Trasformazioni segrete
 
@@ -555,8 +495,8 @@ Possiamo avere tre approcci:
 - **Algoritmo**: le operazioni sono segrete. Ad esempio, gli algoritmi delle prime SIM, algoritmi USA durante la guerra fredda;
 - **Parametro**: la macchina e l'algoritmo sono noti ma un parametro di ingresso dell'algoritmo è segreto (chiave crittografica).
 
-I primi due approcci non funzionano molto bene perchè:
-- **No manutenibilità**: è impossibile che non si possa violare la segretezza di una macchina o di un algoritmo. Non è immediato ripristinare la sua sicurezza perchè si dovrebbe riprogettare tutto da zero;
+I primi due approcci non funzionano molto bene perché:
+- **No manutenibilità**: è impossibile che non si possa violare la segretezza di una macchina o di un algoritmo. Non è immediato ripristinare la sua sicurezza perché si dovrebbe riprogettare tutto da zero;
 - **No scalabilità**: non si può pensare questo approccio su grande scala come internet. Cosa succede se una macchina segreta viene violata?;
 - **No Certificazione**: chi è che mi garantisce che quello che stiamo usando è davvero sicuro se nessuno conosce come è stato costruito?
 
@@ -588,7 +528,7 @@ Si possono individuare due famiglie di cifrari:
 Le chiavi simmetriche devono avere le seguenti proprietà:
 
 - **Robustezza**: un intrusore non deve essere in grado facilmente di individuare la chiave. Se una chiave è formata da `n` bit, più grande è lo spazio delle chiavi più è difficile individuare i bit corretti;
-- **Riservatezza**: il sistema deve garantire la riservatezza della chiave perchè le chiavi `ks` e `kd` devono essere segrete;
+- **Riservatezza**: il sistema deve garantire la riservatezza della chiave perché le chiavi `ks` e `kd` devono essere segrete;
 - **Integrità**: quando si decifrano i dati, si deve essere sicuri che la chiave non sia stata alterata altrimenti non è possibile decifrarli;
 - **Autenticità**: la chiave è conosciuta solo dalla sorgente autentica e dalla destinazione autentica.
 
@@ -611,7 +551,7 @@ Ci sono diversi criteri da seguire per non far risalire all'intrusore la chiave:
 
 ### Indovinare la chiave
 
-E' sempre possibile risalire alla chiave perchè esiste l'attacco con _forza bruta_. Per ridurre questo attacco si devono adottare alcuni accorgimenti:
+È sempre possibile risalire alla chiave perché esiste l'attacco con _forza bruta_. Per ridurre questo attacco si devono adottare alcuni accorgimenti:
 - **Lo spazio delle chiavi deve essere molto grande**: se `n` è il numero di bit che rappresenta la chiave, $ 2^{n} $ è l'insieme delle possibili configurazioni. Più è grande `n` più è difficile per un intrusore indovinare la chiave;
 - **I bit devono essere casuali**: i bit possono essere anche tanti ma devono essere anche scelti a caso. Non ci deve essere un pattern;
 - **Limitare il numero di prove che l'intrusore ha a dispoziione**: ad esempio il pin del bancomat. Dopo tre accessi si disabilita l'accesso;
@@ -649,7 +589,7 @@ Esistono diverse tipologie di attacco:
 - **Attacco con testo in chiaro scelto**: l'intrusore sceglie un testo in chiaro e ha la possibilità di cifrare il messaggio;
 - **Attacco con testo cifrato scelto**: l'intrusore riesce a farsi decifrare un testo cifrato da lui scelto dalla sorgente legittima.
 
-La contromisura da adottare è quella _preventiva_: bisogna fare in modo che l'uscita di un algortimo crittografico debba essere assolutamente aleatoria cioè la probabilità che una variabile assuma un valore sia la stessa. Purtroppo, non è sempre vero perchè ci sono alcuni algoritmi che impiegati in un certe modalità producono determinismo.
+La contromisura da adottare è quella _preventiva_: bisogna fare in modo che l'uscita di un algortimo crittografico debba essere assolutamente aleatoria cioè la probabilità che una variabile assuma un valore sia la stessa. Purtroppo, non è sempre vero perché ci sono alcuni algoritmi che impiegati in un certe modalità producono determinismo.
 
 ## Teoria della complessità
 
@@ -657,7 +597,7 @@ Finora si è sempre usato i termini di _calcolo facile_. E’ però utile avere 
 
 La complessità computazionale può essere determinata con una serie di indicatori:
 
-- **Tempo di esecuzione**: ovviamente non è un tempo _vero_ perchè ogni tecnologia ha un concetto di tempo diverso. Per misurare il tempo di esecuzione si fa riferimento al numero di operazioni eseguite dall'algoritmo per terminare;
+- **Tempo di esecuzione**: ovviamente non è un tempo _vero_ perché ogni tecnologia ha un concetto di tempo diverso. Per misurare il tempo di esecuzione si fa riferimento al numero di operazioni eseguite dall'algoritmo per terminare;
 - **Memoria occupata dal programma**
 - **Memoria occupata dai dati**
 
@@ -671,7 +611,7 @@ Il numero `n` (dimensione input) incide sul numero di operazioni richieste, in a
 
 - **Tempo di esecuzione nel caso peggiore**: si intende il numero massimo di operazioni $ N_{max} $ che occorre eseguire per qualsiasi dato d’ingresso di `n` bit.\
 \
-La notazione che si usa è _O grande_ perchè evidenzia come proprio si incrementa il tempo di esecuzione al crescere senza limiti. Se `n` non è esprimibile analiticamente, bisogna trovare una funzione che approssima l'andamento della funzione. 
+La notazione che si usa è _O grande_ perché evidenzia come proprio si incrementa il tempo di esecuzione al crescere senza limiti. Se `n` non è esprimibile analiticamente, bisogna trovare una funzione che approssima l'andamento della funzione. 
 
 ### Classificazione degli algoritmi
 
@@ -698,36 +638,36 @@ Per ottenere sicurezza non ci interessa sapere l'andamento al crescere senza mis
 Le unità di misura da adottare sono:
 
 - **Anno MIPS**: parametro che dipende dalla tecnologia. Il tempo di esecuzione di un attacco è espresso in anni MIPS. Questa unità di misura fa riferimento a quante istruzioni può elaborare un calcolatore e con il passare degli anni il numero di riferimento aumenta. Attualmente un calcolatore in grado di eseguire un milione di istruzioni al secondo;
-- **Livello di sicurezza**: parametro indipendente dalla tecnologia. L'algoritmo di _ricerca esauriente_ risolve ogni problema perchè esplorare lo spazio totale degli input è sempre possibile. Bisogna individuare qual è il numero di bit della chiave tale per cui l'andamento diventa esponenziale.
+- **Livello di sicurezza**: parametro indipendente dalla tecnologia. L'algoritmo di _ricerca esauriente_ risolve ogni problema perché esplorare lo spazio totale degli input è sempre possibile. Bisogna individuare qual è il numero di bit della chiave tale per cui l'andamento diventa esponenziale.
 
 ![dedurre](./img/img13.png)
 
 Una chiave deve avere come numero minimo di bit:
 
-- **In una chiave simmetrica**: se si usa una chiave privata a 128 bit, l'intrusore è difficile che riesca a trovarla perchè l'andamento dell'algoritmo diventa esponenziale;
-- **In una chiave asimmetrica**: in questo caso i bit non possono essere solo di 128 bit perchè l'attacco non è solo quello di forza bruta. Nelle chiavi asimmetriche esistono algoritmi di fattorizzazione che consente di risalire della chiave pubblica alla chiave privata il cui andamento è sub-esponenziale. In questo caso, il numero di bit per evitare attacchi alle chiavi asimmetriche devono essere almeno di 2000 bit.
+- **In una chiave simmetrica**: se si usa una chiave privata a 128 bit, l'intrusore è difficile che riesca a trovarla perché l'andamento dell'algoritmo diventa esponenziale;
+- **In una chiave asimmetrica**: in questo caso i bit non possono essere solo di 128 bit perché l'attacco non è solo quello di forza bruta. Nelle chiavi asimmetriche esistono algoritmi di fattorizzazione che consente di risalire della chiave pubblica alla chiave privata il cui andamento è sub-esponenziale. In questo caso, il numero di bit per evitare attacchi alle chiavi asimmetriche devono essere almeno di 2000 bit.
 
 # 02.Meccanismi di base (07-10-2021)
 
-Si è visto come funzionano a livello concettuale le trasformazioni per garantire i requisiti di sicurezza. Adesso si vedono come sono costruite perchè se non vengono impiegate correttamente aprono a diverse vulnerabilità.
+Si è visto come funzionano a livello concettuale le trasformazioni per garantire i requisiti di sicurezza. Adesso si vedono come sono costruite perché se non vengono impiegate correttamente aprono a diverse vulnerabilità.
 
 ## Generatori di numeri casuali
 
 Per generare una chiave crittografica è importante che abbia due determinate caratteristiche:
 - Ogni valore deve essere casuale;
-- Ogni valore deve essere indipendente dal punto di vista statistico dal precedente e successivo perchè bisogna evitare che un intrusore possa riuscire ad ipotizzare come sono fatti i bit.
+- Ogni valore deve essere indipendente dal punto di vista statistico dal precedente e successivo perché bisogna evitare che un intrusore possa riuscire ad ipotizzare come sono fatti i bit.
 
 ### True Random Number Generator (TRNG)
 
 Per poter rispettare le proprietà appena citate, si ha bisogno di componenti che si chiamano _TRNG_.
 
 Non si possono usare questi componenti per generare gradi quantità di chiavi crittografiche per due motivi:
-- **Bassa frequenza di generazione**: se bisogna generare un numero elevato di chiavi in un tempo brevissimo non sono adatti questi componenti perchè usano ad esempio fenomeni fisici per generarli (decadimento radioattivo, rumore termico etc);
+- **Bassa frequenza di generazione**: se bisogna generare un numero elevato di chiavi in un tempo brevissimo non sono adatti questi componenti perché usano ad esempio fenomeni fisici per generarli (decadimento radioattivo, rumore termico etc);
 - **Non riproducibilità**: mittente e destinazione devono disporre dello stesso segreto per applicare una determinata trasformazione. Se il mittente genera una chiave deve passarla al destinatario assolutamente altrimenti se il destinatario provasse a generare una chiave non otterrebbe mai la stessa.
 
 ### Pseudo Random Number Generator (PRNG)
 
-Per superare questi problemi, si usano questo altri tipi di generatori. Sono componenti che consentono di generare lunghe sequenze di numeri casuali in modo deterministico a partire da un dato iniziale detto _seme_. Per questo motivo si chiamano _pseudo_ perchè se il _seme_ iniziale è uguale sia nella sorgente che nella destinazione, viene riprodotta la stessa sequenza di bit.
+Per superare questi problemi, si usano questo altri tipi di generatori. Sono componenti che consentono di generare lunghe sequenze di numeri casuali in modo deterministico a partire da un dato iniziale detto _seme_. Per questo motivo si chiamano _pseudo_ perché se il _seme_ iniziale è uguale sia nella sorgente che nella destinazione, viene riprodotta la stessa sequenza di bit.
 
 Per generare questa sequenza si possono usare degli automi a stati finiti dove la funzione G e F o solo una delle due deve essere unidirezionale in modo da rendere impossibile ad un avversario che ha individuato uno stato il risalire agli stati precedenti ed al seme.
 
@@ -786,13 +726,13 @@ Inoltre, è importante usare un numero minimo di bit affinchè l'impronta sia re
 
 Si indica con $ P_1(2^{n}, 1) = \frac{1}{2^n} $ la probabilità di un tentativo di trovare una collisione. La probabilità di insuccesso, quindi, è 1 - 1/2^n. Se si hanno k tentativi, P_k(2^n, k) = 1 - (1 - 1/2^n)^k. Questo vuol dire che k= P_k(2^n, k) * 2^n. 2^n per avere un andamento esponenziale deve essere almeno 128. Dunque, l'impronta deve essere almeno 128 bit.
 
-Per garantire la _resistenza forte_ non bastano 128 bit. Il numero di bit deve essere il doppio perchè per la resistenza forte si vedrà che sono necessari 2^(n/2) tentativi. Dunque, è più facile effettuare un attacco rispetto alla resistenza debole.
+Per garantire la _resistenza forte_ non bastano 128 bit. Il numero di bit deve essere il doppio perché per la resistenza forte si vedrà che sono necessari 2^(n/2) tentativi. Dunque, è più facile effettuare un attacco rispetto alla resistenza debole.
 
 ### Unidirezionalità
 
 L'unidirezionalità è importante in due scenari:
 
-- **Firma digitale**: un intrusore potrebbe generare tramite un PRNG crittograficamente sicuro un `r` casuale. L'intrusore può sempre calcolare `V(r)` perchè `V` è una trasformazione nota a tutti. Tramite la chiave pubblica può calcolare l'uscita `x`. L'intrusore vuole fare `H^-1(x)` e trovare un `y` dotato di significato. La funzione hash non è invertibile quindi un'operazione del genere non può essere effettuata;
+- **Firma digitale**: un intrusore potrebbe generare tramite un PRNG crittograficamente sicuro un `r` casuale. L'intrusore può sempre calcolare `V(r)` perché `V` è una trasformazione nota a tutti. Tramite la chiave pubblica può calcolare l'uscita `x`. L'intrusore vuole fare `H^-1(x)` e trovare un `y` dotato di significato. La funzione hash non è invertibile quindi un'operazione del genere non può essere effettuata;
 - **Identificazione**: memorizzare un segreto in forma cifrata. La chiave di cifratura è la passhrase che viene sottoposta alla funzione `H`. Anche in questo caso la funzione hash non deve essere invertibile.
 
 # 03.Meccanismi Simmetrici
@@ -820,10 +760,10 @@ Il cifrario simmetrico vengono utilizzati per garantire _riservatezza_. In raris
 
 Esistono come cifrari simmetrici due famiglie distinte:
 
-- **Cifrario a flusso**: si ispira al cifrario _One-time pad_. E' un cifrario che opera su uno o pochi bit alla volta con una regola variabile al progredire del testo. Garantisce la  protezione dei singoli bit di una trasmissione seriale. Ad esempio, nel settore della telefonia, applicazione web etc;
+- **Cifrario a flusso**: si ispira al cifrario _One-time pad_. È un cifrario che opera su uno o pochi bit alla volta con una regola variabile al progredire del testo. Garantisce la  protezione dei singoli bit di una trasmissione seriale. Ad esempio, nel settore della telefonia, applicazione web etc;
 - **Cifrario a blocchi**: si ispira al _Cifrario poligrafico_ ed al _Cifrario composto_. Trasforma con una regola fissa blocchi di messaggio formati da molti bit. La lunghezza del blocco dipende dallo specifico algoritmo. Ad esempio, protezione di pacchetti, di file, posta elettronica etc.
 
-Un _cifrario a flusso_, è più veloce di un _cifrario a blocchi_ perchè non introduce rallentamenti. Se il _cifrario a flusso_ non è impiegato correttamente, è meno sicuro di un cifrario a blocchi non impiegato correttamente.
+Un _cifrario a flusso_, è più veloce di un _cifrario a blocchi_ perché non introduce rallentamenti. Se il _cifrario a flusso_ non è impiegato correttamente, è meno sicuro di un cifrario a blocchi non impiegato correttamente.
 
 ## Cifrario a flusso
 
@@ -836,7 +776,7 @@ Encryption `E` e decryption `D` sono implementati con degli `XOR`:
 
 Per questo motivo ci deve essere _sincronismo_ tra i flussi di chiave della sorgente e della chiave.
 
-Il testo cifrato `c` sarà sicuramente più lungo di 128 bit per cui non ha senso usare l'attacco di forza bruta perchè in questi tipi di cifrari, la chiave è lunga quanto il testo. Inoltre, la chiave varia da messaggio a messaggio.
+Il testo cifrato `c` sarà sicuramente più lungo di 128 bit per cui non ha senso usare l'attacco di forza bruta perché in questi tipi di cifrari, la chiave è lunga quanto il testo. Inoltre, la chiave varia da messaggio a messaggio.
 
 I cifrari a flusso si suddividono in:
 
@@ -852,14 +792,14 @@ I cifrari a flusso si suddividono in:
 
 Nel _cifrato a flusso sincrono_, l'attaccante può effettuare attacchi attivi:
 
-- **Se si modifica un bit del cifrato**: la destinazione non decifra correttamente un bit perchè è stato cambiato. Si dice che non si ha perdita di sincronismo perchè solo il i-esimo è è stato cambiato. Tuttavia, la decifrazione non è corretta;
-- **Se si cancella/inserisce un bit**: dal punto in poi in cui è stato cancellato il bit, i restanti non corrisponderanno mai a quelli inviati. Si dice che si ha perdita di sincronismo perchè tutti i bit sono da buttare via.
+- **Se si modifica un bit del cifrato**: la destinazione non decifra correttamente un bit perché è stato cambiato. Si dice che non si ha perdita di sincronismo perché solo il i-esimo è è stato cambiato. Tuttavia, la decifrazione non è corretta;
+- **Se si cancella/inserisce un bit**: dal punto in poi in cui è stato cancellato il bit, i restanti non corrisponderanno mai a quelli inviati. Si dice che si ha perdita di sincronismo perché tutti i bit sono da buttare via.
 
 Nel _cifrato a flusso autosincronizzante_ l'attaccante può effettuare attacchi attivi:
 
-- **Se modifica, cancella o elimina un bit del cifrato**: si ha una perdita di sincronismo ma non permanete, solo di un transitorio. Il transitorio è legato alla dimensione del registro di scorrimento (SHIFT) perchè dipende da quanti cicli, il bit modificato/cancellato/inserito rimane dentro a questo registro.
+- **Se modifica, cancella o elimina un bit del cifrato**: si ha una perdita di sincronismo ma non permanete, solo di un transitorio. Il transitorio è legato alla dimensione del registro di scorrimento (SHIFT) perché dipende da quanti cicli, il bit modificato/cancellato/inserito rimane dentro a questo registro.
 
-I più usati sono quelli a _cifrario flusso sincrono_ perchè i componenti a _cifrario a flusso autosincronizzante_ sono più costosi.
+I più usati sono quelli a _cifrario flusso sincrono_ perché i componenti a _cifrario a flusso autosincronizzante_ sono più costosi.
 
 ### Possibili vulnerabilità
 
@@ -867,7 +807,7 @@ Per garantire la _riservatezza_, i cifrari a flusso devono avere certe propriet�
 
 #### Uso della chiave una sola volta
 
-Il requisito fondamentale è che la chiave deve essere usata una e una sola volta. Se si usa lo stesso flusso di chiave su messaggi distinti si possono fare attacchi di analisi sui cifrati perchè si sfruttano le proprietà dell'`XOR`.
+Il requisito fondamentale è che la chiave deve essere usata una e una sola volta. Se si usa lo stesso flusso di chiave su messaggi distinti si possono fare attacchi di analisi sui cifrati perché si sfruttano le proprietà dell'`XOR`.
 
 ![marco togni](./img/img41.png)
 
@@ -914,11 +854,11 @@ Si prende un messaggio e lo si suddividono in blocchi. Se l'ultimo blocco contie
 
 Ogni blocco viene dato in pasto alla funzione di encryption `E` e quindi il testo cifrato non è altro che la concatenazione dei cifrati ottenuti dai singoli blocchi.
 
-L'operazione di cifrare a blocchi ricorda molto la tecnica di base della sostituzione monoalfabetica della crittografia classica ma la rende immune da un attacco con statistiche perchè lavora proprio su blocchi e non su singoli bit.
+L'operazione di cifrare a blocchi ricorda molto la tecnica di base della sostituzione monoalfabetica della crittografia classica ma la rende immune da un attacco con statistiche perché lavora proprio su blocchi e non su singoli bit.
 
-Nei cifrari a blocco, l'attacco con forza bruta ha senso perchè la chiave è sempre la stessa. Dunque, bisogna dimensionare la chiave almeno con 128 bit.
+Nei cifrari a blocco, l'attacco con forza bruta ha senso perché la chiave è sempre la stessa. Dunque, bisogna dimensionare la chiave almeno con 128 bit.
 
-La chiave deve essere modificata frequentemente perchè nella modalità ECB, la stessa chiave cifra moltissimi blocchi di testo in chiaro e quindi ci sono più possibilità di individuarla.
+La chiave deve essere modificata frequentemente perché nella modalità ECB, la stessa chiave cifra moltissimi blocchi di testo in chiaro e quindi ci sono più possibilità di individuarla.
 
 Vantaggi:
 
@@ -944,20 +884,20 @@ Questa modalità consente di ottenere aleatorietà.
 
 ![marco togni](./img/img18.png)
 
-La modalità CBC prende il messaggio in chiaro, lo suddivide in blocchi, l'ultimo blocco è sottoposto a padding se necessario. Per ogni blocco, il testo in chiaro viene messo in `XOR` con un altro dato e sottoposto poi alla funzione di cifratura `E` ottenendo un testo cifrato c_i. Solo per quanto riguarda il blocco 1, il testo in chiaro viene dato in `XOR` con quello che si chiama _vettore di inizializzazione_ che è aleatorio ed è diverso da messaggio a messaggio. E' un insieme di bit, grande quanto il blocco.
+La modalità CBC prende il messaggio in chiaro, lo suddivide in blocchi, l'ultimo blocco è sottoposto a padding se necessario. Per ogni blocco, il testo in chiaro viene messo in `XOR` con un altro dato e sottoposto poi alla funzione di cifratura `E` ottenendo un testo cifrato c_i. Solo per quanto riguarda il blocco 1, il testo in chiaro viene dato in `XOR` con quello che si chiama _vettore di inizializzazione_ che è aleatorio ed è diverso da messaggio a messaggio. È un insieme di bit, grande quanto il blocco.
 
 In fase di decifrazione `D`, le operazioni sono inverse.
 
 Le caratteristiche di questo vettore sono:
 - **Casualità**;
 - **Imprevedibilità** (altrimenti viola confidenzialità);
-- **Usato una e una sola volta**: perchè se si ripete il vettore e si hanno due messaggi uguali, si ottiene lo stesso cifrato.
+- **Usato una e una sola volta**: perché se si ripete il vettore e si hanno due messaggi uguali, si ottiene lo stesso cifrato.
 
 Il vettore non deve essere necessariamente segreto. Sicuramente aumenta la robustezza ma non è un requisito necessario.
 
 Svantaggi:
 
-- In questo caso, non si può procedere in modo parallelo con più CPU perchè è necessario il cifrato del passo precedente in fase ci cifrazione. Invece, il parallelismo lo si ottiene in fase di decifrazione se si hanno già tutti i pezzi di cifrato che costituiscono;
+- In questo caso, non si può procedere in modo parallelo con più CPU perché è necessario il cifrato del passo precedente in fase ci cifrazione. Invece, il parallelismo lo si ottiene in fase di decifrazione se si hanno già tutti i pezzi di cifrato che costituiscono;
 - Se un attaccante, modifica un qualcunque bit di un blocco, l'errore si propaga nei blocchi successivi.
 
 Da un punto di vista hardware è possibile che si implementino due circuiti diversi: uno in fase di encryption e l'altro in fase di decryption. Molti algoritmi hanno la E che coincide con D ma se non coincidono si dovrebbe usare due circuiti diversi.
@@ -1005,9 +945,9 @@ Si parte da un vettore di inizializzazione che serve sempre per inizializzare lo
 
 In decifrazione, non si usa la funzione inversa ma si continua ad usare la funzione di encryption `E` (stesso circuito hardware).
 
-Il vettore non deve essere necessariamente segreto. Sicuramente aumenta la robustezza ma non è un requisito necessario. Inoltre, il vettore non deve essere necessariamente imprevedibile ma unico perchè si ha un problema di confidenzialità se la chiave è usata più volte.
+Il vettore non deve essere necessariamente segreto. Sicuramente aumenta la robustezza ma non è un requisito necessario. Inoltre, il vettore non deve essere necessariamente imprevedibile ma unico perché si ha un problema di confidenzialità se la chiave è usata più volte.
 
-L'OFB si preferisce usarlo quando i canali sono rumorosi (ad esempio i satelliti) perchè la modifica di un cifrato non si propaga sul blocco successivo.
+L'OFB si preferisce usarlo quando i canali sono rumorosi (ad esempio i satelliti) perché la modifica di un cifrato non si propaga sul blocco successivo.
 
 ### Counter (CTR)
 
@@ -1015,7 +955,7 @@ Questa modalità si applica un cifrario a blocchi per generare un flusso di chia
 
 ![marco togni](./img/img29.png)
 
-Il  messaggio in chiaro si suddivide in blocchi, ogni blocco viene messo in XOR con un numero di bit di chiave che è generato cifrando con un cifrario a blocchi lo stato di un contatore che deve essere reso aleatorio. L'aleatorietà la si ottiene aggiungendo allo stato di un contatore che ad ogni blocco si incrementa (o, 1, 2 etc). Gli stati sono resi imprevedibili perchè la parte iniziale è riempita da un numero casuale e imprevedibile (seed) generato da un PNRG
+Il  messaggio in chiaro si suddivide in blocchi, ogni blocco viene messo in XOR con un numero di bit di chiave che è generato cifrando con un cifrario a blocchi lo stato di un contatore che deve essere reso aleatorio. L'aleatorietà la si ottiene aggiungendo allo stato di un contatore che ad ogni blocco si incrementa (o, 1, 2 etc). Gli stati sono resi imprevedibili perché la parte iniziale è riempita da un numero casuale e imprevedibile (seed) generato da un PNRG
 
 I blocchi possono lavorare in parallelo sia in fase di `E` che di `D`.
 
@@ -1025,16 +965,16 @@ Questo schema viene usato, ad esempio, su reti ATM.
 
 Adesso bisogna capire come usare queste modalità in modo corretto. In questo esempio la modalità CBC non è usata correttamente.
 
-E' bene ricordare che l'attacco è molto difficile da realizzare.
+È bene ricordare che l'attacco è molto difficile da realizzare.
 L'intrusore deve riuscire ad entrare in una sessione già avviata tra client e server e alterare il normale flusso dei dati (attacco _Man In The Middle_). Se la versione di TLS è la 1.0 si rischia di subire questo attacco.
 
 ![marco togni](./img/img23.png)
 
 All'inizio di una connessione TCP, il client e il server negoziano gli algoritmi di cifratura, la chiave della sessione e i parametri che vengono usati dai cifrari come il vettore di inizializzazione e anche la modalità di cifratura da usare.
 
-I dati a livello applicativo hanno una certa dimensione per cui vengono suddivisi in blocchi perchè vanno a finire in un pacchetto SSL il cui payload è di dimensione inferiore. Ogni pacchetto poi viene concatenato a quello successivo.
+I dati a livello applicativo hanno una certa dimensione per cui vengono suddivisi in blocchi perché vanno a finire in un pacchetto SSL il cui payload è di dimensione inferiore. Ogni pacchetto poi viene concatenato a quello successivo.
 
-A livello applicativo, client e server condividono un vettore di inizializzazione che è casuale, imprevedibile e usato una sola volta. Quando il messaggio viene suddiviso e incapsulato in pacchetti SSL, la modalità CBC viene applicata sui pezzi di messaggio e ogni pacchetto ha bisogno di un vettore di inizializzazione diverso. Non si può rinegoziare questo vettore di inizializzazione ogni volta perchè ha un costo. Come scelta, è stata adottata di usare come vettore di inizializzazione il residuo in termini di bit del cifrario del pacchetto precedente. Ad esempio, il primo pacchetto ha un cifrato, gli ultimi X byte vengono usati come vettore di inizializzazione per cifrare il pacchetto successivo. In questo modo, l'intrusore può prevedere qual è il vettore di inizializzazione che sarà usato nella cifratura di un pacchetto SSL. Cade il requisito di imprevedibilità dal secondo pacchetto in poi.
+A livello applicativo, client e server condividono un vettore di inizializzazione che è casuale, imprevedibile e usato una sola volta. Quando il messaggio viene suddiviso e incapsulato in pacchetti SSL, la modalità CBC viene applicata sui pezzi di messaggio e ogni pacchetto ha bisogno di un vettore di inizializzazione diverso. Non si può rinegoziare questo vettore di inizializzazione ogni volta perché ha un costo. Come scelta, è stata adottata di usare come vettore di inizializzazione il residuo in termini di bit del cifrario del pacchetto precedente. Ad esempio, il primo pacchetto ha un cifrato, gli ultimi X byte vengono usati come vettore di inizializzazione per cifrare il pacchetto successivo. In questo modo, l'intrusore può prevedere qual è il vettore di inizializzazione che sarà usato nella cifratura di un pacchetto SSL. Cade il requisito di imprevedibilità dal secondo pacchetto in poi.
 
 ![marco togni](./img/img24.png)
 
@@ -1056,7 +996,7 @@ Basta conoscere come si comporta l’XOR, cioè se si fa l'XOR di uno stesso val
 
 ? XOR K1
 
-Bisogna eliminare l'effetto K1 perchè è quello che SSL userebbe e vedere se Lucia XOR K mi produce lo stesso cifrato.
+Bisogna eliminare l'effetto K1 perché è quello che SSL userebbe e vedere se Lucia XOR K mi produce lo stesso cifrato.
 K è il residuo che Luca ha usato per cifrare Lucia al passo 1:
 
 (Lucia XOR K1 XOR K) XOR K1
@@ -1067,7 +1007,7 @@ Lucia XOR K
 
 #### Dimensione del blocco
 
-Non solo la dimensione della chiave è importante ma anche la dimensione del blocco perchè definisce quanti sono i dati possono essere cifrati con la stessa chiave. La cifratura deve essere robusta fino a 2^n input diversi.
+Non solo la dimensione della chiave è importante ma anche la dimensione del blocco perché definisce quanti sono i dati possono essere cifrati con la stessa chiave. La cifratura deve essere robusta fino a 2^n input diversi.
 Purtroppo molte modalità di cifratura diventano insicure dopo 2^n/2 cifrature a causa dell’aumento di probabilità di collisioni tra due blocchi di cifrato per il paradosso del compleanno.
 Con 64 bit c'è questa problematica.
 
@@ -1087,7 +1027,7 @@ Ci sono due famiglie:
 
 Questo schema prevede che fuori banda e in maniera **assolutamente** robusta sia stata precondivisa una _master key_. Il mittente dovrà inviare alla destinazione molti messaggi cifrati con cifrari simmetrici.
 
-Non è opportuno che A cifri molti dati con questa _master key_ perchè questa chiave meno si cambia meglio è, dato che bisogna creare un canale fuori banda (costo elevato). La master key quindi deve avere una vita lunga. I dati che il mittente A invierà in maniera riservata a B saranno cifrati con _session key_ che cambiano ad ogni sessione. Ovviamente, non si deve aprire un canale di sessione dedicato ma sfruttando la cifratura simmetrica, la _master key_ viene usata solo per cifrare chiavi di sessione.
+Non è opportuno che A cifri molti dati con questa _master key_ perché questa chiave meno si cambia meglio è, dato che bisogna creare un canale fuori banda (costo elevato). La master key quindi deve avere una vita lunga. I dati che il mittente A invierà in maniera riservata a B saranno cifrati con _session key_ che cambiano ad ogni sessione. Ovviamente, non si deve aprire un canale di sessione dedicato ma sfruttando la cifratura simmetrica, la _master key_ viene usata solo per cifrare chiavi di sessione.
 
 ![marco togni](./img/img31.png)
 
@@ -1107,7 +1047,7 @@ Ovviamente il centro di distribuzione dovrà essere sicuro, scalabile etc.
 
 ## KDC 14-10-2021
 
-E' un protocollo di distribuzione di chiave il cui modello è stato usato in altri servizi, che non fanno distribuzione di chiave, che servono per identificare (es. Kerberos).
+È un protocollo di distribuzione di chiave il cui modello è stato usato in altri servizi, che non fanno distribuzione di chiave, che servono per identificare (es. Kerberos).
 
 ![marco togni](./img/img33.png)
 
@@ -1115,12 +1055,12 @@ Il mittente A ha condiviso con il centro di distribuzione la _master key_ KA men
 
 - A deve comunicare a KDC che ha bisogno di una chiave. Invia un messaggio specificando chi è il mittente, con chi vuole comunicare e un numero random imprevedibile e unico ad ogni sessione R_a che ha lo scopo di _sfida_ per vedere se T è davvero il centro di distribuzione;
 - T riceva il messaggio e risponde inviando un messaggio cifrato Questo messaggio non è altro che la concatenazione della chiave KA, il destinatario B, la chiave di sessione k e la chiave di sessione k concatenata con A cifrata con dalla master key di B. Per cifrare il messaggio si usa la chiave KA in modo tale che si dimostra che T sia a conoscenza della chiave;
-- A riceve il messaggio e lo decifra ottenendo Ra (sa che è davvero T con cui sta comunicando), il destinatario B, la chiave di sessione k e Ekb(A || k). E' ovvio che A non sappia decifrarlo ma lo deve inviare a B per passargli la chiave k. Tanto solo B può decifrarlo.
+- A riceve il messaggio e lo decifra ottenendo Ra (sa che è davvero T con cui sta comunicando), il destinatario B, la chiave di sessione k e Ekb(A || k). È ovvio che A non sappia decifrarlo ma lo deve inviare a B per passargli la chiave k. Tanto solo B può decifrarlo.
 
 Un attaccante può:
-- **Modificare a caso un bit del messaggio sul canale**: si invalida solo la sessione perchè il messaggio è aleatorio e non la riservatezza;
+- **Modificare a caso un bit del messaggio sul canale**: si invalida solo la sessione perché il messaggio è aleatorio e non la riservatezza;
 - **Effettuare un attacco con replica**: replica significa inoltrare lo stesso messaggio
-  - punto 1: Ra non può replicarlo perchè è sempre diverso e anche se fosse servirebbe a poco. T non controlla che Ra è sempre diverso ma genera una chiave di sessione ogni volta diversa e quindi l'intrusore non può decifrarla
+  - punto 1: Ra non può replicarlo perché è sempre diverso e anche se fosse servirebbe a poco. T non controlla che Ra è sempre diverso ma genera una chiave di sessione ogni volta diversa e quindi l'intrusore non può decifrarla
   - punto 3: la replica ha successo se l'intrusore è risalito a una parte di k. Se per qualche motivo k è noto, si possono estrarre altre informazioni da B inviando dei messaggi. Ovviamente saranno cifrati i messaggi ma può sempre fare altri ragionamenti.
 
 Per questo motivo il protocollo non può essere costituito solo da 3 passi ma si devono aggiungere altri step:
@@ -1133,7 +1073,7 @@ Per evitare che l'intrusore conosca la chiave k, bisogna tenere traccia delle ch
 Per evitare che l'intrusore conosca qualcosa sulla chiave o la chiave stessa, si limita la validità temporale.
 
 I problemi del protocollo sono i seguenti:
-- Overhed di comunicazione perchè è installata una terza entità;
+- Overhed di comunicazione perché è installata una terza entità;
 - Gestire la memoria sicura;
 - Rendere il servizio sempre disponibile;
 - Scalabile.
@@ -1143,15 +1083,15 @@ I problemi del protocollo sono i seguenti:
 Quali sono i componenti che meglio si usano per implementare questo protocollo?
 
 - **ECB**: si sfrutta il determinismo e la malleabilità di questa modalità:
-  - L'intrusore si mette in ascolto sul canale perchè vuole avviare la comunicazione dei passi 3, 4 e 5 come se fosse la sorgente leggittima. Per farlo deve sostanzialmente sostituire due blocchi Ekb(A||k) e Eka(..);
+  - L'intrusore si mette in ascolto sul canale perché vuole avviare la comunicazione dei passi 3, 4 e 5 come se fosse la sorgente leggittima. Per farlo deve sostanzialmente sostituire due blocchi Ekb(A||k) e Eka(..);
   -  l'intrusore intercetta un messaggio del passo 2 tra A e T;
   - Da una sessione precedente, si conserva Ekb(A). Il messaggio Ekb(A || k) che può essere riscritto come Ekb(A) || Ekb(k);
   - Avvia il protocollo tra C (intrusore) e T per ottenere una chiave k1;
-  - al passo 3, si inserisce sulla sessione di A che al posto di inviare il messaggio Ekb(A || k) -> Ekb(A) || Ekb(k) lo sostituisce. Ha il blocco Ekb(A) perchè lo ha conservato da una sessione passata e lo concatena con Ekb(k1);
-  - al passo 4, B risponde al messaggio perchè è stato costruito;
+  - al passo 3, si inserisce sulla sessione di A che al posto di inviare il messaggio Ekb(A || k) -> Ekb(A) || Ekb(k) lo sostituisce. Ha il blocco Ekb(A) perché lo ha conservato da una sessione passata e lo concatena con Ekb(k1);
+  - al passo 4, B risponde al messaggio perché è stato costruito;
   - al passo 5, dato che l'intrusore conosce k1 riesce a decifrarlo.
 
-  E' difficile effettuare session injection, l'attacco prevede di aprire in una nuova da parte dell'intrusore e di prendere e modificare i messaggi.
+  È difficile effettuare session injection, l'attacco prevede di aprire in una nuova da parte dell'intrusore e di prendere e modificare i messaggi.
 
 da 2.32.22 in poi
 
@@ -1191,7 +1131,7 @@ Un primo modo per costruire raw CBC-MAC che sfrutti un cifrario simmetrico in mo
 
 ![marco togni](./img/img37.png)
 
-Si prende il messaggio originario, lo si suddivide in blocchi. Ogni blocco viene dato in XOR al cifrato precedente dove al primo passo, il blocco viene messo in XOR con un vettore di inizializzazione (0). Ai fini della confidenzialità non importa avere un vettore imprevedibile, assolutamente casuale e usato una sola volta. L'uscita dell'ultimo blocco non è altro che l'attestato di autenticità e integrità. Questa modalità diventa deterministica appunto perchè il vettore è 0.
+Si prende il messaggio originario, lo si suddivide in blocchi. Ogni blocco viene dato in XOR al cifrato precedente dove al primo passo, il blocco viene messo in XOR con un vettore di inizializzazione (0). Ai fini della confidenzialità non importa avere un vettore imprevedibile, assolutamente casuale e usato una sola volta. L'uscita dell'ultimo blocco non è altro che l'attestato di autenticità e integrità. Questa modalità diventa deterministica appunto perché il vettore è 0.
 
 ![marco togni](./img/img38.png)
 
@@ -1234,17 +1174,17 @@ Per tutte le implementazioni per motivi di efficienza, viene usato l'HMAC e non 
 
 L'opzione 3 viene scartata: qualche bit del testo in chiaro per come funziona le funzione hash crittograficamente sicura, potrebbe anche rimanere anche nell'attestato di autenticità, ma visto che qui bisogna proteggere sia autenticità che integrità è importante che non riveli neanche nessuna informazione sul messaggio in chiaro ( non si può perdere la proprietà di riservatezza).
 
-La soluzione ottimale è SSL perchè se il messaggio non è integro ed autentico non lo si va a decifrare. Nel secondo caso, si deve lo stesso decifrare per poi calcolare integrità ed autenticità.
+La soluzione ottimale è SSL perché se il messaggio non è integro ed autentico non lo si va a decifrare. Nel secondo caso, si deve lo stesso decifrare per poi calcolare integrità ed autenticità.
 
 Esistono degli standard per ottenere authenticated encryption. A seconda della modalità di cifratura che si sta usando si possono avere degli attacchi. La modalità MAC-then-Encrypt (SSL) non è sempre robusta nelle implementazioni anche se a livello concettuale va bene (es. modalità CBC). Gli standard a prescindere dalla modalità di cifratura usata funzionano sempre bene e utizzano la modalità Encrypt-then-MAC.
 
 ### Esempio
 
-E' possibile trovare questo problema nelle vecchie versioni di TLS. Supponiamo che mittente e destinatario abbiano negoziato la modalità CBC per negoziare i dati. Nel protocollo, viene eseguito MAC-then-Encrypt cioè viene preso m, viene calcolato HMAC su m, m || HMAC viene sottoposto a CBC.
+È possibile trovare questo problema nelle vecchie versioni di TLS. Supponiamo che mittente e destinatario abbiano negoziato la modalità CBC per negoziare i dati. Nel protocollo, viene eseguito MAC-then-Encrypt cioè viene preso m, viene calcolato HMAC su m, m || HMAC viene sottoposto a CBC.
 
 TLS ha un pacchetto formato da type, version, lenght, data, MAC, padding e tutto è cifrato. Nel padding, viene scritto i byte che sono stati riempiti. Esempio, 3 byte, il padding sarà 3 3 3.
 
-Se c'era stato in decifrazione un errore legato al padding veniva restituito "padding error". Se invece veniva scartato il pacchetto TLS perchè non era integro/autentico veniva restituito "MAC error". L'intrusore osservando questi messaggi sa cosa è successo.
+Se c'era stato in decifrazione un errore legato al padding veniva restituito "padding error". Se invece veniva scartato il pacchetto TLS perché non era integro/autentico veniva restituito "MAC error". L'intrusore osservando questi messaggi sa cosa è successo.
 
 Un attaccante può fare il seguente attacco (padding oracle):
 - L'attaccante invia un testo cifrato scelto e può sapere se gli ultimi byte relativi a un padding validi o no.
@@ -1255,7 +1195,7 @@ Tuttavia, in SSL, anche se sono stati rimossi questi errori è possibile effettu
 
 Bisogna adottare la modalità MAC-then-encrypt. Il testo sorgente è cifrato è costituito da tre blocchi: c0, c1 e c2. L'attaccante intercetta il cifrato e vuole decifrare solo m1.
 
-Toglie c2 e fa in modo che la destinazione decifri un testo cifrato scelto. Suppone che l'ultimo byte di m1 è 1 (quindi il padding). L'intrusore modifica l'ultimo byte di c0 e lo modifica (ad hoc perchè non conosce il cifrato) 
+Toglie c2 e fa in modo che la destinazione decifri un testo cifrato scelto. Suppone che l'ultimo byte di m1 è 1 (quindi il padding). L'intrusore modifica l'ultimo byte di c0 e lo modifica (ad hoc perché non conosce il cifrato) 
 
 da 2.16.36
 
@@ -1266,7 +1206,7 @@ Il cifrario simmetrico non garantisce autenticazione (solo in sotto scenari). Co
 Se si dispone solo di un cifrario simmetrico, si può garantire non ripudio? Si, ma è complesso
 
 La firma digitale è un concetto ad alto livello che garantisce non ripudio. Le proprietà di un servizio di firma digitale su un dato sono:
-- Consente a chiunque di identificare univocamente il firmatario perchè per dire ch è stata una determinata persona a firmare
+- Consente a chiunque di identificare univocamente il firmatario perché per dire ch è stata una determinata persona a firmare
 - Non poter essere imitata da un impostare: un intrusore non deve imitare la firma
 - Non poter essere trasportata da un messaggio ad un altro: se la sorgente usa dei bit che rappresentano una firma, questi non possono essere presi e spostati su un altro messaggio.
 - Non poter essere ripudiata dall'autore
@@ -1276,7 +1216,7 @@ La firma digitale è un concetto ad alto livello che garantisce non ripudio. Le 
 
 00-54.00 rivedere questa parte!
 
-E' necessario inserire una terza entità (come un notaio). Come costruire il servizio di firma digitale con un cifrario simmetrico:
+È necessario inserire una terza entità (come un notaio). Come costruire il servizio di firma digitale con un cifrario simmetrico:
 
 Ci sono A e B, T è la terza parte. Ci sono delle chiavi precondivise tra A e B e questa terza parte. A quando vuole inviare un documento firmato digitalmente, deposita il documento alla terza parte. T invierà ad A la ricevuta ad A. A invierà il contratto comn la ricevuta a B e B verifica con T la verifica del documento.
 
@@ -1295,7 +1235,7 @@ Con questo protocollo si risolvono i problemi del ripudio e della falsificazione
 
 Viene usata per costruire generatori di numeri pseudo-casuali, cifrari che garantiscono riservatezza, schemi di meccanismi di firma digitale che garantiscano il non-ripudio e qualunque protocollo di identificazione/autenticazione. In particolare, viene usata soprattutto con schemi di firma digitale. Non viene utilizzata per motivi di efficienza per costruire cifrari con PNRG crittocraficamente sicuri.
 
-Rispetto ai cifrari simmetrici, si inizia a vedere la distribuzione delle chiavi perchè per poterli usare in modo efficace bisogna capire prima l'infrastruttura.
+Rispetto ai cifrari simmetrici, si inizia a vedere la distribuzione delle chiavi perché per poterli usare in modo efficace bisogna capire prima l'infrastruttura.
 
 ## Come distribuire le chiavi pubbliche in modo sicuro
 
@@ -1331,9 +1271,9 @@ Le informazioni sono le seguenti:
 - Subject's public key info: stringa bit che corrisponde alla chiave pubblica
 - Estensione: Campi aggiuntivo. rende flessibile ai fini applicativi il certificato. Se distribuisco in una repository pubblica un certificato, può servire il certificato qual è il ruolo di Luca o il suo indirizzo di lavoro, email istituizione? A volte si usa questo campo per aggiungere info a livello applicativo.
 
-La firma viene fatta su tutte le informazioni della struttura dati perchè deve essere garantita l'autenticità, tranne il campo estensione perchè queste informazioni sono da verificare e non è detto che siano corrette.
+La firma viene fatta su tutte le informazioni della struttura dati perché deve essere garantita l'autenticità, tranne il campo estensione perché queste informazioni sono da verificare e non è detto che siano corrette.
 
-Tutte le volte che si aggiungono campi bisogna chiedersi se sono necessarie perchè si aggiunge un overhead di rete, di memorizzazione. 
+Tutte le volte che si aggiungono campi bisogna chiedersi se sono necessarie perché si aggiunge un overhead di rete, di memorizzazione. 
 
 ### PKI (Public Key Infrastructure)
 
@@ -1363,7 +1303,7 @@ Consente di creare un sistema di Directory distribuito capace di garantire alte 
 
 Dato che è distribuito, ci sono diversi nodi: DSA (Directory Service Agent) che gestisce un sottoinsieme di informazioni e quando un utente detto DUA chiede informazioni al proprio DSA e se non ha le informazioni richieste, si coordina con gli altri DSA per ottenere le informazioni richieste.
 
-Inoltre, può differenziare tra accesso anonimo e accesso autenticato. Un certificato anonimo va bene per i certificati perchè le informazioni non è critica ma per sua natura deve essere pubblica.
+Inoltre, può differenziare tra accesso anonimo e accesso autenticato. Un certificato anonimo va bene per i certificati perché le informazioni non è critica ma per sua natura deve essere pubblica.
 
 ![marco togni](./img/img47.png)
 
@@ -1391,7 +1331,7 @@ Il protocollo che consente ad un utente di registrarsi a un PKI è il seguente:
 
 Inizializzazione:
 Luca deve generare una coppia di chiavi, deve farsi identificare da una registration authority e Luca quando deve richiedere un certificato:
-- chi riceve la richiesta di certificato, ci deve essere il nome del richiedente perchè deve essere verificato chi dice di essere;
+- chi riceve la richiesta di certificato, ci deve essere il nome del richiedente perché deve essere verificato chi dice di essere;
 - Nella richiesta, Luca possiede effettivamente la sua chiave privata?
 Come si garantisce di possedere effettivamente la chiave privata:
 
@@ -1408,8 +1348,8 @@ Esistono diversi modelli con cui è possibile mettere in piedi infrastrutture di
 Da punto di vista operativo questo schema non viene mai usato. Questo modello può andare bene se si vuole realizzare solo un servizio di cifratura: un'azienda con i suoi dipendenti aziendali:
   - **Vantaggi**: una CA interna salva la chiave privata e distribuisce la coppia di chiavi ai dipendenti che la utilizzano poi per scambiare informazioni. L'azienda è proprietaria dei dati e in questo modo può risalire a tutti i dati in caso se la chiave privata venga persa;
   - **Svantaggi**:
-    - il supporto al non ripudio non è garantito perchè la chiave privata l'ha due entità diverse. Per questo motivo non la si può usare come firma digitale.
-    - La CA è contattata da tutti gli utenti è quindi c'è un certo carico ma soprattutto c'è una porta in ascolto. Meno la CA ha aperte porte aperte verso l'esterno meglio è perchè ha la coppia di chiavi con cui rilascia i certificati.
+    - il supporto al non ripudio non è garantito perché la chiave privata l'ha due entità diverse. Per questo motivo non la si può usare come firma digitale.
+    - La CA è contattata da tutti gli utenti è quindi c'è un certo carico ma soprattutto c'è una porta in ascolto. Meno la CA ha aperte porte aperte verso l'esterno meglio è perché ha la coppia di chiavi con cui rilascia i certificati.
 
 ### Schema a tre parti
 
@@ -1417,8 +1357,8 @@ I modelli a tre parti, possono prevedere diverse alternative:
 
 - L'utente comunica solo con la RA che a sua volta comunica solo con la CA. L'utente avvia il processo di generazione delle chiavi, si deve far identificare di persona dalla RA. Ad esempio, per ritirare il badge ci si presenta di persona per farselo rilasciare (sorta di RA). RA a questo punto, se l'utente si identifica e trova il possesso della chiave privata, invia una richiesta alla CA chiedendo di rilasciare il certificato e lo restituisce alla RA che a sua volta lo restituisce all'utente.
 
-La normativa italiana prevede che la chiave segreta sia generata dall'utente perchè deve avere il controllo pieno. Da un punto di vista tecnico la generazione può avvenire in due modi:
-- Viene chiesto un certificato fisicamente: ci si reca dalla RA che restituisce un modulo crittografico ma vuoto. L'utente in sua presenza avvia la generazione della coppia di chiavi. Il modulo crittografico è collegato ad esempio tramite una seriale a una smart card e al software della RA e restituisce la coppia di chiavi. Successivamente, l'utente cambia il PIN iniziale. L'identificazione è verificata. Questo modello ha un rallentamento perchè bisogna fare numerosi passaggi e c'è una fase in cui la chiave privata non è di proprietà dell'utente.
+La normativa italiana prevede che la chiave segreta sia generata dall'utente perché deve avere il controllo pieno. Da un punto di vista tecnico la generazione può avvenire in due modi:
+- Viene chiesto un certificato fisicamente: ci si reca dalla RA che restituisce un modulo crittografico ma vuoto. L'utente in sua presenza avvia la generazione della coppia di chiavi. Il modulo crittografico è collegato ad esempio tramite una seriale a una smart card e al software della RA e restituisce la coppia di chiavi. Successivamente, l'utente cambia il PIN iniziale. L'identificazione è verificata. Questo modello ha un rallentamento perché bisogna fare numerosi passaggi e c'è una fase in cui la chiave privata non è di proprietà dell'utente.
 ![img](./img/img50.png)
 - Viene chiesto un certificato da remoto: prevede che l'utente sia stato identificato una volta dalla RA. RA rilascia un autenticatore che lo si conserva fino al momento del bisogno. Al momento dell'identificazione si genera una chiave pubblica da remoto e la si invia alla RA oppure direttamente alla CA. RA/CA deve identificare e poi verificare che l'utente abbia davvero la chiave segreta corrispondente e invia il certificato. (lo standard IAK)
 ![img](./img/img51.png)
@@ -1427,7 +1367,7 @@ Quando si fa una richiesta autenticata, l'utente deve aver ricevuto fuori banda 
 
 ### Prova di possesso (POP)
 
-E' fondamentale garantirla perchè ovviamente se non si avessero le garanzie della prova di possesso:
+È fondamentale garantirla perché ovviamente se non si avessero le garanzie della prova di possesso:
 - Luca mette sul canale la chaive pubblica ma l'intrusore mette la sua chiave. La CA prende la stringa di bit che ha generato l'intrusore e produce un certificato. Chinque vuole parlare con Luca in realtà parla con l'intrusore.
 - L'intrusore manda una richiesta a nome di Luca, la CA prende la stringa di bit generata e la registra come appartenete a Luca anche se non è davvero lui.
 
@@ -1458,7 +1398,7 @@ Un secondo criterio si basa se si ha una connessione oppure no:
   - Certificate Revocation List
   - Certificate Revocation Tree
 
-I modelli push non sono molto implementati perchè sono piuttosto complessi. Bisogna vedere se un utente è mobile/stazionario etc. Quindi, si preferiscono i modelli push.
+I modelli push non sono molto implementati perché sono piuttosto complessi. Bisogna vedere se un utente è mobile/stazionario etc. Quindi, si preferiscono i modelli push.
 
 # Lezione 27-10-2021
 
@@ -1466,7 +1406,7 @@ I modelli push non sono molto implementati perchè sono piuttosto complessi. Bis
 
 Per rendere partecipi tutti gli utenti che una chiave non deve essere più usata, CA mantiene on-line una lista autenticata dei certificati revocati (CRL).
 
-E' un modello pull il cui funzionamento è off-line.
+È un modello pull il cui funzionamento è off-line.
 
 ![marco togni](./img/img52.png)
 
@@ -1475,28 +1415,28 @@ La Certificate List è composta da alcuni campi che riguardano la revoca:
 - **Revoked certificate**: questo campo contiene a sua volta:
   - **user certificate serial**: numero seriale del certificato. Il numero seriale è un ID univoco. In generale, in questo campo si potrebbe inserire:
     - **chiave pubblica**
-    - **nome del possessore**: il nome del possessore non è una buona idea perchè ad un nome possono essere associate più chiavi quindi non si sa quale è stata la chiave revocata.
+    - **nome del possessore**: il nome del possessore non è una buona idea perché ad un nome possono essere associate più chiavi quindi non si sa quale è stata la chiave revocata.
     - **id univoco**: tra tutti i certificati si sa a quale chiave appartiene in modo semplice
   - **revocation date**: quando alla CA è arrivata la notifica di revoca. Tutto quello che è stato firmato prima, ovviamente, è valido.
   - **crlExtensions**: campo opzionale in cui si specifica il motivo della revoca.
-- **This Update Date** e **Next Update Date**: l'autorità di certificazione emette a scadenze temporali, ad esempio, con scandenza bisettimanale, ogni ora etc, la lista di revoca. Le informazioni contenute in questa struttura dati valgono dal valore di "This Update Date", fino a "Next Update Date". Non valgono nè prima nè dopo.
+- **This Update Date** e **Next Update Date**: l'autorità di certificazione emette a scadenze temporali, ad esempio, con scandenza bisettimanale, ogni ora etc, la lista di revoca. Le informazioni contenute in questa struttura dati valgono dal valore di "This Update Date", fino a "Next Update Date". Non valgono né prima né dopo.
 
 Problemi:
 - La lista di revoca viene pubblicata sulla Directory e verrà sostituita/affiancata (dipende dalla politica della CA) all'istante di tempo Next Update Date. Se questa lista viene pubblicata su una directory, sarà l'utente finale tramite il protocollo LDAP a recuperare la lista di revoca e può decidere se conservarla in locale fino al prossimo aggiornamento. Questa è una decisione lato cliente. Si può verificare lo stato di revoca in maniera offline.
 Problema di freschezza delle informazioni: se in quell'arco temporale, un altro certificato viene revocato, come fa l'utente finale a saperlo? Deve solo aspettare l'aggiornamento successivo. Se si deve sapere in tempo reale in tempo reale, la lista di revoca non è l'opzione migliore.
-- Dimensione della struttura dati: questa struttura dati cresce nel tempo. Se ad esempio, la frequenza di revoca è circa del 10 per cento all’anno, i certificati con validità temporale di due anni, popolazione stabile di circa 100000 certificati allora la dimensione media di una CRL circa 20000 entries. Non è tanto un problema lato directory perchè esse sono pensate per mantenere un grande numero di dati ma è un problema sull'occupazione di banda e lato cliente. Se il dispositivo ha limitate capacità questo è un limite forte di progettazione.
+- Dimensione della struttura dati: questa struttura dati cresce nel tempo. Se ad esempio, la frequenza di revoca è circa del 10 per cento all’anno, i certificati con validità temporale di due anni, popolazione stabile di circa 100000 certificati allora la dimensione media di una CRL circa 20000 entries. Non è tanto un problema lato directory perché esse sono pensate per mantenere un grande numero di dati ma è un problema sull'occupazione di banda e lato cliente. Se il dispositivo ha limitate capacità questo è un limite forte di progettazione.
 
 Possibili soluzioni:
 - Le CRL possono diventare molto grosse e quindi onerose da scaricare e da esaminare:
-  - Eliminare la revoca dopo la prima CRL successiva alla scadenza del certificato: se un certificato è scaduto temporalmente, non ha senso mantenerlo nella lista di revoca perchè non passerebbe l'operazione di verifica. (Da vedere);
+  - Eliminare la revoca dopo la prima CRL successiva alla scadenza del certificato: se un certificato è scaduto temporalmente, non ha senso mantenerlo nella lista di revoca perché non passerebbe l'operazione di verifica. (Da vedere);
   - pubblicare CRL complete (Base CRL) e poi solo le differenze (Delta CRL): Ad esempio, si suppone che dopo la prima settimana di operatività della CA, essa emette la prima lista di revoca. Questa lista è chiamata Base CRL e sarà sempre disponibile. Dalla seconda settimana in poi la Ca emetterà una variazione rispetto alla . Ogni settimana, la CA non emette tutta la storia fino a quel momento ma emette solo le variazioni di quello specifico arco temporale. Queste variazioni prendono il nome di Delta CRL. l'utente finale, la prima volta scarica la Base CRL. Se il certificato non è nella Base, scarica le Delta CRL fino a quando non trova il certificato. Nei casi fortunati, si scaricano poche liste e c'è anche un risparmio di memorizzazione però nel caso sfortunato si scarica tutta la storia.
-  - partizionare le CRL in tanti gruppi (es. per ogni mille certificati emessi) usando CRL DP: la struttura dati complessiva viene partizionata. I criteri possono essere molteplici: tutti i certificati che hanno validità temporale di un anno finiscono in una partizione, in ordine seriale etc. Sulla directory viene pubblicata partizioni di lista di revoca. Quindi, bisogna definire un modello di distribuzione del criterio lato cliente. Nel certificato, ci sono campi estensioni in cui è possibile veicolare informazioni in più. Si aggiunge come campo "Distribution point". La CA sa di certo che se un certificato verrà revocato, finisce già in una certa partizione perchè conosce qual è il criterio adotatto. Quindi, viene già indicato all'interno del campo. Il Distribution point è   e' il percorso all'interno della gerarchia della directory. Come un file system. (vedi figura della directory) in cui si troverà eventualmente l'informazione sullo stato di revoca. L'utente, userà il distribution point nella query LDAP.
+  - partizionare le CRL in tanti gruppi (es. per ogni mille certificati emessi) usando CRL DP: la struttura dati complessiva viene partizionata. I criteri possono essere molteplici: tutti i certificati che hanno validità temporale di un anno finiscono in una partizione, in ordine seriale etc. Sulla directory viene pubblicata partizioni di lista di revoca. Quindi, bisogna definire un modello di distribuzione del criterio lato cliente. Nel certificato, ci sono campi estensioni in cui è possibile veicolare informazioni in più. Si aggiunge come campo "Distribution point". La CA sa di certo che se un certificato verrà revocato, finisce già in una certa partizione perché conosce qual è il criterio adotatto. Quindi, viene già indicato all'interno del campo. Il Distribution point è   È il percorso all'interno della gerarchia della directory. Come un file system. (vedi figura della directory) in cui si troverà eventualmente l'informazione sullo stato di revoca. L'utente, userà il distribution point nella query LDAP.
 
   A seconda del meccanismo che si usa, nella struttura dati CRL ci sono campi aggiuntivi come ad esempio se è una CRL Base o Delta, Distribution Point etc.
 
 ### OCSP
 
-E' un protocollo standard client-server che permette ad un utente finale di chiedere a un server lo stato di revoca di uno specifico certificato. Ci sono come componenti un RA e CA ma non una directory per lo stato di revoca. Si interroga un server che sempre è online perchè deve restituire la risposta. Il protocollo definisce lo standard di richiesta di come deve essere mandato il messaggio di richiesta e di risposta (buono, revocato o sconosciuto)
+È un protocollo standard client-server che permette ad un utente finale di chiedere a un server lo stato di revoca di uno specifico certificato. Ci sono come componenti un RA e CA ma non una directory per lo stato di revoca. Si interroga un server che sempre è online perché deve restituire la risposta. Il protocollo definisce lo standard di richiesta di come deve essere mandato il messaggio di richiesta e di risposta (buono, revocato o sconosciuto)
 
 Il server è un possibile collo di bottiglia per cui bisogna progettarlo in modo opportuno.
 
@@ -1512,7 +1452,7 @@ Per confrontare i diversi meccanismi a disposizione, bisogna adottare metodi di 
 - Carico computazionale sulle entità coinvolte: lato CA, lato cliente etc
 - overhed in termini di banda
 
-E' bene ricordare che esistono molti altri:
+È bene ricordare che esistono molti altri:
 
 - Sicurezza: l'ìnformazione di revoca garantisce autenticità (cioè chi è che mi fornisce l'informazione), integrità, confidenzialità, non ripudio.
 - Standard: adesione a uno standard, proprietario
