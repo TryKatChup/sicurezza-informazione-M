@@ -1,7 +1,7 @@
 # Sicurezza dell'informazione 2021-2022
 
-<!--la data da togliereeeeee...tra due mesi viene l'angoscia di vedere quando il corso è iniziato-->
-## 01.Introduzione (23/09/2021)
+<!-- lezione del 23/09/2021-->
+## 00.Introduzione
 
 ### Scopo della sicurezza informatica
 
@@ -11,7 +11,7 @@ Per essere più precisi, è l’insieme dei prodotti, dei servizi, delle regole 
 
 ### I tre capisaldi della sicurezza informatica (CIA Trade Triangle)
 
-L'acronimo _CIA_ viene usato per rappresentare le tre proprietà fondamentali della sicurezza informatica:
+L'acronimo CIA viene usato per rappresentare le tre proprietà fondamentali della sicurezza informatica:
 
 - **Confidenzialità** (o **riservatezza**): solo chi è autorizzato può accedere (in sola lettura) a risorse o sapere almeno che esse esistano;
 - **Integrità**: solo chi è autorizzato può modificare, eliminare e creare risorse;
@@ -33,13 +33,12 @@ A queste proprietà se ne possono aggiungere altre come:
 
 Esempio:
 
-- Un ponte ha una crepa (vulnerabilità);
-- Rischia di crollare (minaccia);
-- Un peso totale eccessivo sul ponte (attacco);
-- Cercare di controllare il numero di veicoli sul ponte (contromisura).
+- **Vulnerabilità**: un ponte ha una crepa;
+- **Minaccia**: Rischia di crollare;
+- **Attacco**: un peso totale eccessivo sul ponte;
+- **Contromisura**: cercare di controllare il numero di veicoli sul ponte.
 
-## 27/09/2021
-
+<!-- lezione del 27/09/2021 -->
 ### Calcolatore sicuro
 
 La sicurezza di un calcolatore deve essere garantita sia a livello hardware che a livello software. Ovviamente questa ipotesi non è sempre verificata, ma in questo corso quando studieremo i servizi e meccanismi di sicurezza lo daremo per scontato.
@@ -97,7 +96,7 @@ Una certa contromisura, quindi, deve essere applicata attentamente, valutando si
 
 Come i [veri ingegneri dimostrano](https://youtu.be/EOR8Uz27s3Y?t=420), l'obiettivo è capire a fronte di più possibilità progettuali quale risulti la migliore scelta per garantire la [sicurezza](https://twitter.com/AndreaDraghetti/status/1455576154425933828) del proprio [sistema](https://raidforums.com/Thread-Italy-s-Ministery-of-Healthcare-hacked-and-Blackmails-WhiteHatsicurezza) e dei propri dati.
 
-#### Possibili contromisure per attacchi passivi
+### Possibili contromisure per attacchi passivi
 
 L’unica contromisura da utilizzare è la _prevenzione_. La _rilevazione_ e la _reazione_ risultano inutili dopo che l'attacco è avvenuto poiché l'intrusore ha intercettato i messaggi.
 
@@ -106,7 +105,7 @@ Si può:
 - **Impedire** l'accesso al canale. Ciò viene implementato tramite l'utilizzo o di canali dedicati, oppure progettando meccanismi di controllo dell'accesso, in modo che ogni volta che una sorgente accede al canale, sia prevista l'autenticazione del cliente. Questa soluzione non è tuttavia né economicamente sostenibile né scalabile;
 - **Cifrare** i dati da inviare, ovvero rendere incomprensibili i dati trasmessi, tranne al destinatario legittimo.
 
-#### Possibili contromisure per attacchi attivi
+### Possibili contromisure per attacchi attivi
 
 Le contromisure da adottare, a differenza degli attacchi passivi, includono anche la _rilevazione_ e la _reazione_. L'unico modo per _prevenire_ un attacco attivo è quello di controllare l'accesso al canale. Tuttavia, è quasi impossibile per i motivi specificati in precedenza. Questa contromisura, quindi, non viene usata.
 
@@ -115,7 +114,9 @@ Si può:
 - **Aggiungere** un attestato di integrità e di autenticità. In questo modo la destinazione è in grado di comprendere se il flusso dei messaggi è integro e autentico oppure se è stato manomesso (integrità e autenticità);
 - **Impedire** l'interruzione del flusso di dati. La destinazione si assicura che il numero corretto di messaggi siano stati ricevuti (disponibilità).
 
-## 01. Dati Sicuri
+## 01.Dati Sicuri
+
+### Algoritmi e protocolli
 
 Per proteggere i dati a fronte di eventuali attacchi occorre utilizzare delle trasformazioni.
 
@@ -129,7 +130,7 @@ Nei casi complessi, è necessario che si eseguano più trasformazioni e la seque
 
 In alcuni casi è necessario l'intervento di una terza entità che operi da _arbitro_/_giudice_.
 
-## Come rendere sicuri i dati
+### Come rendere sicuri i dati
 
 La sicurezza dei dati può essere garantita tramite l'impiego di una codifica ridondante dei dati, che consiste nell'aggiunta di bit in più rispetto alla lunghezza del messaggio originario (ridondanza spaziale).
 
@@ -138,7 +139,7 @@ Nel caso si voglia garantire autenticità e integrità si utilizza un attestato 
 - Spazio, necessario per la memorizzazione;
 - Tempo, maggiore tempo di trasferimento.
 
-## Crittografia e Crittoanalisi
+### Crittografia e Crittoanalisi
 
 La disciplina che studia gli algoritmi ed i protocolli da applicare dal lato sorgente e lato destinatario di un canale insicuro è detta _crittologia_. A sua volta è formata da due distinte e correlate discipline:
 
@@ -147,7 +148,7 @@ La disciplina che studia gli algoritmi ed i protocolli da applicare dal lato sor
 
 Nel corso si studierà solo crittografia.
 
-## I principi della difesa
+### I principi della difesa
 
 Ci sono tre principi che guidano la progettazione:
 
@@ -155,7 +156,7 @@ Ci sono tre principi che guidano la progettazione:
 - Deve essere impossibile _dedurre_ la trasformata/i calcoli da parte dell'intrusore;
 - Deve essere impossibile _indovinare_ la trasformata/i calcoli da parte dell'intrusore.
 
-## Proteggere la proprietà di confidenzialità
+### Proteggere la proprietà di confidenzialità
 
 Per proteggere i dati abbiamo bisogno di una trasformata che renda incomprensibile il contenuto. In questo modo, l'intrusore non sarà in grado di capire i messaggi.
 La riservatezza si ottiene con una trasformazione di tipo _preventivo_: l'intrusore che accede ai dati non sarà in grado di comprenderli.
@@ -180,7 +181,7 @@ Altre considerazioni:
 - **A e B non è detto che siano entrambi online**: possono essere online contemporaneamente oppure A online e B offline. I messaggi possono essere decifrati in momenti diversi;
 - **B = A**: la sorgente potrebbe coincidere con la destinazione. Ad esempio, vogliamo cifrare dei dati che abbiamo sul nostro hard disk. Quando effettuiamo il logout dal sistema essi vengono cifrati mentre quando effettuiamo il login li decifriamo.
 
-## Proteggere la proprietà di integrità
+### Proteggere la proprietà di integrità
 
 Proteggere l'integrità vuol dire costruire delle trasformazioni in grado di rilevare modifiche al contenuto dei dati trasmessi. In questo caso, la contromisura da adottare è quella della _rilevazione_ perché le modifiche ai messaggi sul canale non possono essere evitate a priori.
 
@@ -204,8 +205,6 @@ Considerato il messaggio `m`, bisogna fare in modo che la probabilità che esca 
 È inevitabile che due messaggi diversi possano avere in uscita la stessa impronta perché lo spazio di input è molto più grande dello spazio di output (`m > n`). Per un intrusore deve essere computazionalmente difficile trovare un messaggio `m2` con impronta `H(m2)` uguale a quella di `m1`, cioè `H(m1)`.
 
 Ad esempio, se i messaggi sono `10` e il numero di bit è pari a `3`, le possibili uscite della funzione hash sono `8` e alcuni messaggi avranno sicuramente la stessa impronta.
-
- <!--> Fine 3/11 correzione ore 13:52 <-->
 
 Le funzioni hash possono essere classificate in due categorie:
 
@@ -298,7 +297,7 @@ Alcune considerazioni:
 
 - Da un punto di vista computazionale, la sorgente effettua due trasformazioni (encryption `E` e la funzione `H`). La destinazione deve verificare l'integrità (la funzione `H`). Se il messaggio non è integro non viene effettuata l'operazione di decryption `D`. In questo modo si può risparmiare una trasformazione.
 
-## Proteggere la proprietà di autenticazione (=autenticità?)
+### Proteggere la proprietà di autenticità
 
 Chi riceve un dato è importante che sappia chi è stato ad originarlo. L'intrusore può creare _ad hoc_ un messaggio, inserirlo nel normale flusso dei dati e fingere di di provenire dalla sorgente originale. Questo attacco lo si può solo _rilevare_.
 
@@ -318,9 +317,9 @@ Alcune considerazioni:
 - **A e B non è detto che siano entrambi online**: `B` può verificare l'autenticità in un secondo momento;
 - **B = A**: se nel file system vogliamo garantire la loro autenticità, durante la fase di logout e login, oltre a decifrarli, occorre verificare che siano anche autentici.
 
-# 29/09/2021
-
-## Garantire autenticità
+<!-- lezione del 29/09/2021-->
+<!-- doppione -->
+### Garantire autenticità
 
 Per garantire autenticità si ricorre all'operazione di firma o _sign_, che produce un certificato di autenticità e che viene inserito e inviato insieme al testo dell'informazione eventualmente cifrato. La destinazione avrà una funzione `V` di _verify_, utilizzata per verificare se il certificato è effettivamente autentico e per ricavare il mittente.
 
@@ -441,7 +440,7 @@ La ricezione è efficiente: viene risparmiata una trasformazione. Se il cifrato 
 - **SSH**: permette di aprire shell remote sicure.
 Si prende il messaggio, si cifra e si manda sul canale insicuro il cifrato concatenato con l'attestato di autenticità costruito sul messaggio.-->
 
-## Anonimato/Identificazione
+### Anonimato/Identificazione
 
 Per _identificazione_ si intende un insieme di azioni che richiedono di identificare chi sta partecipando a un'interazione. Ad esempio, risulta indispensabile quando effettuiamo un pagamento o quando si vuole accedere a certe risorse. L'opposto dell'identificazione è l'_anonimato:. Un esempio di utilizzo è nel caso di voto elettronico o di pagamento via criptovaluta.
 
@@ -482,7 +481,7 @@ Un intrusore può:
 - Rubare il dispositivo (smartcard);
 - Replicare una prova che ha viaggiato sul canale in una legittima transizione di identificazione e riutilizzarla.
 
-## Funzioni one-way
+### Funzioni one-way
 
 Una funzione `f` è detta unidirezionale se:
 
@@ -498,7 +497,7 @@ Ad esempio, sono funzioni unidirezionali la:
 
 Nella teoria della complessità computazionale, non esistono funzioni che siano unidirezionali. In crittografia, invece, sono state individuate diverse funzioni che sono candidate ad avere un comportamento di unidirezionalità (come ad esempio le funzioni di compressione, di cifratura e di firma). Vengono chiamate _pseudo-unidirezionali_ le funzioni che appaiono unidirezionali se non si possiede una particolare informazione sulla loro costruzione.
 
-## Trasformazioni segrete
+### Trasformazioni segrete
 
 Possiamo avere tre approcci:
 - **Macchine a funzionamento segreto**: non conoscere la struttura della macchina. Ad esempio, la _macchina enigma_;
@@ -518,7 +517,7 @@ L'approccio usato al giorno d'oggi, quindi, risulta essere la trasfrormazione se
 - Con `k` indichiamo la _chiave_, ovvero il parametro non noto, in ingresso;
 - Con _spazio delle chiavi_ si intende l'insieme delle ![formula](https://render.githubusercontent.com/render/math?math=\color{red}\2^n) possibili configurazioni dove `n` è il numero di bit della chiave. La chiave è costituita da una delle ![formula](https://render.githubusercontent.com/render/math?math=\color{red}\2^n) configurazioni. Più è grande `n`, più è complicato per un intrusore indovinare la chiave.
 
-## Algoritmo forza bruta
+### Algoritmo forza bruta
 
 Un intrusore può sempre disporre di un _algoritmo di ricerca esauriente_, noto come _algoritmo di forza bruta_.
 
@@ -527,7 +526,7 @@ Un intrusore può sempre disporre di un _algoritmo di ricerca esauriente_, noto 
 Se l'intrusore non conosce la chiave, può esplorare tutto lo spazio delle chiavi. Se `n` è il numero di bit della chiave e $ 2^{n} $ è il numero totale di configurazioni, effettua diversi tentativi fino a quando non indovina la chiave. 
 Occorre conoscere la trasformata `T`. Se il cifrato che ottiene è uguale a quello presente sul canale, allora ha avuto successo nel trovare la configurazione corretta.
 
-## Relazioni fra le chiavi
+### Relazioni fra le chiavi
 
 Si possono individuare due famiglie di cifrari:
 
@@ -551,7 +550,7 @@ Le chiavi asimmetriche devono avere le seguenti proprietà:
 - **Integrità**: è importante che la chiave privata `ks` che si sta utilizzando sia quella corretta e non modificata. Lo stesso vale per la chiave pubblica `kd`;
 - **Autenticità**: si deve essere certi sull'appartenenza della chiave pubblica `kd`, altrimenti non è garantita autenticità.
 
-## Crittoanalisi
+### Crittoanalisi
 
 Come riportato precedentemente, la crittoanalisi si occupa di progettare tutte quelle trasformazioni che minano le proprietà di sicurezza.
 Ci sono diversi criteri da seguire per non far risalire all'intrusore la chiave:
