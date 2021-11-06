@@ -77,7 +77,7 @@ Gli attacchi si classificano in due tipologie:
   - **Aggiungere** nuove informazioni facendo credere alla destinazione che siano state inviate dalla sorgente legittima. Viene minato il requisito dell'_autenticità_;
   - **Interrompere** il normale flusso impedendo che i dati arrivino alla destinazione. Viene minato il requisito di _disponibilità_.
 
-### Contromisure e analisi del rischio
+### Contromisure
 
 Esistono 3 tipologie di contromisure per gli attacchi:
 
@@ -132,12 +132,12 @@ In alcuni casi è necessario l'intervento di una terza entità che operi da _arb
 
 ### Come rendere sicuri i dati
 
-La sicurezza dei dati può essere garantita tramite l'impiego di una codifica ridondante dei dati, che consiste nell'aggiunta di bit in più rispetto alla lunghezza del messaggio originario (ridondanza spaziale).
+La sicurezza dei dati può essere garantita tramite l'impiego di una codifica ridondante dei dati, che consiste nell'aggiunta di bit in più rispetto alla lunghezza del messaggio originario.
 
 Nel caso si voglia garantire autenticità e integrità si utilizza un attestato di integrità o di originalità. In tal casi si ha ridondanza in termini di:
 
-- Spazio, necessario per la memorizzazione;
-- Tempo, maggiore tempo di trasferimento.
+- **Spazio**: necessario per la memorizzazione;
+- **Tempo**: maggiore tempo di trasferimento.
 
 ### Crittografia e Crittoanalisi
 
@@ -163,7 +163,7 @@ La riservatezza si ottiene con una trasformazione di tipo _preventivo_: l'intrus
 
 ![confidenzialità](./img/img2.png)
 
-Ad esempio:
+Lo scenario applicativo è il seguente:
 
 - La sorgente `A` non può inserire i dati `m` sul canale insicuro, ma deve prima trasformarli tramite un'encryption `E`;
 - Questa trasformazione è conosciuta solo dalla sorgente `A` ed è l'unica in grado di eseguirla;
@@ -197,13 +197,12 @@ Risulta importante che essa sia _crittograficamente sicura_ e abbia le seguenti 
 
 - **Calcoli difficili**: dato il messaggio `m` deve essere facile calcolare la sua impronta. L'operazione inversa invece deve essere computazionalmente difficile;
 - **Comportamento da "oracolo casuale"**: se si decide che l'impronta sia costituita da `n` bit, le possibili uscite della funzione hash sono `2^n`. 
-Considerato il messaggio `m`, bisogna fare in modo che la probabilità che esca un' uscita rispetto ad un'altra sia la stessa. Inoltre, se la domanda viene ripetuta, la risposta sarà la medesima, dato che è stata assegnata precedentemente dall'oracolo.
+Considerato il messaggio `m`, bisogna fare in modo che la probabilità che esca un' uscita rispetto ad un'altra sia la stessa. Inoltre, se il messaggio viene ripetuto, la risposta sarà la medesima, dato che è stata assegnata precedentemente dall'oracolo.
 
 ![zeus](./img/zeus.jpg)
 
 - **Resistente alle collisioni**: per un intrusore deve essere molto difficile individuare due messaggi che abbiano la stessa impronta.
 È inevitabile che due messaggi diversi possano avere in uscita la stessa impronta perché lo spazio di input è molto più grande dello spazio di output (`m > n`). Per un intrusore deve essere computazionalmente difficile trovare un messaggio `m2` con impronta `H(m2)` uguale a quella di `m1`, cioè `H(m1)`.
-
 Ad esempio, se i messaggi sono `10` e il numero di bit è pari a `3`, le possibili uscite della funzione hash sono `8` e alcuni messaggi avranno sicuramente la stessa impronta.
 
 Le funzioni hash possono essere classificate in due categorie:
@@ -213,7 +212,7 @@ Le funzioni hash possono essere classificate in due categorie:
 
 ![attestazioneIntegrità](./img/img4.png)
 
-Uno scenario che consente di comprendere l'importanza delle funzioni hash è il seguente:
+Lo scenario applicativo è il seguente:
 
 - La sorgente `A` manda sul canale insicuro un messaggio `m`;
 - L'impronta `H(m)` deve viaggiare su un canale sicuro per evitare che un intrusore possa sostituire `m` con un altro messaggio `m'` e di conseguenza sostituire anche `H(m)` con `H(m')`;
@@ -241,10 +240,7 @@ Il protocollo che assicura riservatezza e integrità dei dati è costituito dai 
   - **Passo 3**: la destinazione riceve `c` che può essere, o quello inviato dalla sorgente o un altro che è stato modificato dall'intrusore. Per questo motivo, dato che non si ha la certezza, si indica il messaggio `c` con `c*`. La destinazione applica la funzione `D` su `c*` ottenendo di nuovo `m* || H*(m)`;
   - **Passo 4**: per vedere se il messaggio sia integro, dobbiamo verificare che la funzione crittograficamente sicura `H(m*)` coincida con `H*(m)`. Se non coincidono il messaggio viene scartato.
 
-Alcune considerazioni:
-- L'intrusore può modificare casualmente i bit del cifrato, ma calcolarsi l'operazione inversa senza conoscere la trasformata `D` è computazionalmente difficile;
-- Da un punto di vista computazionale, la sorgente effettua due trasformazioni (encryption `E` e la funzione `H`). 
-La destinazione esegue sempre due trasformazioni (decryption `D` e la funzione `H`).
+L'intrusore può modificare solo casualmente i bit del cifrato perchè calcolarsi l'operazione inversa senza conoscere la trasformata `D` è computazionalmente difficile. Inoltre, le trasformate `D` e `E` sono segrete.
 
 ### Esempio 2
 
@@ -269,7 +265,7 @@ L'**integrità** _è rispettata_ perché se si modificano i bit di:
 La **riservatezza**, invece, _non è rispettata_ perché:
 
 - L'intrusore ha a disposizione molte informazioni di contesto. 
-L'intrusore sa che Luca sta trasmettendo dei dati alla sua amata Lucia. Dato che `E(m)` è impossibile che lo sappia, da un messaggio scelto in chiaro `m'` si può calcolare l'impronta `H(m')`. Se nota che l'impronta è la stessa, la riservatezza del messaggio è violata.
+L'intrusore sa che Luca sta trasmettendo dei dati alla sua amata Lucia. Dato che `E(p)` è impossibile che lo sappia, da un messaggio scelto in chiaro `m'` si può calcolare l'impronta `H(m')`. Se nota che l'impronta è la stessa, la riservatezza del messaggio è violata.
 
 ### Esempio 3
 
@@ -289,17 +285,13 @@ La **riservatezza** _è verificata_ perché:
 
 - Non si riuscirebbe a confrontare l'impronta `H(m')` scelta dall'intrusore con quella `H(E(p))`, poiché è assente la parte di cifratura del messaggio.
 
-L'integrità non è garantita:
+L'**integrità** non è garantita:
 
 - L'intrusore può modificare `E(p)` e ottenere `E*(p)` e sostituire `H(E(p))` con `H(E*(p))`. Se `m` è un messaggio senza un particolare significato (ad esempio un numero), `D(E(p))` restituisce `m*` e la destinazione potrebbe non accorgersi che `m*` non sia corretto. Se invece `m` è un messaggio dotato di significato, la destinazione potrebbe accorgersi che `m*` è scorretto, e quindi può scartato.
 
-Alcune considerazioni:
-
-- Da un punto di vista computazionale, la sorgente effettua due trasformazioni (encryption `E` e la funzione `H`). La destinazione deve verificare l'integrità (la funzione `H`). Se il messaggio non è integro non viene effettuata l'operazione di decryption `D`. In questo modo si può risparmiare una trasformazione.
-
 ### Proteggere la proprietà di autenticità
 
-Chi riceve un dato è importante che sappia chi è stato ad originarlo. L'intrusore può creare _ad hoc_ un messaggio, inserirlo nel normale flusso dei dati e fingere di di provenire dalla sorgente originale. Questo attacco lo si può solo _rilevare_.
+Chi riceve un dato è importante che sappia chi è stato ad originarlo. L'intrusore può creare _ad hoc_ un messaggio, inserirlo nel normale flusso dei dati e fingere di provenire dalla sorgente originale. Questo attacco lo si può solo _rilevare_.
 
 ![autenticazione](./img/img5.png)
 
@@ -340,7 +332,8 @@ Il primo schema alternativo per realizzare _sign-verify_ è la _firma digitale_.
 ![firmadigitale](./img/img6.png)
 
 Lo scenario applicativo è il seguente:
-- La sorgente `A` prende il messaggio `m` e lo sottopone a una trasformazione `H`, costruendo l’impronta `H(m)`, che garantisce l’integrità. 
+
+- La sorgente `A` prende il messaggio `m` e lo sottopone a una trasformazione `H`, costruendo l’impronta `H(m)`, che garantisce l’integrità.
 - La funzione `S` di _sign_ viene eseguita su `H(m)`, e sul canale di comunicazione insicuro viene trasmesso `m` concatenato con `S(H(m))`.
 - La destinazione `B` verifica tramite `V` che `c` proviene dalla sorgente leggittima. In questo modo viene verificata l'autenticità del messaggio. Dato che `c` contiene `H(m)`, possiamo verificare anche la proprietà di integrità.
 
@@ -490,9 +483,9 @@ Una funzione `f` è detta unidirezionale se:
 - È difficile, dato `f(x)`, risalire a `x` che ha originato l'output.
 
 Ad esempio, sono funzioni unidirezionali la:
-- **Funzione hash crittograficamente sicura**;
-- **Funzione di cifratura**;
-- **Funzione di autenticazione**.
+- Funzione hash crittograficamente sicura;
+- Funzione di cifratura;
+- Funzione di autenticazione.
 
 
 Nella teoria della complessità computazionale, non esistono funzioni che siano unidirezionali. In crittografia, invece, sono state individuate diverse funzioni che sono candidate ad avere un comportamento di unidirezionalità (come ad esempio le funzioni di compressione, di cifratura e di firma). Vengono chiamate _pseudo-unidirezionali_ le funzioni che appaiono unidirezionali se non si possiede una particolare informazione sulla loro costruzione.
