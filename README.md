@@ -132,9 +132,7 @@ In alcuni casi è necessario l'intervento di una terza entità che operi da _arb
 
 ### Come rendere sicuri i dati
 
-La sicurezza dei dati può essere garantita tramite l'impiego di una codifica ridondante dei dati, che consiste nell'aggiunta di bit in più rispetto alla lunghezza del messaggio originario.
-
-Nel caso si voglia garantire autenticità e integrità si utilizza un attestato di integrità o di originalità. In tal casi si ha ridondanza in termini di:
+La sicurezza dei dati può essere garantita tramite l'impiego di una codifica ridondante dei dati, che consiste nell'aggiunta di bit in più rispetto alla lunghezza del messaggio originario. In tal casi si ha ridondanza in termini di:
 
 - **Spazio**: necessario per la memorizzazione;
 - **Tempo**: maggiore tempo di trasferimento.
@@ -215,7 +213,7 @@ Le funzioni hash possono essere classificate in due categorie:
 Lo scenario applicativo è il seguente:
 
 - La sorgente `A` manda sul canale insicuro un messaggio `m`;
-- L'impronta `H(m)` deve viaggiare su un canale sicuro per evitare che un intrusore possa sostituire `m` con un altro messaggio `m'` e di conseguenza sostituire anche `H(m)` con `H(m')`;
+- L'impronta `H(m)` deve viaggiare su un canale sicuro per evitare che un intrusore possa sostituire `m` con un altro messaggio `m'` e di conseguenza sostituire anche `H(m)` con `H(m')` (la funzione `H` non è segreta);
 - `B` applica la funzione hash al messaggio ricevuto, e verifica che l'hash ricevuto coincida con quello ottenuto;
 - Se si equivalgono, il messaggio è stato trasmesso correttamente. In questo modo la destinazione è in grado di rilevare se il messaggio ha subito modifiche.
 
@@ -435,7 +433,7 @@ Si prende il messaggio, si cifra e si manda sul canale insicuro il cifrato conca
 
 ### Anonimato/Identificazione
 
-Per _identificazione_ si intende un insieme di azioni che richiedono di identificare chi sta partecipando a un'interazione. Ad esempio, risulta indispensabile quando effettuiamo un pagamento o quando si vuole accedere a certe risorse. L'opposto dell'identificazione è l'_anonimato:. Un esempio di utilizzo è nel caso di voto elettronico o di pagamento via criptovaluta.
+Per _identificazione_ si intende un insieme di azioni che richiedono di identificare chi sta partecipando a un'interazione. Ad esempio, risulta indispensabile quando si effettua un pagamento o quando si vuole accedere a certe risorse. L'opposto dell'identificazione è l'_anonimato_. Un esempio di utilizzo è nel caso di voto elettronico o di pagamento via criptovaluta.
 
 Il processo di identificazione ha le seguenti caratteristiche:
 
@@ -483,9 +481,9 @@ Una funzione `f` è detta unidirezionale se:
 - È difficile, dato `f(x)`, risalire a `x` che ha originato l'output.
 
 Ad esempio, sono funzioni unidirezionali la:
-- Funzione hash crittograficamente sicura;
-- Funzione di cifratura;
-- Funzione di autenticazione.
+- Funzione hash crittograficamente sicura `H`;
+- Funzione di cifratura `E` e `D`;
+- Funzione di sign `S`.
 
 
 Nella teoria della complessità computazionale, non esistono funzioni che siano unidirezionali. In crittografia, invece, sono state individuate diverse funzioni che sono candidate ad avere un comportamento di unidirezionalità (come ad esempio le funzioni di compressione, di cifratura e di firma). Vengono chiamate _pseudo-unidirezionali_ le funzioni che appaiono unidirezionali se non si possiede una particolare informazione sulla loro costruzione.
@@ -500,7 +498,7 @@ Possiamo avere tre approcci:
 I primi due approcci non sono molto funzionali:
 - **No manutenibilità**: _security through obscurity is always a bad idea_. <!--stfu Microsoft and Apple)-->
 - **No scalabilità**: vedi sopra; <!--apple-->
-- **No Certificazione**: chi mi garantisce che quello che stiamo usando è davvero sicuro, se nessuno conosce come è stato costruito?
+- **No Certificazione**: chi garantisce che quello che si sta usando è davvero sicuro, se nessuno conosce come è stato costruito?
 
 L'approccio usato al giorno d'oggi, quindi, risulta essere la trasfrormazione segreta tramite _parametro_.
 
@@ -523,25 +521,26 @@ Occorre conoscere la trasformata `T`. Se il cifrato che ottiene è uguale a quel
 
 Si possono individuare due famiglie di cifrari:
 
-- **Cifrari a chiavi simmetriche**: le chiavi `ks` e `kd` o sono uguali o facilmente ricavabili l'una dall’altra. Le chiavi sono le stesse, quindi devono essere tenute segrete;
+- **Cifrari a chiavi simmetriche**: le chiavi `ks` e `kd` o sono uguali o facilmente ricavabili l'una dall’altra, quindi devono essere tenute segrete;
 - **Cifrari a chiave pubbliche**: le chiavi `ks` e `kd` sono diverse e una delle due è difficilmente calcolabile dall'altra. Ogni entità dispone di una coppia di chiave `ks` e `kd`, di cui `ks` è segreta, mentre `kd` pubblica. Dalla conoscenza della chiave pubblica non è possibile risalire alla conoscenza della corrispondente chiave segreta.
 
 ### Proprietà delle chiavi simmetriche
 
 Le chiavi simmetriche devono avere le seguenti proprietà:
 
-- **Robustezza**: un intrusore non deve essere in grado facilmente di individuare la chiave. Se una chiave è formata da `n` bit, più grande è lo spazio delle chiavi più è difficile individuare i bit corretti;
-- **Riservatezza**: il sistema deve garantire la riservatezza della chiave perché le chiavi `ks` e `kd` devono essere segrete;
-- **Integrità**: quando si decifrano i dati, si deve essere sicuri che la chiave non sia stata alterata altrimenti non è possibile decifrarli;
-- **Autenticità**: la chiave è conosciuta solo dalla sorgente autentica e dalla destinazione autentica.
+- **Robustezza**: un intrusore non deve essere in grado facilmente di individuare la chiave;
+- **Riservatezza**: il sistema deve garantire la riservatezza della chiave perché deve essere segreta;
+- **Integrità**: si deve essere sicuri che la chiave non sia stata alterata altrimenti non è possibile usarla;
+- **Autenticità**: la chiave è conosciuta solo dalla sorgente e dalla destinazione autentica.
 
 ### Proprietà delle chiavi asimmetriche
 
 Le chiavi asimmetriche devono avere le seguenti proprietà:
 
+- **Robustezza**: un intrusore non deve essere in grado facilmente di individuare la chiave privata `ks`;
 - **Riservatezza**: la riservatezza è legata alla chiave `ks` privata;
-- **Integrità**: è importante che la chiave privata `ks` che si sta utilizzando sia quella corretta e non modificata. Lo stesso vale per la chiave pubblica `kd`;
-- **Autenticità**: si deve essere certi sull'appartenenza della chiave pubblica `kd`, altrimenti non è garantita autenticità.
+- **Integrità**: è importante che le chiavi `ks` e `kd` siano quelle corrette e non modificate;
+- **Autenticità**: si deve essere certi che la chiave pubblica `kd` appartenga a un certo utente.
 
 ### Crittoanalisi
 
