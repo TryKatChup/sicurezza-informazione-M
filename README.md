@@ -191,9 +191,12 @@ Il riassunto lo si calcola tramite una funzione hash.
 
 In generale, una funzione hash `H` è una funzione che prende un dato `m` di lunghezza arbitraria e restituisce in uscita un'impronta `H(m)`.
 
-Risulta importante che essa sia _crittograficamente sicura_ e abbia le seguenti proprietà:
+Una funzione hash ha la seguente proprietà:
 
 - **Calcoli difficili**: dato il messaggio `m` deve essere facile calcolare la sua impronta. L'operazione inversa invece deve essere computazionalmente difficile;
+
+Oltre alla proprietà appena scritta, risulta importante che essa sia _crittograficamente sicura_ e abbia anche le seguenti proprietà:
+
 - **Comportamento da "oracolo casuale"**: se si decide che l'impronta sia costituita da `n` bit, le possibili uscite della funzione hash sono `2^n`. 
 Considerato il messaggio `m`, bisogna fare in modo che la probabilità che esca un' uscita rispetto ad un'altra sia la stessa. Inoltre, se il messaggio viene ripetuto, la risposta sarà la medesima, dato che è stata assegnata precedentemente dall'oracolo.
 
@@ -289,13 +292,13 @@ L'**integrità** non è garantita:
 
 ### Proteggere la proprietà di autenticità
 
-Chi riceve un dato è importante che sappia chi è stato ad originarlo. L'intrusore può creare _ad hoc_ un messaggio, inserirlo nel normale flusso dei dati e fingere di provenire dalla sorgente originale. Questo attacco lo si può solo _rilevare_.
+Chi riceve un messaggio è importante che sappia chi è l'autore o chi lo ha inviato. L'intrusore può creare _ad hoc_ un messaggio, inserirlo nel normale flusso dei dati e fingere di provenire dalla sorgente originale. Questo attacco lo si può solo _rilevare_.
 
 ![autenticazione](./img/img5.png)
 
 Per garantire l'autenticità di una sorgente, si deve costruire una trasformazione `S` che, dato un messaggio `m`, deve produrre in uscita un _attestato di autenticità_ `c` che rappresenta in maniera non imitabile il messaggio `m` originale.
 
-La destinazione riceve sia il messaggio `m` che l'attestato di autenticità `c` ed effettua una trasformazione `V` sull'attestato di autenticità, producendo in uscita una risposta che afferma l'autenticità o meno del messaggio. In caso affermativo si recupera il messaggio `m`, altrimenti viene scartato.
+La destinazione riceve l'attestato di autenticità `c` ed effettua una trasformazione `V` sull'attestato di autenticità, producendo in uscita una risposta che afferma l'autenticità o meno del messaggio. In caso affermativo viene restituito il messaggio `m`.
 
 Devono essere rispettate le seguenti proprietà:
 
@@ -331,32 +334,31 @@ Il primo schema alternativo per realizzare _sign-verify_ è la _firma digitale_.
 
 Lo scenario applicativo è il seguente:
 
-- La sorgente `A` prende il messaggio `m` e lo sottopone a una trasformazione `H`, costruendo l’impronta `H(m)`, che garantisce l’integrità.
-- La funzione `S` di _sign_ viene eseguita su `H(m)`, e sul canale di comunicazione insicuro viene trasmesso `m` concatenato con `S(H(m))`.
+- La sorgente `A` prende il messaggio `m` e lo sottopone a una trasformazione `H`, costruendo l’impronta `H(m)`, che garantisce l’integrità;
+- La funzione `S` di _sign_ viene eseguita su `H(m)`, e sul canale di comunicazione viene trasmesso `m` concatenato con `c`;
 - La destinazione `B` verifica tramite `V` che `c` proviene dalla sorgente leggittima. In questo modo viene verificata l'autenticità del messaggio. Dato che `c` contiene `H(m)`, possiamo verificare anche la proprietà di integrità.
 
-Questo schema ha due vantaggi:
+Questo schema ha due vantaggi rispetto allo schema normale di _sign_:
 
 - **Efficienza**: la funzione di _sign_ `S` è una trasformazione costosa. Anzichè applicare `m` direttamente a _sign_, viene applicata a `H(m)`, che ha dimensione inferiore, rispetto a `m`. Si può applicare anche all'impronta perché è univoca per la proprietà di resistenza alle collisioni;
-- **Avere subito la disponibilità del dato**: Si può prendere direttamente `m` e si verifica l'autenticità in un secondo momento, come previsto dallo schema a blocchi.
+- **Avere subito la disponibilità del dato**: si può prendere direttamente `m` e si verifica l'autenticità in un secondo momento, come previsto dallo schema a blocchi.
 
 Questo schema assicura anche la proprietà di:
-- **Non ripudio**: dato che la sorgente `A` è l'unica che esegue `S`, non può disconoscere in un secondo momento l'attestato di autenticità.
 
-Il canale in questo modo viene reso sicuro e viene garantita anche la non ripudiabilità (la destinazione ottiene il messaggio dal canale non direttamente interpretabile). In questo caso la funzione `S` di Sign è segreta ed è conosciuta solamente dal mittente `A` che _firma_ il messaggio.
+- **Non ripudio**: dato che la sorgente `A` è l'unica che esegue `S`, non può disconoscere in un secondo momento l'attestato di autenticità.
 
 <!-- più corto il titolo secondo me-->
 <!-- Hash del messaggio e di un segreto -->
 ### Hash applicata al messaggio concatenato con un segreto S, condiviso tra sorgente e destinazione
 
-Il secondo schema alternativo per realizzare Sign-Verify è l'uso di un _hash_.
+Il secondo schema alternativo per realizzare _sign_-_verify_ è l'uso di un _hash_.
 
 ![hashs](./img/img7.png)
 
-- Due entità `A` e `B` (mittente e destinatario) condividono un segreto `s`. 
-- `A` calcola `H(m || s)` a partire da `m`, cioè il messaggio che si vuole trasferire, e invia alla destinazione `m || H(m || s)`.
-- Dato che il messaggio viaggia sul canale insicuro, l'intrusore può aver modificato il messaggio. Per questo motivo `m` si indica con `m*`.
-- La destinazione riceverà il messaggio `m*` e andrà a calcolare `H(m* || s)`.
+- Due entità `A` e `B` (mittente e destinatario) condividono un segreto `s`;
+- `A` calcola `H(m || s)` a partire da `m`, cioè il messaggio che si vuole trasferire, e invia alla destinazione `m || H(m || s)`;
+- Dato che il messaggio viaggia sul canale insicuro, l'intrusore può aver modificato il messaggio. Per questo motivo `m` si indica con `m*`;
+- La destinazione riceverà il messaggio `m*` e andrà a calcolare `H(m* || s)`;
 - Se `H(m* || s) = H(m || s)`, le due proprietà sono state garantite (integrità e autenticità).
 
 In questo caso **non** viene garantito il _non ripudio_, poiché la sorgente `A` potrebbe sospettare che la destinazione `B` si sia costruita un `H(m || s)`, e che la sorgente `A` non abbia inviato nessun messaggio. Questo è dovuto al fatto che `A` e `B` condividono un segreto, quindi non si è in grado di risalire a chi è effettivamente l'autore del messaggio inviato.
@@ -367,7 +369,7 @@ Viceversa, la firma digitale è meno efficiente poiché ha anche la funzione di 
 
 Questo schema è robusto:
 
-- La funzione `H` non è invertibile quindi nessuno a parte `A` o `B` conosce `s`. Se fosse invertibile, l'intrusore ricaverebbe `s` e costruirebbe un attestato di autenticità valido.
+- La funzione `H` non è invertibile quindi l'intrusore non può ricavare `s` e costruire un attestato di autenticità valido.
 
 ### Esempio 1 (protocollo SSL)
 
