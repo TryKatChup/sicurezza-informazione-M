@@ -41,15 +41,11 @@ Esempio:
 <!-- lezione del 27/09/2021 -->
 ### Calcolatore sicuro
 
-La sicurezza di un calcolatore deve essere garantita sia a livello hardware che a livello software. Ovviamente questa ipotesi non è sempre verificata, ma in questo corso quando studieremo i servizi e meccanismi di sicurezza lo daremo per scontato.
-
-<!-- differenza tra servizi e meccanismo di sicurezza -->
-
-Quando parliamo di sicurezza dei dati, faremo un'assunzione fondamentale: l'hardware, il firmware e il sistema operativo sono **sicuri**.
+La sicurezza di un calcolatore deve essere garantita a livello hardware, firmware e software. Ovviamente questa ipotesi non è sempre verificata, ma in questo corso lo si darà per scontato.
 
 ### Valutazione, Certificazione, Enti
 
-Gli enti di certificazione definiscono delle metodologie che consentono di verificare che un progetto sia effettivamente sicuro. Applicando questi standard, gli enti garantiscono la sicurezza del prodotto che installiamo.
+Gli enti di certificazione definiscono delle metodologie che consentono di verificare che un progetto sia effettivamente sicuro. Applicando questi standard, gli enti garantiscono la sicurezza del prodotto che si installa.
 
 Esempi di standard internazionali per valutazione e certificazione della sicurezza: Orange book del NCSC, ISO 17799, CINI, CERT, ecc.
 
@@ -59,7 +55,7 @@ D'ora in poi per analizzare e studiare i meccanismi di sicurezza si farà riferi
 
 Questo modello prevede che ci sia una sorgente dei dati, una destinazione a cui sono rivolti e che ci sia un canale che mette in comunicazione sorgente con destinazione.
 
-Assumiamo che:
+Si assume che:
 
 - La sorgente sia in un ambiente sicuro (hardware e sistema operativo sicuri);
 - La destinazione sia in un ambiente sicuro (hardware e sistema operativo sicuri);
@@ -102,7 +98,7 @@ L’unica contromisura da utilizzare è la _prevenzione_. La _rilevazione_ e la 
 
 Si può:
 
-- **Impedire** l'accesso al canale. Ciò viene implementato tramite l'utilizzo o di canali dedicati, oppure progettando meccanismi di controllo dell'accesso, in modo che ogni volta che una sorgente accede al canale, sia prevista l'autenticazione del cliente. Questa soluzione non è tuttavia né economicamente sostenibile né scalabile;
+- **Impedire** l'accesso al canale. Ciò viene implementato tramite l'utilizzo di canali dedicati tra sorgente e destinazione. Questa soluzione non è tuttavia né economicamente sostenibile né scalabile;
 - **Cifrare** i dati da inviare, ovvero rendere incomprensibili i dati trasmessi, tranne al destinatario legittimo.
 
 ### Possibili contromisure per attacchi attivi
@@ -156,7 +152,7 @@ Ci sono tre principi che guidano la progettazione:
 
 ### Proteggere la proprietà di confidenzialità
 
-Per proteggere i dati abbiamo bisogno di una trasformata che renda incomprensibile il contenuto. In questo modo, l'intrusore non sarà in grado di capire i messaggi.
+Per proteggere i dati si ha bisogno di una trasformata che renda incomprensibile il contenuto. In questo modo, l'intrusore non sarà in grado di capire i messaggi.
 La riservatezza si ottiene con una trasformazione di tipo _preventivo_: l'intrusore che accede ai dati non sarà in grado di comprenderli.
 
 ![confidenzialità](./img/img2.png)
