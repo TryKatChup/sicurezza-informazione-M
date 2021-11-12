@@ -34,7 +34,7 @@ A queste proprietà se ne possono aggiungere altre come:
 Esempio:
 
 - **Vulnerabilità**: un ponte ha una crepa;
-- **Minaccia**: Rischia di crollare;
+- **Minaccia**: rischia di crollare;
 - **Attacco**: un peso totale eccessivo sul ponte;
 - **Contromisura**: cercare di controllare il numero di veicoli sul ponte.
 
@@ -69,8 +69,8 @@ Gli attacchi si classificano in due tipologie:
 
 - **Passivo**: l'intrusore si inserisce sul canale e osserva solo i dati trasmessi. Ad esempio, se il canale è un cavo di rete, si usa uno _sniffer_. Viene minato il requisito di _confidenzialità_;
 - **Attivo**: l'intrusore si inserisce sul canale ed altera il normale flusso dei dati. Può:
-  - **Modificare** il flusso intenzionalmente per cambiare il contenuto dei dati. Viene minato il requisito dell'_integrità_;
-  - **Aggiungere** nuove informazioni facendo credere alla destinazione che siano state inviate dalla sorgente legittima. Viene minato il requisito dell'_autenticità_;
+  - **Modificare** il flusso intenzionalmente per cambiare il contenuto dei dati. Viene minato il requisito di _integrità_;
+  - **Aggiungere** nuove informazioni facendo credere alla destinazione che siano state inviate dalla sorgente legittima. Viene minato il requisito di _autenticità_;
   - **Interrompere** il normale flusso impedendo che i dati arrivino alla destinazione. Viene minato il requisito di _disponibilità_.
 
 ### Contromisure
@@ -144,7 +144,7 @@ Nel corso si studierà solo crittografia.
 
 ### I principi della difesa
 
-Ci sono tre principi che guidano la progettazione:
+Ci sono tre principi che guidano la progettazione delle trasformazioni:
 
 - Deve essere impossibile _sapere_ la trasformata/i calcoli da parte dell'intrusore;
 - Deve essere impossibile _dedurre_ la trasformata/i calcoli da parte dell'intrusore;
@@ -166,8 +166,8 @@ Lo scenario applicativo è il seguente:
 
 Devono essere rispettate le seguenti proprietà:
 
-- **Segretezza**: la trasformazione `E` e `D` sono conosciute solo rispettivamente dalla sorgente e dal destinatario quindi per i tre principi di difesa, non è possibile risalire al messaggio in chiaro;
-- **Calcoli difficili**: dato il messaggio `m` deve essere facile calcolare il messaggio cifrato. L'operazione inversa, se non si conosce la trasformata di `D`, deve essere computazionalmente difficile..
+- **Segretezza**: la trasformazione `E` e `D` sono conosciute solo rispettivamente dalla sorgente e dal destinatario, non è possibile risalire al messaggio in chiaro;
+- **Calcoli difficili**: dato il messaggio `m` deve essere facile calcolare il messaggio cifrato. L'operazione inversa, se non si conosce la trasformata di `D`, deve essere computazionalmente difficile.
 
 Altre considerazioni:
 
@@ -308,7 +308,7 @@ Alcune considerazioni:
 
 <!-- lezione del 29/09/2021-->
 <!-- doppione -->
-### Garantire autenticità
+<!-- ### Garantire autenticità
 
 Per garantire autenticità si ricorre all'operazione di firma o _sign_, che produce un certificato di autenticità e che viene inserito e inviato insieme al testo dell'informazione eventualmente cifrato. La destinazione avrà una funzione `V` di _verify_, utilizzata per verificare se il certificato è effettivamente autentico e per ricavare il mittente.
 
@@ -318,7 +318,7 @@ Vengono quindi rispettati due principi:
 
 - **Trasformazioni segrete**: in questo caso l'operazione di _sign_. Nessun altro, oltre alla sorgente legittima, deve conoscere la trasformazione che è stata applicata, altrimenti chiunque può effettuare _fabrication attack_.
 
-- **Calcoli impossibili**: i calcoli per costruire un messaggio apparentemente autentico e senza conoscere la trasformazione della sorgente devono essere complessi.
+- **Calcoli impossibili**: i calcoli per costruire un messaggio apparentemente autentico e senza conoscere la trasformazione della sorgente devono essere complessi.-->
 
 Esistono 2 schemi alternativi per realizzare sign-verify: _la firma digitale_ e _hash_.
 
@@ -341,11 +341,12 @@ Questo schema ha due vantaggi rispetto allo schema normale di _sign_:
 
 Questo schema assicura anche la proprietà di:
 
-- **Non ripudio**: dato che la sorgente `A` è l'unica che esegue `S`, non può disconoscere in un secondo momento l'attestato di autenticità.
+- **Non ripudio**: dato che la sorgente `A` è l'unica che esegue `S`, non può disconoscere in un secondo momento l'attestato di autenticità;
+- **integrità**: per la funzione hash.
 
 <!-- più corto il titolo secondo me-->
-<!-- Hash del messaggio e di un segreto -->
-### Hash applicata al messaggio concatenato con un segreto S, condiviso tra sorgente e destinazione
+<!-- Hash applicata al messaggio concatenato con un segreto S, condiviso tra sorgente e destinazione -->
+### Hash del messaggio e di un segreto
 
 Il secondo schema alternativo per realizzare _sign_-_verify_ è l'uso di un _hash_.
 
@@ -357,19 +358,17 @@ Il secondo schema alternativo per realizzare _sign_-_verify_ è l'uso di un _has
 - La destinazione riceverà il messaggio `m*` e andrà a calcolare `H(m* || s)`;
 - Se `H(m* || s) = H(m || s)`, le due proprietà sono state garantite (integrità e autenticità).
 
-In questo caso **non** viene garantito il _non ripudio_, poiché la sorgente `A` potrebbe sospettare che la destinazione `B` si sia costruita un `H(m || s)`, e che la sorgente `A` non abbia inviato nessun messaggio. Questo è dovuto al fatto che `A` e `B` condividono un segreto, quindi non si è in grado di risalire a chi è effettivamente l'autore del messaggio inviato.
+Rispetto allo schema di _firma digitale_, **non** viene garantita la proprietà di _non ripudio_, poiché la sorgente `A` potrebbe sospettare che la destinazione `B` si sia costruita un `H(m || s)`, e che la sorgente `A` non abbia inviato nessun messaggio. Questo è dovuto al fatto che `A` e `B` condividono un segreto, quindi non si è in grado di risalire a chi è effettivamente l'autore del messaggio inviato.
 
-Questo schema risulta essere più efficiente rispetto alla _firma digitale_, ma potrà essere usato solamente quando si è sicuri del corretto comportamento di `A` e `B`. Può essere utilizzato, ad esempio, con sistemi IoT che richiedono consumi ridotti di batteria e alta efficienza.
+### Firma digitale vs Hash del messaggio e di un segreto
 
-Viceversa, la firma digitale è meno efficiente poiché ha anche la funzione di _sign_ `S` ma garantisce il _non ripudio_.
+Lo schema _hash_ risulta essere più efficiente rispetto alla _firma digitale_, ma potrà essere usato solamente quando si è sicuri del corretto comportamento di `A` e `B`. Può essere utilizzato, ad esempio, con sistemi IoT che richiedono consumi ridotti di batteria e alta efficienza.
 
-Questo schema è robusto:
-
-- La funzione `H` non è invertibile quindi l'intrusore non può ricavare `s` e costruire un attestato di autenticità valido.
+Viceversa, la firma digitale è meno efficiente poiché ha la funzione di _sign_ `S` ma garantisce il _non ripudio_.
 
 ### Esempio 1 (protocollo SSL)
 
-In questo caso, si invia un messaggio che rispetta le proprietà di **riservatezza**, **autenticità** (e **integrità**?):
+In questo caso, si invia un messaggio che rispetta le proprietà di **riservatezza**, **autenticità** e **integrità**:
 
 `p = m || H(m || s)`
 
@@ -379,19 +378,18 @@ In questo caso, si invia un messaggio che rispetta le proprietà di **riservatez
 
 `H*(m || s) =? H(m* || s)`
 
-- Il messaggio viene concatenato al certificato e cifrato dal client;
-- Il messaggio viene cifrato e lo si concatena con l'attestato di autenticità costruito sul messaggio.
+- Il messaggio `m` viene concatenato al certificato e cifrato dal client;
 
 Questo schema è usato dal protocollo SSL il quale adotta le funzioni hash crittograficamente sicure con un segreto per costruire il certificato di autenticità.
 
-Da un punto di vista di efficienza, le trasformazioni in fase di ricezione sono due: 
+Da un punto di vista di efficienza, le trasformazioni in fase di ricezione sono due:
+
 - Decodifica del messaggio cifrato;
-- Autenticazione;
-- (Integrità?).
+- Autenticazione tramite funzione hash crittograficamente sicura.
 
 ### Esempio 2 (protocollo SSH)
 
-In questo caso, si invia un messaggio che rispetta le proprietà di **riservatezza** e **autenticazione**:
+In questo caso, si invia un messaggio che rispetta le proprietà di **riservatezza** e **autenticità**:
 
 `p = m`
 
@@ -403,11 +401,11 @@ Questo schema viene usato dal protocollo SSH. Permette di aprire shell remote si
 
 Da un punto di vista di efficienza, le trasformazioni in fase di ricezione sono due:
 - Decodifica del messaggio cifrato;
-- Autenticazione.
+- Autenticazione tramite funzione hash crittograficamente sicura.
 
 ### Esempio 3 (protocollo IPSec)
 
-In questo caso, si invia un messaggio che rispetta le proprietà di **riservatezza** e **autenticazione**:
+In questo caso, si invia un messaggio che rispetta le proprietà di **riservatezza** e **autenticità**:
 
 `p = m`
 
@@ -455,7 +453,7 @@ Un processo d’identificazione avviene tramite l'uso di protocolli.
 
 Qualunque protocollo di identificazione prevede due fasi:
 
-- **Registrazione**: durante la registrazione, l’identificando ed il verificatore concordano e memorizzano rispettivamente il dato segreto `S` con cui l'identificando si farà riconoscere ed il _termine di paragone_ `T = H(S)`, che consentirà al verificatore di accertare che l'identificando conosce `S`.
+- **Registrazione**: durante la registrazione, l’identificando ed il verificatore concordano e memorizzano rispettivamente il segreto `S` con cui l'identificando si farà riconoscere ed il _termine di paragone_ `T = H(S)`, che consentirà al verificatore di accertare che l'identificando conosce `S`. Il verificatore non può memorizzare direttamente il segreto `S` perchè se è malintenziato potrebbe usarlo a sua volta;
 - **Identificazione**: l'identificando e il verificatore devono essere entrambi online (univocità del tempo).
 Questo processo può scomporsi in:
   - **Dichiarazione**: l'identificando dichiara la sua identità;
@@ -464,7 +462,7 @@ Questo processo può scomporsi in:
 
 ![kronk](/img/kronk.jpeg)
 
-Un intrusore può:
+In generale, un intrusore può:
 
 - Dedurre o indovinare la prova (il segreto);
 - Rubare il dispositivo (smartcard);
@@ -520,7 +518,7 @@ Occorre conoscere la trasformata `T`. Se il cifrato che ottiene è uguale a quel
 Si possono individuare due famiglie di cifrari:
 
 - **Cifrari a chiavi simmetriche**: le chiavi `ks` e `kd` o sono uguali o facilmente ricavabili l'una dall’altra, quindi devono essere tenute segrete;
-- **Cifrari a chiave pubbliche**: le chiavi `ks` e `kd` sono diverse e una delle due è difficilmente calcolabile dall'altra. Ogni entità dispone di una coppia di chiave `ks` e `kd`, di cui `ks` è segreta, mentre `kd` pubblica. Dalla conoscenza della chiave pubblica non è possibile risalire alla conoscenza della corrispondente chiave segreta.
+- **Cifrari a chiave pubbliche**: le chiavi `ks` e `kd` sono diverse e una delle due è difficilmente calcolabile dall'altra. Ogni entità dispone di una coppia di chiave `ks` e `kd`, di cui `ks` è segreta, mentre `kd` pubblica.
 
 ### Proprietà delle chiavi simmetriche
 
@@ -543,54 +541,66 @@ Le chiavi asimmetriche devono avere le seguenti proprietà:
 ### Crittoanalisi
 
 Come riportato precedentemente, la crittoanalisi si occupa di progettare tutte quelle trasformazioni che minano le proprietà di sicurezza.
-Ci sono diversi criteri da seguire per non far risalire all'intrusore la chiave:
+Bisogna evitare che un intrusore possa:
 
-- **Indovinarla**;
-- **Intercettarla**;
-- **Dedurla**.
+- Indovinare la chiave;
+- Intercettare la chiave;
+- Dedure la chiave.
 
 ### Indovinare la chiave
 
 È sempre possibile risalire alla chiave tramite attacco con _forza bruta_. Per ridurre le probabilità di successo di questo attacco, occorrono alcuni accorgimenti:
 - **Lo spazio delle chiavi deve essere molto grande**: se `n` è il numero di bit che rappresenta la chiave, $ 2^{n} $ è l'insieme delle possibili configurazioni. Più è grande `n` più è difficile per un intrusore indovinare la chiave;
-- **I bit devono essere casuali**;
+- **I bit devono essere casuali**: bisogna evitare che un intrusore possa trovare un modo per risalire alla chiave;
 - **Limitare il numero di prove che l'intrusore ha a disposizione**, come ad esempio il pin del bancomat. Dopo tre tentativi si disabilita l'accesso;
 - **Cambiare frequentemente la chiave**: se i dati devono essere mantenuti a lungo termine, occorre cambiare frequentemente la chiave. In questo modo, si riducono le probabilità di individuare quest'ultima da parte dell'intrusore.
 <!--Fine correzione 04/11, ore 20:28-->
 
 ### Intercettare la chiave
 
-La chiave se è un parametro può essere intercettata. Ogni volta che si deve eseguire l'algoritmo, vuol dire che bisogna mettere in RAM l'algoritmo e i parametri. Il parametro sicuramente deve essere memorizzato in maniera sicura (cifrato) e solo il proprietario deve avere accesso alla cella in cui è memorizzata la chiave.
+La chiave se è un parametro può essere intercettata. Ogni volta che si deve eseguire l'algoritmo, vuol dire che bisogna trasferire in RAM l'algoritmo e i parametri dato che i calcolatori usano l'architettura di Von Neumann:
 
-Si deve evitare anche che quando si mette il parametro sul bus non ci sia modo di intercettarlo. Ci deve essere anche un supporto alla sicurezza che protegga la RAM.
-
-Inoltre, l’unità di elaborazione dopo aver eseguito l'algoritmo deve cancellare poi accuratamente il dato dalla memoria.
+- Il parametro sicuramente deve essere memorizzato in maniera sicura (cifrato) e solo il proprietario deve avere accesso alla cella in cui è memorizzata la chiave;
+- Si deve evitare anche che quando si mette il parametro sul bus non ci sia modo di intercettarlo;
+- Ci deve essere anche un supporto alla sicurezza che protegga la RAM.
+- L’unità di elaborazione dopo aver eseguito l'algoritmo deve cancellare poi accuratamente il dato dalla memoria.
 
 Nel corso, l'hardware è sicuro ma non è detto che lo sia.
 
 Esistono diverse celle di memoria dove può risiedere la chiave:
+
 - **Soluzione meno robusta**: calcolatore costituito da HDD, CPU e RAM;
-- **Soluzione intermedia**: supporto di memorizzazione come ad esempio, smart card passiva in cui si conserva solo il segreto. Si ha bisogno di un pc per poter eleborare. Quindi il segreto passa per la RAM;
+- **Soluzione intermedia**: supporto di memorizzazione come ad esempio, smart card passiva in cui si conserva solo il segreto. Si ha bisogno di un pc per poter eleborare. Quindi il segreto deve passare per la RAM;
 - **Soluzione sicura**: smart card attiva in cui c'è anche una CPU e RAM. Nulla viene eseguito all'interno di un calcolatore.
 
-I motivi per cui la soluzione viene classificata come sicura, intermedia e meno robusta si intuiscono leggendo la parte iniziale del paragrafo.
+I motivi per cui la soluzione viene classificata come sicura, intermedia e meno robusta si intuiscono leggendo la parte iniziale di questo paragrafo.
 
 ### Esempio
 
-Un sistema di memorizzazione che salva una chiave su file system prende il nome di _portachiavi_. Tutti i segreti vengono salvati a partire da una passphrase definita dall'utente.
+Nei file system, una chiave s viene memorizzata in forma cifrata in una parte della memoria chiamata _portachiavi_.
 
-C'è un problema: se si perde la passphrase? Serve un sistema di _recovery_.
+![intrusore](./img/img53.png)
+
+La chiave s viene generata una volta (o più, se si decide di cambiarla
+nel tempo) tramite un RNG (si vedrà più avanti che cosa è) e subito cifrata con la funzione E accoppiata ad u, è portata e memorizzata in modo cifrato sulla memoria M (ovvero Eu(s)).
+
+In seguito, per eseguire gli accessi esiste una _passphrase_ dettata
+decisa dall’utente, facile per lui da ricordare, su cui viene eseguita
+una funzione hash per calcolarne l’impronta u. Una volta creata
+u, essa deve essere impiegata per decifrare s. Una volta decifrata la chiave essa viene utilizzata per tradurre il testo e quindi calcolare y = T(s,x). Immediatamente dopo, una primitiva cancella s dalla memoria del processore (grazie al wiper sicuro).
+
+In caso di smarrimento o danneggiamento della passphrase è necessario un sistema di _recovery_.
 
 ## Dedurre la chiave
 
 Esistono diverse tipologie di attacco:
 
 - **Attacco con solo testo cifrato**: l'intrusore dispone esclusivamente di testo cifrato che lo preleva dal canale insicuro. L'intrusore può sfruttare conoscenze, ipotesi sul linguaggio di origine che è stato usato per scrivere il messaggio cifrato, può disporre di tecniche e statistiche per effettuare determinati attacchi. Avendo il testo cifrato e queste tecniche può dedurre delle informazioni sul testo originario o sulla chiave stessa;
-- **Attacco con testo in chiaro noto**: l'intrusore ha la fortuna di avere il testo in chiaro del messaggio e il suo cifrato;
-- **Attacco con testo in chiaro scelto**: l'intrusore sceglie un testo in chiaro e ha la possibilità di cifrare il messaggio;
+- **Attacco con testo in chiaro noto**: l'intrusore ha la fortuna di avere il testo in chiaro e il cifrato. In questo modo si può studiare il codice usato per cifrare il testo;
+- **Attacco con testo in chiaro scelto**: l'intrusore sceglie un testo in chiaro e ha la possibilità di cifrare il messaggio ingannando la vittima;
 - **Attacco con testo cifrato scelto**: l'intrusore riesce a farsi decifrare un testo cifrato da lui scelto dalla sorgente legittima.
 
-La contromisura da adottare è quella _preventiva_: bisogna fare in modo che l'uscita di un algortimo crittografico debba essere assolutamente aleatoria cioè la probabilità che una variabile assuma un valore sia la stessa. Purtroppo, non è sempre vero perché ci sono alcuni algoritmi che impiegati in un certe modalità producono determinismo.
+La contromisura da adottare è quella _preventiva_: il legame tra il testo in chiaro ed il testo cifrato deve essere così ben nascosti da far apparire quest’ultimo all’intruso come una variabile aleatoria che assume con uguale probabilità tutti i suoi possibili valori.
 
 ## Teoria della complessità
 
@@ -612,7 +622,7 @@ Il numero `n` (dimensione input) incide sul numero di operazioni richieste, in a
 
 - **Tempo di esecuzione nel caso peggiore**: si intende il numero massimo di operazioni $ N_{max} $ che occorre eseguire per qualsiasi dato d’ingresso di `n` bit.\
 \
-La notazione che si usa è _O grande_ perché evidenzia come proprio si incrementa il tempo di esecuzione al crescere senza limiti. Se `n` non è esprimibile analiticamente, bisogna trovare una funzione che approssima l'andamento della funzione. 
+Tramite la notazione del _O grande_ è possibile evidenziare come incrementa il tempo di esecuzione dell’algoritmo al crescere senza limiti della dimensione dell’input.
 
 ### Classificazione degli algoritmi
 
@@ -631,22 +641,25 @@ Un problema si può classificare in:
 
 ### Complessità e Sicurezza
 
-Per ottenere sicurezza non ci interessa sapere l'andamento al crescere senza misura di n ma interessa:
+Per ottenere sicurezza è necessario:
 
-- Trovare il valore n al di sopra del quale l'andamento diventa esponenziale. Se l'andamento è polinomiale l'intrusore è capace di entrare nel sistema. Nel nostro caso la chiave dovrà essere di un numero di bit in modo tale che la ricerca nello spazio delle chiavi diventi esponenziale;
-- Non ci interessa difenderci dal caso peggiore ma dal caso migliore. L'intrusore non deve entrare nel sistema facilmente. L'intrusore non si deve trovare di fronte ad istanze del problema di facile soluzione. Ad esempio, i bit della chiave devono essere aleatori.
+- **Trovare il valore n al di sopra del quale l'andamento diventa esponenziale**: se l'andamento è polinomiale l'intrusore è capace di entrare nel sistema. Dunque, la chiave dovrà avere un numero di bit in modo tale che la ricerca nello spazio delle chiavi diventi esponenziale;
+- **Vedere qual è il caso migliore**: l'intrusore non si deve trovare di fronte ad istanze del problema di facile soluzione.
 
-Le unità di misura da adottare sono:
+Le unità di misura che si possono adottare sono:
 
-- **Anno MIPS**: parametro che dipende dalla tecnologia. Il tempo di esecuzione di un attacco è espresso in anni MIPS. Questa unità di misura fa riferimento a quante istruzioni può elaborare un calcolatore e con il passare degli anni il numero di riferimento aumenta. Attualmente un calcolatore in grado di eseguire un milione di istruzioni al secondo;
-- **Livello di sicurezza**: parametro indipendente dalla tecnologia. L'algoritmo di _ricerca esauriente_ risolve ogni problema perché esplorare lo spazio totale degli input è sempre possibile. Bisogna individuare qual è il numero di bit della chiave tale per cui l'andamento diventa esponenziale.
+- **Anno MIPS**: il tempo di esecuzione di un attacco è espresso in anni MIPS. Questa unità di misura fa riferimento a quante istruzioni può elaborare un calcolatore e con il passare degli anni il numero di riferimento aumenta. Attualmente, un calcolatore è in grado di eseguire un milione di istruzioni al secondo. Questo parametro dipende dalla tecnologia;
+- **Livello di sicurezza**: assume come riferimento il tempo
+d’esecuzione dell’algoritmo di ricerca esauriente. L’algoritmo di ricerca esauriente è in grado di risolvere tutti i problemi e quindi si deve individuare qual è il numero di bit della chiave tale per cui l'andamento diventa esponenziale. Il parametro è indipendente dalla tecnologia.
+
+Il vantaggio di impiegare il livello di sicurezza al posto degli anni MIPS è quello di non fissare la velocità del calcolatore che esegue l’attacco e quindi di prescindere dall’evoluzione tecnologia. Naturalmente è possibile passare dalla misura in anni MIPS a quella in livello di sicurezza e viceversa.
 
 ![dedurre](./img/img13.png)
 
-Una chiave deve avere come numero minimo di bit:
+Una chiave deve avere un numero minimo di bit:
 
 - **In una chiave simmetrica**: se si usa una chiave privata a 128 bit, l'intrusore è difficile che riesca a trovarla perché l'andamento dell'algoritmo diventa esponenziale;
-- **In una chiave asimmetrica**: in questo caso i bit non possono essere solo di 128 bit perché l'attacco non è solo quello di forza bruta. Nelle chiavi asimmetriche esistono algoritmi di fattorizzazione che consente di risalire della chiave pubblica alla chiave privata il cui andamento è sub-esponenziale. In questo caso, il numero di bit per evitare attacchi alle chiavi asimmetriche devono essere almeno di 2000 bit.
+- **In una chiave asimmetrica**: in questo caso i bit non possono essere solo di 128 bit perché l'attacco non è solo quello di forza bruta. Nelle chiavi asimmetriche esistono algoritmi di fattorizzazione che consente di risalire dalla chiave pubblica alla chiave privata il cui andamento è sub-esponenziale. In questo caso, il numero di bit per evitare attacchi alle chiavi asimmetriche devono essere almeno di 2000 bit.
 
 # 02.Meccanismi di base (07-10-2021)
 
