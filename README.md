@@ -577,12 +577,12 @@ I motivi per cui la soluzione viene classificata come sicura, intermedia e meno 
 
 ### Esempio
 
-Nei file system, una chiave s viene memorizzata in forma cifrata in una parte della memoria chiamata _portachiavi_.
+Nei file system, una chiave `s` viene memorizzata in forma cifrata in una parte della memoria chiamata _portachiavi_.
 
 ![intrusore](./img/img53.png)
 
-La chiave s viene generata una volta (o più, se si decide di cambiarla
-nel tempo) tramite un RNG (si vedrà più avanti che cosa è) e subito cifrata con la funzione E accoppiata ad u, è portata e memorizzata in modo cifrato sulla memoria M (ovvero Eu(s)).
+La chiave `s` viene generata una volta (o più, se si decide di cambiarla
+nel tempo) tramite un RNG (si vedrà più avanti che cosa è) e subito cifrata con la funzione E accoppiata ad u, ed è portata e memorizzata in modo cifrato sulla memoria M (ovvero Eu(s)).
 
 In seguito, per eseguire gli accessi esiste una _passphrase_ dettata
 decisa dall’utente, facile per lui da ricordare, su cui viene eseguita
@@ -661,9 +661,10 @@ Una chiave deve avere un numero minimo di bit:
 - **In una chiave simmetrica**: se si usa una chiave privata a 128 bit, l'intrusore è difficile che riesca a trovarla perché l'andamento dell'algoritmo diventa esponenziale;
 - **In una chiave asimmetrica**: in questo caso i bit non possono essere solo di 128 bit perché l'attacco non è solo quello di forza bruta. Nelle chiavi asimmetriche esistono algoritmi di fattorizzazione che consente di risalire dalla chiave pubblica alla chiave privata il cui andamento è sub-esponenziale. In questo caso, il numero di bit per evitare attacchi alle chiavi asimmetriche devono essere almeno di 2000 bit.
 
-# 02.Meccanismi di base (07-10-2021)
+<!-- lezione del 07/10/2021-->
+## 02.Meccanismi di base
 
-Si è visto come funzionano a livello concettuale le trasformazioni per garantire i requisiti di sicurezza. Adesso si vedono come sono costruite perché se non vengono impiegate correttamente aprono a diverse vulnerabilità.
+Si è visto come funzionano a livello concettuale le trasformazioni per garantire i requisiti di sicurezza. Adesso si vedono come sono costruite.
 
 ## Generatori di numeri casuali
 
