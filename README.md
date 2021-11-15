@@ -582,12 +582,12 @@ Nei file system, una chiave `s` viene memorizzata in forma cifrata in una parte 
 ![intrusore](./img/img53.png)
 
 La chiave `s` viene generata una volta (o più, se si decide di cambiarla
-nel tempo) tramite un RNG (si vedrà più avanti che cosa è) e subito cifrata con la funzione E accoppiata ad u, ed è portata e memorizzata in modo cifrato sulla memoria M (ovvero Eu(s)).
+nel tempo) tramite un RNG (si vedrà più avanti che cosa è) ed è subito cifrata con la funzione `E` accoppiata ad `u`. Poi è portata e memorizzata in modo cifrato sulla memoria `M` (ovvero `Eu(s)`).
 
 In seguito, per eseguire gli accessi esiste una _passphrase_ dettata
 decisa dall’utente, facile per lui da ricordare, su cui viene eseguita
-una funzione hash per calcolarne l’impronta u. Una volta creata
-u, essa deve essere impiegata per decifrare s. Una volta decifrata la chiave essa viene utilizzata per tradurre il testo e quindi calcolare y = T(s,x). Immediatamente dopo, una primitiva cancella s dalla memoria del processore (grazie al wiper sicuro).
+una funzione hash per calcolarne l’impronta `u`. Una volta creata
+`u`, essa deve essere impiegata per decifrare `s`. Una volta decifrata la chiave essa viene utilizzata per tradurre il testo e quindi calcolare y = T(s,x). Immediatamente dopo, una primitiva cancella `s` dalla memoria del processore (grazie al wiper sicuro).
 
 In caso di smarrimento o danneggiamento della passphrase è necessario un sistema di _recovery_.
 
@@ -652,7 +652,7 @@ Le unità di misura che si possono adottare sono:
 - **Livello di sicurezza**: assume come riferimento il tempo
 d’esecuzione dell’algoritmo di ricerca esauriente. L’algoritmo di ricerca esauriente è in grado di risolvere tutti i problemi e quindi si deve individuare qual è il numero di bit della chiave tale per cui l'andamento diventa esponenziale. Il parametro è indipendente dalla tecnologia.
 
-Il vantaggio di impiegare il livello di sicurezza al posto degli anni MIPS è quello di non fissare la velocità del calcolatore che esegue l’attacco e quindi di prescindere dall’evoluzione tecnologia. Naturalmente è possibile passare dalla misura in anni MIPS a quella in livello di sicurezza e viceversa.
+Naturalmente è possibile passare dalla misura in anni MIPS a quella in livello di sicurezza e viceversa.
 
 ![dedurre](./img/img13.png)
 
