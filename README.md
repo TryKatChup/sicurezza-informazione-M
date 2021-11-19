@@ -107,8 +107,8 @@ Le contromisure da adottare, a differenza degli attacchi passivi, includono anch
 
 Si può:
 
-- **Aggiungere** un attestato di integrità e di autenticità. In questo modo la destinazione è in grado di comprendere se il flusso dei messaggi è integro e autentico oppure se è stato manomesso (integrità e autenticità);
-- **Impedire** l'interruzione del flusso di dati. La destinazione si assicura che il numero corretto di messaggi siano stati ricevuti (disponibilità).
+- **Aggiungere** un attestato di integrità e/o di autenticità. In questo modo la destinazione è in grado di comprendere se il flusso dei messaggi è integro e/o autentico oppure se è stato manomesso (integrità e autenticità);
+- **Impedire** l'interruzione del flusso di dati. La destinazione si assicura che abbia ricevuto il numero corretto di messaggi (disponibilità).
 
 ## 01.Dati Sicuri
 
