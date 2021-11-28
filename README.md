@@ -1039,76 +1039,94 @@ Questo schema prevede che fuori banda e in maniera **assolutamente** robusta sia
 
 Uno svantaggio di questo schema è che non è scalabile: quando il numero di utenti diventa alto il numero di scambi della _master key_ diventa improponibile.
 
-### Key Distribution Center
+<!-- 14-10-2021 -->
+### Key Distribution Center (KDC)
 
-Per ridurre il numero di chiavi pre-concordate in circolazione è quello di introdurre nel sistema una terza entità chiamata _centro di distribuzione delle chiavi_.
+È impossibile che ogni utente stabilisca una chiave segreta con ognuno degli altri utenti. Si ipotizzi una comunità formata da `Nu`, ogni utente deve:
+
+- Fare `Nu - 1` incontri diretti;
+- Memorizzare `Nu - 1` chiavi segrete;
+- Aggiornarsi ogni volta che nella comunità si aggiunge un nuovo utente.
+
+Occorrono dunque: Nc = Nu * (Nu-1)/2 canali _sicuri_; altrettante sono le chiavi segrete in circolazione. Per ridurre, quindi, il numero di chiavi pre-concordate si introduce una terza entità chiamata _centro di distribuzione delle chiavi_.
 
 ![marco togni](./img/img32.png)
 
-Ogni utente condivide con il centro di distribuzione la master key. Sarà questa entità che si occupa di generare le chiavi di sessioni k agli utenti che ne fanno richiesta.
+L'idea è quella che `A` chiede a `T` una chiave di sessione `k`, `T` la genera e la passa ad `A` e poi `A` la invia a `B`. Ogni utente deve precedentemente pre-condividere con `T` una chiave simmetrica unica (KAT, KBT).
 
-Ovviamente il centro di distribuzione dovrà essere sicuro, scalabile etc.
+![marco togni](./img/img55.png)
 
-<!-- 14-10-2021 -->
-### KDC
+Il mittente `A` ha condiviso con il centro di distribuzione la _master key_ `KA` mentre `B` ha condiviso la _master key_ `KB`. Tutto in maniera assolutamente sicura.
 
-È un protocollo di distribuzione di chiave il cui modello è stato usato in altri servizi, che non fanno distribuzione di chiave, che servono per identificare (es. Kerberos).
+- `A` deve comunicare a `T` che ha bisogno di una chiave. Invia un messaggio specificando chi è il mittente, con chi vuole comunicare e un numero random imprevedibile e unico ad ogni sessione R_a che ha lo scopo di _sfida_ per vedere se `T` è davvero il centro di distribuzione;
+- `T` riceve il messaggio e risponde inviando a sua volta un messaggio. Questo messaggio non è altro che la concatenazione di Ra, il destinatario `B`, la chiave di sessione `k` e la chiave di sessione `k` concatenata con `A` cifrata con dalla master key di `B`. Per cifrare il messaggio si usa la chiave KA in modo tale che si dimostra che `T` sia a conoscenza della chiave;
+- `A` riceve il messaggio e decifra EKA ottenendo Ra (sa che è davvero `T` con cui sta comunicando), il destinatario `B`, la chiave di sessione `k` e EKB(A || k). È ovvio che `A` non sappia decifrarlo ma lo deve inviare a `B`.
 
 ![marco togni](./img/img33.png)
 
-Il mittente A ha condiviso con il centro di distribuzione la _master key_ KA mentre B ha condiviso la _master key_ KB. Tutto in maniera assolutamente sicura.
-
-- A deve comunicare a KDC che ha bisogno di una chiave. Invia un messaggio specificando chi è il mittente, con chi vuole comunicare e un numero random imprevedibile e unico ad ogni sessione R_a che ha lo scopo di _sfida_ per vedere se T è davvero il centro di distribuzione;
-- T riceva il messaggio e risponde inviando un messaggio cifrato Questo messaggio non è altro che la concatenazione della chiave KA, il destinatario B, la chiave di sessione k e la chiave di sessione k concatenata con A cifrata con dalla master key di B. Per cifrare il messaggio si usa la chiave KA in modo tale che si dimostra che T sia a conoscenza della chiave;
-- A riceve il messaggio e lo decifra ottenendo Ra (sa che è davvero T con cui sta comunicando), il destinatario B, la chiave di sessione k e Ekb(A || k). È ovvio che A non sappia decifrarlo ma lo deve inviare a B per passargli la chiave k. Tanto solo B può decifrarlo.
-
 Un attaccante può:
-- **Modificare a caso un bit del messaggio sul canale**: si invalida solo la sessione perché il messaggio è aleatorio e non la riservatezza;
-- **Effettuare un attacco con replica**: replica significa inoltrare lo stesso messaggio
-  - punto 1: Ra non può replicarlo perché è sempre diverso e anche se fosse servirebbe a poco. T non controlla che Ra è sempre diverso ma genera una chiave di sessione ogni volta diversa e quindi l'intrusore non può decifrarla
-  - punto 3: la replica ha successo se l'intrusore è risalito a una parte di k. Se per qualche motivo k è noto, si possono estrarre altre informazioni da B inviando dei messaggi. Ovviamente saranno cifrati i messaggi ma può sempre fare altri ragionamenti.
 
-Per questo motivo il protocollo non può essere costituito solo da 3 passi ma si devono aggiungere altri step:
+- **Modificare a caso un bit del messaggio sul canale**: si invalida solo la sessione perché il messaggio è aleatorio;
+- **Effettuare un attacco con replica**: replica significa inoltrare lo stesso messaggio:
 
-- B invia un messaggio per indicare che la chiave k è stata ricevuta davvero. Solo B è in grado di decifrare e risalire a k e per questo motivo si è sicuri che sia stato B a generarlo. Dentro questo messaggio c'è un numero random Rb.
-- A decifra il messaggio appena ricevuto, e spedisce il messaggio cifrato con all'interno Rb - 1 in modo che B sia sicuro che sia A il mittente.
+  - **punto 1** (non può avvenire l'attacco): Ra l'intrusore non può replicarlo perché è sempre diverso e anche se fosse servirebbe a poco. T non controlla che Ra è sempre diverso ma genera una chiave di sessione ogni volta diversa e quindi l'intrusore non può decifrarla;
+  - **punto 3**: un intrusore che è riuscito ad intercettare il messaggio 3 E(A||k), può ripresentarlo a B iniziando praticamente il protocollo dal passo 3 e forzando B a mandare (quante volte volesse) campioni di messaggio cifrato. Per questo motivo il protocollo non può essere costituito solo da 3 passi ma si devono aggiungere altri passi:
+    - `B` invia un messaggio per indicare che la chiave `k` è stata ricevuta davvero. Solo `B` è in grado di decifrare e risalire a `k` e per questo motivo si è sicuri che sia stato B a generarlo. Dentro questo messaggio c'è un numero random Rb;
+    - `A` decifra il messaggio appena ricevuto, e spedisce il messaggio cifrato con all'interno Rb - 1 in modo che `B` sia sicuro che sia `A` il mittente.
 
-Per evitare che l'intrusore conosca la chiave k, bisogna tenere traccia delle chiavi di sessione già utilizzate. B quando riceve il messaggio 3, preleva k e verifica se il messaggio è stato già inviato o no da parte di A. (MA questo schema non lo prevede)
+Soluzioni:
 
-Per evitare che l'intrusore conosca qualcosa sulla chiave o la chiave stessa, si limita la validità temporale.
+- `B` quando riceve il messaggio 3, preleva `k` e verifica se il messaggio è stato già inviato o no da parte di `A` (MA questo schema non lo prevede);
+- Per evitare che l'intrusore conosca qualcosa sulla chiave o la chiave stessa, si limita la validità temporale.
 
 I problemi del protocollo sono i seguenti:
+
+- Collo di bottiglia (n° max di utenti);
 - Overhed di comunicazione perché è installata una terza entità;
-- Gestire la memoria sicura;
-- Rendere il servizio sempre disponibile;
-- Scalabile.
+- Gestire la memoria in modo sicuro;
+- Rendere il servizio sempre disponibile (online);
+- Scalabile;
+- Ente degno di fiducia.
+
+### Esempio
+
+Molti sono i progetti che lo hanno assunto come riferimento: il prototipo KryptoKnight, il servizio di autenticazione Kerberos realizzato dal MIT, lo standard DCE per ambienti distribuiti e Active Directory di Windows 2000.
 
 ### Esercizio
 
-Quali sono i componenti che meglio si usano per implementare questo protocollo?
+Quali attacchi sono possibili usando le varie modalità di cifratura?
+
+A livello implementativo sorgono delle vulnerabilità:
 
 - **ECB**: si sfrutta il determinismo e la malleabilità di questa modalità:
-  - L'intrusore si mette in ascolto sul canale perché vuole avviare la comunicazione dei passi 3, 4 e 5 come se fosse la sorgente leggittima. Per farlo deve sostanzialmente sostituire due blocchi Ekb(A||k) e Eka(..);
-  -  l'intrusore intercetta un messaggio del passo 2 tra A e T;
-  - Da una sessione precedente, si conserva Ekb(A). Il messaggio Ekb(A || k) che può essere riscritto come Ekb(A) || Ekb(k);
-  - Avvia il protocollo tra C (intrusore) e T per ottenere una chiave k1;
-  - al passo 3, si inserisce sulla sessione di A che al posto di inviare il messaggio Ekb(A || k) -> Ekb(A) || Ekb(k) lo sostituisce. Ha il blocco Ekb(A) perché lo ha conservato da una sessione passata e lo concatena con Ekb(k1);
-  - al passo 4, B risponde al messaggio perché è stato costruito;
-  - al passo 5, dato che l'intrusore conosce k1 riesce a decifrarlo.
 
-  È difficile effettuare session injection, l'attacco prevede di aprire in una nuova da parte dell'intrusore e di prendere e modificare i messaggi.
+  - L'intrusore si mette in ascolto sul canale perché vuole avviare la comunicazione dei passi 3, 4 e 5 come se fosse la sorgente `A` leggittima;
+  - Da una sessione precedente di `A`, l'intrusore intercetta il messaggio del passo 3 di `A`. Da questo messaggio si conserva Ekb(A). Il messaggio Ekb(A || k) può essere riscritto come Ekb(A) || Ekb(k);
+  - `A` deve riaprire una nuova sessione con B altrimenti questo attacco non avrebbe senso;
+  - A questo punto, l'intrusore avvia una sua comunicazione con `T` in modo da ottenere una sua chiave k1. Si conserva Ekb(k1);
+  - L'intrusore nella sua comunicazione aperta, al passo 3 e al posto di inviare il messaggio Ekb(C || k1) -> Ekb(C) || Ekb(k) lo sostituisce. Ha il blocco Ekb(A) perché lo ha conservato da una sessione passata e lo concatena con Ekb(k1);
+  - al passo 4, `B` risponde al messaggio pensando che sia `A`. Le sessioni aperte sono due: A - B e C (ma in realtà diventa A) - B;
+  - al passo 5, dato che l'intrusore conosce k1 riesce a decifrare il messaggio.
 
-da 2.32.22 in poi
+  È difficile effettuare una session injection cioè l'attaccante si intromette nella sessione e modifica/crea i messaggi. Per questo l'intrusore deve creare una nuova comunicazione.
+- **CBC**: da fare a casa
+- **CFB**: da fare a casa
+- **OFB**: da fare a casa
+- **CTR**: da fare a casa
 
-- **CBC**: da fare
+### Key Distribution Center (KDC) - Alternativo
 
-### 18/10/2021 
+da 2.35.00 in poi
+
+<!-- 18/10/2021 --> 
 
 da 0 a 1.00.00 esercizio
 
 ### Integrità e confidenzialità
 
 L'attaccante può effettuare attacchi attivi. L'obiettivo è vedere se violando l'integrità si riesce a risalire al testo in chiaro cioè se si viola anche la proprietà di riservatezza.
+
+### Diffie-Hellman key agreement
 
 ### Esempio
 
