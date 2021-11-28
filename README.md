@@ -1,9 +1,5 @@
 # Sicurezza dell'informazione 2021-2022
 
-## DISCLAIMER
-Questi appunti sono stati scritti in modo da facilitare lo studio e il superamento dell'esame di Sicurezza dell'Informazione M.
-Dario De Nardi, inoltre, è l'autore principale di questi appunti, in quanto gli altri coautori stanno preparando altri esami nel mentre, ed effettuano correzioni e aggiunte appena riescono. Pertanto i crediti principali vanno a lui.
-
 <!-- lezione del 23/09/2021-->
 ## 00.Introduzione
 
