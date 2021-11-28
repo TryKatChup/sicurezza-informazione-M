@@ -107,8 +107,8 @@ Le contromisure da adottare, a differenza degli attacchi passivi, includono anch
 
 Si può:
 
-- **Aggiungere** un attestato di integrità e di autenticità. In questo modo la destinazione è in grado di comprendere se il flusso dei messaggi è integro e autentico oppure se è stato manomesso (integrità e autenticità);
-- **Impedire** l'interruzione del flusso di dati. La destinazione si assicura che il numero corretto di messaggi siano stati ricevuti (disponibilità).
+- **Aggiungere** un attestato di integrità e/o di autenticità. In questo modo la destinazione è in grado di comprendere se il flusso dei messaggi è integro e/o autentico oppure se è stato manomesso (integrità e autenticità);
+- **Impedire** l'interruzione del flusso di dati. La destinazione si assicura che abbia ricevuto il numero corretto di messaggi (disponibilità).
 
 ## 01.Dati Sicuri
 
@@ -344,8 +344,6 @@ Questo schema assicura anche la proprietà di:
 - **Non ripudio**: dato che la sorgente `A` è l'unica che esegue `S`, non può disconoscere in un secondo momento l'attestato di autenticità;
 - **integrità**: per la funzione hash.
 
-<!-- più corto il titolo secondo me-->
-<!-- Hash applicata al messaggio concatenato con un segreto S, condiviso tra sorgente e destinazione -->
 ### Hash del messaggio e di un segreto
 
 Il secondo schema alternativo per realizzare _sign_-_verify_ è l'uso di un _hash_.
@@ -378,7 +376,7 @@ In questo caso, si invia un messaggio che rispetta le proprietà di **riservatez
 
 `H*(m || s) =? H(m* || s)`
 
-- Il messaggio `m` viene concatenato al certificato e cifrato dal client;
+Il messaggio `m` viene concatenato al certificato e cifrato dal client.
 
 Questo schema è usato dal protocollo SSL il quale adotta le funzioni hash crittograficamente sicure con un segreto per costruire il certificato di autenticità.
 
@@ -395,11 +393,12 @@ In questo caso, si invia un messaggio che rispetta le proprietà di **riservatez
 
 `c = E(p), H(m || s)`
 
-- Il messaggio `m` viene cifrato e viene inviato il cifrato concatenato con l'attestato di autenticità costruito sul messaggio.
+Il messaggio `m` viene cifrato e viene inviato il cifrato concatenato con l'attestato di autenticità costruito sul messaggio.
 
 Questo schema viene usato dal protocollo SSH. Permette di aprire shell remote sicure.
 
 Da un punto di vista di efficienza, le trasformazioni in fase di ricezione sono due:
+
 - Decodifica del messaggio cifrato;
 - Autenticazione tramite funzione hash crittograficamente sicura.
 
@@ -411,21 +410,11 @@ In questo caso, si invia un messaggio che rispetta le proprietà di **riservatez
 
 `c = E(p), H((E(p) || s)`
 
-- In fase di invio, il messaggio viene cifrato e autenticato, mentre in fase di ricezione viene controllato l'attestato di autenticità e decifrato il messaggio.
+In fase di invio, il messaggio viene cifrato e autenticato, mentre in fase di ricezione viene controllato l'attestato di autenticità e decifrato il messaggio.
 
 Questo schema viene usato dal protocollo IPsec. È un protocollo SSL a livello di trasporto (TCP). Vengono creati _socket sicuri_ in cui i messaggi sono autenticati.
 
 La ricezione è _efficiente_: viene risparmiata una trasformazione. Se il testo cifrato ha subito delle modifiche, chi riceve verifica il certificato e, se qualche operazione illegale è avvenuta, si evita l'operazione di decifratura.
-
-<!-- testo spostato negli esempi di sopra :) -->
-<!--### Esempi di applicazioni di procolli
-
-- **SSL**: adotta le funzioni hash crittograficamente sicure con un segreto per costruire il certificato di autenticità. Il messaggio viene concatenato al certificato e cifrato dal client.
-Si prende il messaggio, si cifra e si manda il cifrato concatenato con l'attestato di autenticità costruito sul messaggio;
-- **SSL IPsec**: protocollo SSL a livello di trasporto (TCP). Vengono creati socket sicuri in cui i messaggi sono autenticati. In fase di invio, il messaggio viene cifrato e autenticato, mentre in fase di ricezione viene controllato l'attestato di autenticità e decifrato il messaggio;
-La ricezione è efficiente: viene risparmiata una trasformazione. Se il cifrato ha subito delle modifiche, chi riceve verifica il certificato e, se qualche operazione illegale è avvenuta, si evita l'operazione di decifratura;
-- **SSH**: permette di aprire shell remote sicure.
-Si prende il messaggio, si cifra e si manda sul canale insicuro il cifrato concatenato con l'attestato di autenticità costruito sul messaggio.-->
 
 ### Anonimato/Identificazione
 
@@ -562,7 +551,7 @@ La chiave se è un parametro può essere intercettata. Ogni volta che si deve es
 
 - Il parametro sicuramente deve essere memorizzato in maniera sicura (cifrato) e solo il proprietario deve avere accesso alla cella in cui è memorizzata la chiave;
 - Si deve evitare anche che quando si mette il parametro sul bus non ci sia modo di intercettarlo;
-- Ci deve essere anche un supporto alla sicurezza che protegga la RAM.
+- Ci deve essere anche un supporto alla sicurezza che protegga la RAM;
 - L’unità di elaborazione dopo aver eseguito l'algoritmo deve cancellare poi accuratamente il dato dalla memoria.
 
 Nel corso, l'hardware è sicuro ma non è detto che lo sia.
@@ -666,52 +655,54 @@ Una chiave deve avere un numero minimo di bit:
 
 Si è visto come funzionano a livello concettuale le trasformazioni per garantire i requisiti di sicurezza. Adesso si vedono come sono costruite.
 
-## Generatori di numeri casuali
+### Generatori di numeri casuali (RNG)
 
-Per generare una chiave crittografica è importante che abbia due determinate caratteristiche:
+I componenti per generare numeri casuali si chiamano RNG.
+In generale, per generare una chiave crittografica è importante che un componente RNG abbia due determinate caratteristiche:
+
 - Ogni valore deve essere casuale;
 - Ogni valore deve essere indipendente dal punto di vista statistico dal precedente e successivo perché bisogna evitare che un intrusore possa riuscire ad ipotizzare come sono fatti i bit.
 
 ### True Random Number Generator (TRNG)
 
-Per poter rispettare le proprietà appena citate, si ha bisogno di componenti che si chiamano _TRNG_.
+Questi componenti non si possono usare per generare gradi quantità di chiavi crittografiche per due motivi:
 
-Non si possono usare questi componenti per generare gradi quantità di chiavi crittografiche per due motivi:
 - **Bassa frequenza di generazione**: se bisogna generare un numero elevato di chiavi in un tempo brevissimo non sono adatti questi componenti perché usano ad esempio fenomeni fisici per generarli (decadimento radioattivo, rumore termico etc);
-- **Non riproducibilità**: mittente e destinazione devono disporre dello stesso segreto per applicare una determinata trasformazione. Se il mittente genera una chiave deve passarla al destinatario assolutamente altrimenti se il destinatario provasse a generare una chiave non otterrebbe mai la stessa.
+- **Non riproducibilità**: mittente e destinazione devono disporre dello stesso segreto per applicare una determinata trasformazione. Se il mittente genera una chiave deve passarla al destinatario altrimenti se il destinatario provasse a generare una chiave non otterrebbe mai la stessa.
 
 ### Pseudo Random Number Generator (PRNG)
 
-Per superare questi problemi, si usano questo altri tipi di generatori. Sono componenti che consentono di generare lunghe sequenze di numeri casuali in modo deterministico a partire da un dato iniziale detto _seme_. Per questo motivo si chiamano _pseudo_ perché se il _seme_ iniziale è uguale sia nella sorgente che nella destinazione, viene riprodotta la stessa sequenza di bit.
+Per superare i problemi del TRNG, si usano questi altri tipi di generatori. Sono componenti che consentono di generare lunghe sequenze di numeri casuali in modo deterministico a partire da un dato iniziale detto _seme_. Per questo motivo si chiamano _pseudo_ perché se il _seme_ iniziale è uguale sia nella sorgente che nella destinazione, viene riprodotta la stessa sequenza di bit.
 
-Per generare questa sequenza si possono usare degli automi a stati finiti dove la funzione G e F o solo una delle due deve essere unidirezionale in modo da rendere impossibile ad un avversario che ha individuato uno stato il risalire agli stati precedenti ed al seme.
+![dedurre](./img/img54.png)
 
-Tuttavia, questi componenti non garantiscono _imprevedibilità_ cioè dopo un certo numero di bit è possibile individuare ogni successivo valore.
+Questi componenti non garantiscono la proprietà di _imprevedibilità_ cioè un intrusore che è riuscito ad intercettare l’uscita o ad individuare, in tutto o in parte, lo stato del generatore, riesce a dedurre da quale seme si è partiti o quali saranno i prossimi valori generati.
 
 ### Cryptographically Secure PseudoRandom Bit Generator (CSPRBG)
 
-Nella sicurezza informatica, si ha bisogno che si rispetti una proprietà in più rispetto a quelle citate in precedenza: l'_imprevedibilità_.
+Nella sicurezza informatica, si ha bisogno che si rispetti assolutamente la proprietà dell'_imprevedibilità_.
 
 ![dedurre](./img/img28.png)
 
-Questo generatore prevede che il seme sia generato da un _True Number Generator_ una volta sola. A questo punto, il seme viene dato in ingresso ad un PRNG il cui modello è un automa a stati finiti dove la funzione di stato futuro o di uscita deve deve essere unidirezionale in modo da rendere impossibile ad un avversario che ha individuato uno stato il risalire agli stati precedenti ed al seme.
+Questo generatore prevede che il seme sia generato da un _True Number Generator_ una volta sola. A questo punto, il seme viene dato in ingresso ad un PRNG il cui modello è un automa a stati finiti dove la funzione di stato futuro o di uscita deve deve essere unidirezionale in modo da rendere impossibile ad un avversario che ha individuato uno stato di risalire agli stati precedenti ed al seme. Inoltre, il seme deve essere anch'esso imprevedibile e tenuto segreto.
 
 La funzione unidirezionale impiegata può sfruttare algoritmi di crittografia per produrre in uscita questi bit casuali:
-- **Crittografia simmetrica**: le proprietà sono solo sperimentalmente verificabili ma hanno alta velocità di generazione delle sequenze di uscita;
+
+- **Crittografia simmetrica**: le proprietà sono solo sperimentalmente verificabili: hanno alta velocità di generazione delle sequenze di uscita;
 - **Crittografia asimetrica**: si può dimostrare teoricamente che l'uscita è casuale, imprevedibile e indeducibile ma hanno prestazioni più basse.
 
-#### Esempio
+### Esempio
 
 Un esempio di PRNG è la classe Secure Random di Java.
 
-## Algoritmi di hash
+### Algoritmi di hash
 
 Gli algoritmi che realizzano la funzione hash devono presentare le seguenti proprietà:
 
 - **Efficienza**: deve essere facile calcolare l'impronta anche se il messaggio in ingresso è molto lungo;
 - **Robustezza alle collisioni**: si possono individuare due tipi di robustezza:
-  - **Robustezza debole alle collisioni**: dato un input `x` a cui corrisponde un'impronta `H(x)`, deve essere computazionalmente difficile per l'intrusore trovare un `y != x` tale per cui `H(y) = H(x)`;
-  - **Robustezza forte alle collisioni**: deve essere difficile trovare una coppia di sua scelta `x` e `y` tale per cui abbiano l'impronta identica `H(y) = H(x)`;
+  - **Robustezza debole alle collisioni**: per ogni messaggio `m`, è difficile trovare un altro messaggio `m'` tale che `H(m') = H(m)`. Quindi conoscendo l'hash di un messaggio, non si è in grado, con una potenza di calcolo ragionevole, di trovare un altro input che genera lo stesso hash. Da notare che la proprietà suppone che si conosca il messaggio di origine e che questo non deve aiutare nel trovare un secondo messaggio con hash identico;
+  - **Robustezza forte alle collisioni**: deve essere difficile trovare una qualsiasi coppia `x` e `y` tale che `H(y) = H(x)`. Non si parte da un messaggio dato, ma si sceglie una qualsiasi coppia di messaggi `m` e `m'` che generano lo stesso hash. Se si riesce, non si viola la resistenza alle collisioni deboli;
 - **Unidirezionalità**: data un'impronta deve essere computazionalmente difficile risalire al messaggio originario che l'ha generata.
 
 ### Efficienza
@@ -720,41 +711,41 @@ Per garantire efficienza, la maggior parte degli algoritmi utilizzano uno _schem
 
 ![dedurre](./img/img14.png)
 
-Consiste nel prendere il messaggio di lunghezza arbitraria e suddividerlo in blocchi di dimensione prefissata a seconda dello specifico algoritmo di implementazione di `f`. Si applica a `m0` formato da `r` bit (`r>n` dove `n` è l'uscita del blocco) la funzione `f` (che ha le caratteristiche di robustezza debole, forte alle collisioni e unidirezionalità) e un vettore di inizializzazione che avrà un valore iniziale. In uscita, viene prodotta un'impronta `h1`. In pipeline, viene poi elaborato il secondo blocco `m1` concatenato all'impronta generata al passo precedente. L'impronta `h`-iesma è ottenuta applicando una funzione `f` all'impronta ottenuta al passo ottenuto `i-1` con il messaggio `h`-iesmo.
+Consiste nel prendere il messaggio `m` di lunghezza arbitraria e lo si suddivide in blocchi di dimensione prefissata a seconda dello specifico algoritmo di implementazione di `f`. Si applica a `m0` formato da `r` bit (`r>n` dove `n` è l'uscita del blocco) la funzione `f` (che ha le caratteristiche di robustezza debole, forte alle collisioni e unidirezionalità) e un vettore di inizializzazione che avrà un valore iniziale. In uscita, viene prodotta un'impronta `h1`. In pipeline, viene poi elaborato il secondo blocco `m1` concatenato all'impronta generata al passo precedente. L'impronta `h`-iesma è ottenuta applicando una funzione `f` all'impronta ottenuta al passo ottenuto `i-1` con il messaggio `h`-iesmo.
 L'impronta finale dell'intero messaggio, corrisponde con l'ultima impronta generata dall'ultimo blocco.
 
 Questo schema è soggetto ad un attacco che si chiama _attacco con estensione_.
 
 ![dedurre](./img/img15.png)
 
-Dalla sorgente `A` si invia un messaggio `m` concatenato al suo attestato di autenticità che è costruito con la funzione hash `H(s || m)` dove `s` è il segreto condiviso tra mittente e destinatario. Se la funzione hash è implementata secondo lo _schema di Merkle-Damgard_, allora è presenta una vulnerabilità. L'intrusore può inviare un messaggio `m'` oltre a quello `m` già esistente. `H(s || m)` non è altro che l'impronta di uscita dell'ultimo blocco del messaggio `m`. Mettendola come input di un nuovo blocco `f` insieme al messaggio dell'intrusore suddiviso in blocchi, si riesce a calcolare il nuovo attestato di auntenticità.
+Dalla sorgente `A` si invia un messaggio `c` concatenato al suo attestato di autenticità che è costruito con la funzione hash `H(s || m)` dove `s` è il segreto condiviso tra mittente e destinatario. Se la funzione hash è implementata secondo lo _schema di Merkle-Damgard_, allora è presente una vulnerabilità. `H(s || m)` non è altro che l'impronta di uscita dell'ultimo blocco del messaggio `m`. Mettendola come input di un nuovo blocco `f` insieme al messaggio dell'intrusore `m'` suddiviso in blocchi, si riesce a calcolare il nuovo attestato di auntenticità.
 
-Per evitare il problema serve aggiungere all'ultimo blocco delle informazioni aggiuntive, ad esempio, qual è la lunghezza del messaggio. Chi riceve il messaggio, sa che tecnica è stata usata e quindi in fase di elaborazione ricava le informazioni aggiuntive. Tuttavia, non è sempre robusto.<!--?!? Motivo non capito--> Se il messaggio non è dotato di significato, l'attacco ha successo.
+Per evitare il problema serve aggiungere all'ultimo blocco delle informazioni aggiuntive, ad esempio, qual è la lunghezza del messaggio. Tuttavia, non è sempre robusto perchè chi riceve il messaggio, deve elaborare queste informazioni aggiuntive.
+
+Oppure, si potrebbe pensare di invertire la posizione di `s` e di `m` all’interno dell’autenticatore, che eviterebbe l’estensione dell’algoritmo. Si capisce la differenza fra schema concettuale, che potrebbero risultare equivalenti, ed implementazioni. Ma questo trucchetto è utile solo se la funzione hash non è resistente alla collisione debole. Infatti, supponiamo che un intrusore possa trovare un messaggio `m'` in collisione con `m`. Con questa ipotesi si avrebbe `H(m || s) = H(m' || s)`. Dunque, all’intrusore sarebbe sufficiente inviare sul canale il messaggio `m'` concatenato con `H(m || s)` che, per la collisione, autenticherebbe `m'`.
 
 ### Robustezza alle collisioni
 
-Le funzioni hash non garantiscono sempre la resistenza alle collisioni. Non ci si limita, quindi, a eseguire solo una volta ma questa operazione la si effettua più volte. La doppia compressione consente alle funzioni hash di avere un comportamento aleatorio.
+Le funzioni hash non garantiscono sempre la resistenza alle collisioni. Non ci si limita, quindi, a eseguire solo una volta l'operazione di hash ma la si effettua più volte. Ad esempio, HMAC è uno standard a due compressioni cioè si effettua l'impronta di un'impronta.
 
-La resistenza alle collisione è fondamentale quando la funzione hash è usata per costruire attestati di autenticità. Ad esempio, in uno schema di firma digitale.
+La resistenza alle collisione è fondamentale quando la funzione hash è usata per costruire attestati di autenticità. Ad esempio, in uno schema di firma digitale perchè l'intrusore potrebbe trovare una coppia di messaggi che producono la stessa impronta. L'intrusore potrà eludere le vittime facendo firmare un contratto su un messaggio `m` a loro favorevoli, per poi in futuro usare l’attestato di autenticità su un messaggio `m'` (favorevole ora all’intrusore), dato che c’è collisione. In questo esempio, non è rispettata la collisione forte.
 
-Inoltre, è importante usare un numero minimo di bit affinchè l'impronta sia resistente alle collisioni deboli e forti. Le funzioni hash devono avere un comportamento aleatorio cioè devono restituire con uguale probabilità una delle 2^n configurazioni.
+### Complessità del calcolo di una collisione
 
-Si indica con $ P_1(2^{n}, 1) = \frac{1}{2^n} $ la probabilità di un tentativo di trovare una collisione. La probabilità di insuccesso, quindi, è 1 - 1/2^n. Se si hanno k tentativi, P_k(2^n, k) = 1 - (1 - 1/2^n)^k. Questo vuol dire che k= P_k(2^n, k) * 2^n. 2^n per avere un andamento esponenziale deve essere almeno 128. Dunque, l'impronta deve essere almeno 128 bit.
+**Ipotesi**: per la proprietà di oracolo casuale, le funzioni hash devono avere un comportamento aleatorio cioè devono restituire con uguale probabilità una delle 2^n configurazioni.
 
-Per garantire la _resistenza forte_ non bastano 128 bit. Il numero di bit deve essere il doppio perché per la resistenza forte si vedrà che sono necessari 2^(n/2) tentativi. Dunque, è più facile effettuare un attacco rispetto alla resistenza debole.
+**Problema**: data una funzione hash con `n` possibili output e un determinato `H(x)`, se `H` viene applicato a `K` input casuali, quale deve essere il valore di `k` tale che la probabilità che almeno un input `y` soddisfi `H(y) = H(x)` sia maggiore di 0.5?
+
+- **Resistenza debole**: si indica con $ P_1(2^{n}, 1) = \frac{1}{2^n} $ la probabilità di un tentativo di trovare una collisione. La probabilità di insuccesso, quindi, è 1 - 1/2^n. Se si hanno k tentativi, P_k(2^n, k) = 1 - (1 - 1/2^n)^k. Questo vuol dire che k= P_k(2^n, k) * 2^n. 2^n per avere un andamento esponenziale deve essere almeno 128. Dunque, l'impronta deve essere almeno 128 bit;
+- **Resistenza forte (paradosso del compleanno)**: nell’ipotesi che le date di nascita siano equiprobabili, è sufficiente scegliere a caso 253 persone per avere una probabilità > 0,5 che una di queste compia gli anni in un dato giorno. Sono invece sufficienti 23 persone scelte a caso per avere una probabilità > 0,5 che due o più compiano gli anni nello stesso giorno. Quindi, non bastano 128 bit. Il numero di bit deve essere il doppio perché per la resistenza forte sono necessari 2^(n/2) tentativi. Dunque, è più facile effettuare un attacco rispetto alla resistenza debole.
 
 ### Unidirezionalità
 
-L'unidirezionalità è importante in due scenari:
+L'unidirezionalità è un'altra proprietà importante. Un caso tipico in cui `H` deve essere one-way si ha quando un messaggio in chiaro `m` è autenticato da `H(m || s)` altrimenti invertendo la funzione si risalirebbe al segreto.
 
-- **Firma digitale**: un intrusore potrebbe generare tramite un PRNG crittograficamente sicuro un `r` casuale. L'intrusore può sempre calcolare `V(r)` perché `V` è una trasformazione nota a tutti. Tramite la chiave pubblica può calcolare l'uscita `x`. L'intrusore vuole fare `H^-1(x)` e trovare un `y` dotato di significato. La funzione hash non è invertibile quindi un'operazione del genere non può essere effettuata;
-- **Identificazione**: memorizzare un segreto in forma cifrata. La chiave di cifratura è la passhrase che viene sottoposta alla funzione `H`. Anche in questo caso la funzione hash non deve essere invertibile.
+## 03.Meccanismi Simmetrici
 
-# 03.Meccanismi Simmetrici
-
-Ora si vede come sono implementati `E` e `D` usando cifrari simmetrici.
-
-## Cifrario simmetrico
+### Cifrario simmetrico
 
 Nella crittografia classica, è stato individuato un cifrario perfetto chiamato _One-time pad_. Il cifrario perfetto è per definizione un algoritmo in grado di occultare il testo in chiaro escludendo ogni tipo di attacco, ne segue che un testo cifrato con un cifrario perfetto non può essere letto in nessun modo se non si è in possesso della chiave di cifratura unica per decifrarlo. Tuttavia, il suo impiego nella pratica è molto complicato.
 
@@ -771,7 +762,7 @@ Ci sono due tecniche che garantiscono _confusione_ e _diffusione_:
 
 Dalla _teoria dell'informazione_ di Shannon discende che un _cifrario simmerico_ è computazionalmente sicuro se usa _diffusione_ e _sostituzione_.
 
-Il cifrario simmetrico vengono utilizzati per garantire _riservatezza_. In rarissimi casi, viene usato per garantire _autenticazione_, costruire generatori di numeri pseudo-casuali crittograficamente sicuri e dei protocolli di identificazione.
+I cifrari simmetrici vengono utilizzati per garantire riservatezza. In rarissimi casi, viene usato per garantire autenticazione, per generatori di numeri pseudo-casuali crittograficamente sicuri e per alcuni protocolli di identificazione.
 
 Esistono come cifrari simmetrici due famiglie distinte:
 
@@ -780,14 +771,14 @@ Esistono come cifrari simmetrici due famiglie distinte:
 
 Un _cifrario a flusso_, è più veloce di un _cifrario a blocchi_ perché non introduce rallentamenti. Se il _cifrario a flusso_ non è impiegato correttamente, è meno sicuro di un cifrario a blocchi non impiegato correttamente.
 
-## Cifrario a flusso
+### Cifrario a flusso
 
 Encryption `E` e decryption `D` sono implementati con degli `XOR`:
 
 ![dedurre](./img/img34.png)
 
-- **Encryption**: viene preso il bit i-esimo di testo in chiaro `m`, lo si mette in `XOR` con il bit i-esmo della chiave `k`. Lo stesso flusso di chiave non può essere impiegato su messaggi diversi e lo si genera con un PRNG crittograficamente sicuro;
-- **Decryption**: al bit i-esimo del messaggio cifrato `c`, deve essere sommato modulo 2 (`XOR`) lo stesso i-esmo bit di chiave `k` usato nella fase di cifratura.
+- **Encryption**: viene preso il bit `i`-esimo di testo in chiaro `m`, lo si mette in `XOR` (somma modulo 2) con il bit `i`-esmo della chiave `k`;
+- **Decryption**: al bit `i`-esimo del messaggio cifrato `c`, si mette in `XOR` lo stesso `i`-esmo bit di chiave `k` usato nella fase di cifratura.
 
 Per questo motivo ci deve essere _sincronismo_ tra i flussi di chiave della sorgente e della chiave.
 
@@ -803,24 +794,32 @@ I cifrari a flusso si suddividono in:
 
   ![dedurre](./img/img42.png)
 
-### Cifrario a flusso sincrono vs Cifrario a flusso autosincronizzante
-
-Nel _cifrato a flusso sincrono_, l'attaccante può effettuare attacchi attivi:
-
-- **Se si modifica un bit del cifrato**: la destinazione non decifra correttamente un bit perché è stato cambiato. Si dice che non si ha perdita di sincronismo perché solo il i-esimo è è stato cambiato. Tuttavia, la decifrazione non è corretta;
-- **Se si cancella/inserisce un bit**: dal punto in poi in cui è stato cancellato il bit, i restanti non corrisponderanno mai a quelli inviati. Si dice che si ha perdita di sincronismo perché tutti i bit sono da buttare via.
-
-Nel _cifrato a flusso autosincronizzante_ l'attaccante può effettuare attacchi attivi:
-
-- **Se modifica, cancella o elimina un bit del cifrato**: si ha una perdita di sincronismo ma non permanete, solo di un transitorio. Il transitorio è legato alla dimensione del registro di scorrimento (SHIFT) perché dipende da quanti cicli, il bit modificato/cancellato/inserito rimane dentro a questo registro.
-
 I più usati sono quelli a _cifrario flusso sincrono_ perché i componenti a _cifrario a flusso autosincronizzante_ sono più costosi.
+
+### Esempio
+
+Uno degli algoritmi più famosi è RC4 ma ormai è stato disabilitato nei browser a causa delle sue vulnerabilità.
+Al giorno d'oggi vengono usati algoritmi come Salsa e Sosemanuk.
 
 ### Possibili vulnerabilità
 
-Per garantire la _riservatezza_, i cifrari a flusso devono avere certe proprietà e bisogna capire quali sono le loro vulnerabilità.
+Per garantire la _riservatezza_, i cifrari a flusso devono avere certe proprietà e bisogna capire quali sono le loro vulnerabilità:
+- Attacchi attivi;
+- Uso della chiave una sola volta;
+- Malleabilità.
 
-#### Uso della chiave una sola volta
+### Attacchi attivi
+
+Nel _cifrato a flusso sincrono_, nel caso di attacchi attivi:
+
+- **Se si modifica un bit del cifrato**: la destinazione non decifra correttamente un bit perché è stato cambiato. Si dice che non si ha perdita di sincronismo perché solo il `i`-esimo è è stato cambiato. Tuttavia, la decifrazione non è corretta;
+- **Se si cancella/inserisce un bit**: dal punto in poi in cui è stato cancellato il bit, i restanti non corrisponderanno mai a quelli inviati. Si dice che si ha perdita di sincronismo perché tutti i bit sono da buttare via.
+
+Nel _cifrato a flusso autosincronizzante_, nel caso di attacchi attivi:
+
+- **Se modifica, cancella o elimina un bit del cifrato**: si ha una perdita di sincronismo ma non permanete, solo di un transitorio. Il transitorio è legato alla dimensione del registro di scorrimento (SHIFT) perché dipende da quanti cicli, il bit modificato/cancellato/inserito rimane dentro a questo registro.
+
+### Uso della chiave una sola volta
 
 Il requisito fondamentale è che la chiave deve essere usata una e una sola volta. Se si usa lo stesso flusso di chiave su messaggi distinti si possono fare attacchi di analisi sui cifrati perché si sfruttano le proprietà dell'`XOR`.
 
@@ -833,21 +832,21 @@ Ad esempio, si consideri:\
 
 Fare `c1 XOR c2` è come fare l'`XOR` su due messaggi in chiaro: `m1 XOR m2`.
 
-##### Esempio
+### Esempio
 
-Alcune volte, nelle implementazioni dei protocolli ci si accorge di questa vulnerabilità e di conseguenza, si possono effettuare degli attacchi (es. il protocollo WEP).
+Nell'implementazione del protocollo WEB si presenta questo tipo di vulnerabilità.
 
 ![marco togni](./img/img17.png)
 
 L'obiettivo è ottenere un _seed_ variabile ma in realtà questo protocollo presenta alcuni limiti:
+
 - Il vettore di inizializzazione ha una dimensione limitata (24 bit). Dopo 2^{24} generazioni si ha che il seed si ripete;
 - Quando si spegneva, il vettore si inizializzava a zero e poi funzionava ad incremento. Il comportamente è molto prevedibile.
 
-# 11/10/2021
+<!-- 11/10/2021 -->
+### Malleabilità
 
-#### Malleabilità
-
-La proprietà di _malleabilità_ consiste nella possibilità di alterare il cifrato in modo da produrre un effetto desiderato sul testo in chiaro originario. L'attacco ha successo se e solo se l'attaccante conosce una parte del messaggio `m`.
+La proprietà di _malleabilità_ consiste nella possibilità di alterare il cifrato in modo da produrre un effetto desiderato sul testo in chiaro originario. L'attacco ha successo se e solo se l'intrusore conosce una parte del messaggio `m` che il mittente deve inviare.
 
 Il mittente effettua `m XOR k`, l'attaccante prende `(m XOR k) XOR p` dove `p` è scelto da lui e sostituisce il messaggio sul canale con il nuovo messaggio cifrato modificato. La destinazione, decifra `((m XOR k) XOR p)) XOR k` e quindi non sarebbe altro che fare `m XOR p`.
 
@@ -857,67 +856,70 @@ Fare le tabelle di verità per credere!
 
 Ad esempio, il mittente sta cifrando dei dati strutturati. All'inizio di questi dati, c'è sempre la parola "From". L'attaccante, conosce che il flusso è strutturato. Il suo obiettivo è quello di cambiare la provenienza del messaggio `m`. Si ipotizzi che l'inizio del messaggio sia "From Dario" con rappresentazione esadecimale "44 61 72 69 6F". L'obiettivo dell'intrusore è ottenere "From Lucia" con rappresentazione esadecimale "4C 75 63 69 61". Bisogna trovare quel `p` tale per cui `m XOR p = Lucia`. Dunque, `p` deve essere "08 14 11 00 0E".
 
-## Cifrari a blocchi
-
-La modalità base per effettuare Encryption `E` e decryption `D` prende il nome di ECB.
+### Cifrari a blocchi
 
 ### Electronic Code Book (ECB)
 
-Si prende un messaggio e lo si suddividono in blocchi. Se l'ultimo blocco contiene meno bit della lunghezza che dovrebbe avere lo si completa con dei bit di padding.
+Si prende un messaggio e lo si suddivide in blocchi di uguale lunghezza prefissata. Se l'ultimo blocco contiene meno bit della lunghezza che dovrebbe avere lo si completa con dei bit di padding.
 
 ![marco togni](./img/img35.png)
 
-Ogni blocco viene dato in pasto alla funzione di encryption `E` e quindi il testo cifrato non è altro che la concatenazione dei cifrati ottenuti dai singoli blocchi.
+Ogni blocco viene dato in input alla funzione di encryption `E` tramite una chiave fissa condivisa dalle due parti. Il testo cifrato, quindi, non è altro che la concatenazione dei cifrati ottenuti dai singoli blocchi.
 
-L'operazione di cifrare a blocchi ricorda molto la tecnica di base della sostituzione monoalfabetica della crittografia classica ma la rende immune da un attacco con statistiche perché lavora proprio su blocchi e non su singoli bit.
+L'operazione di cifrare a blocchi ricorda molto la tecnica di base della sostituzione monoalfabetica della crittografia classica ma a differenza di quest'ultima, la grossa dimensione dei blocchi la rende immune da un attacco con statistiche.
 
-Nei cifrari a blocco, l'attacco con forza bruta ha senso perché la chiave è sempre la stessa. Dunque, bisogna dimensionare la chiave almeno con 128 bit.
-
-La chiave deve essere modificata frequentemente perché nella modalità ECB, la stessa chiave cifra moltissimi blocchi di testo in chiaro e quindi ci sono più possibilità di individuarla.
+La chiave deve essere modificata frequentemente perché essa cifra moltissimi blocchi di testo in chiaro e quindi ci sono più possibilità di individuarla. Dunque, l'attacco con forza bruta è possibile ed è necessario dimensionare la chiave almeno con 128 bit.
 
 Vantaggi:
 
-- **Grande efficienza**: se si dispone di più CPU, l'esecuzione è parallela;
-- **No propagazione dell'errore**: se l'intrusore modifica a caso un bit, si dice che la propagazione dell'errore rimane confinata a quel blocco. Chi decifra avrà solo un blocco "sbagliato".
+- **Alto parallelismo**: se si dispone di più CPU, l'esecuzione è parallela;
+- **No propagazione dell'errore**: se l'intrusore modifica a caso un bit, si dice che la propagazione dell'errore rimane confinata a quel blocco. Chi decifra avrà solo un blocco _sbagliato_.
 
 Svantaggi:
 
-- **Determinismo**: a blocchi in chiaro identici corrispondono blocchi cifrati assolutamente identici. Ciò vuol dire che se viene inviato lo stesso messaggio, queste sono informazioni in più che si riescono a capire. Se il messaggio è strutturato l'intrusore può sfruttarlo a suo favore;
-- **Maleabilità**: un intrusore è in grado di modificare il testo cifrato in modo tale che la destinazione quando lo decifra ottiene un testo da lui scelto. Ad esempio, si consideri una transazione bancaria. Nel primo blocco si ha il mittente, nel secondo il destinatario e nel terzo la cifra da trasferire. L'intrusore, sostituisce al blocco del destinatario, il suo. Se il mittente è "Luca", il destinatario è "Lucia" e la somma da trasferire "100", l'attaccante basta che sostituisce "Lucia" con il suo nome.
+- **Determinismo**: a blocchi in chiaro identici corrispondono blocchi cifrati assolutamente identici. Sono informazioni in più che un intrusore può sfruttare a suo favore;
+- **Maleabilità**: un intrusore è in grado di modificare il testo cifrato in modo tale che la destinazione quando lo decifra ottiene un testo da lui scelto. Ad esempio, si consideri una transazione bancaria. Nel primo blocco si ha il mittente, nel secondo il destinatario e nel terzo la cifra da trasferire. L'intrusore, sostituisce al blocco del destinatario, il suo. Se il mittente è "Luca", il destinatario è "Lucia" e la somma da trasferire "100", l'attaccante basta che sostituisca "Lucia" con il suo nome.
 
-Questa modalità si usa solo in casi specifici: ad esempio, cifrare delle informazioni che sono già per natura aleatoria e ci deve essere solo un blocco! Ad esempio, una chiave di sessione.
+Questa modalità si usa solo in casi specifici: ad esempio, cifrare delle informazioni che sono già per natura aleatoria o un testo che risiede interamente in un solo blocco (possibile sostituzione di blocchi). Ad esempio, si usa per cifrare una chiave di sessione.
+
+### Esempio
+
+Esistono tanti algoritmi di cifratura per i cifrari a blocchi (DES, TDES, AES). Oggi lo standard è AES.
 
 ### Modalità di cifratura
 
-L'obiettivo, quindi, è quello di trovare modalità di cifrature aleatorie. Ad esempio, esistono le modalità CBC, CFB, OFB, CTR.
+L'obiettivo, quindi, è quello di trovare modalità di _cifrature aleatorie_. Esistono le modalità CBC, CFB, OFB, CTR.
 
-<!-- Da un punto di vista hardware è possibile che si implementino due circuiti diversi: uno in fase di encryption e l'altro in fase di decryption. Molti algoritmi hanno la stessa E che coincide con D ma se non coincidono si dovrebbe usare due circuiti diversi. -->
+### Cipher Block Chaining (CBC)
 
-#### Cipher Block Chaining (CBC)
-
-Questa modalità consente di ottenere aleatorietà.
+Solo questa modalità di cifratura utilizza il padding.
 
 ![marco togni](./img/img18.png)
 
-La modalità CBC prende il messaggio in chiaro, lo suddivide in blocchi, l'ultimo blocco è sottoposto a padding se necessario. Per ogni blocco, il testo in chiaro viene messo in `XOR` con un altro dato e sottoposto poi alla funzione di cifratura `E` ottenendo un testo cifrato c_i. Solo per quanto riguarda il blocco 1, il testo in chiaro viene dato in `XOR` con quello che si chiama _vettore di inizializzazione_ che è aleatorio ed è diverso da messaggio a messaggio. È un insieme di bit, grande quanto il blocco.
+La modalità CBC prende il messaggio in chiaro, lo suddivide in blocchi e l'ultimo blocco è sottoposto a padding se necessario. Per ogni blocco, il testo in chiaro viene messo in `XOR` con il cifrato del blocco precedente e il risultato viene messo in input alla funzione di cifratura `E` ottenendo un testo cifrato c_i. Solo per quanto riguarda il blocco 1, il testo in chiaro viene dato in `XOR` con quello che si chiama _vettore di inizializzazione_ (IV) altrimenti questo blocco sarebbe sempre deterministico. IV può essere o concordato o inviato come primo blocco del cifrato e la sua dimensione è grande quanto quella del blocco.
 
-In fase di decifrazione `D`, le operazioni sono inverse.
+In fase di decifrazione, le operazioni sono inverse ed è sufficiente invertire il verso delle frecce. Se si perde IV dopo aver cifrato il messaggio, si riesce comunque a decifrare tutto lato destinazione tranne il primo blocco.
 
-Le caratteristiche di questo vettore sono:
-- **Casualità**;
-- **Imprevedibilità** (altrimenti viola confidenzialità);
-- **Usato una e una sola volta**: perché se si ripete il vettore e si hanno due messaggi uguali, si ottiene lo stesso cifrato.
+Per ottenere aleatorietà, questo vettore deve essere:
 
-Il vettore non deve essere necessariamente segreto. Sicuramente aumenta la robustezza ma non è un requisito necessario.
+- **Casuale**;
+- **Imprevedibile** (altrimenti viola confidenzialità);
+- **Non ripetibile**: se si ripete il vettore e si hanno due messaggi uguali, si ottiene lo stesso cifrato.
+
+Il vettore non deve essere necessariamente segreto che non è un requisito fondamentale cifrare IV per garantire la riservatezza. L'intrusore non conosce la chiave k.
+
+In generale la dimensione del cifrato è maggiore del testo in chiaro. Se il messaggio è di `N` bit il cifrato sarà `N` bit + IV + padding.
+
+Vantaggi:
+
+- Un cambiamento in un singolo blocco ha effetto su tutti i blocchi cifrati seguenti.
 
 Svantaggi:
 
-- In questo caso, non si può procedere in modo parallelo con più CPU perché è necessario il cifrato del passo precedente in fase ci cifrazione. Invece, il parallelismo lo si ottiene in fase di decifrazione se si hanno già tutti i pezzi di cifrato che costituiscono;
+- In questo caso, non si può procedere in modo parallelo con più CPU perché è necessario il cifrato del passo precedente in fase di cifrazione. Invece, il parallelismo lo si ottiene in fase di decifrazione se si hanno già tutti i pezzi di cifrato;
 - Se un attaccante, modifica un qualcunque bit di un blocco, l'errore si propaga nei blocchi successivi.
 
-Da un punto di vista hardware è possibile che si implementino due circuiti diversi: uno in fase di encryption e l'altro in fase di decryption. Molti algoritmi hanno la E che coincide con D ma se non coincidono si dovrebbe usare due circuiti diversi.
-
-#### Chipher Feedback (CFB)
+### Chipher Feedback Block (CFB)
 
 Questo schema ricorda un _cifrario a flusso autosincronizzante_. 
 
@@ -927,22 +929,15 @@ Nel dettaglio, può essere rappresentato nel seguente modo:
 
 ![marco togni](./img/img19.png)
 
-Si prende un registro a scorrimento che viene inizializzato con un vettore di inizializzazione che è casuale, non necessariamente segreto, imprevedibile e usato una sola volta. Il registro è formato da due parti: una parte formata dagli s bit meno significativi e l'altra dai b-s bit più significativi. A scorrimento vuol dire che ad ogni clock s bit "escono" dal registro. Il registro a scorrimento viene sottoposto ad una cifratura con la chiave `K`. L'uscita va a finire in un altro registro a scorrimento che è formato da s bit più significativi e b-s bit meno significativi.
-Il cifrato finale è ottenuto mettendo in `XOR` s bit del testo in chiaro con gli s bit più significati del vettore a scorrimento di cifratura. Il risultato è il cifrato costituito da s bit.
-
-Al passo 2, i b-s bit contengono ancora alcuni vecchi bit del vettore di inizializzazione ma prima o poi i bit di questo vettore vengono buttati fuori. I blocchi non prevedono padding.
+Si prende un registro a scorrimento che viene inizializzato con un vettore di inizializzazione che è casuale, non necessariamente segreto, imprevedibile e usato una sola volta. Il registro è formato da due parti: una parte formata dagli s bit meno significativi e l'altra dai b-s bit più significativi. A scorrimento vuol dire che ad ogni clock s bit "escono" dal registro. Lo stato del registro a scorrimento viene sottoposto ad una cifratura con la chiave `K`. L'uscita va a finire in un altro registro a scorrimento che è formato da s bit più significativi e b-s bit meno significativi. Il cifrato finale è ottenuto mettendo in `XOR` s bit del testo in chiaro con gli s bit più significati del vettore a scorrimento di cifratura. Il risultato è il cifrato costituito da s bit.
 
 ![marco togni](./img/img20.png)
 
-In decifrazione, si procede analogamente. Per decifrare il primo blocco di testo in chiaro bisogna avere il cifrato ottenuto al passo precedente vuol dire scorrere indietro. La prima cosa da fare è partire dall'ultimo blocco e recuperare a ritroso.
+In decifrazione, si procede analogamente. Per decifrare il primo blocco di testo in chiaro bisogna avere il cifrato ottenuto al passo precedente vuol dire scorrere indietro. La prima cosa da fare è partire dall'ultimo blocco e recuperare a ritroso. Inoltre, si usa sempre la stessa funzione `E` cioè l'implementazione dell'algoritmo è la stessa (quindi stesso circuito hardware).
 
-In fase di decifrazione, si usa sempre la stessa funzione `E` cioè l'implementazione dell'algoritmo è la stessa (stesso circuito hardware).
+Si ha la propagazione dell’errore (una modifica su un cifrato si propaga sul successivo), ma si esaurisce dopo un certo lasso di tempo (si vedano cifrari a flusso auto-sincronizzante).
 
-Inoltre, il vettore deve essere necessariamente imprevedibile.
-
-Il vettore non deve essere necessariamente segreto. Sicuramente aumenta la robustezza ma non è un requisito necessario.
-
-Si usa, ad esempio, quando si ha una trasmissione carattere per carattere (8 bit alla volta). <!-- Per le caratteristiche generali di flusso autosincronizzante -->
+Si usa, ad esempio, quando si ha una trasmissione carattere per carattere (8 bit alla volta).
 
 ### Output Feedback (OFB)
 
@@ -954,7 +949,7 @@ Nel dettaglio, può essere rappresentato nel seguente modo:
 
 ![marco togni](./img/img21.png)
 
-Si parte da un vettore di inizializzazione che serve sempre per inizializzare lo stato di un registro a scorrimento. L'uscita del registro a scorrimento viene cifrata per poi essere messa in ingresso ad un altro registro a scorrimento e gli s bit più significativi dell'output vengono messi in `XOR` con gli s bit del testo in chiaro. I blocchi non prevedono padding.
+Come in CFB, anche in questo caso IV serve per inizializzare il registro. Il procedimento iniziale è identico, tranne per l’ultimo passaggio: C1 viene infatti prodotto allo stesso modo, ma non viene mandato in ingresso al registro, al passo successivo.
 
 ![marco togni](./img/img22.png)
 
@@ -962,65 +957,62 @@ In decifrazione, non si usa la funzione inversa ma si continua ad usare la funzi
 
 Il vettore non deve essere necessariamente segreto. Sicuramente aumenta la robustezza ma non è un requisito necessario. Inoltre, il vettore non deve essere necessariamente imprevedibile ma unico perché si ha un problema di confidenzialità se la chiave è usata più volte.
 
-L'OFB si preferisce usarlo quando i canali sono rumorosi (ad esempio i satelliti) perché la modifica di un cifrato non si propaga sul blocco successivo.
+L'OFB si preferisce usarlo quando i canali sono rumorosi (ad esempio i satelliti) perché la modifica di un blocco cifrato non si propaga sul blocco successivo.
 
 ### Counter (CTR)
 
-Questa modalità si applica un cifrario a blocchi per generare un flusso di chiavi ma il registro a scorrimento contiene lo stato di un contatore. I blocchi non prevedono padding.
+Il comportamento è quello di un cifrario a flusso sincrono.
 
 ![marco togni](./img/img29.png)
 
-Il  messaggio in chiaro si suddivide in blocchi, ogni blocco viene messo in XOR con un numero di bit di chiave che è generato cifrando con un cifrario a blocchi lo stato di un contatore che deve essere reso aleatorio. L'aleatorietà la si ottiene aggiungendo allo stato di un contatore che ad ogni blocco si incrementa (o, 1, 2 etc). Gli stati sono resi imprevedibili perché la parte iniziale è riempita da un numero casuale e imprevedibile (seed) generato da un PNRG
+Funziona esattamente come una modalità ECB: il testo in chiaro viene suddiviso in blocchi, ciascuno dei quali viene lavorato indipendentemente dagli altri. Il flusso di chiave di L bit casuali, dove L è la lunghezza del blocco, è sommato modulo 2 con un pari numero di bit del testo in chiaro. Tali bit sono ottenuti cifrando lo stato di un contatore a L bit, incrementato di un’unità prima di procedere all’elaborazione di un nuovo blocco, con la chiave k.
+
+L’i-esimo bit di chiave non dipende né dal messaggio né dagli altri bit di chiave, bensì solo dal seed iniziale. Infatti, viene fornito come input della funzione Ek il seed iniziale e i suoi N incrementi unitari, dove N è il numero di blocchi da cifrare.
 
 I blocchi possono lavorare in parallelo sia in fase di `E` che di `D`.
+
+Si utilizza la sola funzione di cifratura Ek sia per cifrare che per decifrare.
 
 Questo schema viene usato, ad esempio, su reti ATM.
 
 ### Beast Attack (Browser Exploit Against SSL/TLS)
 
-Adesso bisogna capire come usare queste modalità in modo corretto. In questo esempio la modalità CBC non è usata correttamente.
+In questo esempio la modalità CBC non è usata correttamente.
 
-È bene ricordare che l'attacco è molto difficile da realizzare.
-L'intrusore deve riuscire ad entrare in una sessione già avviata tra client e server e alterare il normale flusso dei dati (attacco _Man In The Middle_). Se la versione di TLS è la 1.0 si rischia di subire questo attacco.
+Se la versione di TLS è la 1.0 si rischia di subire questo attacco però è bene ricordare che l'attacco è molto difficile da realizzare.
+L'intrusore deve riuscire ad entrare in una sessione già avviata tra client e server e alterare il normale flusso dei dati (attacco _Man In The Middle_). Secondo la classificazione degli attacchi, questo fa parte della categoria _attacco con testo in chiaro scelto_.
 
-![marco togni](./img/img23.png)
-
-All'inizio di una connessione TCP, il client e il server negoziano gli algoritmi di cifratura, la chiave della sessione e i parametri che vengono usati dai cifrari come il vettore di inizializzazione e anche la modalità di cifratura da usare.
-
-I dati a livello applicativo hanno una certa dimensione per cui vengono suddivisi in blocchi perché vanno a finire in un pacchetto SSL il cui payload è di dimensione inferiore. Ogni pacchetto poi viene concatenato a quello successivo.
-
-A livello applicativo, client e server condividono un vettore di inizializzazione che è casuale, imprevedibile e usato una sola volta. Quando il messaggio viene suddiviso e incapsulato in pacchetti SSL, la modalità CBC viene applicata sui pezzi di messaggio e ogni pacchetto ha bisogno di un vettore di inizializzazione diverso. Non si può rinegoziare questo vettore di inizializzazione ogni volta perché ha un costo. Come scelta, è stata adottata di usare come vettore di inizializzazione il residuo in termini di bit del cifrario del pacchetto precedente. Ad esempio, il primo pacchetto ha un cifrato, gli ultimi X byte vengono usati come vettore di inizializzazione per cifrare il pacchetto successivo. In questo modo, l'intrusore può prevedere qual è il vettore di inizializzazione che sarà usato nella cifratura di un pacchetto SSL. Cade il requisito di imprevedibilità dal secondo pacchetto in poi.
+All'inizio di una connessione TCP, il client e il server negoziano gli algoritmi di cifratura, la chiave della sessione e i parametri che vengono usati dai cifrari come il vettore di inizializzazione e anche la modalità di cifratura da usare. I dati a livello applicativo hanno una certa dimensione e vengono suddivisi in blocchi perché vanno a finire in pacchetti SSL il cui payload è di dimensione inferiore.
 
 ![marco togni](./img/img24.png)
 
 Se il vettore di inizializzazione non è imprevedibile si incorre a questo tipo di attacco.
 
-Secondo la classificazione degli attacchi, questo fa parte della categoria _attacco con testo in chiaro scelto_.
-
 Si suppone che ci siano due persone che stanno parlando tra di loro: Luca e Lucia.
 
-Luca inizia sempre la conversazione con "Mia amata Lucia".  Supponiamo che "Mia amata" finisca in un blocco e "Lucia" in un altro. Le operazioni sono le seguenti:
-- "Mia amata" XOR con il vettore di inizializzazione casuale, imprevedibile e usato una e una sola volta, producendo un cifrato;
-- "Lucia" XOR con il cifrato del passo precedente producendo un nuovo cifrato.
+Luca inizia sempre la conversazione con "Mia amata Lucia". Si suppone che "Mia amata" finisca in un blocco e "Lucia" in un altro. Le operazioni sono le seguenti:
+
+- "Mia amata" `XOR` con il vettore di inizializzazione casuale, imprevedibile e usato una e una sola volta, producendo un cifrato;
+- "Lucia" `XOR` con il cifrato del passo precedente producendo un nuovo cifrato.
+
+L'obiettivo dell'intrusore è cercare di capire se dando un input opportuno, si ha lo stesso output del blocco 2 così da poter confrontare e dedurre che "Lucia" è stato l'input del passaggio 2.
 
 ![marco togni](./img/img30.png)
 
-L'obiettivo dell'intrusore è cercare di capire se dando un input opportuno al passaggio 3 si ha lo stesso output del blocco 2 così da poter confrontare e dedurre che "Lucia" è stato l'input del blocco 2.
+Basta conoscere come si comporta l’`XOR`, cioè se si da due volte lo stesso input, è come se annullasse l’`XOR`.
 
-Basta conoscere come si comporta l’XOR, cioè se si fa l'XOR di uno stesso valore due volte, il secondo XOR annulla il primo:
+Si indica con:
 
-? XOR K1
+- `K1` il nuovo vettore di inizializzazione che ovviamente sarà diverso rispetto a quello del passaggio 2;
+- `K` è il residuo che è stato usato nel passaggio 2.
 
-Bisogna eliminare l'effetto K1 perché è quello che SSL userebbe e vedere se Lucia XOR K mi produce lo stesso cifrato.
-K è il residuo che Luca ha usato per cifrare Lucia al passo 1:
+Bisogna eliminare l'effetto `K1` perché è quello che SSL userebbe come input e vedere se si produce lo stesso cifrato. Avendo ipotizzato, per semplicità, che il vettore di inizializzazione è prevedibile, è possibile costruire un messaggio che abbia la forma:
 
-(Lucia XOR K1 XOR K) XOR K1
+`Lucia XOR K1 XOR K XOR K1`
 
-Lucia XOR K1 XOR K XOR K1
+`Lucia XOR K`
 
-Lucia XOR K
-
-#### Dimensione del blocco
+### Dimensione del blocco
 
 Non solo la dimensione della chiave è importante ma anche la dimensione del blocco perché definisce quanti sono i dati possono essere cifrati con la stessa chiave. La cifratura deve essere robusta fino a 2^n input diversi.
 Purtroppo molte modalità di cifratura diventano insicure dopo 2^n/2 cifrature a causa dell’aumento di probabilità di collisioni tra due blocchi di cifrato per il paradosso del compleanno.
@@ -1028,31 +1020,28 @@ Con 64 bit c'è questa problematica.
 
 La modalità CBC è usata ma nonostante ciò si va contro a questo attacco: se ci sono due testi uguali cifrati in modalità CBC vuol dire che se si mettono ogni bit in XOR dei due cifrati, si ottiene l'XOR dei due messaggi in chiaro. Si guardi paragrafo precedente sulla malleabilità.
 
-## Gestione della chiave
+### Gestione della chiave
 
 Quando si usano cifrari simmetrici, l'algoritmo deve essere robusto, la chiave deve essere generata, memorizzata e dimensionata in maniera opportuna e devono essere impiegate modalità di cifratura corrette. Se tutto questo è vero resta un problema: la chiave deve essere distribuita in modo sicuro.
 
 Ci sono due famiglie:
-- **Con precedente KA (key agremeent)**: modello che prevede un accordo fuori banda che almeno una volta con canale dedicato qualcosa sia stato distribuito tra mittente e destinatario;
+
+- **Con precedente KA (key agremeent)**: modello che prevede un accordo fuori banda con canale dedicato;
 - **Senza precedente KA**: modello che prevede che non ci sia scambiato niente in precedenza.
 
 ### Con precedente KA (key agremeent)
 
-#### Master key
-
-Questo schema prevede che fuori banda e in maniera **assolutamente** robusta sia stata precondivisa una _master key_. Il mittente dovrà inviare alla destinazione molti messaggi cifrati con cifrari simmetrici.
-
-Non è opportuno che A cifri molti dati con questa _master key_ perché questa chiave meno si cambia meglio è, dato che bisogna creare un canale fuori banda (costo elevato). La master key quindi deve avere una vita lunga. I dati che il mittente A invierà in maniera riservata a B saranno cifrati con _session key_ che cambiano ad ogni sessione. Ovviamente, non si deve aprire un canale di sessione dedicato ma sfruttando la cifratura simmetrica, la _master key_ viene usata solo per cifrare chiavi di sessione.
+Questo schema prevede che fuori banda e in maniera **assolutamente** robusta sia stata precondivisa una _master key_. Non è opportuno che `A` cifri molti dati con questa _master key_ perché questa chiave meno si cambia meglio è, dato che poi bisogna creare un canale fuori banda (costo elevato). La master key quindi deve avere una vita lunga e ogni tanta va rinnovata.
 
 ![marco togni](./img/img31.png)
 
-Lato mittente, si prende il messaggio m, lo si cifra con la _session key_ che viene generata un PRNG crittograficamente sicuro. La _session key_ verrà cifrata tramite la _master key_ e sul canale verrà inviato la _session key_ concatenata al messaggio cifrato.
-
-Il destinatario effettua i passaggi inversi.
+ All’avvio della sessione, il mittente genera una chiave di sessione `k` tramite PNRG crittograficamente sicuro. Questa chiave `k` viene cifrata con la _master key_. Poi, il mittente cifra anche il messaggio con la chiave `k` e il relativo cifrato viene mandato al destinatario concatenato al cifrato della chiave `k`. Il destinatario, conoscendo la master key, decifra la chiave `k`, che userà per decifrare a sua volta il messaggio `m`. La chiave di sessione viene usata solo una volta.
 
 Uno svantaggio di questo schema è che non è scalabile: quando il numero di utenti diventa alto il numero di scambi della _master key_ diventa improponibile.
 
-Per ridurre il numero di chiavi pre-concordate in circolazione è quello di introdurre nel sistema una terza entità chiamata _centro di distribuzione delle chiavi_ che ha il compito di distribuire a tutti gli utenti che gestisce.
+### Key Distribution Center
+
+Per ridurre il numero di chiavi pre-concordate in circolazione è quello di introdurre nel sistema una terza entità chiamata _centro di distribuzione delle chiavi_.
 
 ![marco togni](./img/img32.png)
 
@@ -1060,7 +1049,8 @@ Ogni utente condivide con il centro di distribuzione la master key. Sarà questa
 
 Ovviamente il centro di distribuzione dovrà essere sicuro, scalabile etc.
 
-## KDC 14-10-2021
+<!-- 14-10-2021 -->
+### KDC
 
 È un protocollo di distribuzione di chiave il cui modello è stato usato in altri servizi, che non fanno distribuzione di chiave, che servono per identificare (es. Kerberos).
 
@@ -1112,7 +1102,7 @@ da 2.32.22 in poi
 
 - **CBC**: da fare
 
-## 18/10/2021 
+### 18/10/2021 
 
 da 0 a 1.00.00 esercizio
 
@@ -1120,7 +1110,7 @@ da 0 a 1.00.00 esercizio
 
 L'attaccante può effettuare attacchi attivi. L'obiettivo è vedere se violando l'integrità si riesce a risalire al testo in chiaro cioè se si viola anche la proprietà di riservatezza.
 
-#### Esempio
+### Esempio
 
 Si suppone che si stia usando un protocollo TCP. La macchina sorgente ha cifrato dei dati, vengono inviati usando il protocollo IPsec e ricevuti dalla macchina gateway che è in ascolto sulla porta 80. L'intrusore è in ascolto sulla porta 25 sul gateway.
 
@@ -1155,7 +1145,7 @@ Questa implementazione non è corretta. Quello che si usa è encrypted CBC-MAC. 
 Si suppone di avere adottato una modalità di cifratura raw CBC-MAC. Uno schema a cascata introduce sempre un problema a cascata con estensione. Se il messaggio è lungo un blocco il raw CBC-MAC si può usare. Il problema è che i messaggi sono di lunghezza arbitraria (da più blocchi). L'intrusore può:
 - Scegliere un messaggio di 1 blocco arbitrario m
 - La sorgente legittima crea il tag t su m E(k, m)
-- Usare t come tag su un messaggio di due blocchi fatto così: (m, t XOR m)
+- Usare t come tag su un messaggio di due blocchi fatto così: (m, t EXOR m)
 
 E(m, t XOR m) -> E(k, E(k, m) XOR t XOR m) -> E(k, t XOR t XOR m) -> E(k, m) -> t
 
@@ -1227,7 +1217,7 @@ La firma digitale è un concetto ad alto livello che garantisce non ripudio. Le 
 - Non poter essere ripudiata dall'autore
 - Rendere inalterabile il messaggio in cui è stata apposta: quel contenuto deve essere conforme per quello che è stato firmato.
 
-# 21-10-2021
+### 21-10-2021
 
 00-54.00 rivedere questa parte!
 
@@ -1235,7 +1225,7 @@ La firma digitale è un concetto ad alto livello che garantisce non ripudio. Le 
 
 Ci sono A e B, T è la terza parte. Ci sono delle chiavi precondivise tra A e B e questa terza parte. A quando vuole inviare un documento firmato digitalmente, deposita il documento alla terza parte. T invierà ad A la ricevuta ad A. A invierà il contratto comn la ricevuta a B e B verifica con T la verifica del documento.
 
-## Registro Atti Privati
+### Registro Atti Privati
 
 Chiede solo le considerazioni e non il funzionamento. Ma che significa?
 
@@ -1246,13 +1236,13 @@ Con questo protocollo si risolvono i problemi del ripudio e della falsificazione
 - Fidarsi dalla terza parte
 - Amministrare le chiavi in modo robusto altrimenti viene compromesso il servizio
 
-# Meccanismi asimmetrici
+### Meccanismi asimmetrici
 
 Viene usata per costruire generatori di numeri pseudo-casuali, cifrari che garantiscono riservatezza, schemi di meccanismi di firma digitale che garantiscano il non-ripudio e qualunque protocollo di identificazione/autenticazione. In particolare, viene usata soprattutto con schemi di firma digitale. Non viene utilizzata per motivi di efficienza per costruire cifrari con PNRG crittocraficamente sicuri.
 
 Rispetto ai cifrari simmetrici, si inizia a vedere la distribuzione delle chiavi perché per poterli usare in modo efficace bisogna capire prima l'infrastruttura.
 
-## Come distribuire le chiavi pubbliche in modo sicuro
+### Come distribuire le chiavi pubbliche in modo sicuro
 
 Quandi si usa una chiave pubblica bisogna essere certi dell'identità del proprietario e quindi poterla verificare. Si immagini l'utlizzo della chiave per motivi di confidenzialità: se si deve cifrare i dati per Luca, si deve prendere la chiave pubblica di Luca, darla in pasto alla funzione di encryption E e poi Luca userà la chiave privata sulla funzione di decryption. Se si usa una chiave pubblica che appartiene ad un altra persona e non a Luca, vuol dire cifrare i dati probabilmente per un intrusore.
 
@@ -1415,7 +1405,7 @@ Un secondo criterio si basa se si ha una connessione oppure no:
 
 I modelli push non sono molto implementati perché sono piuttosto complessi. Bisogna vedere se un utente è mobile/stazionario etc. Quindi, si preferiscono i modelli push.
 
-# Lezione 27-10-2021
+### Lezione 27-10-2021
 
 ### CRL (Certificate Revocation List)
 
@@ -1474,16 +1464,16 @@ Per confrontare i diversi meccanismi a disposizione, bisogna adottare metodi di 
 - Espressività: motivo per cui il certificato è stato revocato.
 - On-line vs Off-line: se si viaggia in aereo molto, prima scarico e durante il volo verifico.
 
----
-![marco togni](./img/marco_togni.jpg)
+<!--- -->
+<!--[marco togni](./img/marco_togni.jpg)-->
 
 <!--![cyber sesso](https://user-images.githubusercontent.com/56556806/134823047-da26060a-3813-4e73-a13c-256bcd0483c4.png)-->
 
-# How I Defeated Fascism with the Power of Love
+<!--# How I Defeated Fascism with the Power of Love
 
 ## Chapter 1: The Power of Love
 
 The first step in my journey was realizing that it is impossible to defeat
 fascism with the power of love.
 
-## Chapter 2: The Power of Incredible Violence
+## Chapter 2: The Power of Incredible Violence-->
