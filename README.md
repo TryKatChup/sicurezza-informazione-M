@@ -231,6 +231,7 @@ Le trasformazioni possono essere combinate fra di loro. Ad esempio, per garantir
 Il protocollo che assicura riservatezza e integrità dei dati è costituito dai questi passi:
 
 - La sorgente esegue due trasformazioni:
+
   - **Passo 1**: viene applicata la funzione hash crittograficamente sicura e la si concatena con il messaggio;
   - **Passo 2**: viene applicata la funzione di encryption `E`. Dato che il messaggio `c` è cifrato, lo si può inviare direttamente sul canale insicuro.
 - La destinazione esegue due trasformazioni:
@@ -255,7 +256,7 @@ In questo caso, l'integrità è rispettata mentre la riservatezza no:
 
 L'**integrità** _è rispettata_ perché se si modificano i bit di:
 
-- **E(p)**: se si cambiano dei bit di E(p) casualmente, è difficile che corrisponda la stessa impronta per la proprietà alla _resistenza alle collisioni_;
+- **E(p)**: se si cambiano dei bit di `E(p)` casualmente, è difficile che corrisponda la stessa impronta per la proprietà alla _resistenza alle collisioni_;
 - **H(m)**: H(m) corrisponde a un altro messaggio per la resistenza alle collisioni;
 - **E(p) e H(m)**: la probabilità che il messaggio modificato corrisponda proprio a quell'impronta che è anch'essa modificata risulta essere molto bassa.
 
@@ -364,7 +365,7 @@ Lo schema _hash_ risulta essere più efficiente rispetto alla _firma digitale_, 
 
 Viceversa, la firma digitale è meno efficiente poiché ha la funzione di _sign_ `S` ma garantisce il _non ripudio_.
 
-### Esempio 1 (protocollo SSL)
+### Esempio 1
 
 In questo caso, si invia un messaggio che rispetta le proprietà di **riservatezza**, **autenticità** e **integrità**:
 
@@ -385,7 +386,7 @@ Da un punto di vista di efficienza, le trasformazioni in fase di ricezione sono 
 - Decodifica del messaggio cifrato;
 - Autenticazione tramite funzione hash crittograficamente sicura.
 
-### Esempio 2 (protocollo SSH)
+### Esempio 2
 
 In questo caso, si invia un messaggio che rispetta le proprietà di **riservatezza** e **autenticità**:
 
@@ -402,7 +403,7 @@ Da un punto di vista di efficienza, le trasformazioni in fase di ricezione sono 
 - Decodifica del messaggio cifrato;
 - Autenticazione tramite funzione hash crittograficamente sicura.
 
-### Esempio 3 (protocollo IPSec)
+### Esempio 3
 
 In questo caso, si invia un messaggio che rispetta le proprietà di **riservatezza** e **autenticità**:
 
@@ -880,7 +881,7 @@ Svantaggi:
 - **Determinismo**: a blocchi in chiaro identici corrispondono blocchi cifrati assolutamente identici. Sono informazioni in più che un intrusore può sfruttare a suo favore;
 - **Maleabilità**: un intrusore è in grado di modificare il testo cifrato in modo tale che la destinazione quando lo decifra ottiene un testo da lui scelto. Ad esempio, si consideri una transazione bancaria. Nel primo blocco si ha il mittente, nel secondo il destinatario e nel terzo la cifra da trasferire. L'intrusore, sostituisce al blocco del destinatario, il suo. Se il mittente è "Luca", il destinatario è "Lucia" e la somma da trasferire "100", l'attaccante basta che sostituisca "Lucia" con il suo nome.
 
-Questa modalità si usa solo in casi specifici: ad esempio, cifrare delle informazioni che sono già per natura aleatoria o un testo che risiede interamente in un solo blocco (possibile sostituzione di blocchi). Ad esempio, si usa per cifrare una chiave di sessione.
+Questa modalità si usa solo in casi specifici: ad esempio, cifrare delle informazioni che sono già per natura aleatoria (per evitare determinismo) o un testo che risiede interamente in un solo blocco (per evitare la possibile sostituzione di blocchi). Ad esempio, si usa per cifrare una chiave di sessione.
 
 ### Esempio
 
@@ -902,11 +903,11 @@ In fase di decifrazione, le operazioni sono inverse ed è sufficiente invertire 
 
 Per ottenere aleatorietà, questo vettore deve essere:
 
-- **Casuale**;
-- **Imprevedibile** (altrimenti viola confidenzialità);
+- **(pseudo)casuale**;
+- **Imprevedibile** anche se si genera un numero randomico ma si conosce il seed si può prevedere che numero verrà dopo. È importante questo punto altrimenti viola confidenzialità;
 - **Non ripetibile**: se si ripete il vettore e si hanno due messaggi uguali, si ottiene lo stesso cifrato.
 
-Il vettore non deve essere necessariamente segreto che non è un requisito fondamentale cifrare IV per garantire la riservatezza. L'intrusore non conosce la chiave k.
+Il vettore non deve essere necessariamente segreto che non è un requisito fondamentale cifrare IV per garantire la riservatezza. L'intrusore non conosce la chiave `k`.
 
 In generale la dimensione del cifrato è maggiore del testo in chiaro. Se il messaggio è di `N` bit il cifrato sarà `N` bit + IV + padding.
 
@@ -1052,11 +1053,11 @@ Occorrono dunque: Nc = Nu * (Nu-1)/2 canali _sicuri_; altrettante sono le chiavi
 
 ![marco togni](./img/img32.png)
 
-L'idea è quella che `A` chiede a `T` una chiave di sessione `k`, `T` la genera e la passa ad `A` e poi `A` la invia a `B`. Ogni utente deve precedentemente pre-condividere con `T` una chiave simmetrica unica (KAT, KBT).
+L'idea è quella che `A` chiede a `T` una chiave di sessione `k`, `T` la genera e la passa ad `A` e poi `A` la invia a `B`. Ogni utente deve precedentemente pre-condividere con `T` una chiave simmetrica unica (KAT, KBT). Tutto in maniera assolutamente sicura.
 
 ![marco togni](./img/img55.png)
 
-Il mittente `A` ha condiviso con il centro di distribuzione la _master key_ `KA` mentre `B` ha condiviso la _master key_ `KB`. Tutto in maniera assolutamente sicura.
+Il mittente `A` ha pre-condiviso con il centro di distribuzione la _master key_ `KA` mentre `B` ha condiviso la _master key_ `KB`.
 
 - `A` deve comunicare a `T` che ha bisogno di una chiave. Invia un messaggio specificando chi è il mittente, con chi vuole comunicare e un numero random imprevedibile e unico ad ogni sessione R_a che ha lo scopo di _sfida_ per vedere se `T` è davvero il centro di distribuzione;
 - `T` riceve il messaggio e risponde inviando a sua volta un messaggio. Questo messaggio non è altro che la concatenazione di Ra, il destinatario `B`, la chiave di sessione `k` e la chiave di sessione `k` concatenata con `A` cifrata con dalla master key di `B`. Per cifrare il messaggio si usa la chiave KA in modo tale che si dimostra che `T` sia a conoscenza della chiave;
@@ -1064,7 +1065,7 @@ Il mittente `A` ha condiviso con il centro di distribuzione la _master key_ `KA`
 
 ![marco togni](./img/img33.png)
 
-Un attaccante può:
+Da un punto di vista della robustezza, il protocollo con soli tre passaggi non è sicuro da un punto di vista concettuale. Un attaccante può:
 
 - **Modificare a caso un bit del messaggio sul canale**: si invalida solo la sessione perché il messaggio è aleatorio;
 - **Effettuare un attacco con replica**: replica significa inoltrare lo stesso messaggio:
@@ -1074,12 +1075,12 @@ Un attaccante può:
     - `B` invia un messaggio per indicare che la chiave `k` è stata ricevuta davvero. Solo `B` è in grado di decifrare e risalire a `k` e per questo motivo si è sicuri che sia stato B a generarlo. Dentro questo messaggio c'è un numero random Rb;
     - `A` decifra il messaggio appena ricevuto, e spedisce il messaggio cifrato con all'interno Rb - 1 in modo che `B` sia sicuro che sia `A` il mittente.
 
-Soluzioni:
+Possibili soluzioni:
 
 - `B` quando riceve il messaggio 3, preleva `k` e verifica se il messaggio è stato già inviato o no da parte di `A` (MA questo schema non lo prevede);
 - Per evitare che l'intrusore conosca qualcosa sulla chiave o la chiave stessa, si limita la validità temporale.
 
-I problemi del protocollo sono i seguenti:
+In generale, i problemi del protocollo sono i seguenti:
 
 - Collo di bottiglia (n° max di utenti);
 - Overhed di comunicazione perché è installata una terza entità;
@@ -1092,18 +1093,16 @@ I problemi del protocollo sono i seguenti:
 
 Molti sono i progetti che lo hanno assunto come riferimento: il prototipo KryptoKnight, il servizio di autenticazione Kerberos realizzato dal MIT, lo standard DCE per ambienti distribuiti e Active Directory di Windows 2000.
 
-### Esercizio
+### Implementazione Key Distribution Center (KDC)
 
-Quali attacchi sono possibili usando le varie modalità di cifratura?
-
-A livello implementativo sorgono delle vulnerabilità:
+A livello implementativo possono esserci delle vulnerabilità che a livello concettuale non ci sono:
 
 - **ECB**: si sfrutta il determinismo e la malleabilità di questa modalità:
 
   - L'intrusore si mette in ascolto sul canale perché vuole avviare la comunicazione dei passi 3, 4 e 5 come se fosse la sorgente `A` leggittima;
   - Da una sessione precedente di `A`, l'intrusore intercetta il messaggio del passo 3 di `A`. Da questo messaggio si conserva Ekb(A). Il messaggio Ekb(A || k) può essere riscritto come Ekb(A) || Ekb(k);
   - `A` deve riaprire una nuova sessione con B altrimenti questo attacco non avrebbe senso;
-  - A questo punto, l'intrusore avvia una sua comunicazione con `T` in modo da ottenere una sua chiave k1. Si conserva Ekb(k1);
+  - A questo punto, l'intrusore avvia una sua comunicazione con `T` in modo da ottenere una sua chiave `k1`. Si conserva Ekb(k1);
   - L'intrusore nella sua comunicazione aperta, al passo 3 e al posto di inviare il messaggio Ekb(C || k1) -> Ekb(C) || Ekb(k) lo sostituisce. Ha il blocco Ekb(A) perché lo ha conservato da una sessione passata e lo concatena con Ekb(k1);
   - al passo 4, `B` risponde al messaggio pensando che sia `A`. Le sessioni aperte sono due: A - B e C (ma in realtà diventa A) - B;
   - al passo 5, dato che l'intrusore conosce k1 riesce a decifrare il messaggio.
@@ -1114,13 +1113,25 @@ A livello implementativo sorgono delle vulnerabilità:
 - **OFB**: da fare a casa
 - **CTR**: da fare a casa
 
+<!-- 18/10/2021 -->
+da 20.00 a 1.00.00 esercizio
+
 ### Key Distribution Center (KDC) - Alternativo
 
-da 2.35.00 in poi
+Il mittente `A` ha pre-condiviso con il centro di distribuzione la _master key_ `KA` mentre `B` ha condiviso la _master key_ `KB`.
 
-<!-- 18/10/2021 --> 
+![marco togni](./img/img56.png)
 
-da 0 a 1.00.00 esercizio
+- A contatta B inviando un messaggio contenente chi è il mittente e la master key di A costruita sul numero randomico, imprevedibile e unico RA; - B contatta T inviando il messaggio che ha ricevuto da parte di A, chi è il mittente e la prova EKB(RB);
+- T genera la chiave k e la restituisce a B il messaggio EKB(K, A, RB) || EKA(K, B, RA);
+- B invia ad A, la seconda parte del messaggio: EKA(K, B, RA)
+
+Da un punto di vista della robustezza, il protocollo con soli tre passaggi non è sicuro da un punto di vista concettuale. Un attaccante può:
+
+
+
+
+### Key Distribution Center (KDC) vs Key Distribution Center (KDC) - Alternativo
 
 ### Integrità e confidenzialità
 
