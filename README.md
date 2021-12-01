@@ -1028,7 +1028,7 @@ Quando si usano cifrari simmetrici, l'algoritmo deve essere robusto, la chiave d
 Ci sono due famiglie:
 
 - **Con precedente KA (key agremeent)**: modello che prevede un accordo fuori banda con canale dedicato;
-- **Senza precedente KA**: modello che prevede che non ci sia scambiato niente in precedenza.
+- **Senza precedente KA (key agremeent)**: modello che prevede che non ci sia scambiato niente in precedenza.
 
 ### Con precedente KA (key agremeent)
 
@@ -1114,30 +1114,49 @@ A livello implementativo possono esserci delle vulnerabilità che a livello conc
 - **CTR**: da fare a casa
 
 <!-- 18/10/2021 -->
-da 20.00 a 1.00.00 esercizio
-
 ### Key Distribution Center (KDC) - Alternativo
 
 Il mittente `A` ha pre-condiviso con il centro di distribuzione la _master key_ `KA` mentre `B` ha condiviso la _master key_ `KB`.
 
 ![marco togni](./img/img56.png)
 
-- A contatta B inviando un messaggio contenente chi è il mittente e la master key di A costruita sul numero randomico, imprevedibile e unico RA; - B contatta T inviando il messaggio che ha ricevuto da parte di A, chi è il mittente e la prova EKB(RB);
-- T genera la chiave k e la restituisce a B il messaggio EKB(K, A, RB) || EKA(K, B, RA);
-- B invia ad A, la seconda parte del messaggio: EKA(K, B, RA)
+- `A` contatta `B` invia un messaggio contenente chi è il mittente || la master key di `A` costruita sul numero randomico imprevedibile e unico RA;
+- `B` contatta `T` inviando il messaggio che ha ricevuto da parte di `A` || chi è il mittente || la prova EKB(RB);
+- `T` genera la chiave `k` e la restituisce a `B` il messaggio EKB(K, A, RB) || EKA(K, B, RA);
+- `B` invia ad `A`, la seconda parte del messaggio: EKA(K, B, RA)
 
-Da un punto di vista della robustezza, il protocollo con soli tre passaggi non è sicuro da un punto di vista concettuale. Un attaccante può:
+Da un punto di vista della robustezza, il protocollo è sicuro da un punto di vista concettuale: un intrusore anche se intercettasse il messaggio 1, il protocollo si riavvierebbe dato che al passo 2 si genera sempre una nuova chiave K.
 
+Presupponendo poi, per assurdo, che l’intrusore riuscisse davvero a conoscere k, non può impersonare A o B, perché rispetto a prima non ci sono mai comunicazioni cifrate con K ma solo con KA e KB. Ovviamente, se nelle comunicazioni future si riusa k, l'intrusore potrebbe usarla per decifrare i messaggi.
 
+### Implementazione Key Distribution Center (KDC) - Alternativo
 
+Per casa.
 
 ### Key Distribution Center (KDC) vs Key Distribution Center (KDC) - Alternativo
+
+- Da un punto di vista di overhead: nel secondo protocollo, B potrebbe costituire un collo di bottiglia se contattato da più mittenti perchè la comunicazione avviene direttamente con B.
+- Carico computazionale: l'entità A rispetto al protocollo 1 è sovracarricata in meno.
 
 ### Integrità e confidenzialità
 
 L'attaccante può effettuare attacchi attivi. L'obiettivo è vedere se violando l'integrità si riesce a risalire al testo in chiaro cioè se si viola anche la proprietà di riservatezza.
 
-### Diffie-Hellman key agreement
+### Senza precedente KA (key agremeent)
+
+Un modello che non prevede distribuzione a priopri di chiavi prende il nome di Diffie-Hellman. L’accordo sulla chiave di sessione deve, quindi, poter essere preso in assenza di ogni altro precedente accordo e l’unico modo per prenderlo è di farlo tramite il canale insicuro.
+
+Lo scambio detto DH (dai loro cognomi) si basa sul teorema dei logaritmi discreti. Si definisce:
+
+- `p` un numero primo grande cioè è un numero formato da almeno 360 cifre decimali;
+- `g` che è un altro numero, è detto generatore di `p` se le potenze modulo `p` generano tutti interi compresi tra 1 e p-1. Se `g` è il generatore allora g mod p, g^2 mod p, ..., g^p mod p sono tutti numeri distinti e compresi da valori compresi tra 1 e p-1.
+
+Il teorema enuncia che per un qualsiasi intero b e un generatore g di p, si può trovare un esponente univoco i tale che b=g^i(mod p) dove 0 <= i <= (p-1) e i è chiamato _logaritmo discreto_ di b per la base g, modulo p.
+
+L’obiettivo dello scambio DH è far sì che due utenti qualsiasi A e B, senza aver preso alcun precedente
+accordo segreto, riescano a condividere un dato segreto K dopo aver calcolato ed essersi scambiati senza nessuna segretezza due dati YA e YB. A tal fine è necessario che ciascuno dei due utenti scelga a caso un numero X compreso fra 1 e (p-1), tenendoli segreti.
+
+Il numero primo p e g sono noti (magari accordati inizialmente tra le due parti).
 
 ### Esempio
 
