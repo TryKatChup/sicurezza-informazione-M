@@ -124,8 +124,6 @@ L'_algoritmo_ è una sequenza di istruzioni, e rappresenta una singola trasforma
 
 Nei casi complessi, è necessario che si eseguano più trasformazioni e la sequenza da eseguire deve essere ben precisa. In questo caso, si parla di _protocollo_.
 
-In alcuni casi è necessario l'intervento di una terza entità che operi da _arbitro_/_giudice_.
-
 ### Come rendere sicuri i dati
 
 La sicurezza dei dati può essere garantita tramite l'impiego di una codifica ridondante dei dati, che consiste nell'aggiunta di bit in più rispetto alla lunghezza del messaggio originario. In tal casi si ha ridondanza in termini di:
@@ -721,7 +719,7 @@ Questo schema è soggetto ad un attacco che si chiama _attacco con estensione_.
 
 Dalla sorgente `A` si invia un messaggio `c` concatenato al suo attestato di autenticità che è costruito con la funzione hash `H(s || m)` dove `s` è il segreto condiviso tra mittente e destinatario. Se la funzione hash è implementata secondo lo _schema di Merkle-Damgard_, allora è presente una vulnerabilità. `H(s || m)` non è altro che l'impronta di uscita dell'ultimo blocco del messaggio `m`. Mettendola come input di un nuovo blocco `f` insieme al messaggio dell'intrusore `m'` suddiviso in blocchi, si riesce a calcolare il nuovo attestato di auntenticità.
 
-Per evitare il problema serve aggiungere all'ultimo blocco delle informazioni aggiuntive, ad esempio, qual è la lunghezza del messaggio. Tuttavia, non è sempre robusto perchè chi riceve il messaggio, deve elaborare queste informazioni aggiuntive.
+Per evitare il problema serve aggiungere all'ultimo blocco delle informazioni aggiuntive, ad esempio, qual è la lunghezza del messaggio. Tuttavia, non è sempre robusto perchè chi riceve il messaggio, deve ricordarsi di elaborare queste informazioni aggiuntive.
 
 Oppure, si potrebbe pensare di invertire la posizione di `s` e di `m` all’interno dell’autenticatore, che eviterebbe l’estensione dell’algoritmo. Si capisce la differenza fra schema concettuale, che potrebbero risultare equivalenti, ed implementazioni. Ma questo trucchetto è utile solo se la funzione hash non è resistente alla collisione debole. Infatti, supponiamo che un intrusore possa trovare un messaggio `m'` in collisione con `m`. Con questa ipotesi si avrebbe `H(m || s) = H(m' || s)`. Dunque, all’intrusore sarebbe sufficiente inviare sul canale il messaggio `m'` concatenato con `H(m || s)` che, per la collisione, autenticherebbe `m'`.
 
@@ -956,7 +954,7 @@ Come in CFB, anche in questo caso IV serve per inizializzare il registro. Il pro
 
 In decifrazione, non si usa la funzione inversa ma si continua ad usare la funzione di encryption `E` (stesso circuito hardware).
 
-Il vettore non deve essere necessariamente segreto. Sicuramente aumenta la robustezza ma non è un requisito necessario. Inoltre, il vettore non deve essere necessariamente imprevedibile ma unico perché si ha un problema di confidenzialità se la chiave è usata più volte.
+Il vettore non deve essere necessariamente segreto e non deve essere necessariamente imprevedibile ma deve essere usato una e una sola volta perchè se questo schema ricorda un cifrario a flusso sincrono, si ha un problema di confidenzialità (proprietà dell'OXR).
 
 L'OFB si preferisce usarlo quando i canali sono rumorosi (ad esempio i satelliti) perché la modifica di un blocco cifrato non si propaga sul blocco successivo.
 
@@ -976,18 +974,16 @@ Si utilizza la sola funzione di cifratura Ek sia per cifrare che per decifrare.
 
 Questo schema viene usato, ad esempio, su reti ATM.
 
-### Beast Attack (Browser Exploit Against SSL/TLS)
+### Esempio
 
-In questo esempio la modalità CBC non è usata correttamente.
+In questo esempio la modalità CBC non è usata correttamente: si viola la confidenzialità se il vettore IV non è imprevedibile.
 
-Se la versione di TLS è la 1.0 si rischia di subire questo attacco però è bene ricordare che l'attacco è molto difficile da realizzare.
+Se la versione di TLS è la 1.0 si rischia di subire l'attacco _Beast Attack_ (Browser Exploit Against SSL/TLS) però è bene ricordare che l'attacco è molto difficile da realizzare.
 L'intrusore deve riuscire ad entrare in una sessione già avviata tra client e server e alterare il normale flusso dei dati (attacco _Man In The Middle_). Secondo la classificazione degli attacchi, questo fa parte della categoria _attacco con testo in chiaro scelto_.
 
 All'inizio di una connessione TCP, il client e il server negoziano gli algoritmi di cifratura, la chiave della sessione e i parametri che vengono usati dai cifrari come il vettore di inizializzazione e anche la modalità di cifratura da usare. I dati a livello applicativo hanno una certa dimensione e vengono suddivisi in blocchi perché vanno a finire in pacchetti SSL il cui payload è di dimensione inferiore.
 
 ![marco togni](./img/img24.png)
-
-Se il vettore di inizializzazione non è imprevedibile si incorre a questo tipo di attacco.
 
 Si suppone che ci siano due persone che stanno parlando tra di loro: Luca e Lucia.
 
@@ -1028,7 +1024,7 @@ Quando si usano cifrari simmetrici, l'algoritmo deve essere robusto, la chiave d
 Ci sono due famiglie:
 
 - **Con precedente KA (key agremeent)**: modello che prevede un accordo fuori banda con canale dedicato;
-- **Senza precedente KA**: modello che prevede che non ci sia scambiato niente in precedenza.
+- **Senza precedente KA (key agremeent)**: modello che prevede che non ci sia scambiato niente in precedenza.
 
 ### Con precedente KA (key agremeent)
 
@@ -1114,73 +1110,128 @@ A livello implementativo possono esserci delle vulnerabilità che a livello conc
 - **CTR**: da fare a casa
 
 <!-- 18/10/2021 -->
-da 20.00 a 1.00.00 esercizio
-
 ### Key Distribution Center (KDC) - Alternativo
 
 Il mittente `A` ha pre-condiviso con il centro di distribuzione la _master key_ `KA` mentre `B` ha condiviso la _master key_ `KB`.
 
 ![marco togni](./img/img56.png)
 
-- A contatta B inviando un messaggio contenente chi è il mittente e la master key di A costruita sul numero randomico, imprevedibile e unico RA; - B contatta T inviando il messaggio che ha ricevuto da parte di A, chi è il mittente e la prova EKB(RB);
-- T genera la chiave k e la restituisce a B il messaggio EKB(K, A, RB) || EKA(K, B, RA);
-- B invia ad A, la seconda parte del messaggio: EKA(K, B, RA)
+- `A` contatta `B` invia un messaggio contenente chi è il mittente || la master key di `A` costruita sul numero randomico imprevedibile e unico RA;
+- `B` contatta `T` inviando il messaggio che ha ricevuto da parte di `A` || chi è il mittente || la prova EKB(RB);
+- `T` genera la chiave `k` e la restituisce a `B` il messaggio EKB(K, A, RB) || EKA(K, B, RA);
+- `B` invia ad `A`, la seconda parte del messaggio: EKA(K, B, RA)
 
-Da un punto di vista della robustezza, il protocollo con soli tre passaggi non è sicuro da un punto di vista concettuale. Un attaccante può:
+Da un punto di vista della robustezza, il protocollo è sicuro da un punto di vista concettuale: un intrusore anche se intercettasse il messaggio 1, il protocollo si riavvierebbe dato che al passo 2 si genera sempre una nuova chiave K.
 
+Presupponendo poi, per assurdo, che l’intrusore riuscisse davvero a conoscere k, non può impersonare A o B, perché rispetto a prima non ci sono mai comunicazioni cifrate con K ma solo con KA e KB. Ovviamente, se nelle comunicazioni future si riusa k, l'intrusore potrebbe usarla per decifrare i messaggi.
 
+### Implementazione Key Distribution Center (KDC) - Alternativo
 
+Per casa.
 
 ### Key Distribution Center (KDC) vs Key Distribution Center (KDC) - Alternativo
 
+- Da un punto di vista di overhead: nel secondo protocollo, B potrebbe costituire un collo di bottiglia se contattato da più mittenti perchè la comunicazione avviene direttamente con B.
+- Carico computazionale: l'entità A rispetto al protocollo 1 è sovracarricata in meno.
+
+### Senza precedente KA (key agremeent)
+
+Un modello che non prevede distribuzione a priopri di chiavi prende il nome di Diffie-Hellman. L’accordo sulla chiave di sessione deve, quindi, poter essere preso in assenza di ogni altro precedente accordo e l’unico modo per prenderlo è di farlo tramite il canale insicuro.
+
+Prima bisogna introdurre il teorema dei logaritmi discreti. Si definisce:
+
+- `p` un numero primo grande cioè è un numero formato da almeno 360 cifre decimali;
+- `g` che è un altro numero, è detto generatore di `p` se le potenze modulo `p` generano tutti interi compresi tra 1 e p-1. Se `g` è il generatore allora g mod p, g^2 mod p, ..., g^p mod p sono tutti numeri distinti e compresi da valori compresi tra 1 e p-1.
+
+Il teorema enuncia che per un qualsiasi intero b e un generatore g di p, si può trovare un esponente univoco i tale che b=g^i(mod p) dove 0 <= i <= (p-1) e i è chiamato _logaritmo discreto_ di b per la base g, modulo p.
+
+L'algoritmo DH (dai loro cognomi) prevede i seguenti passi:
+
+- Due utenti scelgono a caso un numero X compreso fra 1 e (p-1), tenendoli segreti. Il numero primo p e g sono noti (magari accordati inizialmente tra le due parti);
+- Ogni utente calcola il valore di una funzione unidirezionale F, tale che Y = F(X), da inviare al corrispondente su canale insicuro: in questo modo, l’intrusore che riesce ad intercettare Y non dispone di algoritmi efficienti per calcolare X = F-1(Y):\
+YA = g^XA mod p e YB = g^XB mod p
+- Mandandosi a vicenda Ya e Yb (parametri pubblici perchè sono inviati sul canale), entrambe le parti non avranno modo di risalire, rispettivamente, a Xb e Xa, perché il problema è computazionalmente difficile;
+- Una volta avvenuto lo scambio, il metodo prevede che
+A e B dispongano di una particolare funzione G che garantisca ad entrambi di ottenere lo stesso risultato K a partire dai dati in loro possesso: G(Xa, Yb) = G(Xb, Ya) = K. Il calcolo è il seguente:\
+KA = Yb^XA mod p = (g^XB)^XA mod p
+KB = Ya^XB mod p = (g^XA)^XB mod p
+
+Di seguito l'immagine mostra un piccolo esempio dove è possibile capire meglio i passi dell'algoritmo:
+
+![marco togni](./img/img57.png)
+
+Il protocollo DH prende il nome anche di DH anonimo perchè non garantisce che durante lo scambio YA/YB provenga davvero da A/B. Ovviamente, non si può usare questo protocollo quando non si ha l'assoluta certezza che le entità siano fidate.
+
+![marco togni](./img/img58.png)
+
+Una variante del protocollo prende il nome di DH/ElGamal e prevede che A, l’iniziatore del protocollo, abbia già a disposizione YB ottenuto in precedenza ed in modo sicuro da B. Tuttavia, si perde il grande vantaggio del protocollo DH, ovvero la possibilità di comunicare senza accordi fuori banda.
+
 ### Integrità e confidenzialità
 
-L'attaccante può effettuare attacchi attivi. L'obiettivo è vedere se violando l'integrità si riesce a risalire al testo in chiaro cioè se si viola anche la proprietà di riservatezza.
+L'obiettivo è vedere se violando l'integrità si riesce a risalire al testo in chiaro cioè se si viola anche la proprietà di riservatezza. Questo attacco prende il nome di _attacco di tampering_.
 
-### Diffie-Hellman key agreement
-
-### Esempio
-
-Si suppone che si stia usando un protocollo TCP. La macchina sorgente ha cifrato dei dati, vengono inviati usando il protocollo IPsec e ricevuti dalla macchina gateway che è in ascolto sulla porta 80. L'intrusore è in ascolto sulla porta 25 sul gateway.
+La macchina sorgente ha cifrato dei dati, e li invia sulla porta 80. La comunicazione non avviene direttamente con il destinatario ma in mezzo c'è un gateway che a seconda della porta di destinazione smista i dati. L'intrusore è in ascolto sulla porta 25 del gateway. Il suo obiettivo è quello di non smistare i dati sulla porta 80 ma sulla porta 25.
 
 ![marco togni](./img/img36.png)
 
-L'obiettivo è quello di non smistare i dati sulla porta 80 ma sulla porta 25. Quando i dati vengono decifrati, il vettore di inizializzazione viene messo in XOR con il primo blocco di messaggi cifrati. L'intrusore basta che modifichi il vettore di inizializzazione originario in un vettore che mandato in XOR con il blocco di cifrato restituisca 25 al posto di 80. Il vettore di inizializzazione viene cambiato in IV' XOR 80 XOR 25.
+Tra il gateway e l'end user è stata concordata una modalità di cifratura. Ipotiziamo CBC. Quando i dati vengono decifrati, il vettore di inizializzazione viene messo in XOR con il primo blocco di messaggi cifrati. L'intrusore basta che modifichi il vettore di inizializzazione originario in un vettore che mandato in XOR con il blocco di cifrato restituisca 25 al posto di 80:
 
-Se si vuole richiedere solo integrità si usa MAC (Message Autenthication Code).
-Se il messaggio richiede integrità ma non confidenzialità bisogna usare un cifrario simmetrico nella modalità _authenticated encryption_.
+m[0] = D(k, c[0]) XOR IV = 80
 
-### Autenticazione di m con E(m)?
+Quindi il nuovo vettore di inizializzazione deve essere: IV' = IV XOR 80 XOR 25:
 
-Un cifrario simmetrico, si può usare la cifratura come meccanismo di autenticazione dell'origine di un messaggio?
+D(k, c[0]) XOR IV XOR 80 XOR 25 = 25
 
-Decifrando un messaggio con una chiave, si può confidare dal vero mittente con cui si condivide questa chiave? Questo è vero solo in scenari favorevoli:
-- Il testo deve essere dotato di significato: basta che una modifica di pochi bit alteri completamente il significato del messaggio (non sempre così)
-- Un intrusore non può effettuare attacchi attivi: quindi non modificando il testo, solo chi ha mandato il testo è davvero lui la sorgente leggittima
+In conclusione:
 
-Si riprende lo schema come garantire integrità e autenticità: - HMAC (funzioni hash crittograficamente sicure). Sottopone a due compressioni per ridurre l'attacco con estensione, il messaggio concatenato con il segreto
-- MAC (Message Autenthication Code)
+- Se si vuole garantire solo integrità si usa MAC (Message Autenthication Code);
+- Se si vuole garantire integrità e confidenzialità bisogna usare un cifrario simmetrico nella modalità _authenticated encryption_.
 
-Un primo modo per costruire raw CBC-MAC che sfrutti un cifrario simmetrico in modalità CBC:
+### Autenticazione di m con E(m)
+
+Si potrebbe pensare di usare un cifrario simmetrico anche come meccanismo per autenticare l’origine di un documento. La giustificazione è intuitiva: se si riesce ad ottenere un testo decifrando con una certa chiave un messaggio cifrato, allora si può confidare che tale testo sia stato inviato dal corrispondente con cui si condivide il segreto su quella
+chiave. Questo è vero **solo** in pochi scenari favorevoli: un intrusore non può effettuare attacchi attivi. Se non si modifica il testo solo chi ha mandato il messaggio è davvero la sorgente leggittima perchè un testo  cifrato non più integro può generare un testo in chiaro ancora significativo, se pur diverso dall’originario.
+
+Quindi la sola cifratura del messaggio non basta a garantire l’autenticità e bisogna trovare nuovi meccanismi.
+
+### Integrità e autenticità
+
+Si usa un’hash che utilizza una chiave condivisa e lo si concatena al messaggio originale. Il destinatario è così certo dell’integrità e dell’origine del messaggio (ma non viene garantito il non ripudio e la falsificazione, dato che c’è una chiave condivisa). Si riprenda il paragrafo _hash concatenato a un messaggio_.
+
+Le due soluzioni più usate sono:
+
+- **HMAC**: sottopone a due compressioni e serve per ridurre l'attacco con estensione;
+- **MAC** (Message Autenthication Code).
+
+### Message Authentication Code (MAC)
+
+Un primo modo per costruire un MAC che sfrutti un cifrario simmetrico è usare lo schema raw CBC-MAC.
 
 ![marco togni](./img/img37.png)
 
-Si prende il messaggio originario, lo si suddivide in blocchi. Ogni blocco viene dato in XOR al cifrato precedente dove al primo passo, il blocco viene messo in XOR con un vettore di inizializzazione (0). Ai fini della confidenzialità non importa avere un vettore imprevedibile, assolutamente casuale e usato una sola volta. L'uscita dell'ultimo blocco non è altro che l'attestato di autenticità e integrità. Questa modalità diventa deterministica appunto perché il vettore è 0.
+Si prende il messaggio originario e lo si suddivide in blocchi. Ogni blocco viene dato in XOR al cifrato precedente dove al primo passo, il blocco viene messo in XOR con un vettore di inizializzazione (0). Ai fini della confidenzialità non importa avere un vettore imprevedibile, assolutamente casuale e usato una sola volta. **Solo** l'uscita dell'ultimo blocco è l'attestato di autenticità e integrità. Questa modalità diventa deterministica appunto perché il vettore è 0.
 
 ![marco togni](./img/img38.png)
 
-Questa implementazione non è corretta. Quello che si usa è encrypted CBC-MAC. Questa modalità prende l'ultimo blocco cifrato che viene sottoposto ad un'ulteriore operazione di cifratura però con una chiave diversa.
+Un secondo modo per costruire un MAC (ed è la modalità che si usa) prende il nome di encrypted CBC-MAC. Questa modalità prende l'ultimo blocco cifrato che viene sottoposto ad un'ulteriore operazione di cifratura ma con una chiave diversa.
 
-Si suppone di avere adottato una modalità di cifratura raw CBC-MAC. Uno schema a cascata introduce sempre un problema a cascata con estensione. Se il messaggio è lungo un blocco il raw CBC-MAC si può usare. Il problema è che i messaggi sono di lunghezza arbitraria (da più blocchi). L'intrusore può:
-- Scegliere un messaggio di 1 blocco arbitrario m
-- La sorgente legittima crea il tag t su m E(k, m)
-- Usare t come tag su un messaggio di due blocchi fatto così: (m, t EXOR m)
+### Esempio
 
-E(m, t XOR m) -> E(k, E(k, m) XOR t XOR m) -> E(k, t XOR t XOR m) -> E(k, m) -> t
+L'implementazione raw CBC-MAC è vulnerabile ad attacchi.
+Si suppone di avere adottato questa modalità di cifratura. Uno schema a cascata introduce sempre un attacco con estensione. L'intrusore può:
 
-L'intrusore è in grado di proporre un attestato di autenticità valido su due blocchi. Se non c'è un controllo sulla lunghezza del messaggio, l'intrusore è in grado di fare un attacco con estensione.
+- Scegliere un messaggio m costituito solo da 1 blocco;
+- La sorgente legittima crea il blocco t su m cioè esegue E(k, m);
+- Usare t su un messaggio di due blocchi fatto così: (m, t XOR m)
 
-Per rendere il MAC  robusto è necessario inserire un padding. Le possibili soluzioni sono:
+E(k, (m, t XOR m)) -> E(k, E(k, m) XOR t XOR m) -> E(k, t XOR t XOR m) -> E(k, m) -> t
+
+L'intrusore è in grado di proporre un attestato di autenticità valido su due blocchi. Se non c'è un controllo sulla lunghezza del messaggio, l'intrusore è in grado di fare un attacco con estensione. Se il messaggio è lungo un blocco, questa modalità la si può usare.
+
+1.50.45
+
+Per rendere questo schema robusto è necessario inserire un padding. Le possibili soluzioni sono:
+
 - Fare un padding con tutti zeri: il problema è:
 m | 0000 se si calcola m su E su questo messaggio si ottiene un tag t
 m 00 | 00 se si calcola m su E su questo messaggio si ottiene un tag t1
@@ -1188,7 +1239,7 @@ t = t1. Se il trasferimento sono 100 dollari è come fare 10000
 - Standard ISO: mettere 1 che indica l'inizio del padding con tanti zeri. Bisogna ricordarsi di mettere anche altri pad "100...00".
 CMAC: le API devono essere già corrette senza che il programmatore si ricordi di inserire il padding nel modo corretto.
 
-### authenticated encryption
+### Authenticated encryption
 
 Garantisce confidenzialità contro un avversario che effettua un attacco attivo capace di decifrare alcuni testi cifrati (previene attacchi con testi cifrati scelti)
 
