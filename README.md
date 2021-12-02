@@ -1168,7 +1168,7 @@ Una variante del protocollo prende il nome di DH/ElGamal e prevede che A, l’in
 
 ### Integrità e confidenzialità
 
-L'obiettivo è vedere se violando l'integrità si riesce a risalire al testo in chiaro cioè se si viola anche la proprietà di riservatezza. Questo attacco prende il nome di _attacco di tampering_.
+Se non si garantisce la proprietà d'integrità a un cifrario simmetrico la confidenzialità viene minata. Si consideri l'attacco di _attacco di tampering_ che verrà mostrato di seguito.
 
 La macchina sorgente ha cifrato dei dati, e li invia sulla porta 80. La comunicazione non avviene direttamente con il destinatario ma in mezzo c'è un gateway che a seconda della porta di destinazione smista i dati. L'intrusore è in ascolto sulla porta 25 del gateway. Il suo obiettivo è quello di non smistare i dati sulla porta 80 ma sulla porta 25.
 
@@ -1176,32 +1176,35 @@ La macchina sorgente ha cifrato dei dati, e li invia sulla porta 80. La comunica
 
 Tra il gateway e l'end user è stata concordata una modalità di cifratura. Ipotiziamo CBC. Quando i dati vengono decifrati, il vettore di inizializzazione viene messo in XOR con il primo blocco di messaggi cifrati. L'intrusore basta che modifichi il vettore di inizializzazione originario in un vettore che mandato in XOR con il blocco di cifrato restituisca 25 al posto di 80:
 
-m[0] = D(k, c[0]) XOR IV = 80
+`m[0] = D(k, c[0]) XOR IV = 80`
 
 Quindi il nuovo vettore di inizializzazione deve essere: IV' = IV XOR 80 XOR 25:
 
-D(k, c[0]) XOR IV XOR 80 XOR 25 = 25
+`D(k, c[0]) XOR IV XOR 80 XOR 25 = 25`
 
 In conclusione:
 
 - Se si vuole garantire solo integrità si usa MAC (Message Autenthication Code);
-- Se si vuole garantire integrità e confidenzialità bisogna usare un cifrario simmetrico nella modalità _authenticated encryption_.
+- Se si vuole garantire integrità e confidenzialità si usa _authenticated encryption_.
 
-### Autenticazione di m con E(m)
+### Autenticazione con cifrario simmetrico
 
+Il cifrario simmetrico non garantisce autenticazione (solo in sotto scenari).
 Si potrebbe pensare di usare un cifrario simmetrico anche come meccanismo per autenticare l’origine di un documento. La giustificazione è intuitiva: se si riesce ad ottenere un testo decifrando con una certa chiave un messaggio cifrato, allora si può confidare che tale testo sia stato inviato dal corrispondente con cui si condivide il segreto su quella
 chiave. Questo è vero **solo** in pochi scenari favorevoli: un intrusore non può effettuare attacchi attivi. Se non si modifica il testo solo chi ha mandato il messaggio è davvero la sorgente leggittima perchè un testo  cifrato non più integro può generare un testo in chiaro ancora significativo, se pur diverso dall’originario.
 
 Quindi la sola cifratura del messaggio non basta a garantire l’autenticità e bisogna trovare nuovi meccanismi.
 
-### Integrità e autenticità
+### Meccanismi per l’autenticazione
 
-Si usa un’hash che utilizza una chiave condivisa e lo si concatena al messaggio originale. Il destinatario è così certo dell’integrità e dell’origine del messaggio (ma non viene garantito il non ripudio e la falsificazione, dato che c’è una chiave condivisa). Si riprenda il paragrafo _hash concatenato a un messaggio_.
+Si usa un’hash che utilizza una chiave condivisa e lo si concatena al messaggio originale. Il destinatario è così certo dell’integrità e dell’origine del messaggio ma non viene garantito il non ripudio (A non può ripudiare il suo messaggio, dicendo che l’ha fatto B) e la falsificazione (B non può alterare il messaggio e affermare che l’abbia fatto A), dato che c’è una chiave condivisa. Si riprenda il paragrafo _hash concatenato a un messaggio_ (Integrità e autenticità).
 
 Le due soluzioni più usate sono:
 
 - **HMAC**: sottopone a due compressioni e serve per ridurre l'attacco con estensione;
-- **MAC** (Message Autenthication Code).
+- **MAC** (Message Autenthication Code): si parla nel paragrafo successivo.
+
+Entrambe garantiscono integrità e autenticità.
 
 ### Message Authentication Code (MAC)
 
@@ -1218,90 +1221,139 @@ Un secondo modo per costruire un MAC (ed è la modalità che si usa) prende il n
 ### Esempio
 
 L'implementazione raw CBC-MAC è vulnerabile ad attacchi.
-Si suppone di avere adottato questa modalità di cifratura. Uno schema a cascata introduce sempre un attacco con estensione. L'intrusore può:
+Si suppone di avere adottato questa modalità di cifratura. Uno schema a cascata introduce sempre un attacco con estensione.
 
-- Scegliere un messaggio m costituito solo da 1 blocco;
-- La sorgente legittima crea il blocco t su m cioè esegue E(k, m);
-- Usare t su un messaggio di due blocchi fatto così: (m, t XOR m)
+L'intrusore deve conoscere coppie messaggio-tag. Il tag non è altro che l'uscita dalla trasformata Ek.
+Si ipotizzi che conosca due coppie di messaggi `(m, t)`, `(m', t1)` e vuole concatenarli:
 
-E(k, (m, t XOR m)) -> E(k, E(k, m) XOR t XOR m) -> E(k, t XOR t XOR m) -> E(k, m) -> t
+`m'': m || m'`
 
-L'intrusore è in grado di proporre un attestato di autenticità valido su due blocchi. Se non c'è un controllo sulla lunghezza del messaggio, l'intrusore è in grado di fare un attacco con estensione. Se il messaggio è lungo un blocco, questa modalità la si può usare.
+Usando lo schema a cascata del CBC-MAC si ottiene:
 
-1.50.45
+`E(k, (m, t XOR m'))`
+
+`E(k, E(k, m) XOR t XOR m')`
+
+`E(k, t XOR t XOR m')`
+
+`E(k, m')`
+
+`t'`
+
+Il tag di `m''` sarà lo stesso di `m'` cioè è come se si inviasse solo il tag del messaggio `m'` ma in realtà il messaggio originale è stato esteso. L'intrusore, quindi, è in grado di proporre un attestato di autenticità valido. Se non c'è un controllo sulla lunghezza del messaggio, l'intrusore è in grado di fare un attacco con estensione. Se il messaggio è lungo un blocco, questa modalità la si può usare.
+
+### Message Authentication Code (MAC) + padding
 
 Per rendere questo schema robusto è necessario inserire un padding. Le possibili soluzioni sono:
 
-- Fare un padding con tutti zeri: il problema è:
-m | 0000 se si calcola m su E su questo messaggio si ottiene un tag t
-m 00 | 00 se si calcola m su E su questo messaggio si ottiene un tag t1
-t = t1. Se il trasferimento sono 100 dollari è come fare 10000
-- Standard ISO: mettere 1 che indica l'inizio del padding con tanti zeri. Bisogna ricordarsi di mettere anche altri pad "100...00".
-CMAC: le API devono essere già corrette senza che il programmatore si ricordi di inserire il padding nel modo corretto.
+- **Fare un padding con tutti zeri**: questa soluzione tuttavia risulta essere una pessima idea se il messaggio risulta essere un numero. Si consideri il seguente messaggio:\
+`m || 0000`\
+Se si calcola il MAC su questo messaggio si ottiene un tag t. Si consideri quest'altro messaggio:\
+`m 00 | 00`\
+Se si calcola il MAC si ottiene un tag t1. Però t risulta essere uguale a t1. Se il messaggio indica una somma di denaro, 100 euro sono la stessa cosa di 10000;
+- **Standard ISO**: si inserisce un "1" che indica l'inizio del padding. Si distinguono due casi:
+  - Il blocco finale ha una dimensione inferiore per cui viene riempito con il padding;
+  ![marco togni](./img/img59.png)
+  - Il blocco finale non ha bisogno di bit di padding ma è necessario comunque aggiungere il dummy block cioè un blocco che inizia con 1 che è della stessa dimensione degli altri ("100...00"). Se non si aggiungesse si ritornerebbe al caso del padding con tutti zeri.
+  ![marco togni](./img/img60.png)
 
-### Authenticated encryption
+### CMAC
 
-Garantisce confidenzialità contro un avversario che effettua un attacco attivo capace di decifrare alcuni testi cifrati (previene attacchi con testi cifrati scelti)
+È una variante di CBC-MAC. Le API devono essere già corrette senza che il programmatore si ricordi di inserire il padding nel modo corretto.
+
+### Authenticated encryption (AE)
+
+Authenticated encryption è un concetto introdotto solo nel 2000. Prima Il programmatore aveva il compito di combinare le API ma non tutte le combinazioni forniscono AE. Ad esempio, il programmatore doveva combinare CBC con HMAC.
 
 Problemi:
-- Non previene attacchi di replay: si possono riproporre messaggi come se provenissero dalla stessa sorgente
-- Non contrasta attacchi side channels (timing): <!--impedisce di modificare il cifrato in maniera di risalire al testo in chiaro: def del secondo punto?-->
 
-Authenticated Encryption (AE) è un concetto introdotto nel 2000. Prima Il programmatore aveva il compito di combinare le API......e non tutte le combinazioni forniscono AE...
+- **Non previene attacchi di replay**: si possono riproporre messaggi come se provenissero dalla stessa sorgente;
+- **Non contrasta attacchi side channels (timing)**: attacco che osserva i tempi di risposta.
+
+Oltre a fornire integrità e autenticità, questa modalità garantisce confidenzialità contro un avversario che effettua un attacco attivo capace di decifrare alcuni testi cifrati (previene attacchi con testi cifrati scelti). Si veda l'esempio descritto qualche paragrafo fa con il gateway.
+
+Esistono due modalità a seconda se viene creato il tag prima o dopo la cifratura:
+
+- La modalità MAC-then-Encrypt non è sempre robusta nelle implementazioni anche se a livello concettuale va bene. Ad esempio, nella modalità CBC. Si veda esempio del paragrafo successivo;
+- La modalità Encrypt-then-MAC funziona sempre bene anche nelle implementazioni. Il MAC è verificato subito e il cifrato è scartato se invalido.
 
 ![marco togni](./img/img39.png)
 
-Per tutte le implementazioni per motivi di efficienza, viene usato l'HMAC e non l'encrypted CBC-MAC
+Si riprendono i protocolli già introdotti in precedenza:
 
-- SSL: autenticatore sul messaggio, si cifra tutto (messaggio + autenticatore);
-- IPsec: si cifra + si costruisce il MAC sul cifrato
-- SSH: si cifra + si costruisce l'autenticatore sul messaggio in chiaro
+- **SSL**: si costruisce il MAC sul messaggio e poi si cifra tutto;
+- **IPsec**: si cifra il messaggio e si costruisce il MAC sul cifrato;
+- **SSH**: si cifra  il messaggio e si costruisce il MAC sul messaggio in chiaro.
 
-L'opzione 3 viene scartata: qualche bit del testo in chiaro per come funziona le funzione hash crittograficamente sicura, potrebbe anche rimanere anche nell'attestato di autenticità, ma visto che qui bisogna proteggere sia autenticità che integrità è importante che non riveli neanche nessuna informazione sul messaggio in chiaro ( non si può perdere la proprietà di riservatezza).
+L'opzione 3 viene scartata: qualche bit del testo in chiaro per come funziona le funzione hash crittograficamente sicura, potrebbe anche rimanere anche nell'attestato di autenticità, ma visto che qui bisogna proteggere autenticità, integrità e riservatezza è importante che non riveli neanche nessuna informazione sul messaggio in chiaro.
 
-La soluzione ottimale è SSL perché se il messaggio non è integro ed autentico non lo si va a decifrare. Nel secondo caso, si deve lo stesso decifrare per poi calcolare integrità ed autenticità.
-
-Esistono degli standard per ottenere authenticated encryption. A seconda della modalità di cifratura che si sta usando si possono avere degli attacchi. La modalità MAC-then-Encrypt (SSL) non è sempre robusta nelle implementazioni anche se a livello concettuale va bene (es. modalità CBC). Gli standard a prescindere dalla modalità di cifratura usata funzionano sempre bene e utizzano la modalità Encrypt-then-MAC.
+La soluzione più efficiente è SSL perché se il messaggio non è integro ed autentico non lo si va a decifrare. Nel secondo caso, invece, si deve lo stesso decifrare e poi calcolare integrità ed autenticità.
 
 ### Esempio
 
-È possibile trovare questo problema nelle vecchie versioni di TLS. Supponiamo che mittente e destinatario abbiano negoziato la modalità CBC per negoziare i dati. Nel protocollo, viene eseguito MAC-then-Encrypt cioè viene preso m, viene calcolato HMAC su m, m || HMAC viene sottoposto a CBC.
+È possibile trovare questo problema nelle vecchie versioni di TLS. Si suppone che mittente e destinatario abbiano negoziato la modalità CBC per cifrare i dati. Nel protocollo, quindi, viene eseguito MAC-then-Encrypt cioè viene preso m, viene calcolato il MAC su m, m || MAC viene sottoposto a CBC con padding.
 
-TLS ha un pacchetto formato da type, version, lenght, data, MAC, padding e tutto è cifrato. Nel padding, viene scritto i byte che sono stati riempiti. Esempio, 3 byte, il padding sarà 3 3 3.
+![marco togni](./img/img61.png)
 
-Se c'era stato in decifrazione un errore legato al padding veniva restituito "padding error". Se invece veniva scartato il pacchetto TLS perché non era integro/autentico veniva restituito "MAC error". L'intrusore osservando questi messaggi sa cosa è successo.
+Il pacchetto TLS è formato dai campi riportati nella figura. Nel campo padding, viene scritto i byte che sono stati riempiti. Esempio, 3 byte, il padding sarà 3 3 3.
 
-Un attaccante può fare il seguente attacco (padding oracle):
-- L'attaccante invia un testo cifrato scelto e può sapere se gli ultimi byte relativi a un padding validi o no.
+Se c'era stato in fase di decifrazione un errore legato al padding veniva restituito _padding error_. Se invece veniva scartato il pacchetto TLS perché non era integro/autentico veniva restituito _MAC error_. L'intrusore osservando questi messaggi sa cosa è successo.
 
-Tuttavia, in SSL, anche se sono stati rimossi questi errori è possibile effettuare un attacco di timing attack: si osservano i tempi di decifrazione. Se la risposta arriva subito vuol dire che l'errore è relativo al padding altrimenti è un errore di decifrazione.
+Tuttavia, in SSL, anche se sono stati rimossi questi errori è possibile effettuare un _timing attack_: si osservano i tempi di decifrazione. Se la risposta arriva subito vuol dire che l'errore è relativo al padding altrimenti è un errore di decifrazione.
 
 ![marco togni](./img/img40.png)
 
-Bisogna adottare la modalità MAC-then-encrypt. Il testo sorgente è cifrato è costituito da tre blocchi: c0, c1 e c2. L'attaccante intercetta il cifrato e vuole decifrare solo m1.
+Un attaccante può eseguire l'attacco _padding oracle_ (attacco con testo cifrato scelto):
 
-Toglie c2 e fa in modo che la destinazione decifri un testo cifrato scelto. Suppone che l'ultimo byte di m1 è 1 (quindi il padding). L'intrusore modifica l'ultimo byte di c0 e lo modifica (ad hoc perché non conosce il cifrato) 
+- Si inserisce nella sessione e intercetta `c`;
+- Il testo sorgente è cifrato ed è costituito da tre blocchi: c0, c1 e c2. L'attaccante vuole ottenere m1;
+- Toglie c2 e modifica un byte in c0 per poi inviarlo al destinatario.
 
-da 2.16.36
+![marco togni](./img/img62.png)
 
-### Integrità & Origine & Non ripudio
+Nota: chi riceve effettua le operazioni inverse. Prima controlla il padding e poi il MAC. Quindi, chi riceve il messaggio, vede il blocco c1 che al suo interno ha del padding.
 
-Il cifrario simmetrico non garantisce autenticazione (solo in sotto scenari). Confidenzialità: se l'intrusore fa attacchi passivi va bene altrimenti non viene garantita la proprietà. In questo caso bisogna usare authenticated encryption.
+L'intrusore suppone che l'ultimo byte di m1 sia 1. Se fosse 1 vuol dire che il padding sarebbe 1. Per vedere se questa ipotesi è corretta, l'intrusore, quindi, modifica l'ultimo byte di c0:
 
-Se si dispone solo di un cifrario simmetrico, si può garantire non ripudio? Si, ma è complesso
+c0 XOR g XOR 0x01 dove g è l'ipotesi dell'intrusore.
 
-La firma digitale è un concetto ad alto livello che garantisce non ripudio. Le proprietà di un servizio di firma digitale su un dato sono:
-- Consente a chiunque di identificare univocamente il firmatario perché per dire ch è stata una determinata persona a firmare
-- Non poter essere imitata da un impostare: un intrusore non deve imitare la firma
-- Non poter essere trasportata da un messaggio ad un altro: se la sorgente usa dei bit che rappresentano una firma, questi non possono essere presi e spostati su un altro messaggio.
-- Non poter essere ripudiata dall'autore
-- Rendere inalterabile il messaggio in cui è stata apposta: quel contenuto deve essere conforme per quello che è stato firmato.
+D(c1, k) = m1 XOR c0
 
-### 21-10-2021
+Sostituendo con le ipotesi fatte (l'ultimo byte di m1 = 0x01 = g) si ottiene:
+
+g XOR c0 XOR g XOR 0x01
+
+c0 XOR 0x01
+
+Per far collidere c0 serve aggiungere uno XOR quindi:
+
+D(c1, k) XOR c0 = m1 XOR c0 XOR c0 = ... = 0x01
+
+Se questa ipotesi non è corretta, si ripete lo stesso procedimento facendo assumere tutti i valori a g ( g=0...255).
+
+Se si vuole risalire agli ultimi due byte, si ripete lo stesso procedimento e così via fino a risalire a tutto il blocco m1. Sfruttando le vulnerabilità di SSL si riesce a risalire a tutto il blocco.
+
+### Esempio 2
+
+E se si usasse CTR mode anzichè CBC è possibile eseguire l’attacco? (MAC-then-CTR al posto di MAC-then-CBC).
+
+No, perchè il CTR non usa il padding quindi si elimina il problema. Questo dipende da quale modalità di cifratura si usa. Una buona libreria crittografica fornire API corrette senza sapere tutte queste problematiche. Per questo motivo, si consiglia di usare sempre gli standard (GCM, CCM, EAX) per evitare possibili vulnerabilità.
+
+### Integrità, Autenticità e Non ripudio
+
+Se il segreto è condiviso non si può garantire anche il non ripudio. Per questo motivo, se si usano solo meccanismi simmetrici è necessario l'introduzione di una terza entità ma ciò ha un costo molto alto per cui non viene mai usata modalità.
+
+Il servizio di firma digitale è un concetto ad alto livello che garantisce non ripudio. Le proprietà di un servizio di firma digitale su un dato sono:
+
+- **Consente a chiunque di identificare univocamente il firmatario**: la firma corrisponde solo a una persona;
+- **Non poter essere imitata da un impostare**: un intrusore non deve imitare la firma;
+- **Non poter essere trasportata da un messaggio ad un altro**: se la sorgente usa dei bit che rappresentano una firma, questi non possono essere presi e spostati su un altro messaggio;
+- **Non poter essere ripudiata dall'autore**: l'autore non deve disconoscere la sua firma;
+- **Rendere inalterabile il messaggio in cui è stata apposta**: il messaggio per il quale è stato firmato non deve essere modificato.
+
+<!-- 21-10-2021 -->
 
 00-54.00 rivedere questa parte!
-
-È necessario inserire una terza entità (come un notaio). Come costruire il servizio di firma digitale con un cifrario simmetrico:
 
 Ci sono A e B, T è la terza parte. Ci sono delle chiavi precondivise tra A e B e questa terza parte. A quando vuole inviare un documento firmato digitalmente, deposita il documento alla terza parte. T invierà ad A la ricevuta ad A. A invierà il contratto comn la ricevuta a B e B verifica con T la verifica del documento.
 
@@ -1316,7 +1368,7 @@ Con questo protocollo si risolvono i problemi del ripudio e della falsificazione
 - Fidarsi dalla terza parte
 - Amministrare le chiavi in modo robusto altrimenti viene compromesso il servizio
 
-### Meccanismi asimmetrici
+## 04. Meccanismi asimmetrici
 
 Viene usata per costruire generatori di numeri pseudo-casuali, cifrari che garantiscono riservatezza, schemi di meccanismi di firma digitale che garantiscano il non-ripudio e qualunque protocollo di identificazione/autenticazione. In particolare, viene usata soprattutto con schemi di firma digitale. Non viene utilizzata per motivi di efficienza per costruire cifrari con PNRG crittocraficamente sicuri.
 
