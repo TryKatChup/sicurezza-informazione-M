@@ -363,7 +363,7 @@ Lo schema _hash_ risulta essere più efficiente rispetto alla _firma digitale_, 
 
 Viceversa, la firma digitale è meno efficiente poiché ha la funzione di _sign_ `S` ma garantisce il _non ripudio_.
 
-### Esempio 1
+### Esempio 1: SSL
 
 In questo caso, si invia un messaggio che rispetta le proprietà di **riservatezza**, **autenticità** e **integrità**:
 
@@ -384,7 +384,7 @@ Da un punto di vista di efficienza, le trasformazioni in fase di ricezione sono 
 - Decodifica del messaggio cifrato;
 - Autenticazione tramite funzione hash crittograficamente sicura.
 
-### Esempio 2
+### Esempio 2: SSH
 
 In questo caso, si invia un messaggio che rispetta le proprietà di **riservatezza** e **autenticità**:
 
@@ -401,7 +401,7 @@ Da un punto di vista di efficienza, le trasformazioni in fase di ricezione sono 
 - Decodifica del messaggio cifrato;
 - Autenticazione tramite funzione hash crittograficamente sicura.
 
-### Esempio 3
+### Esempio 3: IPsec
 
 In questo caso, si invia un messaggio che rispetta le proprietà di **riservatezza** e **autenticità**:
 
@@ -1352,64 +1352,110 @@ Il servizio di firma digitale è un concetto ad alto livello che garantisce non 
 
 <!-- 21-10-2021 -->
 
-00-54.00 rivedere questa parte!
+### Integrità, Autenticità e Non ripudio
 
-Ci sono A e B, T è la terza parte. Ci sono delle chiavi precondivise tra A e B e questa terza parte. A quando vuole inviare un documento firmato digitalmente, deposita il documento alla terza parte. T invierà ad A la ricevuta ad A. A invierà il contratto comn la ricevuta a B e B verifica con T la verifica del documento.
+Se il segreto è condiviso non si può garantire anche il non ripudio. Per questo motivo, se si usano solo meccanismi simmetrici è necessario l'introduzione di una terza entità ma ciò ha un costo molto alto per cui non viene mai usata modalità.
 
-### Registro Atti Privati
+### Firma digitale con cifrario simmetrico
 
-Chiede solo le considerazioni e non il funzionamento. Ma che significa?
+Il servizio applicativo di firma digitale è un concetto ad alto livello che garantisce non ripudio. Le proprietà di un servizio di firma digitale su un dato sono:
 
-Con questo protocollo si risolvono i problemi del ripudio e della falsificazione ma si introducono altre problematiche:
+- **Consente a chiunque di identificare univocamente il firmatario**: la firma corrisponde solo a una persona;
+- **Non poter essere imitata da un impostare**: un intrusore non deve imitare la firma;
+- **Non poter essere trasportata da un messaggio ad un altro**: se la sorgente usa dei bit che rappresentano una firma, questi non possono essere presi e spostati su un altro messaggio;
+- **Non poter essere ripudiata dall'autore**: l'autore non deve disconoscere la sua firma;
+- **Rendere inalterabile il messaggio in cui è stata apposta**: il messaggio per il quale è stato firmato non deve essere modificato.
 
-- Autorità sempre online
-- Collo di bottiglia
-- Fidarsi dalla terza parte
-- Amministrare le chiavi in modo robusto altrimenti viene compromesso il servizio
+<!-- 21-10-2021 -->
+
+![marco togni](./img/img63.png)
+
+Ci sono `A`, `B` e `T` è la terza parte. Ci sono delle chiavi precondivise tra `A`, `B` e questa terza parte. In generale, le fasi che devono avvenire sono le seguenti:
+
+- `A` quando vuole inviare un documento firmato digitalmente, deposita il documento alla terza parte;
+- `T` invierà ad `A` la ricevuta;
+- `A` invierà il contratto con la ricevuta a `B`;
+- `B` verifica con `T` il documento cioè se è `T` che ha costruito la ricevuta.
+
+### Registro Atti Privati (RAP)
+
+È uno schema di firma digitale non ripudiabile con cifrari simmetrici. Si chiama Registro Atti Privati perchè modella un "notaio".
+
+![marco togni](./img/img64.png)
+
+Il protocollo prevede le seguenti fasi:
+
+- `A` manda il documento `M` (concatenato col suo identificatore `A`) cifrato con `KA` e lo invia a RAP con alcune informazioni in chiaro come la sua identità. RAP, vedendo l'identità del messaggio, usa `KA` per decifrare il messaggio, la decifratura serve per:
+  - Confidenzialità del documento;
+  - Identificare A: se il documento è stato cifrato con questa chiave KA allora è stato inviato da A però **non** si dimentichi di tutte le ipotesi dei paragrafi precedenti;
+- RAP genera tramite un RNG una chiave di sessione `R`, `T` è la data/ora di ricezione e manda:
+  - **Ricevuta** con cifratura con chiave R di A||T||M, ovvero ER(A||T||M);
+  - **Cifratura** con chiave KA di A||T||M, ovvero EKA(A||T||M) (una sorta di sfida per A);
+- A invia a B il documento M ed una copia della ricevuta, fermo restando il fatto che né lui, né il destinatario, potranno decifrarla, poiché la chiave R la conosce solo RAP.
+- B si limita a chiedere a RAP di decifrare la ricevuta, e verificare che essa sia effettivamente relativa al messaggio M che A ha mandato a B.
+- RAP, dopo la verifica, invia a B EKB(A||T||M). L’uso di KB garantisce a B che la dichiarazione di KB autenticità proviene da RAP.
+
+La firma viene resa non ripudiabile e non falsificabile perchè:
+
+- Solo RAP conosce R, dunque solo lui può produrre la ricevuta.
+- Non può essere ripudiata la firma: su un DB sicuro ci sono tutti i messaggi associati agli autori, alla data di ricezione, alla chiave R e alla ricevuta ER(A||T||M).
+
+Tuttavia, si introducono nuove problematiche:
+
+- Autorità sempre online;
+- Collo di bottiglia;
+- Fidarsi dalla terza parte;
+- Gestire le chiavi in modo sicuro altrimenti viene compromesso il servizio.
 
 ## 04. Meccanismi asimmetrici
 
-Viene usata per costruire generatori di numeri pseudo-casuali, cifrari che garantiscono riservatezza, schemi di meccanismi di firma digitale che garantiscano il non-ripudio e qualunque protocollo di identificazione/autenticazione. In particolare, viene usata soprattutto con schemi di firma digitale. Non viene utilizzata per motivi di efficienza per costruire cifrari con PNRG crittocraficamente sicuri.
+Viene usata per costruire generatori di numeri pseudo-casuali, cifrari, schemi di firma digitale e qualunque protocollo di identificazione/autenticazione. In particolare, viene usata soprattutto con schemi di firma digitale. Viene utilizzata poco per motivi di efficienza per costruire cifrari con PNRG crittocraficamente sicuri.
 
-Rispetto ai cifrari simmetrici, si inizia a vedere la distribuzione delle chiavi perché per poterli usare in modo efficace bisogna capire prima l'infrastruttura.
+### Autenticità della chiave pubblica
 
-### Come distribuire le chiavi pubbliche in modo sicuro
+Chi usa una chiave pubblica ad un’estremità del canale non ha alcuna garanzia che la chiave sia proprio dell’utente di nome Luca e non di un impostore che vuole spacciarsi per Luca. In queste condizioni il pericolo è grosso: si potrebbe, infatti, o inviare ad un intrusore informazioni riservate destinate solo a Luca, o accettare come originate da Luca informazioni false predisposte dall’intrusore.
 
-Quandi si usa una chiave pubblica bisogna essere certi dell'identità del proprietario e quindi poterla verificare. Si immagini l'utlizzo della chiave per motivi di confidenzialità: se si deve cifrare i dati per Luca, si deve prendere la chiave pubblica di Luca, darla in pasto alla funzione di encryption E e poi Luca userà la chiave privata sulla funzione di decryption. Se si usa una chiave pubblica che appartiene ad un altra persona e non a Luca, vuol dire cifrare i dati probabilmente per un intrusore.
+### Esempio: attacco dell’uomo in mezzo
 
-Lo stesso vale per l'operazione di verifica: se Luca vuole firmare un documento, lo darà in pasto alla trasformazione V. Se la sequenza di bit che arriva al destinatario non appartiene a Luca, vuol dire che è un intrusore ad averla cambiata.
+La sicurezza d’uso di una chiave pubblica è minacciata da un particolare tipo di attacco  detto _attacco dell’uomo in mezzo_.
 
-### Autorità di certificazione
+![marco togni](./img/img65.png)
 
-L'obiettivo è costruire un'infrastruttura che consenta di memorizzare le chiavi pubbliche e chiunque le prelevi è certo che la chiave pubblica appartenga a chi dice di essere. Si usa, quindi, una terza parte detta _autorità di certificazione_.
+Si suppone che due utenti A e B abbiano inserito in un database DB le loro chiavi pubbliche PA e PB. L’intrusore fa apparire la sua chiave pubblica PI al posto di quelle di A e di B intercettando l'interrogazione sul DB. A questo punto riesce a decifrare, cifrare e inviare messaggi senza alcun problema.
 
-L'_autorità di certificazione_ ha il ruolo di dire se una sequenza di bit appartiene a Luca, la firma e chiunque può verificare l'attestato di autenticità per affermare che la chiave pubblica è autentica.
+### Autorità di certificazione (CA)
+
+L'obiettivo è costruire un'infrastruttura che consenta di memorizzare le chiavi pubbliche e chiunque le prelevi è certo che la chiave pubblica appartenga all'utente con cui vuole comunicare. Si usa, quindi, una terza parte detta _autorità di certificazione_.
+
+Quando un utente richiede una chiave pubblica, la CA crea un documento digitale firmato (certificato) con la sua chiave privata e lo invia. In questo caso l'attacco dell'uomo in mezzo non è più possibile in quanto non è in grado di riprodurre la firma della CA. Ad esempio, Luca saprà che Lucia è veramente Lucia perché verificando la firma del certificato, con la chiave pubblica di CA, si accorge che è valida, perché è producibile solo da CA. Infatti, Lucia allegherà il suo certificato (precedentemente firmato con la chiave privata della CA), ad ogni sua comunicazione.
 
 ### Certificato a chiave pubblica
 
-Un certificato è una struttura dati le cui informazioni minime che deve per forza contenere sono:
+Il certificato è una struttura dati, generata dal certificatore autorizzato che certifica l’appartenenza di una chiave pubblica ad un determinato utente.
 
-- nome del proprietario della chiave pubblica
-- chiave pubblica
-- firma su queste due informazioni
+Le cui informazioni indispensabili che un certificato deve per forza contenere sono:
 
-Come ogni struttura dati, per essere usati su larga scala, deve essere interoperabili e quindi esistere uno standard di rappresentazione in modo che tutti gli applicativi possano interpretare. Questo standard si chiama X.509.
+- Nome del proprietario della chiave pubblica;
+- Chiave pubblica;
+- Firma su queste due informazioni.
+
+Per essere usato su larga scala, il certificato deve essere interoperabile e quindi deve esistere uno standard di rappresentazione in modo che tutti gli applicativi possano interpretare. Questo standard si chiama X.509.
+
+### Certificato ISO X.509
 
 ![marco togni](./img/img46.png)
 
 Le informazioni sono le seguenti:
-- Versione dello standard: al momento le versioni dello standard sono 3 (1, 2 e 3);
-- Numero seriale del certificato: ogni certificato ha un numero univoco che lo identifica all'interno della terza parte. Non è pensabile che ci sia una terza parte globale ma tante terze parti che si fanno garante del proprio dominio;
-- Algoritmo: quale algoritmo della trasformata V è stato usato dalla terza parte per costruire l'attestato di autenticità;
-- Iusser Name: quale nome è della terza parte ed è interpretabile dall'essere umano. Ad esempio, Posteitaliane in quanto organizzazione potrebbe avere più nomi. Posteitaliane per la pubblica amministeazione e Posteitaliane per i privati;
-- Period of validity: dice quanto è valido il certificato da usare. La terza parte non assume a vita per un tempo illimitato che a Luca corrisponde una stringa di bit. Si assume legalmente la responsabilità. Se qualcosa va storto pagherà i danni economici conseguenti all'uso scorretto del certificato. Ad esempio, per un anno quell'associazione è corretta. Se durante questo anno va storto nelle clausole contrattuali sarà responsabile la terza parte;
-- Subject Name: possessore del certificato
-- Subject's public key info: stringa bit che corrisponde alla chiave pubblica
-- Estensione: Campi aggiuntivo. rende flessibile ai fini applicativi il certificato. Se distribuisco in una repository pubblica un certificato, può servire il certificato qual è il ruolo di Luca o il suo indirizzo di lavoro, email istituizione? A volte si usa questo campo per aggiungere info a livello applicativo.
 
-La firma viene fatta su tutte le informazioni della struttura dati perché deve essere garantita l'autenticità, tranne il campo estensione perché queste informazioni sono da verificare e non è detto che siano corrette.
-
-Tutte le volte che si aggiungono campi bisogna chiedersi se sono necessarie perché si aggiunge un overhead di rete, di memorizzazione. 
+- **Versione dello standard**: al momento le versioni dello standard sono 3 (1, 2 e 3);
+- **Numero seriale del certificato**: ogni certificato ha un numero univoco che lo identifica all'interno della terza parte. Non è pensabile che ci sia una terza parte globale ma tante terze parti che si fanno garante del proprio dominio;
+- **Algoritmo**: quale algoritmo è stato usato dalla terza parte per costruire l'attestato di autenticità;
+- **Nome dell'ente di certificazione**: quale è il nome della terza parte. Ad esempio, Posteitaliane in quanto organizzazione potrebbe avere più nomi. Posteitaliane per la pubblica amministeazione e Posteitaliane per i privati;
+- **Periodo di validità**: dice quanto è valido il certificato da usare. La terza parte non assume a vita che a Luca corrisponde una certa chiave pubblica. Si assume legalmente la responsabilità. Se qualcosa va storto pagherà i danni economici conseguenti all'uso scorretto del certificato. Ad esempio, per un anno quell'associazione è corretta. Se durante questo anno va storto nelle clausole contrattuali sarà responsabile la terza parte;
+- **Nome del soggetto**: proprietario della chiave pubblica;
+- **Informazioni sulla chiave**: stringa bit che corrisponde alla chiave pubblica
+- **Estensione**: si possono aggiungere informazioni in più come ad esempio  qual è il ruolo di Luca, il suo indirizzo di lavoro, email istituizione. A volte si usa questo campo per aggiungere info a livello applicativo.
+- **Firma del certificato (signature)**: firma su tutte le informazioni della struttura dati perché deve essere garantita l'autenticità, tranne il campo estensione perché queste informazioni sono da verificare e non è detto che siano corrette.
 
 ### PKI (Public Key Infrastructure)
 
@@ -1418,16 +1464,6 @@ con PKI si intende un'infrastruttura costituita da un insieme di componenti che 
 - **CA**: autorità di certificazione;
 - **RA**: autorità di registrazione;
 - **Directory**: repository in cui si trovano tutti i certificati.
-
-<!--Gli utenti possono usufruire di molteplici servizi: possibilità di ottenere un certificato a chiave pubblica, di rinnovarlo quando scade, revocare un certificato quando sono cambiate informazioni, compromesso etc.
-
-Fase di inizializzazione:
-Un utente all'inizio deve farsi identificare, una volta identificato ottenere dall'autorità di certificazione un certificato. Una volta ottenuto dovrà essere pubblicato su un sistema di Directory
-
-Fase a regime:
-Gli utenti interagiscono con un sistema di Directory per ottenere i certificati degli altri utenti che si sono già registrati.
-
-L'autorità di certificazione gestisce le operazioni di amministrazione del certificato, deve poter revocare il certificato e deve pubblicare un'informazione relativa la revoca di quel certificato.-->
 
 ### Directory
 
