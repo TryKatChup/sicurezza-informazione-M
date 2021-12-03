@@ -498,7 +498,7 @@ Un intrusore può sempre disporre di un _algoritmo di ricerca esauriente_, noto 
 
 ![intrusore](./img/img10.png)
 
-Se l'intrusore non conosce la chiave, può esplorare tutto lo spazio delle chiavi. Se `n` è il numero di bit della chiave e $ 2^{n} $ è il numero totale di configurazioni, effettua diversi tentativi fino a quando non indovina la chiave. 
+Se l'intrusore non conosce la chiave, può esplorare tutto lo spazio delle chiavi. Se `n` è il numero di bit della chiave e ![formula](https://render.githubusercontent.com/render/math?math=\color{red}\2^n) è il numero totale di configurazioni, effettua diversi tentativi fino a quando non indovina la chiave. 
 Occorre conoscere la trasformata `T`. Se il cifrato che ottiene è uguale a quello presente sul canale, allora ha avuto successo nel trovare la configurazione corretta.
 
 ### Relazioni fra le chiavi
@@ -506,7 +506,7 @@ Occorre conoscere la trasformata `T`. Se il cifrato che ottiene è uguale a quel
 Si possono individuare due famiglie di cifrari:
 
 - **Cifrari a chiavi simmetriche**: le chiavi `ks` e `kd` o sono uguali o facilmente ricavabili l'una dall’altra, quindi devono essere tenute segrete;
-- **Cifrari a chiave pubbliche**: le chiavi `ks` e `kd` sono diverse e una delle due è difficilmente calcolabile dall'altra. Ogni entità dispone di una coppia di chiave `ks` e `kd`, di cui `ks` è segreta, mentre `kd` pubblica.
+- **Cifrari a chiave asimmetriche**: le chiavi `ks` e `kd` sono diverse e una delle due è difficilmente calcolabile dall'altra. Ogni entità dispone di una coppia di chiave `ks` e `kd`, di cui `ks` è segreta, mentre `kd` privata.
 
 ### Proprietà delle chiavi simmetriche
 
@@ -514,7 +514,7 @@ Le chiavi simmetriche devono avere le seguenti proprietà:
 
 - **Robustezza**: un intrusore non deve essere in grado facilmente di individuare la chiave;
 - **Riservatezza**: il sistema deve garantire la riservatezza della chiave perché deve essere segreta;
-- **Integrità**: si deve essere sicuri che la chiave non sia stata alterata altrimenti non è possibile usarla;
+- **Integrità**: si deve essere sicuri che la chiave non sia stata alterata, altrimenti non è possibile usarla;
 - **Autenticità**: la chiave è conosciuta solo dalla sorgente e dalla destinazione autentica.
 
 ### Proprietà delle chiavi asimmetriche
@@ -533,49 +533,46 @@ Bisogna evitare che un intrusore possa:
 
 - Indovinare la chiave;
 - Intercettare la chiave;
-- Dedure la chiave.
+- Dedurre la chiave.
 
 ### Indovinare la chiave
 
 È sempre possibile risalire alla chiave tramite attacco con _forza bruta_. Per ridurre le probabilità di successo di questo attacco, occorrono alcuni accorgimenti:
-- **Lo spazio delle chiavi deve essere molto grande**: se `n` è il numero di bit che rappresenta la chiave, $ 2^{n} $ è l'insieme delle possibili configurazioni. Più è grande `n` più è difficile per un intrusore indovinare la chiave;
-- **I bit devono essere casuali**: bisogna evitare che un intrusore possa trovare un modo per risalire alla chiave;
+- **Lo spazio delle chiavi deve essere molto grande**: se `n` è il numero di bit che rappresenta la chiave, ![formula](https://render.githubusercontent.com/render/math?math=\color{red}\2^n) è l'insieme delle possibili configurazioni. Più è grande `n`, più è difficile per un intrusore indovinare la chiave;
+- **I bit della chiave devono essere casuali**;
 - **Limitare il numero di prove che l'intrusore ha a disposizione**, come ad esempio il pin del bancomat. Dopo tre tentativi si disabilita l'accesso;
 - **Cambiare frequentemente la chiave**: se i dati devono essere mantenuti a lungo termine, occorre cambiare frequentemente la chiave. In questo modo, si riducono le probabilità di individuare quest'ultima da parte dell'intrusore.
 <!--Fine correzione 04/11, ore 20:28-->
 
 ### Intercettare la chiave
 
-La chiave se è un parametro può essere intercettata. Ogni volta che si deve eseguire l'algoritmo, vuol dire che bisogna trasferire in RAM l'algoritmo e i parametri dato che i calcolatori usano l'architettura di Von Neumann:
+Ogni volta che si deve eseguire l'algoritmo, occorre caricarlo in RAM, pertanto, dato che i calcolatori usano l'architettura di Von Neumann:
 
-- Il parametro sicuramente deve essere memorizzato in maniera sicura (cifrato) e solo il proprietario deve avere accesso alla cella in cui è memorizzata la chiave;
-- Si deve evitare anche che quando si mette il parametro sul bus non ci sia modo di intercettarlo;
-- Ci deve essere anche un supporto alla sicurezza che protegga la RAM;
-- L’unità di elaborazione dopo aver eseguito l'algoritmo deve cancellare poi accuratamente il dato dalla memoria.
+- La chiave deve essere memorizzata in maniera sicura (cifrata) e solo il proprietario deve avere accesso alla cella in cui è memorizzata;
+- Si deve evitare l'intercettazione della chiave sui canali di comunicazione;
+- Ci deve essere un supporto alla sicurezza che protegga la RAM;
+- L’unità di elaborazione, dopo aver eseguito l'algoritmo, deve cancellare accuratamente il dato dalla memoria.
 
-Nel corso, l'hardware è sicuro ma non è detto che lo sia.
+In questo corso si darà per scontato che l'hardware sia sicuro, ma in uno scenario reale non è detto che lo sia.
 
 Esistono diverse celle di memoria dove può risiedere la chiave:
 
-- **Soluzione meno robusta**: calcolatore costituito da HDD, CPU e RAM;
-- **Soluzione intermedia**: supporto di memorizzazione come ad esempio, smart card passiva in cui si conserva solo il segreto. Si ha bisogno di un pc per poter eleborare. Quindi il segreto deve passare per la RAM;
-- **Soluzione sicura**: smart card attiva in cui c'è anche una CPU e RAM. Nulla viene eseguito all'interno di un calcolatore.
+- **Hard Disk**: poco sicuro perché lo stesso calcolatore può essere usato da più utenti;
+- **Memory Card**: la si inserisce nel sistema solo quando vi è necessità del dato segreto;
+- **Smart Card**: molto sicura, consiste nell’avere un calcolatore portatile con una sua memoria contenente la chiave `s` cifrata, in questo modo `s` non esce mai dal suo ambiente protetto.
 
-I motivi per cui la soluzione viene classificata come sicura, intermedia e meno robusta si intuiscono leggendo la parte iniziale di questo paragrafo.
 
-### Esempio
+### Esempio: generazione, memorizzazione e uso di una chiave segreta
 
 Nei file system, una chiave `s` viene memorizzata in forma cifrata in una parte della memoria chiamata _portachiavi_.
 
 ![intrusore](./img/img53.png)
 
-La chiave `s` viene generata una volta (o più, se si decide di cambiarla
-nel tempo) tramite un RNG (si vedrà più avanti che cosa è) ed è subito cifrata con la funzione `E` accoppiata ad `u`. Poi è portata e memorizzata in modo cifrato sulla memoria `M` (ovvero `Eu(s)`).
+La chiave `s` viene generata una volta (o più, se si decide di cambiarla nel tempo) tramite un RNG (Random Number Generator) ed è subito cifrata con la funzione `E` accoppiata ad `u`, ovvero una chiave che cifra altre chiavi. Successivamente, `Eu(s)` viene trasferita e memorizzata in modo cifrato sulla memoria `M`.
 
-In seguito, per eseguire gli accessi esiste una _passphrase_ dettata
-decisa dall’utente, facile per lui da ricordare, su cui viene eseguita
-una funzione hash per calcolarne l’impronta `u`. Una volta creata
-`u`, essa deve essere impiegata per decifrare `s`. Una volta decifrata la chiave essa viene utilizzata per tradurre il testo e quindi calcolare y = T(s,x). Immediatamente dopo, una primitiva cancella `s` dalla memoria del processore (grazie al wiper sicuro).
+In seguito, per eseguire gli accessi esiste una _passphrase_ (password tra 20 e 30 caratteri) dettata dall’utente, facile per lui da ricordare, su cui viene eseguita una funzione hash per calcolarne l’impronta `u` (la chiave che cifra chiavi). Una volta creata `u`, essa deve essere impiegata per decifrare `s` (la chiave generata in partenza con RNG).
+
+Una volta decifrata la chiave `s`, essa viene utilizzata per tradurre il testo e quindi calcolare `y = T(s,x)`. Infine, una primitiva cancella `s` dalla memoria del processore (grazie al wiper sicuro).
 
 In caso di smarrimento o danneggiamento della passphrase è necessario un sistema di _recovery_.
 
@@ -583,12 +580,14 @@ In caso di smarrimento o danneggiamento della passphrase è necessario un sistem
 
 Esistono diverse tipologie di attacco:
 
-- **Attacco con solo testo cifrato**: l'intrusore dispone esclusivamente di testo cifrato che lo preleva dal canale insicuro. L'intrusore può sfruttare conoscenze, ipotesi sul linguaggio di origine che è stato usato per scrivere il messaggio cifrato, può disporre di tecniche e statistiche per effettuare determinati attacchi. Avendo il testo cifrato e queste tecniche può dedurre delle informazioni sul testo originario o sulla chiave stessa;
-- **Attacco con testo in chiaro noto**: l'intrusore ha la fortuna di avere il testo in chiaro e il cifrato. In questo modo si può studiare il codice usato per cifrare il testo;
-- **Attacco con testo in chiaro scelto**: l'intrusore sceglie un testo in chiaro e ha la possibilità di cifrare il messaggio ingannando la vittima;
-- **Attacco con testo cifrato scelto**: l'intrusore riesce a farsi decifrare un testo cifrato da lui scelto dalla sorgente legittima.
+- **Attacco con solo testo cifrato**: l'intrusore dispone esclusivamente di testo cifrato che lo preleva dal canale insicuro. L'intrusore può sfruttare conoscenze, ipotesi sul linguaggio di origine che è stato usato per scrivere il messaggio cifrato, può disporre di tecniche e statistiche per effettuare determinati attacchi. Avendo il testo cifrato e sfruttando tecniche, l'attaccante può dedurre delle informazioni sul testo originario o sulla chiave stessa;
+- **Attacco con testo in chiaro noto**: l'intrusore possiede il testo in chiaro e il cifrato. In questo modo, si può studiare il codice usato per cifrare il testo;
+- **Attacco con testo in chiaro scelto**: l'intrusore sceglie un testo in chiaro e ha la possibilità di cifrare il messaggio, ingannando la vittima;
+- **Attacco con testo cifrato scelto**: l'intrusore riesce a farsi decifrare un testo cifrato da lui, scelto dalla sorgente legittima.
 
-La contromisura da adottare è quella _preventiva_: il legame tra il testo in chiaro ed il testo cifrato deve essere così ben nascosti da far apparire quest’ultimo all’intruso come una variabile aleatoria che assume con uguale probabilità tutti i suoi possibili valori.
+La contromisura da adottare è quella _preventiva_: il legame tra il testo in chiaro ed il testo cifrato deve essere _aleatorio_.
+
+<!--03/12/21  fine correzione -->
 
 ## Teoria della complessità
 
