@@ -775,8 +775,10 @@ Encryption `E` e decryption `D` sono implementati con degli `XOR`:
 
 ![dedurre](./img/img34.png)
 
-- **Encryption**: viene preso il bit `i`-esimo di testo in chiaro `m`, lo si mette in `XOR` (somma modulo 2) con il bit `i`-esmo della chiave `k`;
-- **Decryption**: al bit `i`-esimo del messaggio cifrato `c`, si mette in `XOR` lo stesso `i`-esmo bit di chiave `k` usato nella fase di cifratura.
+- **Encryption**: viene preso il bit `i`-esimo di testo in chiaro `m`, lo si mette in `XOR` (somma modulo 2) con il bit `i`-esmo della chiave `k`:\
+`ci = mi XOR ki`
+- **Decryption**: al bit `i`-esimo del messaggio cifrato `c`, si mette in `XOR` lo stesso `i`-esmo bit di chiave `k` usato nella fase di cifratura:\
+`ci XOR ki = (mi XOR ki) XOR ki = mi`
 
 Per questo motivo ci deve essere _sincronismo_ tra i flussi di chiave della sorgente e della chiave.
 
