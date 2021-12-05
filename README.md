@@ -1683,7 +1683,14 @@ _distribuito_. Nel primo caso si hanno delle strutture gerarchiche: cioè si ha 
 
 Il modello della figura è un modello distribuito. L'utente A invia un messaggio all'utente B. Il certificato di B è stato rilasciato dall'autorità di certificazione CA3, quello di A da CA5. L'utente B vuole essere sicuro di potersi fidare del certificato che CA5 ha emesso per A e cerca dunque quali entità hanno emesso un certificato per la chiave pubblica di CA5. Trova CA4 (con cui fra l'altro c'è fiducia reciproca, cross-certificate). Adesso deve trovare quali entità si fidano di CA4 e trova proprio CA5, ovvero la sua CA. Il cammino di fiducia è stato trovato, quindi B si può fidare di A. Il contrario non è possibile in quanto non esiste un percorso di fiducia che permetta di raggiungere CA5.
 
-minuto 45.00
+Il protocollo che si occupa della ricerca del percorso di fiducia prende il nome di _Certification Path Discovery_ e dipende se il modello che si sta usando è centralizzato o distribuito. Una volta trovato un percorso di certificazione è necessario:
+
+- Verificare la validità temporale di tutti i certificati;
+- Verificare se è stato revocato (si usano gli stessi meccanismi dei certificati) ma al posto di parlare CRL si parla di ARL (Authority Revocation List);
+- Se si, verificare le politiche con le quali sono stati rilasciati i vari certificati (se esistono nel campo estensione);
+- Se no, verificare la firma digitale su ciascun certificato.
+
+minuto 55.30
 
 <!--- -->
 <!--[marco togni](./img/marco_togni.jpg)-->
