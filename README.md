@@ -1711,7 +1711,49 @@ In un modello distribuito si possono avere più radici che hanno tra loro dei cr
 
 ![marco togni](./img/img72.png)
 
-Quando la CA emette dei certificati, nel campo estensione esistono diverse politiche.
+Quando la CA emette dei certificati, nel campo estensione esistono diverse politiche. Informazioni su quella che è le regole seguite per rilasciare il certificato
+
+Quando la CA emette dei certificati, nel campo estensione esistono varie tipologie:
+
+### Politiche di gestione
+
+Lo standard X.509 prevede nei campi estensioni, campi che consentono di verificare le politiche di emissione del certificato: qual è la politica con cui è stata emessa (procedura di identificazione dell'utente, regole che sono state seguite per rilasciare il certificato, prova di possesso etc).
+
+Si potrebbe avere un codice 10 che identifica una certa policy. Non esiste uno standard per la policy. In assenza di standard, si potrebbe fare che due CA hanno concordato che un codice ha un significato per loro comune. Oltre a verificare "E' valido temporalmente?"è stato revocato?" è stato emesso con una policy che riconosco altrimento lo scarto.
+
+Discorso analogo vale per i cross-certificate: si possono verificare che sono compatibili anche alle politiche di emissione del certificato.
+
+### Proprietà di PKI
+
+Una PKI ha il dovere di garantire certi servizi, e a seconda dei servizi offerti un utente può decidere a quale rivolgersi:
+
+- **CA**: requisito obbligatorio per tutte le infrastrutture per ovvi motivi;
+- **Supportare la revoca dei certificati**: altro requisito obbligatorio;
+- **Backup delle chiavi private e supportare il Recovery**: un'infrastruttura deve consentire ad un utente di rilasciare più coppie di chiavi. Se si utilizzasse solo un'unica coppia di chiavi per effettuare firma digitale e cifratura, con l'operazione di Backup della chiave privata si va in contrasto con il supporto al non ripudio. È importante tenere separate le due operazioni da eseguire;
+- **Supporto al non ripudio**: si legga il punto precedente;
+- **Aggiornamento automatico della chiave**: se un certificato scade ci deve essere un aggiornamento automatico della chiave altrimenti l'utente non può più continuare ad usufruire del servizio;
+- **Storia delle chiavi**: tenere traccia di tutte le chiavi che sono state generate. Se un certificato è scaduto e un contratto è stato firmato quando il certificato era ancora valido, si vorrebbe poter continuare a verificare il certificato;
+- **Repository pubblico dei certificati**: requisito obbligatorio;
+- **Cross-certification**;
+- **Timestamping**: marcatura temporale. Consente di risalire a quando un contratto è stato firmato.
+
+### Accordo sul segreto: Anonymous Diffie-Hellman
+
+SSL: usa certificati associati al client e al server
+IPsec: usa certificati associati alla macchina (associano in maniera certa un indirizzo IP a una determinata chiave)
+
+Il protocollo della figura seguente è leggermente diverso rispetto a quello visto in precedenza. Se Y rimane sempre lo stesso è possibile effettuare attacchi. Ad ogni sessione di interazione tra un client e un server, il parametro Y (pre_master_secret) deve essere variabile per questo motivo si usano due numeri random RC e RS. La vera chiave prende il nome di master_secret = H(K||Rc||Rs) ed è variabile. In questo modo, per ogni sessione si ottiene un master_secret diverso e si evita di utilizzare sempre lo stesso segreto.
+
+![marco togni](./img/img73.png)
+
+Il problema fondamentale di questa versione è di essere anonima e nulla può garantire da chi proviene il dato pubblico Y. Esistono alcune varianti (diverse dalle varianti del COVID):
+- **Fixed DH**: il client immette i parametri pubblici di DH (p, g, Yc) nel certificato che si fa poi firmare dalla CA. Lo stesso fa il server (con Ys). Questi parametri rimarranno fissi nei certificati. Quindi questa modalità prevede che il dato pubblico (p, g, Y) di ciascun utente sia comunicato all’altro tramite un certificato X.509. Il client e il server si inviano i certificati pubblici creati. Una volta ricevuto il certificato viene verificato e poi entrambi calcolano l’esponenziazione modulare. 
+![marco togni](./img/img74.png)
+In questo schema non c’è identificazione, c’è solo supporto all’autenticità dell’informazione. Il client potrebbe avviare comunicazioni che un eventuale impostore non potrebbe decifrare, ma che gli permetterebbero comunque di perdere tempo. Infatti, in tale scenario, l’intrusore (fake server) che non è il vero possessore del certificato, può inviare il certificato (che è pubblico, quindi può recuperarlo facilmente), ma poi non può concordare il segreto, quindi non si faranno le altre operazioni (p, Xs; Rc,Rs; H) perché non possiede Xs. Il client non sa che il (fake) server non ha trovato la master secret e quindi il client perde tempo;
+- **Ephemeral DH**: solo la chiave pubblica è certificata (non p e g). Quindi, ogni volta viene generato un X diverso. Il client invia al server Yc firmato digitalmente. In questo modo in ricezione è possibile verificare l’integrità e l’autenticità di Y (non identificazione). Il valore del pre_master_secret inoltre così varia da una sessione all’altra; poi, per mantenere la compatibilità con il Fixed DH, si ha uno scambio dei numeri random (anche se dato che la pre_master_key cambia senso randomizzare con Rc e Rs).
+![marco togni](./img/img75.png)
+
+<!-- lezione 04/11/2021 -->
 
 
 
