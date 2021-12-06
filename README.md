@@ -1755,7 +1755,54 @@ In questo schema non c’è identificazione, c’è solo supporto all’autentic
 
 <!-- lezione 04/11/2021 -->
 
+## 05.Cifrario RSA
 
+Tutti i cifrari assimmetrici hanno in comune il fatto che si basano su problemi difficili della teoria dei numeri. Ad esempio, un problema difficile che si è già visto è il logaritmo discreto.
+
+### Caratteristiche della crittografia a chiave pubblica
+
+I cifrari simmetrici sono più veloci (utilizzano sostituzioni e permutazioni) rispetto a quelli asimmetrici che utilizzano per lo più delle volte l'operazione di esponenziazione modulare. Per questo motivo sono molto più lenti dei cifrari simmetrici:
+
+I problemi dell'esponenziazione modulare (`a = b^e mod m`) sono i seguenti:
+
+- La moltiplicazione è eseguita e volte. Operazione molto più costosa di una semplice sostituzione/permutazione;
+- Occupazione di memoria: ad ogni prodotto parziale, i valori aumentano e bisogna ricordarsi che i prodotti parziali vanno memorizzati tra di loro.
+
+Bisogna cercare di renderla il più efficiente possibile.
+
+- **Accoppiare l'elevamento al quadrato delle moltiplicazioni riducendo a modulo**: rer ridurre l'occupazione di memoria, al posto di eseguire `a = (b*b*...*b) mod m`, e volte si può riscrivere la seguente formula nel seguente modo: `a = [(b mod m)*(b mod m)* ...*(b mod m)] mod m`, e volte (esiste l'algoritmo _repeated square and multiply_);
+- **Rappresentazione binaria**: si può ridurre il numero di moltiplicazioni passando alla forma binaria. Si consideri `e = 53`. Si può riscrivere in forma binaria nel seguente modo:
+
+`x = 53 = 110101 = 32 + 16 + 4 + 1`
+
+`g^53 = g^(32+16+4+1) = g^32*g^16*g^4*g^1`
+
+Quando si esegue questa moltiplicazione, si possono calcolare gli elevamenti a potenza (queste sono 4 moltiplicazioni) a cui si devono aggiungere quelle per trovare tali esponenti `g^2*g^2`, `g^8=g^4*g^4` `g^16=g^8*g^8`, `g^32=g^16*g^16` (sono 5 moltiplicazioni). Quindi, le moltiplicazioni totali sono 9.
+
+### Numeri primi
+
+I numeri primi sono alla base dei cifrari RSA. Per individuare i numeri primi si usa il _test di primalità_:
+
+```
+  // 1) x dispari (generato a caso nel desiderato intervallo)
+  // 2) if (x primo?) = false (si controlla tramite il test di primalità)
+  // then x = x + 2 and repeat 2
+  // else
+  // return x
+```
+
+I test di primalità possono essere di due tipi:
+
+- **Deterministici**: questo test dice con certezza se un numero è primo. Questi test sono computazionalmente più onerosi dei test probabilistici;
+- **Probabilistici**: questi test sono polinomiali motivo per cui si adottano più spesso nella pratica ma devono essere poi ripetuti più e più volte per far tendere a 1 la probabilità di avere realmente individuato un primo. Molto famoso è l'algoritmo di Miller Rabin.
+
+### Ricerca esauriente
+
+Adesso si vuole capire come mai bisogna generare un numero primo grande per ottenere robustezza:
+
+![marco togni](./img/img76.png)
+
+49.30
 
 <!--- -->
 <!--[marco togni](./img/marco_togni.jpg)-->
