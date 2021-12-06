@@ -852,9 +852,7 @@ Il mittente effettua `m XOR k`, l'attaccante prende `(m XOR k) XOR p` dove `p` �
 
 Fare le tabelle di verità per credere!
 
-![marco togni](./img/img25.png)
-
-Ad esempio, il mittente sta cifrando dei dati strutturati. All'inizio di questi dati, c'è sempre la parola "From". L'attaccante, conosce che il flusso è strutturato. Il suo obiettivo è quello di cambiare la provenienza del messaggio `m`. Si ipotizzi che l'inizio del messaggio sia "From Dario" con rappresentazione esadecimale "44 61 72 69 6F". L'obiettivo dell'intrusore è ottenere "From Lucia" con rappresentazione esadecimale "4C 75 63 69 61". Bisogna trovare quel `p` tale per cui `m XOR p = Lucia`. Dunque, `p` deve essere "08 14 11 00 0E".
+Ad esempio, il mittente sta cifrando dei dati strutturati. All'inizio di questi dati, c'è sempre la parola "From". L'attaccante, conosce che il flusso è strutturato. Il suo obiettivo è quello di cambiare la provenienza del messaggio `m`. Si ipotizzi che l'inizio del messaggio sia "From Dario" con rappresentazione esadecimale "44 61 72 69 6F". L'obiettivo dell'intrusore è ottenere "From Lucia" con rappresentazione esadecimale "4C 75 63 69 61". Sapendo che `((m XOR k) XOR p)) XOR k` diventa `m XOR p`, bisogna trovare quel `p` tale per cui `m XOR p = Lucia`. Dunque, `p` deve essere "08 14 11 00 0E".
 
 ### Cifrari a blocchi
 
@@ -1690,7 +1688,32 @@ Il protocollo che si occupa della ricerca del percorso di fiducia prende il nome
 - Se si, verificare le politiche con le quali sono stati rilasciati i vari certificati (se esistono nel campo estensione);
 - Se no, verificare la firma digitale su ciascun certificato.
 
-minuto 55.30
+### Modello centralizzato
+
+Esistono diversi modelli gerarchici:
+
+- **Modello gerarchico puro**: i nodi foglia sono gli utenti finali e ogni CA, certifica i propri figli e viceversa. Ad esempio, CA1 cross-certificate CA3 e viceversa.
+![marco togni](./img/img70.png)
+Con questo modello è facile costruire un cammino di certificazione tra due utenti finali a cui basta rivolgersi solamente alle proprie
+CA perchè basta arrivare fino alla radice e poi riscendere fino alla CA di interesse.
+Questo modello garantisce buone caratteristiche di scalabilità ma un fattore che complica pesantemente questo modello è la fiducia.
+
+Dal punto di vista organizzativo questa struttura è possibile se e solo se queste CA (tutte) riconoscono il modello. La root si assume una responsabilità significativa, in quanto se compromessa può essere compromesso tutto. E se una CA non vuole far sapere quali sono gli utenti che amministra? Dunque, sebbene sia un modello più semplice da realizzare, non è detto che sia la soluzione a tutto.
+
+- **Struttura gerarchica top-down**: in questo modello, la radice certifica tutte le CA a scendere. L'utente finale ha sicuramente la chiave pubblica della propria CA e in fase di registrazione ha ricevuto sicuramente la chiave pubblica della radice in questo modo può scendere
+![marco togni](./img/img71.png)
+
+Un modello centralizzato non è sempre la soluzione adottata. Ad esempio, una multinazionale su più sedi può realizzare al suo interno un'infrastruttura del genere ma nella vita quotidiana, quando viene rilasciata una chiave non viene adottata questa soluzione qui. Esistono diversi provider che non hanno un si scambiano le chiavi fra di loro.
+
+### Modello distribuito
+
+In un modello distribuito si possono avere più radici che hanno tra loro dei cross-certificate. La struttura che si ottiene è quella di un grafo.
+
+![marco togni](./img/img72.png)
+
+Quando la CA emette dei certificati, nel campo estensione esistono diverse politiche.
+
+
 
 <!--- -->
 <!--[marco togni](./img/marco_togni.jpg)-->
