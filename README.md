@@ -1735,7 +1735,7 @@ Una PKI ha il dovere di garantire certi servizi, e a seconda dei servizi offerti
 - **Storia delle chiavi**: tenere traccia di tutte le chiavi che sono state generate. Se un certificato è scaduto e un contratto è stato firmato quando il certificato era ancora valido, si vorrebbe poter continuare a verificare il certificato;
 - **Repository pubblico dei certificati**: requisito obbligatorio;
 - **Cross-certification**;
-- **Timestamping**: marcatura temporale. Consente di risalire a quando un contratto è stato firmato.
+- **Timestamping**: marcatura temporale. Consente di risalire a quando un contratto è stato firmato/revocato. Utile per risolvere dei contenziosi.
 
 ### Accordo sul segreto: Anonymous Diffie-Hellman
 
@@ -1755,9 +1755,9 @@ In questo schema non c’è identificazione, c’è solo supporto all’autentic
 
 <!-- lezione 04/11/2021 -->
 
-## 05.Cifrario RSA
+## 05.Cifrari asimmetrici
 
-Tutti i cifrari assimmetrici hanno in comune il fatto che si basano su problemi difficili della teoria dei numeri. Ad esempio, un problema difficile che si è già visto è il logaritmo discreto.
+Tutti i cifrari asimmetrici hanno in comune il fatto che si basano su problemi difficili della teoria dei numeri. Ad esempio, un problema difficile che si è già visto è il logaritmo discreto.
 
 ### Caratteristiche della crittografia a chiave pubblica
 
@@ -1765,7 +1765,7 @@ I cifrari simmetrici sono più veloci (utilizzano sostituzioni e permutazioni) r
 
 I problemi dell'esponenziazione modulare (`a = b^e mod m`) sono i seguenti:
 
-- La moltiplicazione è eseguita e volte. Operazione molto più costosa di una semplice sostituzione/permutazione;
+- La moltiplicazione è eseguita `e` volte. Operazione molto più costosa di una semplice sostituzione/permutazione;
 - Occupazione di memoria: ad ogni prodotto parziale, i valori aumentano e bisogna ricordarsi che i prodotti parziali vanno memorizzati tra di loro.
 
 Bisogna cercare di renderla il più efficiente possibile.
@@ -1784,7 +1784,7 @@ Quando si esegue questa moltiplicazione, si possono calcolare gli elevamenti a p
 I numeri primi sono alla base dei cifrari RSA. Per individuare i numeri primi si usa il _test di primalità_:
 
 ```
-  // 1) x dispari (generato a caso nel desiderato intervallo)
+  // 1) x dispari (generato a caso nel desiderato intervallo con un PNRG)
   // 2) if (x primo?) = false (si controlla tramite il test di primalità)
   // then x = x + 2 and repeat 2
   // else
@@ -1796,13 +1796,195 @@ I test di primalità possono essere di due tipi:
 - **Deterministici**: questo test dice con certezza se un numero è primo. Questi test sono computazionalmente più onerosi dei test probabilistici;
 - **Probabilistici**: questi test sono polinomiali motivo per cui si adottano più spesso nella pratica ma devono essere poi ripetuti più e più volte per far tendere a 1 la probabilità di avere realmente individuato un primo. Molto famoso è l'algoritmo di Miller Rabin.
 
-### Ricerca esauriente
-
-Adesso si vuole capire come mai bisogna generare un numero primo grande per ottenere robustezza:
+Adesso si vuole capire come mai bisogna generare un numero primo grande per ottenere robustezza. Si ricorda che il numero X è compreso fra 1 e (p-1). Se p è piccolo l'algoritmo di ricerca esauriente si riesce ad applicare.
 
 ![marco togni](./img/img76.png)
 
-49.30
+Si calcola `g^x mod p` per x= 1, 2 fino a quando non si trova Y.
+
+### Aspetti caratteristici
+
+Altre caratteristiche dei cifrari asimmetrici sono:
+
+- **Frammentazione del teto in chiaro**: bisogna fare in modo che ad ogni messaggio ci sia un cifrato diverso. Non si può correre il rischio di avere due cifrati uguali a fronte dello stesso testo in chiaro. Dal momento che ci sono le operazioni modulo (il resto della divisione), se si avessero messaggi di dimensione maggiore ad n, si potrebbero avere operazioni modulo che restituiscono, per messaggi diversi, lo stesso resto della divisione. Questo significa che a messaggi diversi può corrispondere lo stesso cifrato, che si contrappone con la solita ipotesi che ad ogni cifrato corrisponde ad un solo messaggio, e viceversa. Per risolvere questa situazione, appunto, si frammentano i messaggi in blocchi e il numero binario intero che rappresenta il blocco deve essere inferiore al modulo;
+![marco togni](./img/img77.png)
+- **Aleatorietà del testo cifrato**: dove ci sono messaggi da cifrare con range di valori prevedibili è un problema. Si possono effettuare attacchi di testo in chiaro noto (messaggi prevedibili). Ad esempio, sì o no in caso di voto elettronico. Se si cifra il si con la chiave pubblica dell'ente a cui si invia la risposta, anche l'attaccante cifra il si con la chiave pubblica dell'ente e confronta i due cifrati. Per rendere probabilistico il cifrario, o si rende probabilistico il messaggio originario concatenandolo ad un numero random, o si rende probabilistica l'uscita con una delle modalità di impiego viste nei cifrari simmetrici (CBC con vettore di inizializzazione)
+![marco togni](./img/img78.png)
+Tuttavia, non è sempre vero perchè algoritmi RSA sono deterministici;
+- **Variabilità della trasformazione**: tutti si basano su una trasformazione che varia nel tempo;
+- **Problema difficile su cui si basa la sicurezza**: la crittografia asimmetrica si basa su problemi difficili della matematica. A descrivere un meccanismo di crittografia asimmetrica è dunque anche il problema di cui fa uso. Il cifrario RSA è un cifrario deterministico, a blocchi che si basa sui problemi difficili di radice e-esima e fattorizzazione mentre il cifrario El Gamal è un cifrario probabilistico a blocchi che utilizza il problema del logaritmo discreto;
+- **Modalità di impiego**: esistono un insieme di standard (PKCS) che definiscono le modalità di utilizzo di un cifrario asimmetrico e le chiavi coinvolte in un cifrario asimmetrico.
+
+### Algoritmo RSA
+
+L'algoritmo RSA è formato da tre algoritmi: G di generazione di chiave, E per la cifratura e D per la decifratura.
+
+### Algoritmo E e D
+
+**numeri coprimi**: In matematica, gli interi a e b si dicono coprimi (o primi tra loro o relativamente primi) se e solo se essi non hanno nessun divisore comune eccetto 1 e -1 o, in modo equivalente, se il loro massimo comune divisore è 1. Per esempio, 6 e 35 sono coprimi, ma 6 e 27 non lo sono, perché entrambi sono divisibili anche per 3 e 1.
+
+**toziente di Eulero**:, è una funzione definita, per ogni intero positivo `n`, come il numero degli interi compresi tra 1 e `n` che sono coprimi con `n`. Ad esempio, `φ(8) = 4` poiché i numeri coprimi di 8 sono quattro: 1, 3, 5, 7.
+
+Ci sono due chiavi, una pubblica e una privata. La chiave privata è definita in termine di due parametri (n, d) e la chiave pubblica in (n, e); `n = p*q`, con `p` e `q` numeri primi; `e` numero noto co-primo `φ(n) = (p-1)*(q-1)`; `n` numero pubblico.
+
+Per cifrare, si prende il messaggio `m` e lo si frammenta in blocchi dove ogni blocco ha un valore intero minore di `n` (frammentazione del messaggio) e l'operazione di cifratura è `c = m^e mod n`.
+
+Per decifrare, si usa la chiave privata ed è sempre un’esponenziazione modulare `m = c^d mod n` dove `d = e^-1 mod φ(n)`.
+
+### Algoritmo G
+
+Ogni utente di RSA deve eseguire il seguente algoritmo:
+
+- Si scelgono segretamente due numeri primi grandi segreti `p` e `q`. Per impedire di trovare questi due numeri ad un malintenzionato si sceglie in un insieme sufficientemente esteso. Per far ciò si scelgono numeri dispari sufficientemente grandi e si verifica con qualche test (ad esempio quello di Miller Rabin) se sono primi;
+- Si calcola `n` come il prodotto di `p` e `q` (`n = p*q`);
+- Si calcola: `Φ(n) = (p-1)(q-1)` (per definizione);
+- Si sceglie un intero `e`, `1 < e < Φ(n)`, tale che sia coprimo con `Φ(n)`, (si sceglie casualmente e poi si verifica se è coprimo con l’algoritmo di Euclide);
+- Si calcola `e` numero noto co-primo `φ(n) = (p-1)*(q-1)`;
+- Si calcola `d = e^-1 mod Φ(n)`;
+
+Tutti gli algoritmi usati sono polinomiali. Per il calcolo dell'esponenziazione modulare si usa l'algoritmo Repeated Square and Multiply, che aumenta l'efficienza.
+
+Aspetti computazionali:
+
+- Generazione della chiave;
+- Cifratura/decifrazione.
+
+Per rendere efficiente:
+
+- La cifratura (xe mod n con x < n) si adottano algoritmi Repeated Square and Multiply con scelta opportuna di e;
+- La decifrazione si ricorre al teorema cinese dei resti (CTR) (impiego più efficiente della chiave privata). Per ottenere un'alta efficienza è importante vedere l'algoritmo nella libreria crittografica che si sta usando.
+
+### Sicurezza di RSA
+
+Gli attacchi possibili sono:
+
+- **Attacchi di forza bruta**: l'algoritmo di ricerca esauriente è in grado di rompere RSA, ma se la chiave è ben dimensionata, oggi fino a 2048 bit , potrebbero essere necessari tempi elevatissimi;
+- **Attacchi matematici**: in questo caso sono a disposizione tre possibilità:
+  - **Fattorizzare n nei suoi due fattori primi**: questo permette di calcolare la funzione totiente di Eulero `(p-1) * (q-1)` e quindi `d`. È il metodo più frequentemente usato;
+  - **Determinare direttamente la funzione totiente di Eulero (p - 1) * (q - 1) senza prima determinare p e q**;
+  - **Determinare direttamente d senza prima determinare la funzione totiente di Eulero**;
+- **Attacchi a tempo**: si basano unicamente sul testo cifrato. Il principio alla base è che si è dimostrato che si può determinare una chiave privata analizzando il tempo impiegato dai computer per decifrare i messaggi. Si possono raccogliere informazioni semplicemente vedendo quanto tempo impiega un pc a decifrare un messaggio. Sono attacchi analoghi ad un ladro che cerca di indovinare la combinazione di sicurezza di una cassaforte osservando il tempo impiegato per ruotare la manopola. Una contromisura è la cosiddetta tecnica di blinding, un algoritmo che maschera il cifrato nascondendo la deducibilità temporale;
+- **Attacchi a testo chiaro scelto**: si scelgono testi cifrati
+scelti e si ottengono i corrispondenti testi in chiaro. La contromisura è usare una tecnica di riempimento probabilistica standardizzata detta OAEP (Optimal Asymmetric Encryption Padding).
+
+### Il cifrario Ibrido
+
+Nello schema ibrido si adotta un cifrario simmetrico per cifrare i dati, ma la chiave condivisa fra mittente e destinatario viene concordata ad esempio tramite DH e scambiata tramite crittografia a chiave pubblica. L'efficienza ottenuta è pari a quella di un cifrario simmetrico.
+
+![marco togni](./img/img79.png)
+
+Ogni volta che il mittente apre una nuova sessione viene generata una chiave simmetrica di sessione, la quale viene criptata con la chiave pubblica del destinatario, e poi spedita assieme al messaggio. Il destinatario, per prima cosa decripta la chiave di sessione attraverso la sua chiave privata, asimmetrica, ed infine usa la chiave di sessione, simmetrica, per decodificare il messaggio. Il vantaggio di questo sistema è che unisce la comodità nella gestione delle chiavi del sistema asimmetrico alla velocità propria di quello simmetrico.
+
+Lato sorgente:
+
+- Si procura la chiave pubblica del destinatario, PU che è ovviamente certificata;
+- Genera a caso la chiave k che sarà poi la chiave condivisa e sceglie la funzione Ek che userà per cifrare i messaggi;
+- Genera c1 che è la chiave k cifrata con la chiave pubblica PU del destinatario: c1 = EPU(k || ID.Ek) dove ID.Ek sarebbe che tipo di cifratura viene usata;
+- Genera c2 che è il messaggio m che vuole comunicare al destinatario, opportunamente cifrato;
+con la chiave k: c2 = Ek (m);
+- Concatena c1 con c2 e lo invia.
+
+lato destinazione:
+
+- Separa c1 e c2;
+- Ricava la chiave k usando la sua chiave segreta con k = DSU(c1);
+- Decifra il messaggio m = Dk(c2).
+
+Va bene RSA perchè anche se è deterministica si sta cifrando una chiave che è già di suo aleatoria.
+
+![marco togni](./img/img80.png)
+
+<!-- Si vuole cifrare un dato molto più piccolo del modulo. se il modulo è 2048 bit e il dato 56 bit (non bisogna neanche frammentarlo) e lo si invia. -->
+
+Esiste però una vulnerabilità, se li si impiega per cifrare messaggi  molto più corti del modulo: i crittogrammi generati ricadrebbero sempre,  infatti, in uno spazio più piccolo di quello a disposizione e ciò renderebbe più agevole il lavoro di crittanalisi.
+
+Se si ha una chiave pubblica minore di 128 bit, un attacco di forza bruta è sempre possibile: sia sul cifrato che sulla chiave k cifrata con quella pubblica. In quest’ultimo caso si ha proprio un campione da testare facilmente: se ciò che si decifra con la chiave supposta corrisponde alla struttura dati c1 significa che si è trovato la chiave.
+
+Se il messaggio è corto, si adottano gli standard per evitare vulnerabilità (PKCS#1v2):
+
+- Padding aumentando di un numero random;
+- Padding OAEP: si aumenta il numero di bit in maniera probabilistica fino ad arrivare alla lunghezza del modulo.
+
+### Firma Digitale
+
+La firma digitale deve:
+
+- Consentire a chiunque di identificare univocamente il firmatario: il certificato a chiave pubblica garantisce questo requisito;
+- Non deve poter essere imitata da un impostore: se e solo se la chiave privata è in possesso solo del possessore di quella chiave;
+- Non deve poter essere trasportata da un documento ad un altro: grazie alla resistenza alle collisioni della funzione hash;
+- Non deve poter essere ripudiata dall'autore: grazie all'uso di un certificato;
+- Deve rendere inalterabile il documento su cui è apposta: grazie alla funzione hash, il documento non è più verificabile dato che poi corrisponde un'altra funzione hash.
+
+Il grande pregio è che l’autenticità di un messaggio può essere verificata con un dato reso di dominio pubblico dal firmatario:
+
+- **Autenticazione**: U autentica il documento calcolando SSU(m) e rendendolo disponibile a chi è interessato;
+- **Verifica**: un qualsiasi utente X verifica l’autenticità di m calcolando Vpu(c), che gli fornisce m e una risposta di tipo vero/falso.
+
+Chiaramente:
+
+- Per ogni SU, per ogni m e per c = SSU(m), deve essere vero VPU(c) = m;
+- Mentre per chi non ha SU e per ogni m di sua invenzione deve essere infattibile costruire un c tale che VPU(c) = m risulti vero.
+
+La firma digitale ha validità legale. In Italia ciò avviene già dal 1997. Solo nel 1999 è stata redatta una norma a livello europeo e nel 2002 l'Italia ha introdotto le leggi necessarie ad adeguarsi a quanto
+richiesto dall'Unione Europea. S e V possono dunque essere implementati con algoritmi RSA.
+
+RSA per come funziona, permette di realizzare la firma digitale per la proprietà di reversibilità delle chiavi ai fini dell'autenticazione:
+
+## Algoritmi di firma con recupero
+
+
+
+### Proprietà di reversibilità
+
+la proprietà di reversibilità delle chiavi, ovvero è
+possibile impiegare la chiave privata SU al posto di PU e viceversa.
+
+
+<!-- lezione 10/11/2021 -->
+
+<!-- primi 40 minuti parte su RSA da rivedere-->
+
+## Servizi di Sicurezza a livello applicativo
+
+Avendo concluso e conosciuto tutto ciò che si doveva sapere sulla crittografia, adesso si procede ad implementare i servizi di sicurezza sicuri, cioè all’uso coordinato di più meccanismi per la sicurezza. Alcuni servizi sono già presenti nel software del calcolatore, altri occorre installarli. In seguito, si distingueranno i servizi propri del livello applicazione (Kerberos, PGP, TSS) ed i servizi applicabili nei protocolli di rete (SSL/TLS, IPv6, IPsec, WEP):
+
+### Firma digitale con marca temporale
+
+Per misurare il tempo è necessario avere dei riferimenti internazionali comuni e chi offre un servizio di timestamping deve usarli. Come riferimenti esistono:
+
+- **Tempo Atomico Internazionale (TAI)**: prende in considerazione il comportamento medio di 260 orologi atomici in più di 40 nazioni. Ogni orologio atomico è connesso ad un server che conta i periodi di oscillazione e l'unicità è ottenuta facendo interagire tra di loro i server via rete;
+- **Tempo Universale Coordinato (UTC)**: simile al TAI ma apporta una piccola modifica perchè l'obiettivo è quello di far passare alle 12:00:00 il sole al meridiano di Greenwich.
+
+L'uso di un Time Stamp Service (TSS) lo si usa dove è strettamente necessario perchè introde un overhead molto alto. Le marche temporali sono presenti anche nel file system, nella messagistica elettronica ma non sono sicure. Invece, un servizio **sicuro** di marcatura temporale deve avere diverse proprietà:
+
+- Il tempo della marca non deve essere falso: si fa affidamento ad un ente fidato;
+- Tramite la marca deve essere possibile individuare in modo sicuro un documento, un istante ed un autore: si la firma digitale;
+- La modifica anche di un solo bit di una marca deve poter essere rilevata: hash crittograficamente sicuro;
+- Deve essere possibile farsi marcare documenti mantenendone riservato il contenuto: hash crittograficamente sicuro;
+- Chiunque deve poter sia farsi marcare i suoi documenti, sia verificare la marcatura dei documenti di chiunque altro: servizio pubblico che consente di verificare il documento.
+
+### Implementazione TSS
+
+Il tutto si basa su una terza parte fidata che è l’autore di marche temporali. La marca temporale deve essere autentica, integra e non ripudiabile. La terza parte, dato che è fidata, deve avere una coppia di chiavi asimmetriche e con la firma digitale dimostra di essere l’autore della marcatura. La terza parte deve essere certificata.
+
+![marco togni](./img/img81.png)
+
+- L’utente A, prima di firmare un documento m, invia a TSS il suo identificativo e la sola impronta di m (funzione hash unidirezionale, quindi crittograficamente sicura), per difenderne l’eventuale riservatezza sia sul canale che per la terza parte;
+- TSS concatena H(m||A) con il suo ID, con l’indicazione temporale t e con il numero progressivo n° che ha attribuito alla marca;
+- TSS restituisce ad A sia questo dato in chiaro, sia la firma che ha apposto al tutto;
+- A, dopo aver verificato la correttezza della marca (l’impronta arrivata a TSS potrebbe essersi deteriorata lungo il percorso od aver subito un qualche attacco attivo), la allega al suo documento;
+- A firma l’intero documento ed allega la firma della marca apposta da TSS.
+
+Ci sono diverse modalità per fare la firma con appendice. Si ipotizzi che un documento debba essere firmato da più persone:
+
+- **Firma a cipolla**: Dario firma  (m || firma), Luca prende il documento, verifica la firma, firma sia il documento che la firma di Dario;
+- **Firma concatenata**: Dario firma  (m || firma), Luca firma solo il documento e invia a Lucia, il documento firmato || firma di Dario || firma di Luca.
+
+Firmare il documento vuol dire prendere atto di averlo letto, firmare la firma della persona precedenti, vuol dire che si sta verificando che la persona precedente ha preso atto del documento e si conferma.
+
+Problemi:
+
+1.11.00
 
 <!--- -->
 <!--[marco togni](./img/marco_togni.jpg)-->
