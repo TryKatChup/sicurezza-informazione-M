@@ -1439,7 +1439,7 @@ Quindi, l'attacco dell'uomo in mezzo non è più possibile in quanto non è in g
 Il certificatore può seguire un modello:
 
 - **Centralizzato (maggiormente adottato)**: Certification Authority (CA). Questo modello usa lo standard ISO X.509;
-- **Distribuito**: chiunque si può fare garante dell'autenticità di una chiave pubblica (PGP - pretty good privacy).
+- **Distribuito**: chiunque si può fare garante dell'autenticità di una chiave pubblica (PGP).
 
 Ad esempio, In Italia, Poste Italiane agisce come ente certificatore (con validità legale). Il modello distribuito, invece, non ha nessuna validità legale.
 
@@ -1900,7 +1900,7 @@ Esiste però una vulnerabilità, se li si impiega per cifrare messaggi  molto pi
 
 Se si ha una chiave pubblica minore di 128 bit, un attacco di forza bruta è sempre possibile: sia sul cifrato che sulla chiave k cifrata con quella pubblica. In quest’ultimo caso si ha proprio un campione da testare facilmente: se ciò che si decifra con la chiave supposta corrisponde alla struttura dati c1 significa che si è trovato la chiave.
 
-Se il messaggio è corto, si adottano gli standard per evitare vulnerabilità (PKCS#1v2):
+Se il messaggio è corto, si espande la firma fino ad arrivare alla dimensione del modulo, adottando gli standard per evitare vulnerabilità (PKCS#1v2):
 
 - Padding aumentando di un numero random;
 - Padding OAEP: si aumenta il numero di bit in maniera probabilistica fino ad arrivare alla lunghezza del modulo.
@@ -1950,12 +1950,14 @@ Avendo concluso e conosciuto tutto ciò che si doveva sapere sulla crittografia,
 
 ### Firma digitale con marca temporale
 
+Il servizio di marcatura temporale di un documento garantisce data e ora certi al momento della sua apposizione.
+
 Per misurare il tempo è necessario avere dei riferimenti internazionali comuni e chi offre un servizio di timestamping deve usarli. Come riferimenti esistono:
 
 - **Tempo Atomico Internazionale (TAI)**: prende in considerazione il comportamento medio di 260 orologi atomici in più di 40 nazioni. Ogni orologio atomico è connesso ad un server che conta i periodi di oscillazione e l'unicità è ottenuta facendo interagire tra di loro i server via rete;
 - **Tempo Universale Coordinato (UTC)**: simile al TAI ma apporta una piccola modifica perchè l'obiettivo è quello di far passare alle 12:00:00 il sole al meridiano di Greenwich.
 
-L'uso di un Time Stamp Service (TSS) lo si usa dove è strettamente necessario perchè introde un overhead molto alto. Le marche temporali sono presenti anche nel file system, nella messagistica elettronica ma non sono sicure. Invece, un servizio **sicuro** di marcatura temporale deve avere diverse proprietà:
+Si usa un Time Stamp Service (TSS) solo dove è strettamente necessario perchè introde un overhead molto alto. Le marche temporali sono presenti anche nel file system, nella messagistica elettronica ma non sono sicure. Invece, un servizio **sicuro** di marcatura temporale deve avere diverse proprietà:
 
 - Il tempo della marca non deve essere falso: si fa affidamento ad un ente fidato;
 - Tramite la marca deve essere possibile individuare in modo sicuro un documento, un istante ed un autore: si la firma digitale;
@@ -1975,6 +1977,8 @@ Il tutto si basa su una terza parte fidata che è l’autore di marche temporali
 - A, dopo aver verificato la correttezza della marca (l’impronta arrivata a TSS potrebbe essersi deteriorata lungo il percorso od aver subito un qualche attacco attivo), la allega al suo documento;
 - A firma l’intero documento ed allega la firma della marca apposta da TSS.
 
+Firma con appendice; firme allegate o separate dal messaggio (vantaggi ad es. firme multiple, verifica di virus nel messaggio se file eseguibile)
+
 Ci sono diverse modalità per fare la firma con appendice. Si ipotizzi che un documento debba essere firmato da più persone:
 
 - **Firma a cipolla**: Dario firma  (m || firma), Luca prende il documento, verifica la firma, firma sia il documento che la firma di Dario;
@@ -1984,7 +1988,144 @@ Firmare il documento vuol dire prendere atto di averlo letto, firmare la firma d
 
 Problemi:
 
-1.11.00
+- Se il servizio deve essere integrato in tutti i meccanismi con non ripudio necessita di uno standard. Lo standard PKIX prevede che il servizio di timestamping sia incluso tra quelli offerti da una PKI;
+- Al crescere la domanda il TSS perde in efficienza (overhead). Si necessita di più TSS coordinati tra loro;
+- Se la marca è firmata digitalmente, vuol dire che l'ente fidato non è la CA ma un altro ente. Nel caso in cui scade la validità del certificato della chiave del TSS i documenti valgono ancora? Stesso problema anche con firma digitale in cui si decide di firmare nuovamente tutti i documenti periodicamente (altro overhead);
+- TSS deve essere un ente fidato.
+
+### Pretty Good Privacy (PGP)
+
+È un servizio che fornisce confidenzialità e autenticazione che può essere usato nello scambio di email o nella memorizzazione di file.
+
+Fornisce 4 tipi di servizi:
+
+- Autenticazione;
+- Confidenzialità;
+- Compressione;
+- Compatibilità.
+
+### Autenticazione
+
+L’autenticazione è ottenuta allegando al documento in chiaro l'hash firmato del documento. Per motivi di compatibilità, il messaggi originario viene sottoposto ad una conversione (Radix-64) che ne aumenta la dimensione. PGP consente, dopo aver firmato (con appendice), anche di zippare, comprimere, il documento autenticato, per renderne efficienti la memorizzazione e la trasmissione.
+
+![marco togni](./img/img82.png)
+
+Un modello alternativo potrebbe essere quello di spostare la funzione di compressione Z mettendola da valle a monte: m lo si espande (Radix-64), lo si comprime, si fa la firma, lo si concatena a m compresso la firma su m e lo si invia.
+
+Criteri da adottare per scegliere il punto giusto da scegliere:
+
+- **Sicurezza**: effettuare la compressione prima o dopo non cambia niente;
+- **Efficienza**: irrilevante perchè gli ordini di differenza devono essere significativi;
+- **Manutenibilità**: se si adotta il secondo schema, lo schema di decompressione non sarebbe mantenibile nel tempo. Se la si facesse a monte, si dovrebbero conservare le informazioni di compressione, sapere che tale algoritmo di compressione sia reperibile nel futuro: bisogna infatti essere in grado di riprodurre il messaggio. Se si usa una funzione aggiornata e un bit risulta essere diversa la firma si invalida.
+
+### Riservatezza
+
+Per garantire la confidenzialità, PGP sfrutta cifrari simmetrici per cifratura e asimmetrici per la distribuzione di chiavi (cifrario ibrido).
+
+![marco togni](./img/img83.png)
+
+Si potrebbe pensare ad un discorso analogo a quello precedente cioè se è meglio posizionare Z a valle o a monte:
+
+- **Sicurezza**: inserendo la funzione di compressione a monte, con la compressione si eliminano le ridondanze di testo in chiaro e, sebbene già la funzione di crittografia sia sufficientemente aleatoria, si aggiunge un grado di robustezza;
+- **Efficienza**: irrilevante perchè gli ordini di differenza devono essere significativi;
+- **Manutenibilità**: non c'è un vincolo così stringente legato alla decifrabilità del messaggio anche se l'algoritmo di compressione viene aggiornato: l'importante è che il contenuto sia lo stesso anche se qualche bit del cifrato è diverso.
+
+![marco togni](./img/img84.png)
+
+È possibile inviare messaggi riservati a più destinatari: una volta cifrato un messaggio con una certa chiave k, è possibile inviarlo anche a più corrispondenti. A tal fine al testo cifrato occorre aggiungere tante chiavi k cifrate e tante firme quanti sono i destinatari, contenenti ciascuna la cifratura asimmetrica della chiave one-time con l’appropriata chiave pubblica. All’arrivo del messaggio, ogni destinatario dopo aver identificato la parte di intestazione che lo riguarda, può al solito rimettere in chiaro dapprima k e poi m.
+
+### Formato dei messaggi PGP
+
+Nella figura di seguito viene riportato il formato di un messaggio PGP:
+
+![marco togni](./img/img85.png)
+
+La chiave è potenzialmente 2048 bit ma non vengono inseriti tutti i bit nel messaggio per risparmiare in occupazione di banda. Viene messo un ID univoco di chiave in particolare si mettono i 64 bit meno significati della chiave. Ci possono essere collisioni ma è molto raro. In questo caso, se il mittente ha più chiavi, il destinatario le proverà tutte fino a quando non troverà quella giusta. Discorso analogo per la cifratura dei dati: si cifra la chiave di sessione con la chiave pubblica del destinatario.
+
+Ogni utente è dotato di due portachiavi: uno delle proprie chiavi private e uno per le chiavi pubbliche proprie e degli altri, perché ogni utente può avere più coppie di chiavi, ognuna con funzione specifica.
+
+Non avendo CA che si assumano una responsabilità legale, il livello di fiducia attribuito per una determinata chiave dipende dalla fiducia nei confronti del firmatario.
+
+Inoltre, servono strutture per memorizzare chiavi pubbliche e private:
+
+- **Portachiavi privato**: sono salvate, cifrate (con un cifrario simmetrico che usa come chiave dell’hash della passphrase), le sue chiavi private:
+  - **Timestamp**: è l'indicazione del momento in cui la chiave è stata generata. Non è un timestamp universale;
+  - **Key ID**: ogni utente può avere più chiavi. Nel momento in cui un utente A invia un messaggio firmato ad un utente B, come fa a dirgli quale chiave utilizzare per verificare l'autenticità del messaggio? Non gli comunica l'intera chiave perché sarebbe dispendioso, ma un ID. L'ID di una chiave è costituito dai 64 bit meno significativi. La probabilità di errore (cioè di identificare più di una chiave fra quelle di un utente con lo stesso ID è bassissima);
+  - **Public Key**: la chiave pubblica associata alla chiave privata;
+  - **Encrypted Private Key**: la chiave privata non viene memorizzata in chiaro, ma cifrata utilizzando una password che viene.
+- **Portachiavi pubblico**: vengono salvate le chiavi pubbliche personali dell'utente e quelle dei suoi corrispondenti:
+  - **Key ID**: si veda il campo Key ID del portachiavi privato;
+  - **Public Key**: la chiave pubblica associata alla chiave privata;
+  - **Owner Trust**: fiducia iniziale che io ripongo in una data chiave pubblica. Esistono diversi livelli di fiducia: contenuto fidato, non fidato, parzialmente fidato... A seconda di come ho ottenuto la chiave e di quanto conosco il proprietario posso impostare il livello di fiducia;
+  - **User ID**: ID del proprietario della chiave pubblica;
+  - **Signature(s)**: la chiave pubblica può ad esempio essere stata ottenuta tramite un certificato. Il certificato X.509 può essere emesso da un'entità di certificazione ma non è detto. Nel caso in cui Luca ha passato a mano la sua chiave, il campo Signature (e con esso il campo collegato Signature Trust) rimane vuoto;
+  - **Signature Trust(s)**: fiducia che ho nei confronti del firmatario del certificato (vedi campo precedente). Il firmatario è presente già nel portachiavi a chiave pubblica? Se l'utente ha firmato già dei certificati, si copia il livello di fiducia presente nel campo Owner Trust corrispondente a quel firmatario;
+  - **Key Legitimacy**: la chiave potrebbe essere stata ricevuta da più firmatari. PGP calcola automaticamente sulla base di Owner Trust e Signature Trust il livello di fiducia (fidata, non fidata, incerta, ...). A intervalli regolari questo campo viene automaticamente ricalcolato da PGP: infatti, un peer potrebbe passare da fidato a non fidato (perché magari è stata compromessa la sua chiave privata).
+
+Nel tempo il livello di fiducia della chiave di un utente potrebbe cambiare, e si definisce in maniera sempre più precisa acquisendo informazioni da altri utenti. Anche nel caso di revoca, se si revoca una chiave, è necessario propagare agli utenti tale informazione. Il processo potrebbe essere lento. "Mi fido di una chiave perché mi fido di altri utenti" è un'assunzione utile in ambienti in cui non serve validità legale. Ma in questo modello si rinuncia ad alcuni vantaggi della CA (revoca in questo caso molto più lunga, latenza naturale prima che tutti conoscano la revoca).
+
+<!-- lezione 11/11/2021 -->
+## Servizi d’identificazione
+
+Gli obiettivi che bisogna tenere a mente durante la progettazione di protocolli sono i seguenti:
+
+- Se le entità in gioco (A e B) sono fidate, B deve poter completare il protocollo di identificazione certo dell’identità di A;
+- (Transferability) B non può riutilizzare lo scambio di identificazione con A per impersonare illegittimamente A presso un’altra entità (non può trasferire la credibilità ad altri);
+- (Impersonation) Deve essere irrilevante la probabilità che un’entità terza C, che esegue il protocollo spacciandosi per A, possa indurre B a completare con successo il protocollo accettando l’identità di C come se fosse quella di A;
+- Tutti gli obiettivi devono essere validi anche se si osservano numerose autenticazioni tra A e B e se l’intrusore C è stato coinvolto in protocolli di identificazione con A e B anche in presenza di simultanee sessioni (ovvero se C spia per tanto tempo A e B devono comunque rimanere saldi gli obiettivi).
+
+quindi devono avere le seguenti proprietà:
+
+- L’identificazione deve essere unilaterale e reciproca: B non può impersonare A presso un’altra entità sfruttando lo scambio di identificazione avuta con A (transferability) e nessuno può identificarsi come A presso B (impersonation). La precedente proprietà deve essere garantita anche dopo aver osservato un elevato numero di identificazioni tra A e B;
+- Efficienza computazionale;
+- Overhead di comunicazione: numero di bit in termini di banda, numeri di messaggi che è costituito il protocollo;
+- Presenza real-time di una terza parte: ad esempio che distribuisce chiavi simmetriche che sono necessarie per la prova di identità;
+- Natura della terza parte: terza parte che fa il binding tra una chiave e un’identità, o terza parte che conosce una chiave di identificazione);
+- Memorizzazione dei segreti.
+
+Esistono due famiglia di identificazione:
+
+- **Identificazione passiva o debole**: quando non sono richieste elaborazioni da parte dell’identificando: comunica solo il segreto concordato con il verificatore durante la registrazione e lo riusa in tutte le sessioni seguenti. Questo approccio viene usato in tutti i protocolli basati su password;
+- **Identificazione attiva o forte**: quando l’identificando deve prendersi carico di calcolare e di comunicare un dato sempre diverso ed imprevedibile per farsi riconoscere. Questo approccio viene usato in tutti i protocolli ad esempio, basati su one-time password e challenge/respose.
+
+### Identificazione passiva
+
+L’identificazione tramite uso di una password è il metodo più usato per controllare l’accesso ad un servizio informatico.
+
+![marco togni](./img/img86.png)
+
+Il protocollo prevede che:
+
+- L’utente trasmette in chiaro il suo identificativo ID e la password PSW che ha imparato a memoria;
+- La macchina estrae da un suo file o DB delle password quella che ha concordato con ID e confronta i due dati.
+
+Un sistema che usa questo protocollo deve essere robusto ad attacchi che provano ad indovinare, intercettare e leggere la password. L’attacco con replica è quello più ovvio e ineminabile perchè l’intrusore intercetta la password e replica il messaggio quando vuole accedere al sistema.
+
+![marco togni](./img/img87.png)
+
+Come si può vedere, I prende la password di A e non risponde ad A (quest’ultima penserà ad un malfunzionamento della rete). Manda la password A a B, che si sentirà al sicuro, e che a sua volta manderà la sua password a I. L’identificazione passiva non può essere mutua.
+
+### Identificazione attiva
+
+La vera contromisura all’attacco con intercettazione e replica è il prevedere che la prova d’identità sia continuamente cambiata. Il calcolo della prova di identità da fornire di volta in volta deve essere facile per chi conosce un’informazione segreta, difficile per chi dispone solo delle prove inviate in precedenza.
+
+### One-time password
+
+È un protocollo di identificazione attiva che prevede di generare a partire da un segreto X di generare fino ad N prove d'identità.
+
+![marco togni](./img/img88.png)
+
+In fase di registrazione, A sceglie a caso un numero X (segreto) ed impiega una serie di funzioni non invertibile F per calcolare la sequenza di valori. Viene dato in input X alla funzione F ottenendo F^1(X) che viene dato a sua volta in pasto di nuovo alla funzione F ottenendo F^2(X). Questo procedimento viene ripetuto fino ad ottenere F^n(X). Nella fase di pre-registrazione, nella macchina M (destinazione) viene inserito solo l’ultima A trasformazione impiegata da A cioè F^n(X).
+
+Quando A si vuole identificare, invia sul canale insicuro F^n-1(X) e M applica a quest’ultima la trasformazione F e controlla se il risultato è uguale a Fn(x) ricevuta. Anche se l'intrusore ha intercettato F^n(X), non ci sono problemi perchè non sa calcolare F^n-1(X). Queste prove verranno usate una e una sola volta. Se la sessione di identificazione va a buon fine, M aggiorna il DB con la nuova prova d'identità F^n-1(X).
+
+La macchina M non conosce il segreto X, e non lo conoscerà mai, ma solo il termine di paragone per stabilire se la one-time password è stata generata da A, la prima volta sarà Fn(X), la seconda Fn-1(X) e così via. Prima di arrivare a F^1(X), ovvero all’esaurirsi delle N trasformazioni, rinnova l’accordo sul segreto con N nuove trasformazioni.
+
+Questo sistema protegge anche nei casi in cui ci si vuole proteggere dal verificatore perchè dispone di prove d'identità che nemmeno lui può usare.
+
+### Protocollo sfida/risposta (hash)
+
+57.45
 
 <!--- -->
 <!--[marco togni](./img/marco_togni.jpg)-->
