@@ -2211,9 +2211,13 @@ Le contromisure da adottare per evitare questi tipi di attacchi sono: numeri ran
 Se occorre mantenere l'informazione d'identità nel tempo (ad esempio nel corso di un’intera sessione) occorre affiancare al protocollo di identificazione altre misure, ad esempio di autenticazione del messaggio. Ad esempio, SSL. In fase di negoziazione avviene l'identificazione, la prova d'identità viene conservata usando un'HMAC in tutti gli scambi di messaggi successivamente al protocollo d'identificazione.
 
 <!-- lezione 17/11/2021 -->
-## Kerberos
+### Esempio
 
-test
+Si supponga che un’azienda debba realizzare servizi di confidenzialità (basati su cifrari ibridi), firma digitale con validità legale e identificazione appoggiandosi a una PKI per la gestione dei certificati. In particolare si supponga che l’azienda fornisca un servizio di identificazione unilaterale di sfida risposta basato su firma digitale per i propri dipendenti aziendali per collegarsi da remoto alla rete aziendale. Si utilizza RSA come cifrario asimmetrico. Quante coppie di chiavi devono essere rilasciate ad ogni dipendente aziendale (una, due o tre)? Motivare la risposta.
+
+28.00
+
+## Kerberos
 
 <!--- -->
 <!--[marco togni](./img/marco_togni.jpg)-->
