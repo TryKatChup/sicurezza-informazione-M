@@ -2213,6 +2213,8 @@ Se occorre mantenere l'informazione d'identità nel tempo (ad esempio nel corso 
 <!-- lezione 17/11/2021 -->
 ## Kerberos
 
+test
+
 <!--- -->
 <!--[marco togni](./img/marco_togni.jpg)-->
 
