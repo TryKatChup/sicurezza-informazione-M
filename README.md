@@ -2123,9 +2123,95 @@ La macchina M non conosce il segreto X, e non lo conoscerà mai, ma solo il term
 
 Questo sistema protegge anche nei casi in cui ci si vuole proteggere dal verificatore perchè dispone di prove d'identità che nemmeno lui può usare.
 
+### Protocollo sfida/risposta
+
+Verranno presentate tre modi diversi per realizzare il protocollo sfida/risposta a seconda della trasformazione che si usa. Queste tre soluzioni hanno tempi di risposta diversa perchè usano trasformazioni diverse ma anche un deploy diverso. Bisogna anche considerare che il segreto deve essere poi distribuito (distribuzione chiavi simmetriche/asimmetriche)
+
 ### Protocollo sfida/risposta (hash)
 
-57.45
+Nella una fase iniziale di pre-inizializzazione A e B scelgono una funzione H sicura e concordano un segreto s (precondiviso).
+
+![marco togni](./img/img89.png)
+
+Quando `A` chiede a `B` di essere identificato inizia l’esecuzione del seguente protocollo:
+
+- `B` invia ad `A` un dato di sfida RB. Tale numero è chiamato _nonce_ e deve essere:
+  - **No ripetibile (unico)**: PNRG con periodo lungo perchè se il numero si ripete ed è stato già usato da A, la risposta la si potrebbe riusare;
+  - **Imprevedibile**: se l'intrusore prevede il numero successivo di RB, lo invia ad A e riceve la risposta perchè A non sa da chi riceve la risposta.
+
+- `A` calcola `c = H(RB || s)` e trasmette `c` come risposta di sfida;
+- `B` calcola c' = `H(RB || s)` con i dati a sua disposizione ed esamina se `c' = c`.
+
+### Protocollo sfida/risposta (cifratura)
+
+Nella una fase iniziale di pre-inizializzazione A e B concordano un segreto s (precondiviso):
+
+- **Caso simmetrico**: chiave di cifratura;
+- **Caso asimmetrico**: chiave pubblica.
+
+![marco togni](./img/img90.png)
+
+<!-- Quando rifaccio la figura: ID non viene usato in ingresso per il PNRG -->
+
+Quando `A` chiede a `B` di essere identificato inizia l’esecuzione del seguente protocollo:
+
+- A invia a B il suo ID per dire che si vuole identificare;
+- B genera un numero random `r` diverso ogni volta tramite un PNRG crittoficamente sicuro;
+- B tramite la chiave che è stata precondivisa, cifra `r` e lo invia ad A;
+- A decifra il messaggio cifrato c e invia il testo in chiaro cifrato `r`;
+- B controlla se il messaggio decifrato da A è uguale al suo `r`.
+
+### Protocollo sfida/risposta (firma digitale)
+
+Nella una fase iniziale di pre-inizializzazione A e B concordano un segreto s (precondiviso).
+
+![marco togni](./img/img91.png)
+
+<!-- Quando rifaccio la figura: ID non viene usato in ingresso per il PNRG -->
+
+Quando `A` chiede a `B` di essere identificato inizia l’esecuzione del seguente protocollo:
+
+- A invia a B il suo ID per dire che si vuole identificare;
+- B genera un numero random `r` diverso ogni volta tramite un PNRG crittoficamente sicuro;
+- B invia ad A il numero random `r`;
+- A firma `r` e invia a B il messaggio firmato;
+- B verifica il messaggio ricevuto da A e lo confronta al numero `r` che ha generato.
+
+### Esempio
+
+Dal protocollo di sfida/risposta si possono creare protocolli di identificazione muta.
+Un protocollo si dice di _identificazione muta_ se A verso B fa quello che A fa verso B cioè B invia la sfida ad A che a sua volta la invia a B (risposta alla sfida):
+
+- `B -> A: RB`;
+- `A -> B: cA = RA || H(RB|| s)`;
+- `B -> A: cB = H(RA|| s)`.
+
+Questo protocollo è soggetto ai seguenti attacchi:
+
+- **Attacco di interleaving**: per capire questo attacco si introduce _problema del Gran Maestro di Scacchi:_ a vuole spacciarsi per un grande esperto di scacchi pur non conoscendo il gioco. A sfida due Gran Maestri B e C, che sistema, senza che se ne accorgano, in due camere contigue: a B assegna i “bianchi”, a C i “neri”. Preso nota della prima mossa di B, A corre nell’altra stanza e la riproduce sulla scacchiera di C. Successivamente prende nota della contromossa di C e corre a riprodurla sulla scacchiera di B. C tenta di impersonare B, è sfidato (a dimostrare di essere B) da A, ed è in grado di inviare in tempo reale senza troppo ritardo e inganno pretendendo di essere A la sfida al vero B, riceve una risposta giusta da B a la passa indietro ad A.
+![marco togni](./img/img92.png)
+C apre due sessioni, una con B e una con A. All'istante t0, B manda la sfida (un nonce RB) ad A. In quel momento C ripropone ad A la stessa sfida lanciata da B. A, dunque, risponderà correttamente a C, che manderà tale risposta pensando che C sia B (che comprende la nuova sfida `RA` e la risposta alla sfida `RB`. C invia il messaggio appena ricevuta da A a B. Alla fine, A e B si sono autenticati con l’intromissione di C;
+- **Attacco di reflection**: apre due sessioni con lo stesso interlocutore contemporaneamente e prevede di rimbalzare indietro informazioni scambiate in sessioni diverse:
+![marco togni](./img/img93.png)
+Le frecce in verde appartengono alla prima sessione mentre quelle nero appartengono alla seconda sessione.
+A(C) apre una connessione con B il quale invia RB. C apre un'altra connessione con B e invia RB ricevuto nella sessione precedente. Non c’è nessun controllo sul fatto che i due nonce debbano essere diversi. B risponde nella seconda sessione con RA||H(RB||s). C prende questo messaggio e lo invia indietro nella prima sessione che aveva aperto con B. La sessione in verde una volta ricevuto H(RA||s) la può chiudere.
+
+Le contromisure da adottare per evitare questi tipi di attacchi sono: numeri random, timestamp e numeri di sequenza. Tuttavia, ci sono dei contro ad usare queste contromisure:
+
+- **Numeri random**:
+  - Uso di un PRNG crittograficamente sicuro. È un componente più costoso rispetto ad una libreria o un RNG;
+  - Il protocollo richiede più scambi di messaggi;
+- **Numeri di sequenza**:
+  - Devono essere memorizzati perchè introducono il concetto di stato;
+  - Sono problematici in reti poco affidabili perchè si perde il sincronismo e bisogna ripetere tutto da capo;
+- **Timestamp**:
+  - Richiede un servizio di timestamp sicuro, perché potrebbe essere falsificato;
+  - Problemi di sincronizzazione.
+
+Se occorre mantenere l'informazione d'identità nel tempo (ad esempio nel corso di un’intera sessione) occorre affiancare al protocollo di identificazione altre misure, ad esempio di autenticazione del messaggio. Ad esempio, SSL. In fase di negoziazione avviene l'identificazione, la prova d'identità viene conservata usando un'HMAC in tutti gli scambi di messaggi successivamente al protocollo d'identificazione.
+
+<!-- lezione 17/11/2021 -->
+## Kerberos
 
 <!--- -->
 <!--[marco togni](./img/marco_togni.jpg)-->
