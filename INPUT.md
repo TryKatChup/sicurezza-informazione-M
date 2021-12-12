@@ -20,13 +20,13 @@
       </ul>
     </li>
     <li>
-      <a href="#dati-sicuri">Dati Sicuri</a>
+      <a href="#01.dati-sicuri">Dati Sicuri</a>
       <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
+        <li><a href="#algoritmi-e-protocolli">Algoritmi e protocolli</a></li>
+        <li><a href="#come-rendere-sicuri-i-dati">Come rendere sicuri i dati</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
+    <li><a href="#02.meccanismi-di-base">Meccanismi di base</a></li>
   </ol>
 </details>
 
