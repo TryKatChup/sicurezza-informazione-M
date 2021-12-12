@@ -1566,6 +1566,16 @@ riesce a verificare la firma, verifica anche il certificato, dunque ha la prova 
   
 Questi ultimi due metodi valgono però solo per la riservatezza, non per la firma digitale.
 
+### Esempio
+
+Luca va di persona, RA genera un autenticatore (token) che memorizza e lo da anche a Luca, ritorna a casa. In un secondo momento, genera la coppia di chiavi PrivA e PubA e invia la richiesta di certificato alla RA. Come deve essere la richiesta di certifcato per essere sicura cioè di dimostrare di avere la prova di possesso e di essere chi dice di essere?
+
+Possibile protocollo:
+
+A, PP(PU)
+
+A->RA: A || Etoken(VPrivA(A||PubA))
+
 ### Revoca di un certificato
 
 Un'infrastruttura deve gestire anche la revoca di un certificato. Lo si deve revocare quando succede qualcosa di sbagliato durante la validità temporale del certificato:
@@ -1884,7 +1894,7 @@ Lato sorgente:
 con la chiave k: c2 = Ek (m);
 - Concatena c1 con c2 e lo invia.
 
-lato destinazione:
+Lato destinazione:
 
 - Separa c1 e c2;
 - Ricava la chiave k usando la sua chiave segreta con k = DSU(c1);
@@ -1936,7 +1946,7 @@ RSA per come funziona, permette di realizzare la firma digitale per la propriet�
 
 ### Proprietà di reversibilità
 
-la proprietà di reversibilità delle chiavi, ovvero è
+La proprietà di reversibilità delle chiavi, ovvero è
 possibile impiegare la chiave privata SU al posto di PU e viceversa.
 
 
@@ -2215,9 +2225,13 @@ Se occorre mantenere l'informazione d'identità nel tempo (ad esempio nel corso 
 
 Si supponga che un’azienda debba realizzare servizi di confidenzialità (basati su cifrari ibridi), firma digitale con validità legale e identificazione appoggiandosi a una PKI per la gestione dei certificati. In particolare si supponga che l’azienda fornisca un servizio di identificazione unilaterale di sfida risposta basato su firma digitale per i propri dipendenti aziendali per collegarsi da remoto alla rete aziendale. Si utilizza RSA come cifrario asimmetrico. Quante coppie di chiavi devono essere rilasciate ad ogni dipendente aziendale (una, due o tre)? Motivare la risposta.
 
+L'azienda se usa una sola coppia di chiavi di decifrazioni, e sono previsti tutti questi servizi vuol dire che c'è anche un sistema di recovery. Utile quando si perde la chiave o l'utente non vuole più restituirla. Se esiste una copia della chiave, si sa, che non è possibile usarla ai fini di firma digitale perchè non viene garantito il non ripudio. Per questo motivo non è una buona soluzione usare solo una coppia di chiavi. Anche usare due coppie di chiavi, non è una buona soluzione. Se la stessa coppia di chiavi, viene usata per identificazione e firma digitale, dato che il server fa identificazione unilaterale, il dipendente non sa con chi si sta identificando. Quindi, un attaccante può falsificarsi per il server. Il dipendente invia un documento firmato pensando di identificarsi e a questo punto è fregato. Se il servizio di firma digitale non prevede validità legale è meglio avere una coppia di chiavi distinta. È bene tenere distinte le coppie di chiavi anche in caso di cifratura e identificazione: Lucia, ha inviato un giorno a Luca delle email cifrate. L'intrusore può intercettare le email, l'intrusore lo ripropone a Luca e firmando non fa altro che recuperare il testo in chiaro.
 
+Quindi, la soluzione migliore è usare tre coppie di chiavi.
 
 ## Kerberos
+
+2.08.00
 
 <!--- -->
 <!--[marco togni](./img/marco_togni.jpg)-->
