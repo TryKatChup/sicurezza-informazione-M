@@ -491,7 +491,7 @@ L'approccio usato al giorno d'oggi, quindi, risulta essere la trasfrormazione se
 
 - Con `T` si indica la trasformazione nota (quindi la conosce anche l'intrusore);
 - Con `k` indichiamo la _chiave_, ovvero il parametro non noto, in ingresso;
-- Con _spazio delle chiavi_ si intende l'insieme delle $ \color{white} 2^n $ possibili configurazioni dove `n` è il numero di bit della chiave. La chiave è costituita da una delle $ \color{white} 2^n $ configurazioni. Più è grande `n`, più è complicato per un intrusore indovinare la chiave.
+- Con _spazio delle chiavi_ si intende l'insieme delle $ \color{black} 2^n $ $ \color{white} 2^n $ possibili configurazioni dove `n` è il numero di bit della chiave. La chiave è costituita da una delle $ \color{black} 2^n $ $ \color{white} 2^n $ configurazioni. Più è grande `n`, più è complicato per un intrusore indovinare la chiave.
 
 ### Algoritmo forza bruta
 
@@ -2226,13 +2226,105 @@ Se occorre mantenere l'informazione d'identità nel tempo (ad esempio nel corso 
 
 Si supponga che un’azienda debba realizzare servizi di confidenzialità (basati su cifrari ibridi), firma digitale con validità legale e identificazione appoggiandosi a una PKI per la gestione dei certificati. In particolare si supponga che l’azienda fornisca un servizio di identificazione unilaterale di sfida risposta basato su firma digitale per i propri dipendenti aziendali per collegarsi da remoto alla rete aziendale. Si utilizza RSA come cifrario asimmetrico. Quante coppie di chiavi devono essere rilasciate ad ogni dipendente aziendale (una, due o tre)? Motivare la risposta.
 
-L'azienda se usa una sola coppia di chiavi di decifrazioni, e sono previsti tutti questi servizi vuol dire che c'è anche un sistema di recovery. Utile quando si perde la chiave o l'utente non vuole più restituirla. Se esiste una copia della chiave, si sa, che non è possibile usarla ai fini di firma digitale perchè non viene garantito il non ripudio. Per questo motivo non è una buona soluzione usare solo una coppia di chiavi. Anche usare due coppie di chiavi, non è una buona soluzione. Se la stessa coppia di chiavi, viene usata per identificazione e firma digitale, dato che il server fa identificazione unilaterale, il dipendente non sa con chi si sta identificando. Quindi, un attaccante può falsificarsi per il server. Il dipendente invia un documento firmato pensando di identificarsi e a questo punto è fregato. Se il servizio di firma digitale non prevede validità legale è meglio avere una coppia di chiavi distinta. È bene tenere distinte le coppie di chiavi anche in caso di cifratura e identificazione: Lucia, ha inviato un giorno a Luca delle email cifrate. L'intrusore può intercettare le email, l'intrusore lo ripropone a Luca e firmando non fa altro che recuperare il testo in chiaro.
+L'azienda se usa una sola coppia di chiavi di decifrazioni, e sono previsti tutti questi servizi vuol dire che c'è anche un sistema di recovery. Utile quando si perde la chiave o l'utente non vuole più restituirla. Se esiste una copia della chiave, si sa, che non è possibile usarla ai fini di firma digitale perchè non viene garantito il non ripudio. Per questo motivo non è una buona soluzione usare solo una coppia di chiavi. Anche usare due coppie di chiavi, non è una buona soluzione. Se la stessa coppia di chiavi, viene usata per identificazione e firma digitale, dato che il server fa identificazione unilaterale, il dipendente non sa con chi si sta identificando. Quindi, un attaccante può falsificarsi per il server. Il dipendente invia un documento firmato pensando di identificarsi e a questo punto è fregato. Se il servizio di firma digitale non prevede validità legale è meglio avere una coppia di chiavi distinta. È bene tenere distinte le coppie di chiavi anche in caso di cifratura e identificazione: Lucia, ha inviato un giorno a Luca delle email cifrate. L'intrusore può intercettare le email, prende il messaggio cifrato, lo ripropone a Luca e firmando non fa altro che recuperare il testo in chiaro.
 
 Quindi, la soluzione migliore è usare tre coppie di chiavi.
 
 ## Kerberos
 
-2.08.00
+Kerberos, il cane a tre teste nella mitologia greca, è un sistema che doveva fornire un servizio di autenticazione per un ambiente client/server, un servizio di accounting e un servizio di audit. Alla fine, però, il progetto ha implementato _una testa sola_ cioè il servizio di autenticazione. Nasce a fine degli anni '90 dove l'ambiente in cui la maggior parte dei clienti lavoravano era quello delle workstation.
+
+Consente a un utente tramite la propria workstation (comunità di utenti tipicamente piccola il cui ambito tipico è quello aziendale) di autenticarsi mutuamente su un server (tra tanti disponibili) e accedere al servizio fornito.
+
+Le strategie che si adottano per un’autenticazione possono essere:
+
+- Compito delle workstation identificare l'utente ma è poco scalabile perchè tutte le workstation devono essere allineate con il termine di paragone. Se viene aggiunto un utente, il termine di paragone deve essere sincronizzato con tutte le altre workstation. Quindi la password è sempre la stessa dell'utente. Poi se viene compromessa una workstation, anche l'accesso ai server è compromesso.
+- Compito del server identificare l'utente. In questo caso l'utente può avere una password diversa su tutti i server perchè sono distinti tra di loro. Nascono numerosi problemi, come ad esempio, se si effettua l'autenticazione su un server poi bisogna rieffettuare l'autenticazione sugli altri, problemi di scalabilità etc.
+
+La gestione di tante workstation e tanti server è complessa, per questo si ricorre a un modello di autenticazione centralizzato per autenticare gli utenti ai server e i server a utenti: 
+
+- Un ente esterno si occupa delle autenticazioni degli utenti finali.
+- Si basa su crittografia simmetrica. È evidente che Kerberos si può usare in un sistema chiuso dove gli utenti si conoscono già perchè bisogna condividere le chiavi.
+
+È stato progettato per evitare tre tipi di attacchi:
+
+- Un utente pretende di essere un altro.
+- Un utente non può alterare un indirizzo IP di una workstation.
+- Un utente può osservare gli scambi di autenticazione e quindi replicare i messaggi in sessioni successive.
+
+Un protocollo di autenticazione deve essere progettato per evitare attacchi, si facile da essere utilizzato da un utente e così via. Si considerino gli esempi successivi per capire meglio il problema.
+
+### Esempio: semplice dialogo di autenticazione
+
+Si indica con C il client, con AS authentication server e con V il servizio a cui l'utente vuole accedere:
+
+- `C -> AS: IDc || Pc || IDv`
+- `AS -> C: Ticket`
+- `C -> V: IDc || Ticket`
+
+I passaggi del protocollo sono:
+
+- Il cliente invia una richiesta all'authentication server inviando il suo ID, la password e l'ID del server che ha il servizio a cui vuole accedere.
+- L'authentication server risponde inviando un _ticket_ che solo AS è in grado di costruire. Un ticket è formato nel seguente modo:\
+`Ticket = Ekv[IDc || ADc || IDv]`\
+ID del cliente, indirizzo IP da cui ha ricevuto il messaggio dall'utente e l'ID del server che ha il servizio a cui il cliente vuole accedere. Il tutto è cifrato con una chiave che è precondivisa tra server e AS.
+- Viene restituito al client il messaggio ma non può decifrare il messaggio perchè non ha la chiave e lo invia il server.
+
+Problemi:
+
+- È un protocollo di autenticazione passiva.
+- Attacchi di replica: sia sul ticket che sulle credenziali che sono utilizzate per autenticarsi (passowrd).
+- Ad ogni connessione ad un server (anche lo stesso) l’utente deve rifare il protocollo.
+
+### Esempio: dialogo di autenticazione più sicuro
+
+Per usare questo protocollo è necessario introdurre un'altra entità: ticket granting server. AS con il ticket granting server (TGS) sono in relazione di fiducia e avranno dei segreti pre-condivisi. Quando AS riceve la richiesta di uso di un servizio da parte di un cliente, il ticket granting server viene contattato dall'AS e per quell'utente costruisce un ticket che l'utente potrà usare in tutte le interazioni con lo specifico server con il quale ha chiesto di interagire.
+
+Per ogni sessione di login:
+
+- ` C -> AS: IDc || IDtgs`
+- ` AS -> C: Ekc[Tickettgs]`
+
+I passaggi del protocollo sono:
+
+- Il cliente invia all'AS il proprio ID e l'ID del ticket granting server con cui vuole interagire.
+- AS risponde inviando un ticket cifrato con la chiave pre-condivisa tra client e AS. Il ticket è formato nel seguente modo:\
+`Tickettgs = Ektgs[IDc || ADc || IDtgs || TS1 || Lifetime1]`\
+Il ticket a sua volta è cifrato, per evitare la falsificazione, con il segreto pre-condiviso tra AS e TGS. Il ticket è formato da:
+  - ID dell'utente;
+  - IP dell'utente da cui ha inviato la richiesta;
+  - ID del tgs;
+  - Timestamping;
+  - Validità temporale.
+
+  Con questo protocollo si evita invio della pwd perchè deriva da Ekc e si riduce la possibilità che un intrusore catturi e riutilizzi il ticket. Ad esempio, aspetta che l'utente faccia logout, falsifica l'indirizzo di rete e lo riutilizzi. Non è impossibile ma è molto difficile proprio perchè si controllano i campi Timestamping e Lifetime1.
+
+Per ogni tipo di servizio di un TGS:
+
+- `C -> TGS: IDc|| IDv || Tickettgs`
+- `TGS -> C: Ticketv`
+
+- Adesso, il client può contattare il TGS inviando il suo ID, l'ID del servizio che vuole usare e il ticket ottenuno nella fase precedente.
+- Il TGS invia al client un ticket che consente di far comunicare il cliente ogni volta che vuole usare uno specifico servizio. Il ticket è formato nel seguente modo:
+
+  `Ticketv = Ekv[IDc || ADc || IDv || TS2 || Lifetime2]`
+
+Per ogni sessione di servizio di un TGS:
+
+`C -> V: IDc || Ticketv`
+
+Il cliente invia solo una richiesta al servizio V specificando il ticket che ha ottenuto dal TGS.
+
+Problemi:
+
+- Durata del ticket: se troppo breve, l’utente deve re-inserire la
+pwd, se troppo lungo problema di intercettazione e riutilizzo;
+- Occorre che il TGS dimostri che la persona che utilizza il ticket
+è quella persona per cui è stato emesso (ultima fase del protocollo _Per ogni sessione di servizio di un TGS_).
+
+<!-- lezione 25/11 -->
+
+
 
 <!--- -->
 <!--[marco togni](./img/marco_togni.jpg)-->
