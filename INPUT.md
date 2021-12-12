@@ -2324,6 +2324,11 @@ pwd, se troppo lungo problema di intercettazione e riutilizzo;
 
 <!-- lezione 25/11 -->
 
+![marco togni](./img/img94.png)
+
+24.57
+
+<!-- lezione 01/12 -->
 
 
 <!--- -->
