@@ -491,7 +491,7 @@ L'approccio usato al giorno d'oggi, quindi, risulta essere la trasfrormazione se
 
 - Con `T` si indica la trasformazione nota (quindi la conosce anche l'intrusore);
 - Con `k` indichiamo la _chiave_, ovvero il parametro non noto, in ingresso;
-- Con _spazio delle chiavi_ si intende l'insieme delle $ \color{white} 2^n $ possibili configurazioni dove `n` è il numero di bit della chiave. La chiave è costituita da una delle $ \color{white} 2^n $ configurazioni. Più è grande `n`, più è complicato per un intrusore indovinare la chiave.
+- Con _spazio delle chiavi_ si intende l'insieme delle $ \color{black} 2^n $ possibili configurazioni dove `n` è il numero di bit della chiave. La chiave è costituita da una delle $ \color{black} 2^n $ configurazioni. Più è grande `n`, più è complicato per un intrusore indovinare la chiave.
 
 ### Algoritmo forza bruta
 
@@ -499,7 +499,7 @@ Un intrusore può sempre disporre di un _algoritmo di ricerca esauriente_, noto 
 
 ![intrusore](./img/img10.png)
 
-Se l'intrusore non conosce la chiave, può esplorare tutto lo spazio delle chiavi. Se `n` è il numero di bit della chiave e $ 2^n $ è il numero totale di configurazioni, effettua diversi tentativi fino a quando non indovina la chiave. 
+Se l'intrusore non conosce la chiave, può esplorare tutto lo spazio delle chiavi. Se `n` è il numero di bit della chiave e 2^n è il numero totale di configurazioni, effettua diversi tentativi fino a quando non indovina la chiave. 
 Occorre conoscere la trasformata `T`. Se il cifrato che ottiene è uguale a quello presente sul canale, allora ha avuto successo nel trovare la configurazione corretta.
 
 ### Relazioni fra le chiavi
@@ -608,7 +608,7 @@ Negli algoritmi di crittografia gli ultimi due parametri non sono presi in consi
 \
 Il numero `n` (dimensione input) incide sul numero di operazioni richieste, in alcuni casi, anche il valore stesso può incidere sul numero di passi da eseguire. Dunque, a parità di `n`, si hanno diversi valori di `N`.
 
-- **Tempo di esecuzione nel caso peggiore**: si intende il numero massimo di operazioni $ N_{max} $ che occorre eseguire per qualsiasi dato d’ingresso di `n` bit.\
+- **Tempo di esecuzione nel caso peggiore**: si intende il numero massimo di operazioni N_{max} che occorre eseguire per qualsiasi dato d’ingresso di `n` bit.\
 \
 Tramite la notazione del _O grande_ è possibile evidenziare come incrementa il tempo di esecuzione dell’algoritmo al crescere senza limiti della dimensione dell’input.
 
