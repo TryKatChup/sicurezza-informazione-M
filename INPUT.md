@@ -1,7 +1,38 @@
+<div align="center">
+
 # Sicurezza dell'informazione 2021-2022
+</div>
+
+<div align="center">
+
+[![Dark/Light Mode](https://img.shields.io/badge/Compatible-Dark&Light%20Mode-1f425f.svg)](https://github.com/dariodenardi)
+[![License: CC0-1.0](https://img.shields.io/badge/License-CC0%201.0-blue.svg)](http://creativecommons.org/publicdomain/zero/1.0/)
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<details open="open">
+  <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
+  <ol>
+    <li>
+      <a href="#introduzione">Introduzione</a>
+      <ul>
+        <li><a href="#scopo-della-sicurezza-informatica">Scopo della sicurezza informatica</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#dati-sicuri">Dati Sicuri</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+  </ol>
+</details>
+
 
 <!-- lezione del 23/09/2021-->
-## 00.Introduzione
+## Introduzione
 
 ### Scopo della sicurezza informatica
 
@@ -154,7 +185,7 @@ Ci sono tre principi che guidano la progettazione delle trasformazioni:
 Per proteggere i dati si ha bisogno di una trasformata che renda incomprensibile il contenuto. In questo modo, l'intrusore non sarà in grado di capire i messaggi.
 La riservatezza si ottiene con una trasformazione di tipo _preventivo_: l'intrusore che accede ai dati non sarà in grado di comprenderli.
 
-![confidenzialità](./img/img2.png)
+![confidenzialità](./img/img2-light.png)
 
 Lo scenario applicativo è il seguente:
 
@@ -2324,9 +2355,20 @@ pwd, se troppo lungo problema di intercettazione e riutilizzo;
 
 <!-- lezione 25/11 -->
 
+### Kerberos V.4
+
+Si assume che sulle workstation sia presente un client Kerberos. Per ogni dominio di amministrazione Kerberos esiste un AS e un TGS. AS gestisce un insieme di utenti che appartengono a quel dominio e il TGS amministra il rilascio delle credenziali che appartengono a quel dominio. Gli utenti precondividono segreti con gli AS, gli AS con i TGS, i TGS con i servizi.
+
 ![marco togni](./img/img94.png)
 
-24.57
+La comunicazione totale, in sintesi, si articola in questo modo:
+
+- All’inizio della sessione di lavoro sulla stazione C, l’utente dichiara la sua identità ad AS
+- AS fornisce il permesso d’accesso a TGS e lo sfida ad usarlo
+- C risponde alla sfida, richiedendo anche l’accesso al server V
+- TGS fornisce a C il permesso d’accesso a V e lo sfida ad usarlo
+  - C si qualifica a V
+  - V si fa identificare da C
 
 <!-- lezione 01/12 -->
 
