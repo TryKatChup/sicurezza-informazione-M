@@ -17,7 +17,8 @@ L'acronimo CIA viene usato per rappresentare le tre proprietà fondamentali dell
 - **Integrità**: solo chi è autorizzato può modificare, eliminare e creare risorse;
 - **Disponibilità**: solo chi è autorizzato può accedere alle risorse senza interferenze ed ostacoli.
 
-![cia](./img/img1.png)
+![Cia-Mark-Light](./img/img1-light.png#gh-light-mode-only)
+![Cia-Mark-Dark ](./img/img1-dark.png#gh-dark-mode-only)
 
 A queste proprietà se ne possono aggiungere altre come:
 
@@ -490,7 +491,7 @@ L'approccio usato al giorno d'oggi, quindi, risulta essere la trasfrormazione se
 
 - Con `T` si indica la trasformazione nota (quindi la conosce anche l'intrusore);
 - Con `k` indichiamo la _chiave_, ovvero il parametro non noto, in ingresso;
-- Con _spazio delle chiavi_ si intende l'insieme delle $ 2^n $ possibili configurazioni dove `n` è il numero di bit della chiave. La chiave è costituita da una delle $ 2^n $ configurazioni. Più è grande `n`, più è complicato per un intrusore indovinare la chiave.
+- Con _spazio delle chiavi_ si intende l'insieme delle $ \color{white} 2^n $ possibili configurazioni dove `n` è il numero di bit della chiave. La chiave è costituita da una delle $ \color{white} 2^n $ configurazioni. Più è grande `n`, più è complicato per un intrusore indovinare la chiave.
 
 ### Algoritmo forza bruta
 
@@ -538,7 +539,7 @@ Bisogna evitare che un intrusore possa:
 ### Indovinare la chiave
 
 È sempre possibile risalire alla chiave tramite attacco con _forza bruta_. Per ridurre le probabilità di successo di questo attacco, occorrono alcuni accorgimenti:
-- **Lo spazio delle chiavi deve essere molto grande**: se `n` è il numero di bit che rappresenta la chiave, $\beta=0$ $ 2^n $ è l'insieme delle possibili configurazioni. Più è grande `n`, più è difficile per un intrusore indovinare la chiave;
+- **Lo spazio delle chiavi deve essere molto grande**: se `n` è il numero di bit che rappresenta la chiave, 2^n è l'insieme delle possibili configurazioni. Più è grande `n`, più è difficile per un intrusore indovinare la chiave;
 - **I bit della chiave devono essere casuali**;
 - **Limitare il numero di prove che l'intrusore ha a disposizione**, come ad esempio il pin del bancomat. Dopo tre tentativi si disabilita l'accesso;
 - **Cambiare frequentemente la chiave**: se i dati devono essere mantenuti a lungo termine, occorre cambiare frequentemente la chiave. In questo modo, si riducono le probabilità di individuare quest'ultima da parte dell'intrusore.
@@ -615,8 +616,8 @@ Tramite la notazione del _O grande_ è possibile evidenziare come incrementa il 
 
 Gli algoritmi possono essere classificati in due categorie:
 
-- **Tempo polinomiale**: algoritmo in grado di completare l'elaborazione di una dimensione `n` di dati in ingresso in un tempo di esecuzione pari a $ O(n^{k}) $ dove `k` è un numero intero positivo;
-- **Tempo esponenziale**: algoritmo in grado di completare l'elaborazione di una dimensione `n` di dati in ingresso in un tempo di esecuzione pari a $ O(e^{n}) $ dove `n` è la dimensione `n` di dati in ingresso.
+- **Tempo polinomiale**: algoritmo in grado di completare l'elaborazione di una dimensione `n` di dati in ingresso in un tempo di esecuzione pari a O(n^{k} dove `k` è un numero intero positivo;
+- **Tempo esponenziale**: algoritmo in grado di completare l'elaborazione di una dimensione `n` di dati in ingresso in un tempo di esecuzione pari a O(e^{n}) dove `n` è la dimensione `n` di dati in ingresso.
 
 ### Classificazione dei problemi
 
@@ -734,7 +735,7 @@ La resistenza alle collisione è fondamentale quando la funzione hash è usata p
 
 **Problema**: data una funzione hash con `n` possibili output e un determinato `H(x)`, se `H` viene applicato a `K` input casuali, quale deve essere il valore di `k` tale che la probabilità che almeno un input `y` soddisfi `H(y) = H(x)` sia maggiore di 0.5?
 
-- **Resistenza debole**: si indica con $ P_1(2^{n}, 1) = \frac{1}{2^n} $ la probabilità di un tentativo di trovare una collisione. La probabilità di insuccesso, quindi, è 1 - 1/2^n. Se si hanno k tentativi, P_k(2^n, k) = 1 - (1 - 1/2^n)^k. Questo vuol dire che k= P_k(2^n, k) * 2^n. 2^n per avere un andamento esponenziale deve essere almeno 128. Dunque, l'impronta deve essere almeno 128 bit;
+- **Resistenza debole**: si indica con P_1(2^{n}, 1) = \frac{1}{2^n} la probabilità di un tentativo di trovare una collisione. La probabilità di insuccesso, quindi, è 1 - 1/2^n. Se si hanno k tentativi, P_k(2^n, k) = 1 - (1 - 1/2^n)^k. Questo vuol dire che k= P_k(2^n, k) * 2^n. 2^n per avere un andamento esponenziale deve essere almeno 128. Dunque, l'impronta deve essere almeno 128 bit;
 - **Resistenza forte (paradosso del compleanno)**: nell’ipotesi che le date di nascita siano equiprobabili, è sufficiente scegliere a caso 253 persone per avere una probabilità > 0,5 che una di queste compia gli anni in un dato giorno. Sono invece sufficienti 23 persone scelte a caso per avere una probabilità > 0,5 che due o più compiano gli anni nello stesso giorno. Quindi, non bastano 128 bit. Il numero di bit deve essere il doppio perché per la resistenza forte sono necessari 2^(n/2) tentativi. Dunque, è più facile effettuare un attacco rispetto alla resistenza debole.
 
 ### Unidirezionalità
