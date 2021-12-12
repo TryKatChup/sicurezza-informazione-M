@@ -490,7 +490,7 @@ L'approccio usato al giorno d'oggi, quindi, risulta essere la trasfrormazione se
 
 - Con `T` si indica la trasformazione nota (quindi la conosce anche l'intrusore);
 - Con `k` indichiamo la _chiave_, ovvero il parametro non noto, in ingresso;
-- Con _spazio delle chiavi_ si intende l'insieme delle <img src="svgs/98592f46da9c6e660c7a3e12be2859a4.svg?invert_in_darkmode" align=middle width=16.34523329999999pt height=21.839370299999988pt/> possibili configurazioni dove `n` è il numero di bit della chiave. La chiave è costituita da una delle <img src="svgs/98592f46da9c6e660c7a3e12be2859a4.svg?invert_in_darkmode" align=middle width=16.34523329999999pt height=21.839370299999988pt/> configurazioni. Più è grande `n`, più è complicato per un intrusore indovinare la chiave.
+- Con _spazio delle chiavi_ si intende l'insieme delle $ 2^n $ possibili configurazioni dove `n` è il numero di bit della chiave. La chiave è costituita da una delle $ 2^n $ configurazioni. Più è grande `n`, più è complicato per un intrusore indovinare la chiave.
 
 ### Algoritmo forza bruta
 
@@ -498,7 +498,7 @@ Un intrusore può sempre disporre di un _algoritmo di ricerca esauriente_, noto 
 
 ![intrusore](./img/img10.png)
 
-Se l'intrusore non conosce la chiave, può esplorare tutto lo spazio delle chiavi. Se `n` è il numero di bit della chiave e <img src="svgs/98592f46da9c6e660c7a3e12be2859a4.svg?invert_in_darkmode" align=middle width=16.34523329999999pt height=21.839370299999988pt/> è il numero totale di configurazioni, effettua diversi tentativi fino a quando non indovina la chiave. 
+Se l'intrusore non conosce la chiave, può esplorare tutto lo spazio delle chiavi. Se `n` è il numero di bit della chiave e $ 2^n $ è il numero totale di configurazioni, effettua diversi tentativi fino a quando non indovina la chiave. 
 Occorre conoscere la trasformata `T`. Se il cifrato che ottiene è uguale a quello presente sul canale, allora ha avuto successo nel trovare la configurazione corretta.
 
 ### Relazioni fra le chiavi
@@ -538,7 +538,7 @@ Bisogna evitare che un intrusore possa:
 ### Indovinare la chiave
 
 È sempre possibile risalire alla chiave tramite attacco con _forza bruta_. Per ridurre le probabilità di successo di questo attacco, occorrono alcuni accorgimenti:
-- **Lo spazio delle chiavi deve essere molto grande**: se `n` è il numero di bit che rappresenta la chiave, <img src="svgs/cf2889bdb114fa1a6a34972c325d36bd.svg?invert_in_darkmode" align=middle width=40.302373649999986pt height=22.831056599999986pt/> <img src="svgs/98592f46da9c6e660c7a3e12be2859a4.svg?invert_in_darkmode" align=middle width=16.34523329999999pt height=21.839370299999988pt/> è l'insieme delle possibili configurazioni. Più è grande `n`, più è difficile per un intrusore indovinare la chiave;
+- **Lo spazio delle chiavi deve essere molto grande**: se `n` è il numero di bit che rappresenta la chiave, $\beta=0$ $ 2^n $ è l'insieme delle possibili configurazioni. Più è grande `n`, più è difficile per un intrusore indovinare la chiave;
 - **I bit della chiave devono essere casuali**;
 - **Limitare il numero di prove che l'intrusore ha a disposizione**, come ad esempio il pin del bancomat. Dopo tre tentativi si disabilita l'accesso;
 - **Cambiare frequentemente la chiave**: se i dati devono essere mantenuti a lungo termine, occorre cambiare frequentemente la chiave. In questo modo, si riducono le probabilità di individuare quest'ultima da parte dell'intrusore.
@@ -607,7 +607,7 @@ Negli algoritmi di crittografia gli ultimi due parametri non sono presi in consi
 \
 Il numero `n` (dimensione input) incide sul numero di operazioni richieste, in alcuni casi, anche il valore stesso può incidere sul numero di passi da eseguire. Dunque, a parità di `n`, si hanno diversi valori di `N`.
 
-- **Tempo di esecuzione nel caso peggiore**: si intende il numero massimo di operazioni <img src="svgs/21788e353617825abd332f90adab3827.svg?invert_in_darkmode" align=middle width=39.45737234999999pt height=22.465723500000017pt/> che occorre eseguire per qualsiasi dato d’ingresso di `n` bit.\
+- **Tempo di esecuzione nel caso peggiore**: si intende il numero massimo di operazioni $ N_{max} $ che occorre eseguire per qualsiasi dato d’ingresso di `n` bit.\
 \
 Tramite la notazione del _O grande_ è possibile evidenziare come incrementa il tempo di esecuzione dell’algoritmo al crescere senza limiti della dimensione dell’input.
 
@@ -615,8 +615,8 @@ Tramite la notazione del _O grande_ è possibile evidenziare come incrementa il 
 
 Gli algoritmi possono essere classificati in due categorie:
 
-- **Tempo polinomiale**: algoritmo in grado di completare l'elaborazione di una dimensione `n` di dati in ingresso in un tempo di esecuzione pari a <img src="svgs/ee6ed68481f95c0e531c3fead6d58752.svg?invert_in_darkmode" align=middle width=43.73567879999999pt height=27.91243950000002pt/> dove `k` è un numero intero positivo;
-- **Tempo esponenziale**: algoritmo in grado di completare l'elaborazione di una dimensione `n` di dati in ingresso in un tempo di esecuzione pari a <img src="svgs/892228ed171a7bc1ff860e1f660e1242.svg?invert_in_darkmode" align=middle width=42.38293454999999pt height=24.65753399999998pt/> dove `n` è la dimensione `n` di dati in ingresso.
+- **Tempo polinomiale**: algoritmo in grado di completare l'elaborazione di una dimensione `n` di dati in ingresso in un tempo di esecuzione pari a $ O(n^{k}) $ dove `k` è un numero intero positivo;
+- **Tempo esponenziale**: algoritmo in grado di completare l'elaborazione di una dimensione `n` di dati in ingresso in un tempo di esecuzione pari a $ O(e^{n}) $ dove `n` è la dimensione `n` di dati in ingresso.
 
 ### Classificazione dei problemi
 
@@ -734,7 +734,7 @@ La resistenza alle collisione è fondamentale quando la funzione hash è usata p
 
 **Problema**: data una funzione hash con `n` possibili output e un determinato `H(x)`, se `H` viene applicato a `K` input casuali, quale deve essere il valore di `k` tale che la probabilità che almeno un input `y` soddisfi `H(y) = H(x)` sia maggiore di 0.5?
 
-- **Resistenza debole**: si indica con <img src="svgs/14c95938d1eb8c5cc621f64feabe5fdd.svg?invert_in_darkmode" align=middle width=101.90990699999998pt height=27.77565449999998pt/> la probabilità di un tentativo di trovare una collisione. La probabilità di insuccesso, quindi, è 1 - 1/2^n. Se si hanno k tentativi, P_k(2^n, k) = 1 - (1 - 1/2^n)^k. Questo vuol dire che k= P_k(2^n, k) * 2^n. 2^n per avere un andamento esponenziale deve essere almeno 128. Dunque, l'impronta deve essere almeno 128 bit;
+- **Resistenza debole**: si indica con $ P_1(2^{n}, 1) = \frac{1}{2^n} $ la probabilità di un tentativo di trovare una collisione. La probabilità di insuccesso, quindi, è 1 - 1/2^n. Se si hanno k tentativi, P_k(2^n, k) = 1 - (1 - 1/2^n)^k. Questo vuol dire che k= P_k(2^n, k) * 2^n. 2^n per avere un andamento esponenziale deve essere almeno 128. Dunque, l'impronta deve essere almeno 128 bit;
 - **Resistenza forte (paradosso del compleanno)**: nell’ipotesi che le date di nascita siano equiprobabili, è sufficiente scegliere a caso 253 persone per avere una probabilità > 0,5 che una di queste compia gli anni in un dato giorno. Sono invece sufficienti 23 persone scelte a caso per avere una probabilità > 0,5 che due o più compiano gli anni nello stesso giorno. Quindi, non bastano 128 bit. Il numero di bit deve essere il doppio perché per la resistenza forte sono necessari 2^(n/2) tentativi. Dunque, è più facile effettuare un attacco rispetto alla resistenza debole.
 
 ### Unidirezionalità
