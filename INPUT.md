@@ -2428,6 +2428,14 @@ Kerberos v4 presenta forti limitazioni:
 
 <!-- lezione 01/12 -->
 
+## Modello di Controllo dell’Accesso basato sui ruoli (RBAC)
+
+25.20
+
+<!-- lezione 09/12 -->
+
+## Introduzione alla Blockchain
+
 <!--- -->
 <!--[marco togni](./img/marco_togni.jpg)-->
 
