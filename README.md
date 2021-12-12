@@ -9,6 +9,9 @@ Il tema della sicurezza informatica è molto importante, in un mondo come quello
 Lo scopo della sicurezza informatica è di proteggere le risorse da accessi indesiderati, garantire la riservatezza delle informazioni, assicurare il funzionamento e la disponibilità dei servizi a fronte di eventi imprevedibili.
 Per essere più precisi, è l’insieme dei prodotti, dei servizi, delle regole organizzative e dei comportamenti individuali che proteggono i sistemi informatici di un’azienda.
 
+![GitHub-Mark-Light](https://raw.githubusercontent.com/GiorgosXou/Random-stuff/main/StackOverflow/Answers/70200610_11465149/b.png#gh-light-mode-only)
+![GitHub-Mark-Dark ](https://raw.githubusercontent.com/GiorgosXou/Random-stuff/main/StackOverflow/Answers/70200610_11465149/w.png#gh-dark-mode-only)
+
 ### I tre capisaldi della sicurezza informatica (CIA Trade Triangle)
 
 L'acronimo CIA viene usato per rappresentare le tre proprietà fondamentali della sicurezza informatica:
