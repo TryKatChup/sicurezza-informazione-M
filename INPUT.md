@@ -2349,29 +2349,84 @@ Il cliente invia solo una richiesta al servizio V specificando il ticket che ha 
 Problemi:
 
 - Durata del ticket: se troppo breve, l’utente deve re-inserire la
-pwd, se troppo lungo problema di intercettazione e riutilizzo;
+password, se troppo lungo problema di intercettazione e riutilizzo.
+- Non è prevista l’autenticazione dei server, si spera che V sia davvero V e non un altro servizio.
 - Occorre che il TGS dimostri che la persona che utilizza il ticket
 è quella persona per cui è stato emesso (ultima fase del protocollo _Per ogni sessione di servizio di un TGS_).
 
 <!-- lezione 25/11 -->
 
-### Kerberos V.4
+### Kerberos V4
 
-Si assume che sulle workstation sia presente un client Kerberos. Per ogni dominio di amministrazione Kerberos esiste un AS e un TGS. AS gestisce un insieme di utenti che appartengono a quel dominio e il TGS amministra il rilascio delle credenziali che appartengono a quel dominio. Gli utenti precondividono segreti con gli AS, gli AS con i TGS, i TGS con i servizi.
+Si assume che sulle workstation sia presente un client Kerberos. Per ogni dominio Realm di amministrazione Kerberos esiste un AS e un TGS. AS gestisce un insieme di utenti che appartengono a quel dominio e il TGS amministra il rilascio delle credenziali che appartengono a quel dominio. Gli utenti devono precondividere una prova di conoscenza con gli AS. L'utente sceglie una passphrase e la sottopone ad una funzione hash (chiave di cifratura). Viene precondivisa anche una chiave Ktgs tra AS e TGS e tra TGS e con i servizi.
 
 ![marco togni](./img/img94.png)
 
-La comunicazione totale, in sintesi, si articola in questo modo:
+La comunicazione totale si articola in questo modo:
 
-- All’inizio della sessione di lavoro sulla stazione C, l’utente dichiara la sua identità ad AS
-- AS fornisce il permesso d’accesso a TGS e lo sfida ad usarlo
-- C risponde alla sfida, richiedendo anche l’accesso al server V
-- TGS fornisce a C il permesso d’accesso a V e lo sfida ad usarlo
-  - C si qualifica a V
-  - V si fa identificare da C
+- All’inizio della sessione di lavoro sulla stazione C, l’utente dichiara la sua identità ad AS:
+  ![marco togni](./img/img95.png)
+  L’utente fornisce alla workstation C il proprio ID e l’ID del TGS a cui vuole accedere. C invia ad AS una richiesta di accesso a TGS, contenente anche l’indirizzo di C e una marca temporale T1 (timestamping utili per evitare intercettazioni e repliche). L'IDtgs è da specificare perchè potenzialmente si potrebbe accedere ad un servizi appartenenti a domini differenti:\
+  `C -> AS: ID || ADC || IDtgs || T1`
+- AS fornisce a C il permesso d’accesso a TGS e lo sfida ad usarlo:
+  ![marco togni](./img/img96.png)
+  AS controlla T1 tramite ID prelevando dalla sua memoria H(P) e la utilizza per cifrare il messaggio da inviare a C (crea una sfida), contenente la chiave di sessione KCT tra C e TGS, una marca temporale T2, una durata massima della sessione di ID su C e il ticket da inviare poi al TGS contenente le informazioni su chi è l’utente, su quale stazione lavora, qual è la chiave di sessione e per quanto è valida, il tutto cifrato con la chiave concordata tra AS e TGS:\
+  `ticketTGS: KCT || ID || ADc || IDtgs || T2 || deltaT2`\
+  \
+  `ticketTGS: EKtgs(ticketTGS)`\
+  \
+  `AS -> C: EPSW(KCT || IDtgs || T2 || DT2 || ticketTGS)`
+- C risponde alla sfida, richiedendo anche l’accesso al server V:
+  ![marco togni](./img/img97.png)
+  C richiede all’utente di digitare la sua password, ne calcola l’hash e lo utilizza come chiave per decifrare il messaggio di AS. L’utente fornisce l’ID del server V e lo invia a TGS insieme al ticket ricevuto da AS e ad un autenticatore cifrato con Kct dimostrando di conoscere la password, dunque identificandosi come vero C. L’autenticatore contiene anche una marca temporale che consentirà a TGS di controllare se la sessione è ancora valida:\
+  \
+  `autenticatoreC: ID || ADc || T3`\
+  \
+  `autenticatoreC: Ekct(autenticatoreC)`\
+  \
+  `C -> TGS: IDV || ticketTGS || autenticatoreC`\
+  \
+  Se si prelevasse in una sessione precedente ticketTGS, non sarebbe utilizzabile perchè l'intrusore non saprebbe costruire l'autenticatore.
+- TGS fornisce a C il permesso d’accesso a V e lo sfida ad usarlo:
+  ![marco togni](./img/img98.png)
+  TGS decifra il ticket ed estrae la chiave di sessione Kct con la quale può decifrare l’autenticatore e confrontare le informazioni contenute con quelle del ticket. TGS sceglie a caso una nuova chiave di sessione Kcv, fissa un intervallo DT4 di tempo per la sessione tra C e V e predispone un ticket che cifra con la chiave che ha concordato solo con V. L’intero messaggio viene inviato a C cifrato con Kct:\
+  \
+  `ticketV: KCV || ID || ADC || IDV || T4 || DT`\
+  \
+  `ticketV: EKV(ticketV)`\
+  \
+  `TGS -> C : EKCT(KCV || IDV || T4 || ticketV)`
+- C risponde alla sfida e si qualifica a V:
+  ![marco togni](./img/img99.png)
+  C decifra il messaggio ed estrae la chiave di sessione. Inoltra quindi a V il ticket ottenuto da TGS e un autenticatore cifrato con la chiave Kcv contenente le sue informazioni, che serve anche a C per sfidare V. L’autenticatore contiene anche una marca temporale che indica il momento in cui C inizia la sua sessione con V (la sessione con V scadrà dopo un intervallo di tempo DT4):\
+  \
+  `autenticatoreC : EKCV(IDC || ADC || T5)`\
+  \
+  `C -> V: ticketV || autenticatoreC`
+- V si fa identificare da C:
+  ![marco togni](./img/img100.png)
+  V decifra il ticket di TGS ed estrae quindi la chiave di sessione Kcv. Decifra quindi l’autenticatore e si accerta che le informazioni coincidano. Per rispondere alla sfida lanciata da C invia un messaggio cifrato con Kcv. C decifra, controlla e se tutto va bene può iniziare ad utilizzare i servizi di V:\
+  \
+  `V -> C : EKCV(T5+1)`\
+  \
+  Se l’utente ha ancora bisogno di V il protocollo ricomincia dal passo 5. Se ha bisogno di accedere ad un altro server ricomincia dal passo 3. Questo protocollo non ammette operazioni illecite da parte di intrusi malevoli.
+
+### Request for Service in Another Realm
+
+Se si chiede un servizio ad un dominio di autenticazione diverso da quello del cliente bisogna rendere scalabile questo servizio di autenticazione. È stata prevista la coesistenza di diversi domini tra cui esiste un rapporto di reciproca fiducia. La relazione di fiducia avviene tra TGS: il TGS remoto si fida del TGS del dominio di origine se quello di origine precondivide con lui una chiave. AS deve precondividere tante chiavi quanti sono i TGS che sono in relazione di fiducia tra di loro.
+
+![marco togni](./img/img101.png)
+
+Se un utente di un dominio ha bisogno di accedere ad un servizio inserito in un altro dominio e gestito quindi da un altro TGS a lui noto, ne indica l’identificativo al posto di IDv, quando, al passo 3, si mette in contatto con il suo TGS. Al passo 4, C ottiene il ticket d’accesso al TGS remoto, al passo 5 gli richiede il ticket d’accesso al server desiderato, al passo 6 lo ottiene ed al passo 7 contatta il server.
+
+Kerberos v4 presenta forti limitazioni:
+
+- Forte dipendenza dal DES.
+- Dipende dallo schema di indirizzamento IP.
+- Il dimensionamento della durata del ticket porta a compromessi tra robustezza ed efficienza.
+- Se si hanno N domini esterni, servono N^2 chiavi da condividere e predistribuite (scalabilità limitata). Infatti, se un TGS è presente in un altro dominio rispetto a C, serve: una chiave condivisa tra C e AS, una chiave tra AS e TGS, una chiave per ogni TGS di dominio diverso.
 
 <!-- lezione 01/12 -->
-
 
 <!--- -->
 <!--[marco togni](./img/marco_togni.jpg)-->
