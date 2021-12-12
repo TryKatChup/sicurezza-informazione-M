@@ -20,13 +20,13 @@
       </ul>
     </li>
     <li>
-      <a href="#01.dati-sicuri">Dati Sicuri</a>
+      <a href="#dati-sicuri">Dati Sicuri</a>
       <ul>
         <li><a href="#algoritmi-e-protocolli">Algoritmi e protocolli</a></li>
         <li><a href="#come-rendere-sicuri-i-dati">Come rendere sicuri i dati</a></li>
       </ul>
     </li>
-    <li><a href="#02.meccanismi-di-base">Meccanismi di base</a></li>
+    <li><a href="#meccanismi-di-base">Meccanismi di base</a></li>
   </ol>
 </details>
 
@@ -142,7 +142,7 @@ Si può:
 - **Aggiungere** un attestato di integrità e/o di autenticità. In questo modo la destinazione è in grado di comprendere se il flusso dei messaggi è integro e/o autentico oppure se è stato manomesso (integrità e autenticità);
 - **Impedire** l'interruzione del flusso di dati. La destinazione si assicura che abbia ricevuto il numero corretto di messaggi (disponibilità).
 
-## 01.Dati Sicuri
+## Dati Sicuri
 
 ### Algoritmi e protocolli
 
@@ -681,7 +681,7 @@ Una chiave deve avere un numero minimo di bit:
 - **In una chiave asimmetrica**: in questo caso i bit non possono essere solo di 128 bit perché l'attacco non è solo quello di forza bruta. Nelle chiavi asimmetriche esistono algoritmi di fattorizzazione che consente di risalire dalla chiave pubblica alla chiave privata il cui andamento è sub-esponenziale. In questo caso, il numero di bit per evitare attacchi alle chiavi asimmetriche devono essere almeno di 2000 bit.
 
 <!-- lezione del 07/10/2021-->
-## 02.Meccanismi di base
+## Meccanismi di base
 
 Si è visto come funzionano a livello concettuale le trasformazioni per garantire i requisiti di sicurezza. Adesso si vedono come sono costruite.
 
