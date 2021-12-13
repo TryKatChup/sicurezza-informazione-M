@@ -17,9 +17,9 @@
       <a href="#introduzione">Introduzione</a>
       <ul>
         <li><a href="#scopo-della-sicurezza-informatica">Scopo della sicurezza informatica</a></li>
-        <li><a href="#i-tre-capisaldi-della-sicurezza-informatica-(CIA Trade-Triangle)">I tre capisaldi della sicurezza informatica (CIA Trade Triangle)</a></li>
+        <li><a href="#i-tre-capisaldi-della-sicurezza-informatica-cia-trade-triangle">I tre capisaldi della sicurezza informatica (CIA Trade Triangle)</a></li>
         <li><a href="#calcolatore-sicuro">Calcolatore sicuro</a></li>
-        <li><a href="#-valutazione,-certificazione,-enti">Valutazione, Certificazione, Enti</a></li>
+        <li><a href="#valutazione-certificazione-enti">Valutazione, Certificazione, Enti</a></li>
         <li><a href="#modello-a-canale-insicuro">Modello a canale insicuro</a></li>
         <li><a href="#classificazione-attacchi">Classificazione attacchi</a></li>
         <li><a href="#contromisure">Contromisure</a></li>
@@ -221,7 +221,7 @@ Se si vuole costruire una trasformazione che protegga l'integrità, bisogna far 
 
 Il riassunto lo si calcola tramite una funzione hash.
 
-![integrità](./img/img3.png)
+![integrità](./img/img3-light.png)
 
 In generale, una funzione hash `H` è una funzione che prende un dato `m` di lunghezza arbitraria e restituisce in uscita un'impronta `H(m)`.
 
@@ -245,7 +245,7 @@ Le funzioni hash possono essere classificate in due categorie:
 - **Funzioni hash semplici**: l’individuazione di due messaggi con la stessa impronta è un calcolo facile. In presenza di certi disturbi, è più probabile che i bit che variano siano sempre gli stessi, per cui è possibile calcolare la probabilità;
 - **Funzioni hash sicure**: se le funzioni hash sono crittograficamente sicure (vedi proprietà scritte in alto).
 
-![attestazioneIntegrità](./img/img4.png)
+![attestazioneIntegrità](./img/img4-light.png)
 
 Lo scenario applicativo è il seguente:
 
@@ -329,7 +329,7 @@ L'**integrità** non è garantita:
 
 Chi riceve un messaggio è importante che sappia chi è l'autore o chi lo ha inviato. L'intrusore può creare _ad hoc_ un messaggio, inserirlo nel normale flusso dei dati e fingere di provenire dalla sorgente originale. Questo attacco lo si può solo _rilevare_.
 
-![autenticazione](./img/img5.png)
+![autenticazione](./img/img5-light.png)
 
 Per garantire l'autenticità di una sorgente, si deve costruire una trasformazione `S` che, dato un messaggio `m`, deve produrre in uscita un _attestato di autenticità_ `c` che rappresenta in maniera non imitabile il messaggio `m` originale.
 
@@ -2443,6 +2443,10 @@ Kerberos v4 presenta forti limitazioni:
 <!-- lezione 09/12 -->
 
 ## Introduzione alla Blockchain
+
+È un paradigma fortemente innovativo dove non esiste un'autorità fidata Quindi, per raggiungere integrità e autenticità non c'è bisogno di autorità fidate. La blockchain non è bitcoin, quest’ultima è un’applicazione della tecnologia blockchain: spesso ci si confonde sulla terminologia. I bitcoin sono una criptovaluta finanziaria.
+
+31.00
 
 <!--- -->
 <!--[marco togni](./img/marco_togni.jpg)-->
