@@ -9,9 +9,9 @@
 [![License: CC0-1.0](https://img.shields.io/badge/License-CC0%201.0-blue.svg)](http://creativecommons.org/publicdomain/zero/1.0/)
 </div>
 
-<!-- TABLE OF CONTENTS -->
+<!-- INDICE -->
 <details open="open">
-  <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
+  <summary><h2 style="display: inline-block">Indice</h2></summary>
   <ol>
     <li>
       <a href="#introduzione">Introduzione</a>
@@ -32,6 +32,33 @@
       <ul>
         <li><a href="#algoritmi-e-protocolli">Algoritmi e protocolli</a></li>
         <li><a href="#come-rendere-sicuri-i-dati">Come rendere sicuri i dati</a></li>
+        <li><a href="#"></a>Crittografia e Crittoanalisi</li>
+        <li><a href="#"></a>I principi della difesa</li>
+        <li><a href="#"></a>Proteggere la proprietà di confidenzialità</li>
+        <li><a href="#"></a>Proteggere la proprietà di integrità</li>
+        <li><a href="#"></a>Esempio</li>
+        <li><a href="#"></a>Esempio 2</li>
+        <li><a href="#"></a>Esempio 3</li>
+        <li><a href="#"></a>Proteggere la proprietà di autenticità</li>
+        <li><a href="#"></a>Firma digitale</li>
+        <li><a href="#"></a>Hash del messaggio e di un segreto</li>
+        <li><a href="#"></a>Firma digitale vs Hash del messaggio e di un segreto</li>
+        <li><a href="#"></a>Esempio: SSL</li>
+        <li><a href="#"></a>Esempio: SSH</li>
+        <li><a href="#"></a>Esempio: IPsec</li>
+        <li><a href="#"></a>Anonimato/Identificazione</li>
+        <li><a href="#"></a>Protocollo di identificazione</li>
+        <li><a href="#"></a>Funzioni one-way</li>
+        <li><a href="#"></a>Trasformazioni segrete</li>
+        <li><a href="#"></a>Algoritmo forza bruta</li>
+        <li><a href="#"></a>Relazioni fra le chiavi</li>
+        <li><a href="#"></a>Proprietà delle chiavi simmetriche</li>
+        <li><a href="#"></a>Proprietà delle chiavi asimmetriche</li>
+        <li><a href="#"></a>Crittoanalisi</li>
+        <li><a href="#"></a>Indovinare la chiave</li>
+        <li><a href="#"></a>Intercettare la chiave</li>
+        <li><a href="#"></a>Esempio: generazione, memorizzazione e uso di una chiave segreta</li>
+        <li><a href="#"></a>Dedurre la chiave</li>
       </ul>
     </li>
     <li><a href="#meccanismi-di-base">Meccanismi di base</a></li>
@@ -56,8 +83,8 @@ L'acronimo CIA viene usato per rappresentare le tre proprietà fondamentali dell
 - **Integrità**: solo chi è autorizzato può modificare, eliminare e creare risorse;
 - **Disponibilità**: solo chi è autorizzato può accedere alle risorse senza interferenze ed ostacoli.
 
-![Cia-Mark-Light](./img/img1-light.png#gh-light-mode-only)
-![Cia-Mark-Dark ](./img/img1-dark.png#gh-dark-mode-only)
+![Cia-Light](./img/img1-light.png#gh-light-mode-only)
+![Cia-Dark ](./img/img1-dark.png#gh-dark-mode-only)
 
 A queste proprietà se ne possono aggiungere altre come:
 
@@ -156,11 +183,13 @@ Si può:
 
 Per proteggere i dati a fronte di eventuali attacchi occorre utilizzare delle trasformazioni.
 
-![cia](./img/img26.png)
+![Algoritmi-Light](./img/img26-light.png#gh-light-mode-only)
+![Algoritmi-Dark ](./img/img26-dark.png#gh-dark-mode-only)
 
 L'_algoritmo_ è una sequenza di istruzioni, e rappresenta una singola trasformazione (blocco `Ts` o `Td`).
 
-![cia](./img/img27.png)
+![Protocolli-Light](./img/img27-light.png#gh-light-mode-only)
+![Protocolli-Dark ](./img/img27-dark.png#gh-dark-mode-only)
 
 Nei casi complessi, è necessario che si eseguano più trasformazioni e la sequenza da eseguire deve essere ben precisa. In questo caso, si parla di _protocollo_.
 
@@ -193,7 +222,8 @@ Ci sono tre principi che guidano la progettazione delle trasformazioni:
 Per proteggere i dati si ha bisogno di una trasformata che renda incomprensibile il contenuto. In questo modo, l'intrusore non sarà in grado di capire i messaggi.
 La riservatezza si ottiene con una trasformazione di tipo _preventivo_: l'intrusore che accede ai dati non sarà in grado di comprenderli.
 
-![confidenzialità](./img/img2-light.png)
+![Confidenzialità-Light](./img/img2-light.png#gh-light-mode-only)
+![Confidenzialità-Dark ](./img/img2-dark.png#gh-dark-mode-only)
 
 Lo scenario applicativo è il seguente:
 
@@ -221,7 +251,8 @@ Se si vuole costruire una trasformazione che protegga l'integrità, bisogna far 
 
 Il riassunto lo si calcola tramite una funzione hash.
 
-![integrità](./img/img3-light.png)
+![Hash-Light](./img/img3-light.png#gh-light-mode-only)
+![Hash-Dark ](./img/img3-dark.png#gh-dark-mode-only)
 
 In generale, una funzione hash `H` è una funzione che prende un dato `m` di lunghezza arbitraria e restituisce in uscita un'impronta `H(m)`.
 
@@ -245,7 +276,8 @@ Le funzioni hash possono essere classificate in due categorie:
 - **Funzioni hash semplici**: l’individuazione di due messaggi con la stessa impronta è un calcolo facile. In presenza di certi disturbi, è più probabile che i bit che variano siano sempre gli stessi, per cui è possibile calcolare la probabilità;
 - **Funzioni hash sicure**: se le funzioni hash sono crittograficamente sicure (vedi proprietà scritte in alto).
 
-![attestazioneIntegrità](./img/img4-light.png)
+![Integrità-Light](./img/img4-light.png#gh-light-mode-only)
+![Integrità-Dark ](./img/img4-dark.png#gh-dark-mode-only)
 
 Lo scenario applicativo è il seguente:
 
@@ -278,7 +310,7 @@ Il protocollo che assicura riservatezza e integrità dei dati è costituito dai 
 
 L'intrusore può modificare solo casualmente i bit del cifrato perchè calcolarsi l'operazione inversa senza conoscere la trasformata `D` è computazionalmente difficile. Inoltre, le trasformate `D` e `E` sono segrete.
 
-### Esempio 2
+### Esempio
 
 In questo caso, l'integrità è rispettata mentre la riservatezza no:
 
@@ -329,7 +361,8 @@ L'**integrità** non è garantita:
 
 Chi riceve un messaggio è importante che sappia chi è l'autore o chi lo ha inviato. L'intrusore può creare _ad hoc_ un messaggio, inserirlo nel normale flusso dei dati e fingere di provenire dalla sorgente originale. Questo attacco lo si può solo _rilevare_.
 
-![autenticazione](./img/img5-light.png)
+![Autenticazione-Light](./img/img5-light.png#gh-light-mode-only)
+![Autenticazione-Dark ](./img/img5-dark.png#gh-dark-mode-only)
 
 Per garantire l'autenticità di una sorgente, si deve costruire una trasformazione `S` che, dato un messaggio `m`, deve produrre in uscita un _attestato di autenticità_ `c` che rappresenta in maniera non imitabile il messaggio `m` originale.
 
@@ -365,7 +398,8 @@ Esistono 2 schemi alternativi per realizzare sign-verify: _la firma digitale_ e 
 
 Il primo schema alternativo per realizzare _sign-verify_ è la _firma digitale_.
 
-![firmadigitale](./img/img6.png)
+![Firma Digitale-Light](./img/img6-light.png#gh-light-mode-only)
+![Firma Digitale-Dark ](./img/img6-dark.png#gh-dark-mode-only)
 
 Lo scenario applicativo è il seguente:
 
@@ -387,7 +421,8 @@ Questo schema assicura anche la proprietà di:
 
 Il secondo schema alternativo per realizzare _sign_-_verify_ è l'uso di un _hash_.
 
-![hashs](./img/img7.png)
+![Hash Concatenato-Light](./img/img7-light.png#gh-light-mode-only)
+![Hash Concatenato-Dark ](./img/img7-dark.png#gh-dark-mode-only)
 
 - Due entità `A` e `B` (mittente e destinatario) condividono un segreto `s`;
 - `A` calcola `H(m || s)` a partire da `m`, cioè il messaggio che si vuole trasferire, e invia alla destinazione `m || H(m || s)`;
@@ -403,7 +438,7 @@ Lo schema _hash_ risulta essere più efficiente rispetto alla _firma digitale_, 
 
 Viceversa, la firma digitale è meno efficiente poiché ha la funzione di _sign_ `S` ma garantisce il _non ripudio_.
 
-### Esempio 1: SSL
+### Esempio: SSL
 
 In questo caso, si invia un messaggio che rispetta le proprietà di **riservatezza**, **autenticità** e **integrità**:
 
@@ -424,7 +459,7 @@ Da un punto di vista di efficienza, le trasformazioni in fase di ricezione sono 
 - Decodifica del messaggio cifrato;
 - Autenticazione tramite funzione hash crittograficamente sicura.
 
-### Esempio 2: SSH
+### Esempio: SSH
 
 In questo caso, si invia un messaggio che rispetta le proprietà di **riservatezza** e **autenticità**:
 
@@ -441,7 +476,7 @@ Da un punto di vista di efficienza, le trasformazioni in fase di ricezione sono 
 - Decodifica del messaggio cifrato;
 - Autenticazione tramite funzione hash crittograficamente sicura.
 
-### Esempio 3: IPsec
+### Esempio: IPsec
 
 In questo caso, si invia un messaggio che rispetta le proprietà di **riservatezza** e **autenticità**:
 
@@ -477,7 +512,8 @@ Un sistema di identificazione si può basare su:
 
 Un processo d’identificazione avviene tramite l'uso di protocolli.
 
-![kronk](/img/img8.png)
+![Protocollo di Identificazione-Light](./img/img8-light.png#gh-light-mode-only)
+![Protocollo di Identificazione-Dark ](./img/img8-dark.png#gh-dark-mode-only)
 
 Qualunque protocollo di identificazione prevede due fasi:
 
@@ -2444,9 +2480,69 @@ Kerberos v4 presenta forti limitazioni:
 
 ## Introduzione alla Blockchain
 
-È un paradigma fortemente innovativo dove non esiste un'autorità fidata Quindi, per raggiungere integrità e autenticità non c'è bisogno di autorità fidate. La blockchain non è bitcoin, quest’ultima è un’applicazione della tecnologia blockchain: spesso ci si confonde sulla terminologia. I bitcoin sono una criptovaluta finanziaria.
+È una tecnologia innovativa in cui non esiste un'entità terza fidata centralizzata che garantisce integrità e autenticità delle informazioni. Spesso ci si confonde con i termini Blockchain e Bitcoin: non sono la stessa cosa. I Bitcoin sono stata la prima applicazione Blockchain. L'obiettivo di Bitcoin è quello di realizzare transazioni economiche valide tra entità che non si fidano tra di loro senza dover ricorrere ad intermediari fidati come gli istituti bancari.
 
-31.00
+Per BlockChain si intende una catena di blocchi immutabili detto registro, che sono distribuiti e decentralizzati. Ogni partecipante conserva e gestisce una copia di tutti i dati, che si presuppone uguale, in termini di contenuti, a quelli che gli altri partecipanti conservano. Il registro è dunque distribuito in questo senso: ognuno ne conserva una copia mentre per decentralizzato si intende che ogni nodo può interviene nella gestione dei dati. Il registro è append-only cioè i dati, una volta accettati dal registro, non possono essere cancellati né modificati ma solo aggiunti.
+
+### Blockchain: struttura
+
+Con blockchain si intende la struttura dati immutabile oltre alla tecnologia.
+
+![marco togni](./img/img102.png)
+
+Ogni blocco contiene:
+
+- header:
+  - altezza del blocco
+  - timestamp: istante temporale in cui è stato minato il blocco.
+  - nonce: 
+  - previous block hash: hash del riferimento al blocco precedente
+  - data_hash: hash crittograficamente sicuro per rendere immutabile il contenuto del campo data
+- dati: contiene un insieme di transazioni finanziarie. Questo campo è firmato
+- header hash: identifica univocamente l'hash applicato all'header del blocco e viene generato tramite un hash crittograficamente sicuro.
+
+Ogni record linka il blocco precedente. Il primo blocco prende il nome di genesis block.
+
+![marco togni](./img/img104.png)
+
+L’hash al blocco precedente consente di formare una catena immutabile e inattaccabile. Se si modificasse un blocco bisognerebbe riuscire a re-computare l’hash di tutti i blocchi successivi. Se si cambia un dato, questa modifica si riflette su tutti i blocchi successivi della catena: il blocco uno viene cambiato con la parola _stupid_ al posto di _my_ ma solo una copia del registro su un nodo risulta essere alterata.
+
+Con queste caratteristiche il registro diventa un ottimo candidato per registrare le transazioni economiche. Nel caso dei Bitcoin, la valuta è completamente digitale per cui ci si espone all'attacco di doppia spesa. Questo attacco prevede di ricreare la moneta digitale in modo da poter spendere all'infinito.
+
+Quando si effettua una transazione, essa viene propagata agli altri nodi della rete in broadcast. Esiste un algoritmo di consenso per i nuovi dati che stabilisce se tutti i registri debbano accettare o no un nuovo dato per evitare il problema della doppia spesa.
+
+Ogni volta che i nodi hanno ricevuto la transazione, viene memorizzata nella cache. Periodicamente un nodo viene selezionato. Se il nodo viene selezionato deve raggruppare e selezionare le transazioni che ritiene valide, creare un blocco e inviarlo a tutti gli altri. Se il blocco viene ritenuto valido dai nodi, viene inserito nella blockchain.
+
+Se viene selezionato un nodo D malintenzionato:
+
+- D non può rubare la moneta di qualcun'altro perchè per pagare si deve firmare con chiave privata del mittente.
+- D può evitare di inserire una transazione valida nel suo blocco. Dato che le trasmissioni sono trasmesse in broadcast ci sarà un nodo non malevolo che la inserirà.
+- D può effettuare un attacco di doppia spesa perchè l'algoritmo converge in modo lento. D aver inviato una somma di denaro ad una persona, D viene selezionato e invia di nuovo la stessa somma ad un altra persona. Si genera un blocco che è in competizione con l'ultimo blocco generato in precedenza.\
+![marco togni](./img/img105.png)\
+Dato che la trasmissione avviene in rete, alcuni nodi avranno prima il blocco in alto e altri il blocco in basso. Per evitare questa problematica, si richiede a tutti i nodi di estendere sempre la catena più lunga in caso di catene parallele. Per evitare di creare una catene parallele, viene creato ogni tot di tempo un nuovo blocco perchè in teoria è fattibile creare catene in parallelo. Per creare in tempo costante un blocco vengono usate due modalità:
+
+- Selezione del nodo: si basa su una competizione della rete tra tutti i nodi
+- Sistemi di incentivi: vengono intascati entrambi da chi genera il blocco:
+  - **Block reward**: quando un nodo viene selezionato per generare un blocco, il nodo ha diritto di realizzare **una** transazione che crea moneta dal nulla (coinbase transaction). Questo nodo ha il diritto di attribuire a chiunque il denaro creato anche a se stesso.
+  - **Transaction fees**: ogni volta che un nodo ha il diritto di generare un blocco deve scegliere delle transazioni perchè esse sono tante e la dimensione del blocco è limitata. La scelta avviene in base alla commissione e per questo si scelgono le transazioni con le commissioni più alte.
+
+1.02.53
+
+Quando un insieme di transazioni è stata ascoltata sulla rete, un nodo può decidere di confezionarle in un blocco e minarlo (costruirlo + pubblicarlo sulla rete e fare in modo che venga aggiunto al registro di tutti i nodi). Per minare il blocco si deve risolvere una sfida. Il primo nodo che riesce a risolvere la sfida lo pubblica mandandolo sulla rete che viene ascoltato dagli altri. Gli altri nodi che stavano minando il blocco si ferma e aggiunge il blocco ricevuta dalla rete al proprio registro.
+
+### Merkle Trees
+
+I dati sono organizzati in strutture chiamate Merkle Tree. Le foglie dell’albero sono i dati, ordinati, mentre gli altri nodi contengono coppie di puntatori hash. La struttura rende semplice provare che un certo dato appartiene a un blocco o meno: basta computare gli hash nel percorso tra il dato e la radice. Questa struttura rende il procedimento di verifica ordinato ed efficiente.
+
+![marco togni](./img/img103.png)
+
+Si parte dalle foglie (i dati). Per ogni coppia di dati si calcola una coppia di hash; poi, per ogni coppia di hash si calcola un hash, e così via fino alla radice, che è contenuta nell’header del blocco, da cui si calcola il fatidico _header hash_. Per verificare se un certo dato appartiene al blocco devo esplorare solo una porzione dell’albero (log n), efficienza. Una modifica ad uno solo dei dati si ripercuote fino alla radice, quindi al _header hash_.
+
+### Bitcoin
+
+Rete P2P di nodi dove ogni nodo potenzialmente memorizza una copia del registro. Bitcoin permette di ricevere e fare pagamenti in forma anonima perchè non c'è un'autorità che effettua un'associazione persona-chiave e non tracciabile perchè ogni utente è individuato da un indirizzo che viene individuato dalla chiave pubblica. Vengono algoritmi di hash crittograficamente sicuri su curve elittiche per fare la firma delle transazioni.
+
+e i Bitcoin garantiscono l'anonimità dei partecipanti perchè in assenza di un'entità che associa un nome a una coppia di chiavi, si rimane anomimi.
 
 <!--- -->
 <!--[marco togni](./img/marco_togni.jpg)-->
