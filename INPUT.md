@@ -79,30 +79,30 @@ Per essere più precisi, è l’insieme dei prodotti, dei servizi, delle regole 
 
 L'acronimo CIA viene usato per rappresentare le tre proprietà fondamentali della sicurezza informatica:
 
-- **Confidenzialità** (o **riservatezza**): solo chi è autorizzato può accedere (in sola lettura) a risorse o sapere almeno che esse esistano;
-- **Integrità**: solo chi è autorizzato può modificare, eliminare e creare risorse;
-- **Disponibilità**: solo chi è autorizzato può accedere alle risorse senza interferenze ed ostacoli.
+- **confidenzialità** (o **riservatezza**): solo chi è autorizzato può accedere (in sola lettura) a risorse o sapere almeno che esse esistano;
+- **integrità**: solo chi è autorizzato può modificare, eliminare e creare risorse;
+- **disponibilità**: solo chi è autorizzato può accedere alle risorse senza interferenze ed ostacoli.
 
 ![Cia-Light](./img/img1-light.png#gh-light-mode-only)
 ![Cia-Dark ](./img/img1-dark.png#gh-dark-mode-only)
 
 A queste proprietà se ne possono aggiungere altre come:
 
-- **Autenticità**: occorre effettivamente dimostrare chi è stato a creare il dato o sapere da chi proviene;
-- **Non ridupio**: quando una qualsiasi operazione sul dato è conclusa, si può dimostrare con certezza a una terza parte la paternità di quell'operazione.
+- **autenticità**: occorre effettivamente dimostrare chi è stato a creare il dato o sapere da chi proviene;
+- **non ridupio**: quando una qualsiasi operazione sul dato è conclusa, si può dimostrare con certezza a una terza parte la paternità di quell'operazione.
 
 ### Terminologia
 
-- **Vulnerabilità**: punto debole del sistema che può rendere realizzabile una minaccia;
-- **Minaccia**: atto ostile intenzionale o meno che ha un qualsiasi effetto negativo sulle risorse o sugli utenti del sistema;
-- **Attacco**: qualsiasi azione che sfrutta una vulnerabilità per concretizzare una minaccia;
+- **Vulnerabilità**: punto debole del sistema che può rendere realizzabile una minaccia.
+- **Minaccia**: atto ostile intenzionale o meno che ha un qualsiasi effetto negativo sulle risorse o sugli utenti del sistema.
+- **Attacco**: qualsiasi azione che sfrutta una vulnerabilità per concretizzare una minaccia.
 - **Contromisura**: azione, dispositivo, procedura o tecnica che consente di rimuovere o ridurre una vulnerabilità.
 
 Esempio:
 
-- **Vulnerabilità**: un ponte ha una crepa;
-- **Minaccia**: rischia di crollare;
-- **Attacco**: un peso totale eccessivo sul ponte;
+- **Vulnerabilità**: un ponte ha una crepa.
+- **Minaccia**: rischia di crollare.
+- **Attacco**: un peso totale eccessivo sul ponte.
 - **Contromisura**: cercare di controllare il numero di veicoli sul ponte.
 
 <a href="#indice">Torna all'indice</a>
@@ -112,11 +112,15 @@ Esempio:
 
 La sicurezza di un calcolatore deve essere garantita a livello hardware, firmware e software. Ovviamente questa ipotesi non è sempre verificata, ma in questo corso lo si darà per scontato.
 
+<a href="#indice">Torna all'indice</a>
+
 ### Valutazione, Certificazione, Enti
 
 Gli enti di certificazione definiscono delle metodologie che consentono di verificare che un progetto sia effettivamente sicuro. Applicando questi standard, gli enti garantiscono la sicurezza del prodotto che si installa.
 
 Esempi di standard internazionali per valutazione e certificazione della sicurezza: Orange book del NCSC, ISO 17799, CINI, CERT, ecc.
+
+<a href="#indice">Torna all'indice</a>
 
 ### Modello a canale insicuro
 
@@ -126,40 +130,46 @@ Questo modello prevede che ci sia una sorgente dei dati, una destinazione a cui 
 
 Si assume che:
 
-- La sorgente sia in un ambiente sicuro (hardware e sistema operativo sicuri);
-- La destinazione sia in un ambiente sicuro (hardware e sistema operativo sicuri);
+- La sorgente sia in un ambiente sicuro (hardware e sistema operativo sicuri).
+- La destinazione sia in un ambiente sicuro (hardware e sistema operativo sicuri).
 - Il canale sia insicuro, ovvero la possibilità di presenza di intrusori che possano fare degli attacchi su tale canale.
 
 Definito un modello di questo genere, l'obiettivo finale sarà di garantire che la destinazione possa consumare ed interpretare correttamente i dati inviati dalla sorgente.
+
+<a href="#indice">Torna all'indice</a>
 
 ### Classificazione attacchi
 
 Gli attacchi si classificano in due tipologie:
 
-- **Passivo**: l'intrusore si inserisce sul canale e osserva solo i dati trasmessi. Ad esempio, se il canale è un cavo di rete, si usa uno _sniffer_. Viene minato il requisito di _confidenzialità_;
+- **Passivo**: l'intrusore si inserisce sul canale e osserva solo i dati trasmessi. Ad esempio, se il canale è un cavo di rete, si usa uno _sniffer_. Viene minato il requisito di _confidenzialità_.
 - **Attivo**: l'intrusore si inserisce sul canale ed altera il normale flusso dei dati. Può:
-  - **Modificare** il flusso intenzionalmente per cambiare il contenuto dei dati. Viene minato il requisito di _integrità_;
-  - **Aggiungere** nuove informazioni facendo credere alla destinazione che siano state inviate dalla sorgente legittima. Viene minato il requisito di _autenticità_;
+  - **Modificare** il flusso intenzionalmente per cambiare il contenuto dei dati. Viene minato il requisito di _integrità_.
+  - **Aggiungere** nuove informazioni facendo credere alla destinazione che siano state inviate dalla sorgente legittima. Viene minato il requisito di _autenticità_.
   - **Interrompere** il normale flusso impedendo che i dati arrivino alla destinazione. Viene minato il requisito di _disponibilità_.
+
+<a href="#indice">Torna all'indice</a>
 
 ### Contromisure
 
 Esistono 3 tipologie di contromisure per gli attacchi:
 
-- **Prevenzione**: si previene la possibilità di un attacco;
-- **Rilevazione**: si rileva un attacco in corso;
-- **Reazione**: si reagisce dopo che un attacco è avvenuto.
+- **prevenzione**: si previene la possibilità di un attacco;
+- **rilevazione**: si rileva un attacco in corso;
+- **reazione**: si reagisce dopo che un attacco è avvenuto.
 
 Il tipo di contromisura da adottare viene scelta anche in base al sistema e a cosa si vuole proteggere (nel corso il focus è incentrato sui dati).
 
 La contromisura ha:
 
-- Un costo in termini economici, di impegno delle risorse informatiche del sistema, di impatto sugli utenti;
+- Un costo in termini economici, di impegno delle risorse informatiche del sistema, di impatto sugli utenti.
 - Una sua efficacia (a fronte di una certa minaccia) e dei suoi effetti collaterali (la creazione di nuove vulnerabilità).
 
 Una certa contromisura, quindi, deve essere applicata attentamente, valutando sia la probabilità che si verifichi una certa minaccia in grado di sfruttare una certa vulnerabilità, sia il danno che ne discende. Questa attività è chiamata _analisi del rischio_.
 
 Come i [veri ingegneri dimostrano](https://youtu.be/EOR8Uz27s3Y?t=420), l'obiettivo è capire a fronte di più possibilità progettuali quale risulti la migliore scelta per garantire la [sicurezza](https://twitter.com/AndreaDraghetti/status/1455576154425933828) del proprio [sistema](https://raidforums.com/Thread-Italy-s-Ministery-of-Healthcare-hacked-and-Blackmails-WhiteHatsicurezza) e dei propri dati.
+
+<a href="#indice">Torna all'indice</a>
 
 ### Possibili contromisure per attacchi passivi
 
@@ -167,7 +177,7 @@ L’unica contromisura da utilizzare è la _prevenzione_. La _rilevazione_ e la 
 
 Si può:
 
-- **Impedire** l'accesso al canale. Ciò viene implementato tramite l'utilizzo di canali dedicati tra sorgente e destinazione. Questa soluzione non è tuttavia né economicamente sostenibile né scalabile;
+- **Impedire** l'accesso al canale. Ciò viene implementato tramite l'utilizzo di canali dedicati tra sorgente e destinazione. Questa soluzione non è tuttavia né economicamente sostenibile né scalabile.
 - **Cifrare** i dati da inviare, ovvero rendere incomprensibili i dati trasmessi, tranne al destinatario legittimo.
 
 ### Possibili contromisure per attacchi attivi
@@ -176,8 +186,10 @@ Le contromisure da adottare, a differenza degli attacchi passivi, includono anch
 
 Si può:
 
-- **Aggiungere** un attestato di integrità e/o di autenticità. In questo modo la destinazione è in grado di comprendere se il flusso dei messaggi è integro e/o autentico oppure se è stato manomesso (integrità e autenticità);
+- **Aggiungere** un attestato di integrità e/o di autenticità. In questo modo la destinazione è in grado di comprendere se il flusso dei messaggi è integro e/o autentico oppure se è stato manomesso (integrità e autenticità).
 - **Impedire** l'interruzione del flusso di dati. La destinazione si assicura che abbia ricevuto il numero corretto di messaggi (disponibilità).
+
+<a href="#indice">Torna all'indice</a>
 
 ## Dati Sicuri
 
