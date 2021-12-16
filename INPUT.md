@@ -105,7 +105,7 @@ Esempio:
 - **Attacco**: un peso totale eccessivo sul ponte;
 - **Contromisura**: cercare di controllare il numero di veicoli sul ponte.
 
-<sup><a href="#indice">[93]</a></sup>
+ <img href="#indice" src="./img/up-arrow.png" alt="Torna all'indice" width="20" height="20"> 
 
 <!-- lezione del 27/09/2021 -->
 ### Calcolatore sicuro
