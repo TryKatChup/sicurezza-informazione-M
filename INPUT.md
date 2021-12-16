@@ -562,7 +562,8 @@ I primi due approcci non sono molto funzionali:
 
 L'approccio usato al giorno d'oggi, quindi, risulta essere la trasfrormazione segreta tramite _parametro_.
 
-![chiave](/img/img9.png)
+![Chiave-Light](./img/img9-light.png#gh-light-mode-only)
+![Chiave-Dark ](./img/img9-dark.png#gh-dark-mode-only)
 
 - Con `T` si indica la trasformazione nota (quindi la conosce anche l'intrusore);
 - Con `k` indichiamo la _chiave_, ovvero il parametro non noto, in ingresso;
@@ -572,7 +573,8 @@ L'approccio usato al giorno d'oggi, quindi, risulta essere la trasfrormazione se
 
 Un intrusore può sempre disporre di un _algoritmo di ricerca esauriente_, noto come _algoritmo di forza bruta_.
 
-![intrusore](./img/img10.png)
+![Forza Bruta-Light](./img/img10-light.png#gh-light-mode-only)
+![Forza Bruta-Dark ](./img/img10-dark.png#gh-dark-mode-only)
 
 Se l'intrusore non conosce la chiave, può esplorare tutto lo spazio delle chiavi. Se `n` è il numero di bit della chiave e 2^n è il numero totale di configurazioni, effettua diversi tentativi fino a quando non indovina la chiave. 
 Occorre conoscere la trasformata `T`. Se il cifrato che ottiene è uguale a quello presente sul canale, allora ha avuto successo nel trovare la configurazione corretta.
