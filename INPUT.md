@@ -261,7 +261,7 @@ Altre considerazioni:
 
 Proteggere l'integrità vuol dire costruire delle trasformazioni in grado di rilevare modifiche al contenuto dei dati trasmessi. In questo caso, la contromisura da adottare è quella della _rilevazione_ perché le modifiche ai messaggi sul canale non possono essere evitate a priori.
 
-Se si vuole costruire una trasformazione che protegga l'integrità, bisogna far si che la sorgente utilizzi ridondanza al messaggio e affianchi al dato iniziale un'informazione aggiuntiva che deve essere costruita opportunamente. Questa informazione si chiama _riassunto_ o _impronta_. La sua dimensione deve essere inferiore perché la si deve poi trasmettere sul canale.
+Se si vuole costruire una trasformazione che protegga l'integrità, bisogna far si che la sorgente utilizzi ridondanza al messaggio e affianchi al dato iniziale un'informazione aggiuntiva che deve essere costruita opportunamente. Il risultato finale `H(m)` viene detto _riassunto_ o _impronta_. La sua dimensione deve essere inferiore perché la si deve poi trasmettere sul canale.
 
 Il riassunto lo si calcola tramite una funzione hash.
 
@@ -293,7 +293,7 @@ Le funzioni hash possono essere classificate in due categorie:
 ![Integrità-Light](./img/img4-light.png#gh-light-mode-only)
 ![Integrità-Dark ](./img/img4-dark.png#gh-dark-mode-only)
 
-Lo scenario applicativo è il seguente:
+ Uno scenario applicativo in cui viene garantita solamente l'integrità è il seguente:
 
 - La sorgente `A` manda sul canale insicuro un messaggio `m`;
 - L'impronta `H(m)` deve viaggiare su un canale sicuro per evitare che un intrusore possa sostituire `m` con un altro messaggio `m'` e di conseguenza sostituire anche `H(m)` con `H(m')` (la funzione `H` non è segreta);
