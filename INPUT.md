@@ -243,7 +243,7 @@ Ci sono tre principi che guidano la progettazione delle trasformazioni:
 
 <a href="#indice">Torna all'indice</a>
 
-### Proteggere la proprietà di confidenzialità
+### Proteggere la proprietà di confidenzialità (o riservatezza)
 
 Per proteggere i dati si ha bisogno di una trasformata che renda incomprensibile il contenuto. In questo modo, l'intrusore non sarà in grado di capire i messaggi.
 La riservatezza si ottiene con una trasformazione di tipo preventivo: l'intrusore che accede ai dati non sarà in grado di comprenderli.
@@ -291,7 +291,7 @@ Una funzione hash ha la seguente proprietà:
 Oltre alla proprietà appena scritta, risulta importante che essa sia crittograficamente sicura e abbia anche le seguenti proprietà:
 
 - **Comportamento da "oracolo casuale"**: se si decide che l'impronta sia costituita da `n` bit, le possibili uscite della funzione hash sono `2^n`. 
-Considerato il messaggio `m`, bisogna fare in modo che la probabilità che esca un' uscita rispetto ad un'altra sia la stessa. Inoltre, se il messaggio viene ripetuto, la risposta sarà la medesima, dato che è stata assegnata precedentemente dall'oracolo.
+Considerato il messaggio `m`, bisogna fare in modo che la probabilità che esca un'uscita rispetto ad un'altra sia la stessa. Inoltre, se il messaggio viene ripetuto, la risposta sarà la medesima, dato che è stata assegnata precedentemente dall'oracolo.
 
 ![zeus](./img/zeus.jpg)
 
@@ -316,17 +316,17 @@ Le funzioni hash possono essere classificate in due categorie:
 
 <a href="#indice">Torna all'indice</a>
 
-### Esempio: garantire riservatezza integrità
+### Esempio: garantire riservatezza e integrità
 
-Le trasformazioni possono essere combinate fra di loro. Ad esempio, per garantire la riservatezza e l'integrità dei dati si possono usare in questo modo:
+Le trasformazioni possono essere combinate fra di loro. Ad esempio, per garantire la _riservatezza_ e l'_integrità_ dei dati si possono usare in questo modo:
 
-`p = m || H(m)` 
+`p = m || H(m)` (Concatenazione del messaggio originale con un hash sicuro)
 
-`c = E(p)`
+`c = E(p)` (Encryption su p)
 
-`p* = D(c*) = m* || H*(m)`
+`p* = D(c*) = m* || H*(m)` (Decryption sul messaggio inviato sul canale)
 
-`H*(m) =? H(m*)`
+`H*(m) =? H(m*)` (Verifica dell'integrità del hash)
 
 Il protocollo che assicura riservatezza e integrità dei dati è costituito dai questi passi:
 
@@ -340,19 +340,27 @@ Il protocollo che assicura riservatezza e integrità dei dati è costituito dai 
 
 L'intrusore può modificare solo casualmente i bit del cifrato perchè calcolarsi l'operazione inversa senza conoscere la trasformata `D` è computazionalmente difficile. Inoltre, le trasformate `D` e `E` sono segrete.
 
-### Esempio: garantire integrità
+Riassumendo, vengono garantite:
+
+- **Riservatezza**: grazie all'operazione di Encryption (`E`) e Decryption (`D`) sul hash concatenato al messaggio, conosciute soltanto rispettivamente dalla sorgente e dalla destinazione. `D` deve essere anche computazionalmente difficile da ricavare.
+- **Integrità**: grazie alla funzione di _hash sicuro_ su `m` che possiede le seguenti proprietà
+  -  resistenza alle collisioni;
+  -  difficoltà nel risalire al messaggio originale, a partire dall'impronta;
+  -  comportamento da oracolo casuale.
+
+### Esempio: garantire solo integrità
 
 In questo caso, l'integrità è rispettata mentre la riservatezza no:
 
 `p = m`
 
-`c = E(p) || H(m)`
+`c = E(p) || H(m)` (Cifro il messaggio e lo concateno al suo hash)
 
-`p* = D(c*) = E*(p) || H*(m)`
+`p* = D(c*) = E*(p) || H*(m)` (Decryption sul messaggio inviato sul canale)
 
-`m* = D(E*(p))`
+`m* = D(E*(p))` (Decryption sul messaggio cifrato)
 
-`H*(m) =? H(m*)`
+`H*(m) =? H(m*)` (Controllo se l'hash presente sul canale insicuro è lo stesso del messaggio decifrato)
 
 L'**integrità** è rispettata perché se si modificano i bit di:
 
@@ -362,26 +370,30 @@ L'**integrità** è rispettata perché se si modificano i bit di:
 
 La **riservatezza**, invece, non è rispettata perché:
 
-- L'intrusore ha a disposizione molte informazioni di contesto. 
-L'intrusore sa che Luca sta trasmettendo dei dati alla sua amata Lucia. Dato che `E(p)` è impossibile che lo sappia, da un messaggio scelto in chiaro `m'` si può calcolare l'impronta `H(m')`. Se nota che l'impronta è la stessa, la riservatezza del messaggio è violata.
+- L'intrusore ha a disposizione molte informazioni di contesto.
+  L'operazione di verifica del hash mandato in chiaro è inutile, dato che tramite attacchi di tipo _Man in The Middle_ si può rubare l'impronta e violare il controllo di riservatezza. In questo caso `H(m)` è totalmente inutile.
 
-### Esempio: garantire riservatezza
+<!--L'intrusore sa che Luca sta trasmettendo dei dati alla sua amata Lucia. Dato che `E(p)` è impossibile che lo sappia, da un messaggio scelto in chiaro `m'` si può calcolare l'impronta `H(m')`. Se nota che l'impronta è la stessa, la riservatezza del messaggio è violata.-->
+
+### Esempio: garantire solo riservatezza
 
 In questo caso, la proprietà di integrità non viene rispettata mentre quella di riservatezza sì:
 
 `p = m`
 
-`c = E(p) || H(E(p))`
+`c = E(p) || H(E(p))` (Cifro il messaggio e lo concateno al hash del messaggio cifrato)
 
-`p* = D(c*) = E*(p) || H*(E(p))`
+`p* = D(c*) = E*(p) || H*(E(p))` (Decifro il contenuto del canale)
 
-`m* = D(E*(p))`
+`m* = D(E*(p))` (Decifro il messaggio cifrato)
 
-`H*(E(p)) =? H(E(m*))`
+`H*(E(p)) =? H(E(m*))` (Controllo la funzione di hash del canale insicuro con la funzione di hash del messaggio decifrato)
 
-La **riservatezza** è verificata perché non si riuscirebbe a confrontare l'impronta `H(m')` scelta dall'intrusore con quella `H(E(p))`, poiché è assente la parte di cifratura del messaggio.
+La **riservatezza** è verificata perché non si riuscirebbe a confrontare l'impronta `H(m')` scelta dall'intrusore con quella `H(E(p))`, poiché è assente la parte di cifratura del messaggio; in più `H(m)` non è invertibile, quindi non si riesce a risalire a `m`.
 
-L'**integrità** non è garantita perchè l'intrusore può modificare `E(p)` e ottenere `E*(p)` e sostituire `H(E(p))` con `H(E*(p))`. Se `m` è un messaggio senza un particolare significato (ad esempio un numero), `D(E(p))` restituisce `m*` e la destinazione potrebbe non accorgersi che `m*` non sia corretto. Se invece `m` è un messaggio dotato di significato, la destinazione potrebbe accorgersi che `m*` è scorretto, e quindi può scartato.
+L'**integrità** non è garantita perchè l'intrusore può modificare `E(p)` e ottenere `E*(p)` e sostituire `H(E(p))` con `H(E*(p))`. Se `m` è un messaggio senza un particolare significato (ad esempio un numero), `D(E(p))` restituisce `m*` e la destinazione potrebbe non accorgersi che `m*` non sia corretto. Se invece `m` è un messaggio dotato di significato, la destinazione potrebbe accorgersi che `m*` è scorretto, e quindi può essere scartato.
+
+Riassumendo, non si ha modo di controllare se l'integrità è stata violata o meno, dato che la funzione di hash del canale insicuro può essere stata modificata e, di conseguenza, anche il messaggio decifrato potrebbe non essere quello mandato dalla sorgente.
 
 ### Proteggere la proprietà di autenticità
 
@@ -392,12 +404,12 @@ Chi riceve un messaggio è importante che sappia chi è l'autore o chi lo ha inv
 
 Per garantire l'autenticità di una sorgente, si deve costruire una trasformazione `S` che, dato un messaggio `m`, deve produrre in uscita un attestato di autenticità `c` che rappresenta in maniera non imitabile il messaggio `m` originale.
 
-La destinazione riceve l'attestato di autenticità `c` ed effettua una trasformazione `V` sull'attestato di autenticità, producendo in uscita una risposta che afferma l'autenticità o meno del messaggio. In caso affermativo viene restituito il messaggio `m`.
+La destinazione riceve l'attestato di autenticità `c` ed effettua una trasformazione `V` sull'attestato di autenticità, producendo in uscita una risposta che afferma l'autenticità o meno del messaggio. In caso affermativo, viene restituito il messaggio `m`.
 
 Devono essere rispettate le seguenti proprietà:
 
 - **Calcoli difficili**: dato il messaggio `m` deve essere facile calcolare l'attestato di integrità `c`. L'operazione inversa invece non è fattibile.
-- **Segretezza**: la trasformazione `S` deve essere segreta per la sorgente perché altrimenti eventuali intrusori potrebbero effettuare la trasformazione. Invece, `V` può essere noto, dato che qualsiasi destinazione deve essere in grado di dire se l'attestato è autentico o no.
+- **Segretezza**: la trasformazione `S` deve essere segreta e conosciuta soltanto dalla sorgente, altrimenti eventuali intrusori potrebbero effettuare la trasformazione. Invece, `V` può essere noto, dato che qualsiasi destinazione deve essere in grado di dire se l'attestato è autentico o no.
 
 Alcune considerazioni:
 
@@ -405,7 +417,7 @@ Alcune considerazioni:
 - **B = A**: se nel file system vogliamo garantire la loro autenticità, durante la fase di logout e login, oltre a decifrarli, occorre verificare che siano anche autentici.
 
 <!-- lezione del 29/09/2021-->
-Esistono 2 schemi alternativi per realizzare sign-verify: la firma digitale e hash.
+Esistono 2 schemi alternativi per realizzare sign-verify: la _firma digitale_ e _hash_.
 
 ### Firma digitale
 
