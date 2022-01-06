@@ -421,7 +421,7 @@ Esistono 2 schemi alternativi per realizzare sign-verify: la _firma digitale_ e 
 
 ### Firma digitale
 
-Il primo schema alternativo per realizzare sign-verify è la firma digitale.
+Il primo schema alternativo per realizzare sign-verify è la _firma digitale_.
 
 ![Firma Digitale-Light](./img/img6-light.png#gh-light-mode-only)
 ![Firma Digitale-Dark ](./img/img6-dark.png#gh-dark-mode-only)
@@ -434,17 +434,17 @@ Lo scenario applicativo è il seguente:
 
 Questo schema ha due vantaggi rispetto allo schema normale di sign:
 
-- **Efficienza**: la funzione di sign `S` è una trasformazione costosa. Anzichè applicare `m` direttamente a sign, viene applicata a `H(m)`, che ha dimensione inferiore, rispetto a `m`. Si può applicare anche all'impronta perché è univoca per la proprietà di resistenza alle collisioni.
+- **Efficienza**: la funzione di sign `S` è una trasformazione costosa. Anzichè applicare `m` direttamente a sign, viene applicata a `H(m)`, che ha dimensione inferiore, rispetto a `m`. Si può applicare anche all'impronta, dato che è univoca per la proprietà di resistenza alle collisioni.
 - **Avere subito la disponibilità del dato**: si può prendere direttamente `m` e si verifica l'autenticità in un secondo momento, come previsto dallo schema a blocchi.
 
 Questo schema assicura anche la proprietà di:
 
 - **Non ripudio**: dato che la sorgente `A` è l'unica che esegue `S`, non può disconoscere in un secondo momento l'attestato di autenticità.
-- **integrità**: per la funzione hash.
+- **Integrità**: per la funzione hash `H(m)`.
 
 ### Hash del messaggio e di un segreto
 
-Il secondo schema alternativo per realizzare sign-verify è l'uso di un hash.
+Il secondo schema alternativo per realizzare sign-verify è tramite l'utilizzo di un _hash_.
 
 ![Hash Concatenato-Light](./img/img7-light.png#gh-light-mode-only)
 ![Hash Concatenato-Dark ](./img/img7-dark.png#gh-dark-mode-only)
@@ -455,17 +455,19 @@ Il secondo schema alternativo per realizzare sign-verify è l'uso di un hash.
 - La destinazione riceverà il messaggio `m*` e andrà a calcolare `H(m* || s)`.
 - Se `H(m* || s) = H(m || s)`, le due proprietà sono state garantite (integrità e autenticità).
 
-Rispetto allo schema di firma digitale, **non** viene garantita la proprietà di non ripudio, poiché la sorgente `A` potrebbe sospettare che la destinazione `B` si sia costruita un `H(m || s)`, e che la sorgente `A` non abbia inviato nessun messaggio. Questo è dovuto al fatto che `A` e `B` condividono un segreto, quindi non si è in grado di risalire a chi è effettivamente l'autore del messaggio inviato.
+Rispetto allo schema di firma digitale, **non** viene garantita la proprietà di non ripudio, poiché la sorgente `A` potrebbe sospettare che la destinazione `B` si sia costruita `H(m || s)`, e che la sorgente `A` non abbia inviato nessun messaggio. 
+
+Questo è dovuto al fatto che `A` e `B` condividono entrambi lo stesso segreto, quindi non si è in grado di risalire a chi è effettivamente l'autore del messaggio inviato.
 
 ### Firma digitale vs Hash del messaggio e di un segreto
 
-Lo schema hash risulta essere più efficiente rispetto alla firma digitale, ma potrà essere usato solamente quando si è sicuri del corretto comportamento di `A` e `B`. Può essere utilizzato, ad esempio, con sistemi IoT che richiedono consumi ridotti di batteria e alta efficienza.
+L'utilizzo di _hash_ risulta essere più efficiente rispetto alla _firma digitale_, ma potrà essere impiegato solamente quando si è sicuri del corretto comportamento di `A` e `B`. Può essere utilizzato, ad esempio, con sistemi IoT che richiedono consumi ridotti di batteria e alta efficienza.
 
-Viceversa, la firma digitale è meno efficiente poiché ha la funzione di sign `S` ma garantisce il non ripudio.
+Viceversa, la firma digitale è meno efficiente, poiché ha la funzione di sign `S`, ma garantisce il non ripudio.
 
 ### Esempio: SSL
 
-In questo caso, si invia un messaggio che rispetta le proprietà di riservatezza, autenticità e integrità:
+In questo caso, si invia un messaggio che rispetta le proprietà di **riservatezza**, **autenticità** e **integrità**:
 
 `p = m || H(m || s)`
 
@@ -477,20 +479,20 @@ In questo caso, si invia un messaggio che rispetta le proprietà di riservatezza
 
 Il messaggio `m` viene concatenato al certificato e cifrato dal client.
 
-Questo schema è usato dal protocollo SSL il quale adotta le funzioni hash crittograficamente sicure con un segreto per costruire il certificato di autenticità.
+Questo schema è usato dal protocollo SSL, il quale adotta le funzioni hash crittograficamente sicure con un segreto per costruire il certificato di autenticità.
 
 Da un punto di vista di efficienza, le trasformazioni in fase di ricezione sono due:
 
-- Decodifica del messaggio cifrato.
-- Autenticazione tramite funzione hash crittograficamente sicura.
+- decodifica del messaggio cifrato;
+- autenticazione tramite funzione hash crittograficamente sicura.
 
 ### Esempio: SSH
 
-In questo caso, si invia un messaggio che rispetta le proprietà di riservatezza e autenticità:
+In questo caso, si invia un messaggio che rispetta le proprietà di **riservatezza**, **integrità** e **autenticità**:
 
 `p = m`
 
-`c = E(p), H(m || s)`
+`c = E(p) || H(m || s)`
 
 Il messaggio `m` viene cifrato e viene inviato il cifrato concatenato con l'attestato di autenticità costruito sul messaggio.
 
@@ -501,13 +503,16 @@ Da un punto di vista di efficienza, le trasformazioni in fase di ricezione sono 
 - Decodifica del messaggio cifrato;
 - Autenticazione tramite funzione hash crittograficamente sicura.
 
+L'integrità, la riservatezza e l'autenticità vengono garantite anche in questo caso, grazie alle proprietà delle funzioni hash.
+
+
 ### Esempio: IPsec
 
-In questo caso, si invia un messaggio che rispetta le proprietà di riservatezza e autenticità:
+In questo caso, si invia un messaggio che rispetta le proprietà di **riservatezza**, **integrità** e **autenticità**:
 
 `p = m`
 
-`c = E(p), H((E(p) || s)`
+`c = E(p) || H((E(p) || s)`
 
 In fase di invio, il messaggio viene cifrato e autenticato, mentre in fase di ricezione viene controllato l'attestato di autenticità e decifrato il messaggio.
 
@@ -515,14 +520,16 @@ Questo schema viene usato dal protocollo IPsec. È un protocollo SSL a livello d
 
 La ricezione è efficiente: viene risparmiata una trasformazione. Se il testo cifrato ha subito delle modifiche, chi riceve verifica il certificato e, se qualche operazione illegale è avvenuta, si evita l'operazione di decifratura.
 
+Come nell'esempio [_garantire solo riservatezza_](#esempio-garantire-solo-riservatezza), si ha il messaggio cifrato `E(p)`concatenato con l'hash del messaggio cifrato `H((E(p) || s)`. Stavolta, nella funzione di hash, `E(p)` è concatenato con il segreto `s`: ciò garantisce l'integrità del messaggio (mancante nell'esempio [_garantire solo riservatezza_](#esempio-garantire-solo-riservatezza)) e l'autenticità.
+
 ### Anonimato/Identificazione
 
-Per identificazione si intende un insieme di azioni che richiedono di identificare chi sta partecipando a un'interazione. Ad esempio, risulta indispensabile quando si effettua un pagamento o quando si vuole accedere a certe risorse. L'opposto dell'identificazione è l'anonimato. Un esempio di utilizzo è nel caso di voto elettronico o di pagamento via criptovaluta.
+Per identificazione si intende un insieme di azioni che richiedono di identificare chi sta partecipando a un'interazione. Ad esempio, risulta indispensabile quando si effettua un pagamento o quando si vuole accedere a certe risorse. L'opposto dell'identificazione è l'anonimato.
 
 Il processo di identificazione ha le seguenti caratteristiche:
 
 - **Real-time**: l'identificazione deve avvenire entro un breve intervallo di tempo prestabilito e non oltre.
-- **Efficienza**: l’identificazione di una entità deve avvenire in maniera efficiente, dato che deve il processo deve essere real-time.
+- **Efficienza**: l’identificazione di una entità deve avvenire in maniera efficiente, dato che il processo deve essere _real-time_.
 - **Sicurezza**: possono essere presenti:
   - **Falsi positivi**: una determinata persona possiede diritti di accesso, ma non riesce ad accedere. Ciò causa inefficienza. Bisogna minimizzare questo numero.
   - **Falsi negativi**: l'accesso viene effettuato da persone non autorizzate. Occorre prevenire la presenza di falsi negativi.
@@ -543,13 +550,13 @@ Un processo d’identificazione avviene tramite l'uso di protocolli.
 Qualunque protocollo di identificazione prevede due fasi:
 
 - **Registrazione**: durante la registrazione, l’identificando ed il verificatore concordano e memorizzano rispettivamente il segreto `S` con cui l'identificando si farà riconoscere ed il termine di paragone `T = H(S)`, che consentirà al verificatore di accertare che l'identificando conosce `S`. Il verificatore non può memorizzare direttamente il segreto `S` perchè se è malintenziato potrebbe usarlo a sua volta.
-- **Identificazione**: l'identificando e il verificatore devono essere entrambi online (univocità del tempo).
+- **Identificazione**: l'identificando e il verificatore **devono essere entrambi online** (univocità del tempo).
 Questo processo può scomporsi in:
   - **Dichiarazione**: l'identificando dichiara la sua identità.
-  - **Interrogazione**: il verificatore interroga l'identificando che deve dimostrare la sua identità.
+  - **Interrogazione**: il verificatore interroga l'identificando, che deve dimostrare la sua identità.
   - **Dimostrazione**: l'identificando deve fornire la stessa prova che aveva fornito in fase di registrazione. La dimostrazione deve essere semplice per chi è il legittimo identificando, mentre complesso per l'intrusore.
 
-![kronk](/img/kronk.jpeg)
+![kronk](./img/kronk.jpeg)
 
 In generale, un intrusore può:
 
@@ -567,11 +574,11 @@ Una funzione `f` è detta unidirezionale se:
 
 Ad esempio, sono funzioni unidirezionali la:
 - Funzione hash crittograficamente sicura `H`.
-- Funzione di cifratura `E` e `D`.
+- Funzione di cifratura `E` e decifratura `D`.
 - Funzione di sign `S`.
 
 
-Nella teoria della complessità computazionale, non esistono funzioni che siano unidirezionali. In crittografia, invece, sono state individuate diverse funzioni che sono candidate ad avere un comportamento di unidirezionalità (come ad esempio le funzioni di compressione, di cifratura e di firma). Vengono chiamate pseudo-unidirezionali le funzioni che appaiono unidirezionali se non si possiede una particolare informazione sulla loro costruzione.
+Nella teoria della complessità computazionale, non esistono funzioni che siano unidirezionali. In crittografia, invece, sono state individuate diverse funzioni che sono candidate ad avere un comportamento di unidirezionalità (come ad esempio le funzioni di compressione, di cifratura e di firma). Vengono chiamate _pseudo-unidirezionali_ le funzioni che appaiono unidirezionali se non si possiede una particolare informazione sulla loro costruzione.
 
 ### Trasformazioni segrete
 
