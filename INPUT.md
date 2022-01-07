@@ -818,28 +818,47 @@ Gli algoritmi che realizzano la funzione hash devono presentare le seguenti prop
 
 - **Efficienza**: deve essere facile calcolare l'impronta anche se il messaggio in ingresso è molto lungo;
 - **Robustezza alle collisioni**: si possono individuare due tipi di robustezza:
-  - **Robustezza debole alle collisioni**: per ogni messaggio `m`, è difficile trovare un altro messaggio `m'` tale che `H(m') = H(m)`. Quindi conoscendo l'hash di un messaggio, non si è in grado, con una potenza di calcolo ragionevole, di trovare un altro input che genera lo stesso hash. Da notare che la proprietà suppone che si conosca il messaggio di origine e che questo non deve aiutare nel trovare un secondo messaggio con hash identico;
-  - **Robustezza forte alle collisioni**: deve essere difficile trovare una qualsiasi coppia `x` e `y` tale che `H(y) = H(x)`. Non si parte da un messaggio dato, ma si sceglie una qualsiasi coppia di messaggi `m` e `m'` che generano lo stesso hash. Se si riesce, non si viola la resistenza alle collisioni deboli;
-- **Unidirezionalità**: data un'impronta deve essere computazionalmente difficile risalire al messaggio originario che l'ha generata.
+  - **Robustezza debole alle collisioni**: per ogni messaggio `m`, è difficile trovare un altro messaggio `m'` tale che `H(m') = H(m)`. 
+  Conoscendo l'hash di un messaggio non si è in grado, con _una potenza di calcolo ragionevole_, di trovare un altro input che genera lo stesso hash. Da notare che la proprietà suppone che si conosca il messaggio di origine e che questo non deve aiutare nel trovare un secondo messaggio con hash identico.
+  - **Robustezza forte alle collisioni**: deve essere difficile trovare una qualsiasi coppia `m` e `m'` tale che `H(m) = H(m')`. Non si parte da un messaggio dato, ma si sceglie una qualsiasi coppia di messaggi `m` e `m'` che generano lo stesso hash. Nel caso in cui la coppia scelta non generi lo stesso hash, non si viola la resistenza alle collisioni deboli.
+- **Unidirezionalità**: data un'impronta `H(m)`, deve essere computazionalmente difficile risalire al messaggio originario che l'ha generata.
 
 ### Efficienza
+
+#### Compressione iterata (Schema di Merkle-Damgard)
 
 Per garantire efficienza, la maggior parte degli algoritmi utilizzano uno _schema di Merkle-Damgard_ o _compressione iterata_.
 
 ![dedurre](./img/img14.png)
 
-Consiste nel prendere il messaggio `m` di lunghezza arbitraria e lo si suddivide in blocchi di dimensione prefissata `n` a seconda dello specifico algoritmo di implementazione di `f`. Si applica a `m0` formato da `r` bit (`r>n`) la funzione `f` (che ha le caratteristiche di robustezza debole, forte alle collisioni e unidirezionalità) e un vettore di inizializzazione che avrà un valore iniziale di lunghezza sempre `n` bit. In uscita, viene prodotta un'impronta `h1` di lunghezza `n` bit. In pipeline, viene poi elaborato il secondo blocco `m1` concatenato all'impronta generata al passo precedente. L'impronta `h`-iesma è ottenuta applicando una funzione `f` all'impronta ottenuta al passo ottenuto `i-1` con il messaggio `h`-iesmo.
-L'impronta finale dell'intero messaggio, corrisponde con l'ultima impronta generata dall'ultimo blocco.
+Consiste nel: 
+- Prendere il messaggio `m` di lunghezza arbitraria e suddividerlo in blocchi di dimensione prefissata `n` (a seconda dello specifico algoritmo di implementazione di `f`).
+- Si applica a `m0` (primo blocco), formato da `r` bit (`r > n`), la funzione `f` (che ha le caratteristiche di robustezza sia debole che forte alle collisioni e unidirezionalità) e un vettore di inizializzazione, che avrà un valore iniziale di lunghezza di `n` bit.
+- In uscita, viene prodotta un'impronta `h1` di lunghezza `n` bit. 
+- In pipeline, viene poi elaborato il secondo blocco `m1` concatenato all'impronta generata al passo precedente. 
+- L'impronta `h`-iesma è ottenuta applicando una funzione `f` all'impronta ottenuta al passo ottenuto `i-1` con il messaggio `m`-iesimo.
+- L'impronta finale dell'intero messaggio corrisponde con l'ultima impronta generata dall'ultimo blocco.
+
+Ci sono implementazioni come MD5, SHA1 e SHA2 che utilizzano questo schema.
 
 Questo schema è soggetto ad un attacco che si chiama _attacco con estensione_.
 
+#### Attacco con estensione del messaggio
+L’assenza della lunghezza del messaggio dell’ultimo blocco può dare origine ad una vulnerabilità sull’**autenticità**, presente in tutti gli algoritmi di compressione iterata. 
 ![dedurre](./img/img15.png)
 
-Dalla sorgente `A` si invia un messaggio `c` concatenato al suo attestato di autenticità che è costruito con la funzione hash `H(s || m)` dove `s` è il segreto condiviso tra mittente e destinatario. Se la funzione hash è implementata secondo lo _schema di Merkle-Damgard_, allora è presente una vulnerabilità. `H(s || m)` non è altro che l'impronta di uscita dell'ultimo blocco del messaggio `m`. Mettendola come input di un nuovo blocco `f` insieme al messaggio dell'intrusore `m'` suddiviso in blocchi, si riesce a calcolare il nuovo attestato di auntenticità.
+- Dalla sorgente `A` si invia un messaggio `m` concatenato al suo attestato di autenticità `H(s || m)`, dove `s` è il segreto condiviso tra mittente e destinatario. 
+- Se la funzione hash è implementata secondo lo _schema di Merkle-Damgard_, allora è presente una vulnerabilità. 
+- `H(s || m)` non è altro che l'impronta di uscita dell'ultimo blocco del messaggio `m`. 
+- Mettendola come input di un nuovo blocco `f` insieme al messaggio dell'intrusore `m'` suddiviso in blocchi, si riesce a calcolare il nuovo attestato di autenticità.
 
-Per evitare il problema serve aggiungere all'ultimo blocco delle informazioni aggiuntive, ad esempio, qual è la lunghezza del messaggio. Tuttavia, non è sempre robusto perchè chi riceve il messaggio, deve ricordarsi di elaborare queste informazioni aggiuntive.
+Per evitare il problema, serve aggiungere all'ultimo blocco delle informazioni aggiuntive, e.g. la lunghezza del messaggio `m`. Tuttavia, non è sempre robusto, poiché chi riceve il messaggio, deve ricordarsi di elaborare queste informazioni aggiuntive.
 
-Oppure, si potrebbe pensare di invertire la posizione di `s` e di `m` all’interno dell’autenticatore, che eviterebbe l’estensione dell’algoritmo. Si capisce la differenza fra schema concettuale, che potrebbero risultare equivalenti, ed implementazioni. Ma questo trucchetto è utile solo se la funzione hash non è resistente alla collisione debole. Infatti, supponiamo che un intrusore possa trovare un messaggio `m'` in collisione con `m`. Con questa ipotesi si avrebbe `H(m || s) = H(m' || s)`. Dunque, all’intrusore sarebbe sufficiente inviare sul canale il messaggio `m'` concatenato con `H(m || s)` che, per la collisione, autenticherebbe `m'`.
+Si potrebbe pensare di invertire la posizione di `s` e di `m` all’interno dell’autenticatore (in modo da avere `H(m || s)`), che eviterebbe l’estensione dell’algoritmo. 
+
+Questo stratagemma è utile solo se la funzione hash è resistente alla collisione debole. Altrimenti, supponiamo che un intrusore possa trovare un messaggio `m'` in collisione con `m`. Con questa ipotesi si avrebbe `H(m || s) = H(m' || s)`. Dunque, all’intrusore sarebbe sufficiente inviare sul canale il messaggio `m'` concatenato con `H(m || s)` che, per la collisione, autenticherebbe `m'`.
+
+m' || H(m || s) 
 
 ### Robustezza alle collisioni
 
