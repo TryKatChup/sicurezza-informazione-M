@@ -617,7 +617,7 @@ Si possono individuare due famiglie di cifrari:
 
 - **Cifrari a chiavi simmetriche**: le chiavi `ks` e `kd` o sono uguali o facilmente ricavabili l'una dall’altra, quindi devono essere tenute segrete.
 - **Cifrari a chiave asimmetriche**: le chiavi `ks` e `kd` sono diverse e una delle due è difficilmente calcolabile dall'altra. Ogni entità dispone di una coppia di chiave `ks` e `kd`, di cui `ks` è segreta, mentre `kd` privata.
-
+<!--test-->
 ### Proprietà delle chiavi simmetriche
 
 Le chiavi simmetriche devono avere le seguenti proprietà:
