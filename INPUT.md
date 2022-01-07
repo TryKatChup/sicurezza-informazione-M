@@ -598,8 +598,9 @@ L'approccio usato al giorno d'oggi, quindi, risulta essere la trasfrormazione se
 ![Chiave-Dark ](./img/img9-dark.png#gh-dark-mode-only)
 
 - Con `T` si indica la trasformazione nota (quindi la conosce anche l'intrusore).
-- Con `k` indichiamo la chiave, ovvero il parametro non noto, in ingresso.
-- Con spazio delle chiavi si intende l'insieme delle $ \color{black} 2^n $ $ \color{white} 2^n $ possibili configurazioni dove `n` è il numero di bit della chiave. La chiave è costituita da una delle $ \color{black} 2^n $ $ \color{white} 2^n $ configurazioni. Più è grande `n`, più è complicato per un intrusore indovinare la chiave.
+- Con `k` indichiamo la chiave, ovvero il parametro non noto, in ingresso. 
+- Con spazio delle chiavi si intende l'insieme delle ![$ 2^n $](https://render.githubusercontent.com/render/math?math=\color{black}\2^n#gh-light-mode-only)![$ 2^n $](https://render.githubusercontent.com/render/math?math=\color{white}\2^n#gh-dark-mode-only) possibili configurazioni dove `n` è il numero di bit della chiave. 
+- La chiave è costituita da una delle ![$ 2^n $](https://render.githubusercontent.com/render/math?math=\color{black}\2^n#gh-light-mode-only)![$ 2^n $](https://render.githubusercontent.com/render/math?math=\color{white}\2^n#gh-dark-mode-only) configurazioni. Più è grande `n`, più è complicato per un intrusore indovinare la chiave.
 
 ### Algoritmo forza bruta
 
@@ -608,33 +609,36 @@ Un intrusore può sempre disporre di un algoritmo di ricerca esauriente, noto an
 ![Forza Bruta-Light](./img/img10-light.png#gh-light-mode-only)
 ![Forza Bruta-Dark ](./img/img10-dark.png#gh-dark-mode-only)
 
-Se l'intrusore non conosce la chiave, può esplorare tutto lo spazio delle chiavi. Se `n` è il numero di bit della chiave e 2^n è il numero totale di configurazioni, effettua diversi tentativi fino a quando non indovina la chiave. 
+Se l'intrusore non conosce la chiave, può esplorare tutto lo spazio delle chiavi. Se `n` è il numero di bit della chiave e ![$ 2^n $](https://render.githubusercontent.com/render/math?math=\color{black}\2^n#gh-light-mode-only)![$ 2^n $](https://render.githubusercontent.com/render/math?math=\color{white}\2^n#gh-dark-mode-only) è il numero totale di configurazioni, effettua diversi tentativi fino a quando non indovina la chiave. 
 Occorre conoscere la trasformata `T`. Se il cifrato che ottiene è uguale a quello presente sul canale, allora ha avuto successo nel trovare la configurazione corretta.
 
 ### Relazioni fra le chiavi
 
 Si possono individuare due famiglie di cifrari:
 
-- **Cifrari a chiavi simmetriche**: le chiavi `ks` e `kd` o sono uguali o facilmente ricavabili l'una dall’altra, quindi devono essere tenute segrete.
-- **Cifrari a chiave asimmetriche**: le chiavi `ks` e `kd` sono diverse e una delle due è difficilmente calcolabile dall'altra. Ogni entità dispone di una coppia di chiave `ks` e `kd`, di cui `ks` è segreta, mentre `kd` privata.
-<!--test-->
+- **Cifrari a chiavi simmetriche**: le chiavi `ks` e `kd` o sono _identiche_ oppure _facilmente ricavabili_ l'una dall’altra, quindi devono essere tenute segrete.
+- **Cifrari a chiavi asimmetriche**: le chiavi `ks` e `kd` sono diverse e una delle due è difficilmente calcolabile dall'altra. Ogni entità dispone di una coppia di chiavi `ks` e `kd`, di cui `ks` è privata, mentre `kd` pubblica.
+<!--Chiave pubblica: cifratura-->
+<!--Chiave privata: decifratura-->
+
+
 ### Proprietà delle chiavi simmetriche
 
 Le chiavi simmetriche devono avere le seguenti proprietà:
 
-- **Robustezza**: un intrusore non deve essere in grado facilmente di individuare la chiave.
-- **Riservatezza**: il sistema deve garantire la riservatezza della chiave perché deve essere segreta.
-- **Integrità**: si deve essere sicuri che la chiave non sia stata alterata, altrimenti non è possibile usarla.
+- **Robustezza**: un intrusore non deve essere in grado di individuare facilmente la chiave.
+- **Riservatezza**: il sistema deve garantire la riservatezza della chiave poiché deve essere segreta.
+- **Integrità**: si deve essere sicuri che la chiave non sia stata alterata, altrimenti non è possibile utilizzarla.
 - **Autenticità**: la chiave è conosciuta solo dalla sorgente e dalla destinazione autentica.
 
 ### Proprietà delle chiavi asimmetriche
 
 Le chiavi asimmetriche devono avere le seguenti proprietà:
 
-- **Robustezza**: un intrusore non deve essere in grado facilmente di individuare la chiave privata `ks`.
+- **Robustezza**: un intrusore non deve essere in grado di individuare facilmente la chiave privata `ks`.
 - **Riservatezza**: la riservatezza è legata alla chiave `ks` privata.
 - **Integrità**: è importante che le chiavi `ks` e `kd` siano quelle corrette e non modificate.
-- **Autenticità**: si deve essere certi che la chiave pubblica `kd` appartenga a un certo utente.
+- **Autenticità**: si deve essere certi che la **chiave pubblica** `kd` appartenga a un certo utente.
 
 ### Crittoanalisi
 
@@ -648,7 +652,7 @@ Bisogna evitare che un intrusore possa:
 ### Indovinare la chiave
 
 È sempre possibile risalire alla chiave tramite attacco con forza bruta. Per ridurre le probabilità di successo di questo attacco, occorrono alcuni accorgimenti:
-- **Lo spazio delle chiavi deve essere molto grande**: se `n` è il numero di bit che rappresenta la chiave, 2^n è l'insieme delle possibili configurazioni. Più è grande `n`, più è difficile per un intrusore indovinare la chiave.
+- **Lo spazio delle chiavi deve essere molto grande**: se `n` è il numero di bit che rappresenta la chiave, ![$ 2^n $](https://render.githubusercontent.com/render/math?math=\color{black}\2^n#gh-light-mode-only) ![$ 2^n $](https://render.githubusercontent.com/render/math?math=\color{white}\2^n#gh-dark-mode-only) è l'insieme delle possibili configurazioni. Più è grande `n`, più è difficile per un intrusore indovinare la chiave.
 - **I bit della chiave devono essere casuali**.
 - **Limitare il numero di prove che l'intrusore ha a disposizione**, come ad esempio il pin del bancomat. Dopo tre tentativi si disabilita l'accesso.
 - **Cambiare frequentemente la chiave**: se i dati devono essere mantenuti a lungo termine, occorre cambiare frequentemente la chiave. In questo modo, si riducono le probabilità di individuare quest'ultima da parte dell'intrusore.
@@ -660,28 +664,34 @@ Ogni volta che si deve eseguire l'algoritmo, occorre caricarlo in RAM, pertanto,
 - La chiave deve essere memorizzata in maniera sicura (cifrata) e solo il proprietario deve avere accesso alla cella in cui è memorizzata.
 - Si deve evitare l'intercettazione della chiave sui canali di comunicazione.
 - Ci deve essere un supporto alla sicurezza che protegga la RAM.
-- L’unità di elaborazione, dopo aver eseguito l'algoritmo, deve cancellare accuratamente il dato dalla memoria.
+- L’ unità di elaborazione, dopo aver eseguito l'algoritmo, deve cancellare accuratamente il dato dalla memoria.
 
 In questo corso si darà per scontato che l'hardware sia sicuro, ma in uno scenario reale non è detto che lo sia.
 
 Esistono diverse celle di memoria dove può risiedere la chiave:
 
-- **Hard Disk**: poco sicuro perché lo stesso calcolatore può essere usato da più utenti.
+- **Hard Disk**: poco sicuro, dato che lo stesso calcolatore può essere usato da più utenti.
 - **Memory Card**: la si inserisce nel sistema solo quando vi è necessità del dato segreto.
-- **Smart Card**: molto sicura, consiste nell’avere un calcolatore portatile con una sua memoria contenente la chiave `s` cifrata, in questo modo `s` non esce mai dal suo ambiente protetto.
+- **Smart Card**: molto sicura, consiste nell’avere un calcolatore portatile con memoria propria contenente la chiave `s` cifrata; in questo modo `s` non esce mai dal suo ambiente protetto.
 
 
 ### Esempio: generazione, memorizzazione e uso di una chiave segreta
 
-Nei file system, una chiave `s` viene memorizzata in forma cifrata in una parte della memoria chiamata portachiavi.
+Nei file system, una chiave `s` viene memorizzata in forma cifrata, in una regione della memoria chiamata _portachiavi_.
 
 ![intrusore](./img/img53.png)
+In questo schema, per generare e memorizare una chiave:
 
-La chiave `s` viene generata una volta (o più, se si decide di cambiarla nel tempo) tramite un RNG (Random Number Generator) ed è subito cifrata con la funzione `E` accoppiata ad `u`, ovvero una chiave che cifra altre chiavi. Successivamente, `Eu(s)` viene trasferita e memorizzata in modo cifrato sulla memoria `M`.
+- La chiave `s` viene generata una volta (o più, se si decide di cambiarla nel tempo) tramite un **RNG (Random Number Generator)**.
+- È necessaria una passphrase (password tra 20 e 30 caratteri) dettata dall’utente, facile per lui da ricordare.
+- Su di essa viene eseguita una funzione hash `H(passphrase)` per ricavare l’impronta `u` (la chiave che cifra chiavi).
+- La chiave viene subito cifrata con la funzione `E` accoppiata a `u` (`u` è una chiave che cifra altre chiavi).
+- Successivamente, `Eu(s)` viene trasferita e memorizzata in modo cifrato sulla memoria `M`.
 
-In seguito, per eseguire gli accessi esiste una passphrase (password tra 20 e 30 caratteri) dettata dall’utente, facile per lui da ricordare, su cui viene eseguita una funzione hash per calcolarne l’impronta `u` (la chiave che cifra chiavi). Una volta creata `u`, essa deve essere impiegata per decifrare `s` (la chiave generata in partenza con RNG).
-
-Una volta decifrata la chiave `s`, essa viene utilizzata per tradurre il testo e quindi calcolare `y = T(s,x)`. Infine, una primitiva cancella `s` dalla memoria del processore (grazie al wiper sicuro).
+Per l'esecuzione di accessi tramite una chiave segreta:
+- Una volta creata `u`, essa deve essere impiegata per decifrare `s` (la chiave generata in partenza con RNG).
+- Una volta decifrata la chiave `s`, essa viene utilizzata per tradurre il testo `y` e quindi calcolare `y = T(s,x)`. 
+- Infine, una primitiva cancella `s` dalla memoria del processore (grazie al wiper sicuro).
 
 In caso di smarrimento o danneggiamento della passphrase è necessario un sistema di recovery.
 
@@ -689,20 +699,23 @@ In caso di smarrimento o danneggiamento della passphrase è necessario un sistem
 
 Esistono diverse tipologie di attacco:
 
-- **Attacco con solo testo cifrato**: l'intrusore dispone esclusivamente di testo cifrato che lo preleva dal canale insicuro. L'intrusore può sfruttare conoscenze, ipotesi sul linguaggio di origine che è stato usato per scrivere il messaggio cifrato, può disporre di tecniche e statistiche per effettuare determinati attacchi. Avendo il testo cifrato e sfruttando tecniche, l'attaccante può dedurre delle informazioni sul testo originario o sulla chiave stessa.
-- **Attacco con testo in chiaro noto**: l'intrusore possiede il testo in chiaro e il cifrato. In questo modo, si può studiare il codice usato per cifrare il testo.
+- **Attacco con solo testo cifrato**: l'intrusore dispone esclusivamente di testo cifrato che preleva dal canale insicuro. L'intrusore può sfruttare:
+  -  conoscenze
+  -  ipotesi sul linguaggio di origine che è stato usato per scrivere il messaggio cifrato
+  -  tecniche e statistiche
+  
+  per effettuare determinati attacchi. Avendo il testo cifrato, l'attaccante può dedurre delle informazioni sul testo originario o sulla chiave stessa.
+- **Attacco con testo in chiaro noto**: l'intrusore possiede sia il testo in chiaro che il cifrato corrispondente. In questo modo, si può studiare il codice usato per cifrare il testo.
 - **Attacco con testo in chiaro scelto**: l'intrusore sceglie un testo in chiaro e ha la possibilità di cifrare il messaggio, ingannando la vittima.
-- **Attacco con testo cifrato scelto**: l'intrusore riesce a farsi decifrare un testo cifrato da lui, scelto dalla sorgente legittima.
+- **Attacco con testo cifrato scelto**: l’intrusore sceglie un un campione di testo cifrato per ottenere il testo in chiaro corrispondente dalla sorgente.
 
 La contromisura da adottare è quella preventiva: il legame tra il testo in chiaro ed il testo cifrato deve essere aleatorio.
 
 ## Teoria della complessità
 
-Finora si è sempre usato i termini di calcolo facile. E’ però utile avere a disposizione una definizione rigorosa: per questo motivo si fa riferimento alla Teoria della complessità.
-
 La complessità computazionale può essere determinata con una serie di indicatori:
 
-- **Tempo di esecuzione**: ovviamente non è un tempo _vero_ perché ogni tecnologia ha un concetto di tempo diverso. Per misurare il tempo di esecuzione si fa riferimento al numero di operazioni eseguite dall'algoritmo per terminare.
+- **Tempo di esecuzione**: ovviamente non è un tempo ˝ _vero_ ˝. Ogni tecnologia ha un concetto di tempo diverso. Per misurare il tempo di esecuzione si fa riferimento al numero di operazioni eseguite dall'algoritmo per terminare.
 - **Memoria occupata dal programma**.
 - **Memoria occupata dai dati**.
 
@@ -710,9 +723,9 @@ Negli algoritmi di crittografia gli ultimi due parametri non sono presi in consi
 
 ### Definizioni
 
-- **Tempo disecuzione di un algoritmo**: si intende il numero di operazioni `N` che occorre eseguire per terminare l'algoritmo quando il dato d’ingresso è rappresentato da una stringa di `n` bit `n = log [valore del dato]`).\
+- **Tempo di esecuzione di un algoritmo**: si intende il **numero di operazioni** `N` che occorre eseguire per terminare l'algoritmo quando il dato d’ingresso è rappresentato da una stringa di `n` bit `n = log [valore del dato]`).\
 \
-Il numero `n` (dimensione input) incide sul numero di operazioni richieste, in alcuni casi, anche il valore stesso può incidere sul numero di passi da eseguire. Dunque, a parità di `n`, si hanno diversi valori di `N`.
+Il numero `n` (dimensione input) incide sul numero di operazioni richieste e, in alcuni casi, anche il valore stesso può incidere sul numero di passi da eseguire. Dunque, a parità di `n`, si possono avere diversi valori di `N`.
 
 - **Tempo di esecuzione nel caso peggiore**: si intende il numero massimo di operazioni N_{max} che occorre eseguire per qualsiasi dato d’ingresso di `n` bit.\
 \
@@ -722,22 +735,22 @@ Tramite la notazione del _O grande_ è possibile evidenziare come incrementa il 
 
 Gli algoritmi possono essere classificati in due categorie:
 
-- **Tempo polinomiale**: algoritmo in grado di completare l'elaborazione di una dimensione `n` di dati in ingresso in un tempo di esecuzione pari a O(n^{k} dove `k` è un numero intero positivo.
-- **Tempo esponenziale**: algoritmo in grado di completare l'elaborazione di una dimensione `n` di dati in ingresso in un tempo di esecuzione pari a O(e^{n}) dove `n` è la dimensione `n` di dati in ingresso.
+- **Tempo polinomiale**: algoritmo in grado di completare l'elaborazione di una dimensione `n` di dati in ingresso in un tempo di esecuzione pari a ![$ O(n^{k}) $](https://render.githubusercontent.com/render/math?math=\color{black}\O{(n^{k})}#gh-light-mode-only) ![$ O(n^{k}) $](https://render.githubusercontent.com/render/math?math=\color{white}\O{(n^{k})}#gh-dark-mode-only) dove `k` è un numero intero positivo.
+- **Tempo esponenziale**: algoritmo in grado di completare l'elaborazione di una dimensione `n` di dati in ingresso in un tempo di esecuzione pari a ![$ O(e^{n}) $](https://render.githubusercontent.com/render/math?math=\color{black}\O{(e^{n})}#gh-light-mode-only) ![$ O(e^{n}) $](https://render.githubusercontent.com/render/math?math=\color{white}\O{(e^{n})}#gh-dark-mode-only) dove `n` è la dimensione dei dati in ingresso.
 
 ### Classificazione dei problemi
 
 Un problema si può classificare in:
 
 - **Facile**: se esiste un algoritmo polinomiale in grado di risolverlo su una macchina di Turing deterministica.
-- **Difficile**: se non sono stati fino ad ora individuati (e probabilmente non saranno mai individuati) algoritmi che lo risolvono in tempo polinomiale.
+- **Difficile**: se **non** sono stati fino ad ora individuati (e probabilmente non saranno mai individuati) algoritmi che lo risolvono in tempo polinomiale.
 
 ### Complessità e Sicurezza
 
 Per ottenere sicurezza è necessario:
 
 - **Trovare il valore n al di sopra del quale l'andamento diventa esponenziale**: se l'andamento è polinomiale l'intrusore è capace di entrare nel sistema. Dunque, la chiave dovrà avere un numero di bit in modo tale che la ricerca nello spazio delle chiavi diventi esponenziale.
-- **Vedere qual è il caso migliore**: l'intrusore non si deve trovare di fronte ad istanze del problema di facile soluzione.
+- **Vedere qual è il caso migliore**: l'intrusore non si deve trovare di fronte a istanze del problema di facile soluzione.
 
 Le unità di misura che si possono adottare sono:
 
@@ -751,53 +764,53 @@ Naturalmente è possibile passare dalla misura in anni MIPS a quella in livello 
 
 Una chiave deve avere un numero minimo di bit:
 
-- **In una chiave simmetrica**: se si usa una chiave privata a 128 bit, l'intrusore è difficile che riesca a trovarla perché l'andamento dell'algoritmo diventa esponenziale.
-- **In una chiave asimmetrica**: in questo caso i bit non possono essere solo di 128 bit perché l'attacco non è solo quello di forza bruta. Nelle chiavi asimmetriche esistono algoritmi di fattorizzazione che consente di risalire dalla chiave pubblica alla chiave privata il cui andamento è sub-esponenziale. In questo caso, il numero di bit per evitare attacchi alle chiavi asimmetriche devono essere almeno di 2000 bit.
+- **In una chiave simmetrica**: se si usa una chiave a 128 bit, l'intrusore è difficile che riesca a trovarla perché l'andamento dell'algoritmo diventa esponenziale.
+- **In una chiave asimmetrica**: in questo caso i bit non possono essere solo 128, poiché non esiste solo la modalità attacco di forza bruta. Nelle chiavi asimmetriche esistono algoritmi di fattorizzazione, che consente di risalire dalla chiave pubblica alla chiave privata, il cui andamento è sub-esponenziale. In questo caso, per evitare attacchi, il numero di bit delle chiavi asimmetriche, deve essere almeno di 2000.
 
 <!-- lezione del 07/10/2021-->
 ## Meccanismi di base
 
-Si è visto come funzionano a livello concettuale le trasformazioni per garantire i requisiti di sicurezza. Adesso si vedono come sono costruite.
-
 ### Generatori di numeri casuali (RNG)
 
-I componenti per generare numeri casuali si chiamano RNG.
+I componenti per generare numeri casuali, vengono chiamati **RNG**.
 In generale, per generare una chiave crittografica è importante che un componente RNG abbia due determinate caratteristiche:
 
 - Ogni valore deve essere casuale.
-- Ogni valore deve essere indipendente dal punto di vista statistico dal precedente e successivo perché bisogna evitare che un intrusore possa riuscire ad ipotizzare come sono fatti i bit.
+- Ogni valore deve essere indipendente dal punto di vista statistico dal precedente e successivo, poiché bisogna evitare che un intrusore possa riuscire a dedurre i bit adiacenti.
 
 ### True Random Number Generator (TRNG)
 
-Questi componenti non si possono usare per generare gradi quantità di chiavi crittografiche per due motivi:
+Questi componenti non si possono usare per generare grandi quantità di chiavi crittografiche per due motivi:
 
-- **Bassa frequenza di generazione**: se bisogna generare un numero elevato di chiavi in un tempo brevissimo non sono adatti questi componenti perché usano ad esempio fenomeni fisici per generarli (decadimento radioattivo, rumore termico etc);
-- **Non riproducibilità**: mittente e destinazione devono disporre dello stesso segreto per applicare una determinata trasformazione. Se il mittente genera una chiave deve passarla al destinatario altrimenti se il destinatario provasse a generare una chiave non otterrebbe mai la stessa.
+- **Bassa frequenza di generazione**: se bisogna generare un numero elevato di chiavi in un tempo brevissimo non sono adatti questi componenti, perché usano ad esempio fenomeni fisici per generarli (decadimento radioattivo, rumore termico etc);
+- **Non riproducibilità**: mittente e destinatario devono disporre dello stesso segreto per applicare una determinata trasformazione. Quando il mittente genera una chiave deve condividerla con il destinatario, altrimenti, se il destinatario provasse a generare una chiave, non otterrebbe mai la stessa.
 
 ### Pseudo Random Number Generator (PRNG)
 
-Per superare i problemi del TRNG, si usano questi altri tipi di generatori. Sono componenti che consentono di generare lunghe sequenze di numeri casuali in modo deterministico a partire da un dato iniziale detto _seme_. Per questo motivo si chiamano _pseudo_ perché se il _seme_ iniziale è uguale sia nella sorgente che nella destinazione, viene riprodotta la stessa sequenza di bit.
+Per superare i problemi del TRNG, si usano questi tipi di generatori. Sono componenti che consentono di generare lunghe sequenze di numeri casuali in modo deterministico, a partire da un dato iniziale detto _seme_. Per questo motivo si chiamano _pseudo_, perché se il _seme_ iniziale è uguale sia nella sorgente che nella destinazione, viene riprodotta la stessa sequenza di bit.
 
 ![dedurre](./img/img54.png)
 
-Questi componenti non garantiscono la proprietà di _imprevedibilità_ cioè un intrusore che è riuscito ad intercettare l’uscita o ad individuare, in tutto o in parte, lo stato del generatore, riesce a dedurre da quale seme si è partiti o quali saranno i prossimi valori generati.
+Questi componenti non garantiscono la proprietà di _imprevedibilità_: un intrusore che è riuscito a intercettare l’uscita o ad individuare, in tutto o in parte, lo stato del generatore, riesce a dedurre da quale seme si è partiti, o quali saranno i prossimi valori generati.
 
 ### Cryptographically Secure PseudoRandom Bit Generator (CSPRBG)
 
-Nella sicurezza informatica, si ha bisogno che si rispetti assolutamente la proprietà dell'_imprevedibilità_.
+Nella sicurezza informatica, si ha bisogno che si rispetti assolutamente la proprietà dell'_imprevedibilità_: non deve essere in grado di dedurro da quale seme sono i partiti i calcoli o quali saranno i prossimi valori generati.
 
 ![dedurre](./img/img28.png)
 
-Questo generatore prevede che il seme sia generato da un _True Number Generator_ una volta sola. A questo punto, il seme viene dato in ingresso ad un PRNG il cui modello è un automa a stati finiti dove la funzione di stato futuro o di uscita deve deve essere unidirezionale in modo da rendere impossibile ad un avversario che ha individuato uno stato di risalire agli stati precedenti ed al seme. Inoltre, il seme deve essere anch'esso imprevedibile e tenuto segreto.
+Questo generatore prevede che il seme, imprevedibile e segreto, sia generato da un _True Number Generator_ una volta sola. A questo punto, il seme viene dato in ingresso a un PRNG il cui modello è un automa a stati finiti, dove la funzione di stato futuro o di uscita deve essere unidirezionale.
+In questo modo si rende impossibile a un avversario che ha individuato uno stato di risalire agli stati precedenti e al seme.
+Occorre che sia verificato anche il _next-bit test_: dati L bit del seme, non deve esistere alcun algoritmo in grado di prevedere il L+1-esimo bit del seme con probabilità maggiore di 0,5.
 
-La funzione unidirezionale impiegata può sfruttare algoritmi di crittografia per produrre in uscita questi bit casuali:
-
-- **Crittografia simmetrica**: le proprietà sono solo sperimentalmente verificabili: hanno alta velocità di generazione delle sequenze di uscita;
-- **Crittografia asimetrica**: si può dimostrare teoricamente che l'uscita è casuale, imprevedibile e indeducibile ma hanno prestazioni più basse.
-
+La funzione unidirezionale impiegata può sfruttare algoritmi di crittografia per produrre in uscita bit casuali (e.g. crittografia simmetrica e asimmetrica):
+<!-->
+- **Crittografia simmetrica**: le proprietà sono solo sperimentalmente verificabili. Hanno alta velocità di generazione delle sequenze di uscita;
+- **Crittografia asimmetrica**: si può dimostrare teoricamente che l'uscita è casuale, imprevedibile e indeducibile, ma hanno prestazioni più basse.
+-->
 ### Esempio
 
-Un esempio di PRNG è la classe Secure Random di Java.
+Un esempio di PRNG è la classe [`SecureRandom`](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/security/SecureRandom.html) di Java.
 
 ### Algoritmi di hash
 
