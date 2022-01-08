@@ -842,7 +842,11 @@ La maggior parte degli algoritmi, per garantire efficienza, comprimendo agevolme
 - L'impronta `h`-iesima è ottenuta applicando una funzione `f` all'impronta ottenuta al passo ottenuto precedente concatenata con il messaggio `m`-iesimo.
 - L'impronta finale dell'intero messaggio corrisponde con l'ultima impronta generata dall'ultimo blocco.
 
-Ci sono implementazioni come MD5, SHA-1 e SHA-2 che utilizzano questo schema.
+Ci sono implementazioni come MD5, SHA-1 e SHA-2 che utilizzano questo schema. Gli algoritmi differiscono tra di loro per:
+- numero di bit di impronta di uscita;
+- numero di bit di blocco di input;
+- numero di step per realizzare l’impronta;
+- dimensione massima del messaggio di output.
 
 Questo schema è soggetto ad un attacco che si chiama _attacco con estensione_.
 
@@ -897,6 +901,8 @@ La destinazione, infine, come verifica di autenticità rimuoverà i bit relativi
 - non avere senso e venire giustamente scartato;
 - acquisire un nuovo senso (in questo caso un importo di denaro enorme) e provocare danni.
 
+Un esempio di implementazione di algoritmo di hash restistente all'attacco con estensione è SHA-3.
+
 ### Attacco al segreto con una collisione
 
 Si potrebbe pensare di invertire la posizione di `s` e di `m` all’interno dell’autenticatore (in modo da avere `H(m || s)`), che eviterebbe l’estensione dell’algoritmo, dato che l'attaccante non conosce il segreto `s`. 
@@ -908,20 +914,39 @@ Questo stratagemma è utile solo se la funzione hash **è resistente alla collis
 
 Come contromisura per migliorare un algoritmo di hash è l'utilizzo di una doppia compressione, realizzando l'impronta di un'impronta (sfavorendo l'efficienza).
 
-
 ### Robustezza alle collisioni
 
-Le funzioni hash non garantiscono sempre la resistenza alle collisioni. Non ci si limita, quindi, a eseguire solo una volta l'operazione di hash ma la si effettua più volte. Ad esempio, HMAC è uno standard a due compressioni cioè si effettua l'impronta di un'impronta.
+Le funzioni hash non garantiscono sempre la resistenza alle collisioni. Si può quindi effettuare più volte l'operazione di hash; ad esempio, HMAC è uno standard a due compressioni, ovvero si effettua l'impronta di un'impronta (utilizzato da SSL e IPSec).
 
-La resistenza alle collisione è fondamentale quando la funzione hash è usata per costruire attestati di autenticità. Ad esempio, in uno schema di firma digitale perchè l'intrusore potrebbe trovare una coppia di messaggi che producono la stessa impronta. L'intrusore potrà eludere le vittime facendo firmare un contratto su un messaggio `m` a loro favorevoli, per poi in futuro usare l’attestato di autenticità su un messaggio `m'` (favorevole ora all’intrusore), dato che c’è collisione. In questo esempio, non è rispettata la collisione forte.
+La resistenza alle collisioni è fondamentale quando la funzione hash è utilizzata per costruire attestati di autenticità. 
+
+Senza di essa, un intrusore potrebbe infatti trovare una coppia di messaggi che producono la stessa impronta. L'intrusore potrà eludere le vittime, facendo firmare un contratto su un messaggio `m` a loro favorevoli, per poi in futuro usare l’attestato di autenticità su un messaggio `m'` (favorevole ora all’intrusore), dato che è presente collisione.
+
+In questo esempio, **non** è rispettata la _collisione forte_, poiché sia `m` che `m'` sono stati scelti dall'attaccante.
+
+
+### Unidirezionalità
+La proprietà di unidirezionalità è importante in due scenari:
+
+**Firma digitale**
+- L'intrusore vuole ottenere l'impronta firmata con la chiave privata della sorgente. Per fare questo, inizia a generare casualmente delle sequenze di `r` bit, tramite un PRNG crittograficamente sicuro.
+- L'intrusore vuole fingere che `r` sia il risultato della firma con chiave privata di `H(input)` (quindi `S_su(H(y)) = r`).
+- L’intrusore calcola `V(r)` (operazione di _Verify_): questa operazione può essere compiuta da chiunque, poiché la trasformata `V` è nota a tutti.
+- Su `V` applica una chiave pubblica della sorgente (nota a tutti).
+- Dalla funzione di Verify si ottiene in uscita `x`.
+- `x = H(input)`. L'obiettivo dell'intrusore è di fingere che `x` sia stato firmato dalla sorgente legittima.
+- Se `H^-1(x)` è dotato di significato, l’attacco ha successo (poiché abbiamo ricavato `input`), ma dato che la funzione `H` non è invertibile ciò non è possibile.
+
+**Memorizzazione di un segreto su un file system**
+- La chiave di cifratura del segreto è la passphrase che viene sottoposta a `H`.
+- Se la funzione non fosse unidirezionale si riuscirebbe a ricavare la passphrase.
 
 ### Complessità del calcolo di una collisione
 
-**Ipotesi**: per la proprietà di oracolo casuale, le funzioni hash devono avere un comportamento aleatorio cioè devono restituire con uguale probabilità una delle 2^n configurazioni.
+**Ipotesi**: per la proprietà di oracolo casuale, le funzioni hash devono avere un comportamento aleatorio, ovvero devono restituire con uguale probabilità una delle ![$  $](https://render.githubusercontent.com/render/math?math=\color{black}\2^{n}#gh-light-mode-only) ![$  $](https://render.githubusercontent.com/render/math?math=\color{white}\2^{n}#gh-dark-mode-only) configurazioni.
 
-**Problema**: data una funzione hash con `n` possibili output e un determinato `H(x)`, se `H` viene applicato a `K` input casuali, quale deve essere il valore di `k` tale che la probabilità che almeno un input `y` soddisfi `H(y) = H(x)` sia maggiore di 0.5?
+**Problema**: data una funzione hash con `n` possibili output e un determinato `H(x)`, se `H` viene applicato a `K` input casuali, quale deve essere il valore di `k` (numero di tentativi per trovare una collisione) tale che la probabilità che almeno un input `y` soddisfi `H(y) = H(x)` sia maggiore di 0.5?
 
-<!--$ P_1(2^{n}, 1) = \frac{1}{2^n}$ -->
 - **Resistenza debole**: si indica con
   
   ![$  $](https://render.githubusercontent.com/render/math?math=\color{black}P_1{(2^{n},1)\=\frac{1}{2^n}}#gh-light-mode-only) ![$  $](https://render.githubusercontent.com/render/math?math=\color{white}\P_1{(2^{n},1)\=\frac{1}{2^n}}#gh-dark-mode-only)
@@ -930,25 +955,20 @@ La resistenza alle collisione è fondamentale quando la funzione hash è usata p
 
   ![$  $](https://render.githubusercontent.com/render/math?math=\color{black}\1-\frac{1}{2^n}#gh-light-mode-only) ![$  $](https://render.githubusercontent.com/render/math?math=\color{white}\1-\frac{1}{2^n}#gh-dark-mode-only)
  
-   Se si hanno `k` tentativi:
+   Se si hanno `k` tentativi, la probabilità di trovare una collisione corrisponde a:
 
    ![$  $](https://render.githubusercontent.com/render/math?math=\color{black}\P_k(2^n,k)\=1-{(1-\frac{1}{2^n})^k}#gh-light-mode-only)![$  $](https://render.githubusercontent.com/render/math?math=\color{white}\P_k(2^n,k)\=1-{(1-\frac{1}{2^n})^k}#gh-dark-mode-only)
 
-   Questo vuol dire che:
+   Applicando il teorema binomiale e approssimando si ottiene:
 
    ![$  $](https://render.githubusercontent.com/render/math?math=\color{black}\k=P_k(2^n,k)\times{2^n}#gh-light-mode-only)![$  $](https://render.githubusercontent.com/render/math?math=\color{white}\k=P_k(2^n,k)\times{2^n}#gh-dark-mode-only)
 
-  ![$  $](https://render.githubusercontent.com/render/math?math=\color{black}\2^n#gh-light-mode-only)![$  $](https://render.githubusercontent.com/render/math?math=\color{white}\2^n#gh-dark-mode-only), per avere un andamento esponenziale deve essere pari almeno a 128 (`n = 7`). Dunque, l'impronta deve essere almeno 128 bit;
+  ![$  $](https://render.githubusercontent.com/render/math?math=\color{black}\2^n#gh-light-mode-only)![$  $](https://render.githubusercontent.com/render/math?math=\color{white}\2^n#gh-dark-mode-only), per avere un andamento esponenziale deve essere pari almeno a 128 (`n = 7`). Dunque, l'impronta deve essere almeno 128 bit (vedi MD5). Attualmente vengono utilizzati 160 bit per l'impronta (vedi SHA-1).
   <!--domanda: cosa ha esattamente spiegato la prof quest'anno?-->
 - **Resistenza forte (paradosso del compleanno)**: nell’ipotesi che le date di nascita siano equiprobabili, è sufficiente scegliere a caso 253 persone per avere una probabilità `> 0,5` che una di queste compia gli anni in un giorno prefissato (resistenza debole). Sono invece sufficienti 23 persone scelte a caso per avere una probabilità `> 0,5` che due o più compiano gli anni nello stesso giorno (resistenza forte).
 Quindi, non bastano 128 bit: il numero di bit deve essere il doppio, poiché per la resistenza forte sono necessari ![$  $](https://render.githubusercontent.com/render/math?math=\color{black}\2^n#gh-light-mode-only)![$  $](https://render.githubusercontent.com/render/math?math=\color{white}\2^{\frac{n}{2}}#gh-dark-mode-only) tentativi.
 
   È quindi più facile effettuare un attacco rispetto alla resistenza debole.
-
-### Unidirezionalità
-
-L'unidirezionalità è un'altra proprietà importante.
-Un caso tipico in cui `H` deve essere one-way si ha quando un messaggio in chiaro `m` è autenticato da `H(m || s)`, altrimenti invertendo la funzione si risalirebbe al segreto.
 
 ## 03.Meccanismi Simmetrici
 
@@ -1033,7 +1053,7 @@ Nel _cifrato a flusso autosincronizzante_, nel caso di attacchi attivi:
 
 Il requisito fondamentale è che la chiave deve essere usata una e una sola volta. Se si usa lo stesso flusso di chiave su messaggi distinti si possono fare attacchi di analisi sui cifrati perché si sfruttano le proprietà dell'`XOR`.
 
-![marco togni](./img/img41.png)
+![](./img/img41.png)
 
 Ad esempio, si consideri:\
 `m1 XOR k = c1`
@@ -1046,7 +1066,7 @@ Fare `c1 XOR c2` è come fare l'`XOR` su due messaggi in chiaro: `m1 XOR m2`.
 
 Nell'implementazione del protocollo WEB si presenta questo tipo di vulnerabilità.
 
-![marco togni](./img/img17.png)
+![](./img/img17.png)
 
 L'obiettivo è ottenere un _seed_ variabile ma in realtà questo protocollo presenta alcuni limiti:
 
@@ -1102,7 +1122,7 @@ L'obiettivo, quindi, è quello di trovare modalità di _cifrature aleatorie_. Es
 
 Solo questa modalità di cifratura utilizza il padding.
 
-![marco togni](./img/img18.png)
+![](./img/img18.png)
 
 La modalità CBC prende il messaggio in chiaro, lo suddivide in blocchi e l'ultimo blocco è sottoposto a padding se necessario. Per ogni blocco, il testo in chiaro viene messo in `XOR` con il cifrato del blocco precedente e il risultato viene messo in input alla funzione di cifratura `E` ottenendo un testo cifrato c_i. Solo per quanto riguarda il blocco 1, il testo in chiaro viene dato in `XOR` con quello che si chiama _vettore di inizializzazione_ (IV) altrimenti questo blocco sarebbe sempre deterministico. IV può essere o concordato o inviato come primo blocco del cifrato e la sua dimensione è grande quanto quella del blocco.
 
@@ -1131,15 +1151,15 @@ Svantaggi:
 
 Questo schema ricorda un _cifrario a flusso autosincronizzante_. 
 
-![marco togni](./img/img44.png)
+![](./img/img44.png)
 
 Nel dettaglio, può essere rappresentato nel seguente modo:
 
-![marco togni](./img/img19.png)
+![](./img/img19.png)
 
 Si prende un registro a scorrimento che viene inizializzato con un vettore di inizializzazione che è casuale, non necessariamente segreto, imprevedibile e usato una sola volta. Il registro è formato da due parti: una parte formata dagli s bit meno significativi e l'altra dai b-s bit più significativi. A scorrimento vuol dire che ad ogni clock s bit "escono" dal registro. Lo stato del registro a scorrimento viene sottoposto ad una cifratura con la chiave `K`. L'uscita va a finire in un altro registro a scorrimento che è formato da s bit più significativi e b-s bit meno significativi. Il cifrato finale è ottenuto mettendo in `XOR` s bit del testo in chiaro con gli s bit più significati del vettore a scorrimento di cifratura. Il risultato è il cifrato costituito da s bit.
 
-![marco togni](./img/img20.png)
+![](./img/img20.png)
 
 In decifrazione, si procede analogamente. Per decifrare il primo blocco di testo in chiaro bisogna avere il cifrato ottenuto al passo precedente vuol dire scorrere indietro. La prima cosa da fare è partire dall'ultimo blocco e recuperare a ritroso. Inoltre, si usa sempre la stessa funzione `E` cioè l'implementazione dell'algoritmo è la stessa (quindi stesso circuito hardware).
 
@@ -1151,15 +1171,15 @@ Si usa, ad esempio, quando si ha una trasmissione carattere per carattere (8 bit
 
 Questo schema ricorda un _cifrario a flusso sincrono_.
 
-![marco togni](./img/img45.png)
+![](./img/img45.png)
 
 Nel dettaglio, può essere rappresentato nel seguente modo:
 
-![marco togni](./img/img21.png)
+![](./img/img21.png)
 
 Come in CFB, anche in questo caso IV serve per inizializzare il registro. Il procedimento iniziale è identico, tranne per l’ultimo passaggio: C1 viene infatti prodotto allo stesso modo, ma non viene mandato in ingresso al registro, al passo successivo.
 
-![marco togni](./img/img22.png)
+![](./img/img22.png)
 
 In decifrazione, non si usa la funzione inversa ma si continua ad usare la funzione di encryption `E` (stesso circuito hardware).
 
@@ -1171,7 +1191,7 @@ L'OFB si preferisce usarlo quando i canali sono rumorosi (ad esempio i satelliti
 
 Il comportamento è quello di un cifrario a flusso sincrono.
 
-![marco togni](./img/img29.png)
+![](./img/img29.png)
 
 Funziona esattamente come una modalità ECB: il testo in chiaro viene suddiviso in blocchi, ciascuno dei quali viene lavorato indipendentemente dagli altri. Il flusso di chiave di L bit casuali, dove L è la lunghezza del blocco, è sommato modulo 2 con un pari numero di bit del testo in chiaro. Tali bit sono ottenuti cifrando lo stato di un contatore a L bit, incrementato di un’unità prima di procedere all’elaborazione di un nuovo blocco, con la chiave k.
 
@@ -1192,7 +1212,7 @@ L'intrusore deve riuscire ad entrare in una sessione già avviata tra client e s
 
 All'inizio di una connessione TCP, il client e il server negoziano gli algoritmi di cifratura, la chiave della sessione e i parametri che vengono usati dai cifrari come il vettore di inizializzazione e anche la modalità di cifratura da usare. I dati a livello applicativo hanno una certa dimensione e vengono suddivisi in blocchi perché vanno a finire in pacchetti SSL il cui payload è di dimensione inferiore.
 
-![marco togni](./img/img24.png)
+![](./img/img24.png)
 
 Si suppone che ci siano due persone che stanno parlando tra di loro: Luca e Lucia.
 
@@ -1203,7 +1223,7 @@ Luca inizia sempre la conversazione con "Mia amata Lucia". Si suppone che "Mia a
 
 L'obiettivo dell'intrusore è cercare di capire se dando un input opportuno, si ha lo stesso output del blocco 2 così da poter confrontare e dedurre che "Lucia" è stato l'input del passaggio 2.
 
-![marco togni](./img/img30.png)
+![](./img/img30.png)
 
 Basta conoscere come si comporta l’`XOR`, cioè se si da due volte lo stesso input, è come se annullasse l’`XOR`.
 
@@ -1239,7 +1259,7 @@ Ci sono due famiglie:
 
 Questo schema prevede che fuori banda e in maniera **assolutamente** robusta sia stata precondivisa una _master key_. Non è opportuno che `A` cifri molti dati con questa _master key_ perché questa chiave meno si cambia meglio è, dato che poi bisogna creare un canale fuori banda (costo elevato). La master key quindi deve avere una vita lunga e ogni tanta va rinnovata.
 
-![marco togni](./img/img31.png)
+![](./img/img31.png)
 
  All’avvio della sessione, il mittente genera una chiave di sessione `k` tramite PNRG crittograficamente sicuro. Questa chiave `k` viene cifrata con la _master key_. Poi, il mittente cifra anche il messaggio con la chiave `k` e il relativo cifrato viene mandato al destinatario concatenato al cifrato della chiave `k`. Il destinatario, conoscendo la master key, decifra la chiave `k`, che userà per decifrare a sua volta il messaggio `m`. La chiave di sessione viene usata solo una volta.
 
@@ -1256,11 +1276,11 @@ Uno svantaggio di questo schema è che non è scalabile: quando il numero di ute
 
 Occorrono dunque: Nc = Nu * (Nu-1)/2 canali _sicuri_; altrettante sono le chiavi segrete in circolazione. Per ridurre, quindi, il numero di chiavi pre-concordate si introduce una terza entità chiamata _centro di distribuzione delle chiavi_.
 
-![marco togni](./img/img32.png)
+![](./img/img32.png)
 
 L'idea è quella che `A` chiede a `T` una chiave di sessione `k`, `T` la genera e la passa ad `A` e poi `A` la invia a `B`. Ogni utente deve precedentemente pre-condividere con `T` una chiave simmetrica unica (KAT, KBT). Tutto in maniera assolutamente sicura.
 
-![marco togni](./img/img55.png)
+![](./img/img55.png)
 
 Il mittente `A` ha pre-condiviso con il centro di distribuzione la _master key_ `KA` mentre `B` ha condiviso la _master key_ `KB`.
 
@@ -1268,7 +1288,7 @@ Il mittente `A` ha pre-condiviso con il centro di distribuzione la _master key_ 
 - `T` riceve il messaggio e risponde inviando a sua volta un messaggio. Questo messaggio non è altro che la concatenazione di Ra, il destinatario `B`, la chiave di sessione `k` e la chiave di sessione `k` concatenata con `A` cifrata con dalla master key di `B`. Per cifrare il messaggio si usa la chiave KA in modo tale che si dimostra che `T` sia a conoscenza della chiave;
 - `A` riceve il messaggio e decifra EKA ottenendo Ra (sa che è davvero `T` con cui sta comunicando), il destinatario `B`, la chiave di sessione `k` e EKB(A || k). È ovvio che `A` non sappia decifrarlo ma lo deve inviare a `B`.
 
-![marco togni](./img/img33.png)
+![](./img/img33.png)
 
 Da un punto di vista della robustezza, il protocollo con soli tre passaggi non è sicuro da un punto di vista concettuale. Un attaccante può:
 
@@ -1323,7 +1343,7 @@ A livello implementativo possono esserci delle vulnerabilità che a livello conc
 
 Il mittente `A` ha pre-condiviso con il centro di distribuzione la _master key_ `KA` mentre `B` ha condiviso la _master key_ `KB`.
 
-![marco togni](./img/img56.png)
+![](./img/img56.png)
 
 - `A` contatta `B` invia un messaggio contenente chi è il mittente || la master key di `A` costruita sul numero randomico imprevedibile e unico RA;
 - `B` contatta `T` inviando il messaggio che ha ricevuto da parte di `A` || chi è il mittente || la prova EKB(RB);
@@ -1367,11 +1387,11 @@ KB = Ya^XB mod p = (g^XA)^XB mod p
 
 Di seguito l'immagine mostra un piccolo esempio dove è possibile capire meglio i passi dell'algoritmo:
 
-![marco togni](./img/img57.png)
+![](./img/img57.png)
 
 Il protocollo DH prende il nome anche di DH anonimo perchè non garantisce che durante lo scambio YA/YB provenga davvero da A/B. Ovviamente, non si può usare questo protocollo quando non si ha l'assoluta certezza che le entità siano fidate.
 
-![marco togni](./img/img58.png)
+![](./img/img58.png)
 
 Una variante del protocollo prende il nome di DH/ElGamal e prevede che A, l’iniziatore del protocollo, abbia già a disposizione YB ottenuto in precedenza ed in modo sicuro da B. Tuttavia, si perde il grande vantaggio del protocollo DH, ovvero la possibilità di comunicare senza accordi fuori banda.
 
@@ -1381,7 +1401,7 @@ Se non si garantisce la proprietà d'integrità a un cifrario simmetrico la conf
 
 La macchina sorgente ha cifrato dei dati, e li invia sulla porta 80. La comunicazione non avviene direttamente con il destinatario ma in mezzo c'è un gateway che a seconda della porta di destinazione smista i dati. L'intrusore è in ascolto sulla porta 25 del gateway. Il suo obiettivo è quello di non smistare i dati sulla porta 80 ma sulla porta 25.
 
-![marco togni](./img/img36.png)
+![](./img/img36.png)
 
 Tra il gateway e l'end user è stata concordata una modalità di cifratura. Ipotiziamo CBC. Quando i dati vengono decifrati, il vettore di inizializzazione viene messo in XOR con il primo blocco di messaggi cifrati. L'intrusore basta che modifichi il vettore di inizializzazione originario in un vettore che mandato in XOR con il blocco di cifrato restituisca 25 al posto di 80:
 
@@ -1419,11 +1439,11 @@ Entrambe garantiscono integrità e autenticità.
 
 Un primo modo per costruire un MAC che sfrutti un cifrario simmetrico è usare lo schema raw CBC-MAC.
 
-![marco togni](./img/img37.png)
+![](./img/img37.png)
 
 Si prende il messaggio originario e lo si suddivide in blocchi. Ogni blocco viene dato in XOR al cifrato precedente dove al primo passo, il blocco viene messo in XOR con un vettore di inizializzazione (0). Ai fini della confidenzialità non importa avere un vettore imprevedibile, assolutamente casuale e usato una sola volta. **Solo** l'uscita dell'ultimo blocco è l'attestato di autenticità e integrità. Questa modalità diventa deterministica appunto perché il vettore è 0.
 
-![marco togni](./img/img38.png)
+![](./img/img38.png)
 
 Un secondo modo per costruire un MAC (ed è la modalità che si usa) prende il nome di encrypted CBC-MAC. Questa modalità prende l'ultimo blocco cifrato che viene sottoposto ad un'ulteriore operazione di cifratura ma con una chiave diversa.
 
@@ -1462,9 +1482,9 @@ Se si calcola il MAC su questo messaggio si ottiene un tag t. Si consideri quest
 Se si calcola il MAC si ottiene un tag t1. Però t risulta essere uguale a t1. Se il messaggio indica una somma di denaro, 100 euro sono la stessa cosa di 10000;
 - **Standard ISO**: si inserisce un "1" che indica l'inizio del padding. Si distinguono due casi:
   - Il blocco finale ha una dimensione inferiore per cui viene riempito con il padding;
-  ![marco togni](./img/img59.png)
+  ![](./img/img59.png)
   - Il blocco finale non ha bisogno di bit di padding ma è necessario comunque aggiungere il dummy block cioè un blocco che inizia con 1 che è della stessa dimensione degli altri ("100...00"). Se non si aggiungesse si ritornerebbe al caso del padding con tutti zeri.
-  ![marco togni](./img/img60.png)
+  ![](./img/img60.png)
 
 ### CMAC
 
@@ -1486,7 +1506,7 @@ Esistono due modalità a seconda se viene creato il tag prima o dopo la cifratur
 - La modalità MAC-then-Encrypt non è sempre robusta nelle implementazioni anche se a livello concettuale va bene. Ad esempio, nella modalità CBC. Si veda esempio del paragrafo successivo;
 - La modalità Encrypt-then-MAC funziona sempre bene anche nelle implementazioni. Il MAC è verificato subito e il cifrato è scartato se invalido.
 
-![marco togni](./img/img39.png)
+![](./img/img39.png)
 
 Si riprendono i protocolli già introdotti in precedenza:
 
@@ -1502,7 +1522,7 @@ La soluzione più efficiente è SSL perché se il messaggio non è integro ed au
 
 È possibile trovare questo problema nelle vecchie versioni di TLS. Si suppone che mittente e destinatario abbiano negoziato la modalità CBC per cifrare i dati. Nel protocollo, quindi, viene eseguito MAC-then-Encrypt cioè viene preso m, viene calcolato il MAC su m, m || MAC viene sottoposto a CBC con padding.
 
-![marco togni](./img/img61.png)
+![](./img/img61.png)
 
 Il pacchetto TLS è formato dai campi riportati nella figura. Nel campo padding, viene scritto i byte che sono stati riempiti. Esempio, 3 byte, il padding sarà 3 3 3.
 
@@ -1510,7 +1530,7 @@ Se c'era stato in fase di decifrazione un errore legato al padding veniva restit
 
 Tuttavia, in SSL, anche se sono stati rimossi questi errori è possibile effettuare un _timing attack_: si osservano i tempi di decifrazione. Se la risposta arriva subito vuol dire che l'errore è relativo al padding altrimenti è un errore di decifrazione.
 
-![marco togni](./img/img40.png)
+![](./img/img40.png)
 
 Un attaccante può eseguire l'attacco _padding oracle_ (attacco con testo cifrato scelto):
 
@@ -1518,7 +1538,7 @@ Un attaccante può eseguire l'attacco _padding oracle_ (attacco con testo cifrat
 - Il testo sorgente è cifrato ed è costituito da tre blocchi: c0, c1 e c2. L'attaccante vuole ottenere m1;
 - Toglie c2 e modifica un byte in c0 per poi inviarlo al destinatario.
 
-![marco togni](./img/img62.png)
+![](./img/img62.png)
 
 Nota: chi riceve effettua le operazioni inverse. Prima controlla il padding e poi il MAC. Quindi, chi riceve il messaggio, vede il blocco c1 che al suo interno ha del padding.
 
@@ -1578,7 +1598,7 @@ Il servizio applicativo di firma digitale è un concetto ad alto livello che gar
 
 <!-- 21-10-2021 -->
 
-![marco togni](./img/img63.png)
+![](./img/img63.png)
 
 Ci sono `A`, `B` e `T` è la terza parte. Ci sono delle chiavi precondivise tra `A`, `B` e questa terza parte. In generale, le fasi che devono avvenire sono le seguenti:
 
@@ -1591,7 +1611,7 @@ Ci sono `A`, `B` e `T` è la terza parte. Ci sono delle chiavi precondivise tra 
 
 È uno schema di firma digitale non ripudiabile con cifrari simmetrici. Si chiama Registro Atti Privati perchè modella un "notaio".
 
-![marco togni](./img/img64.png)
+![](./img/img64.png)
 
 Il protocollo prevede le seguenti fasi:
 
@@ -1629,7 +1649,7 @@ Chi usa una chiave pubblica ad un’estremità del canale non ha alcuna garanzia
 
 La sicurezza d’uso di una chiave pubblica è minacciata da un particolare tipo di attacco detto _attacco dell’uomo in mezzo_.
 
-![marco togni](./img/img65.png)
+![](./img/img65.png)
 
 Si suppone che due utenti A e B abbiano inserito in un database DB le loro chiavi pubbliche PA e PB. L’intrusore fa apparire la sua chiave pubblica PI al posto di quelle di A e di B intercettando l'interrogazione sul DB. A questo punto riesce a decifrare, cifrare e inviare messaggi senza alcun problema.
 
@@ -1667,7 +1687,7 @@ Le informazioni indispensabili che un certificato deve per forza contenere sono:
 
 Lo standard ISO X.509 prevede una suddivisione del certificato in diversi campi in chiaro (dati), seguiti dalla firma del loro hash con la chiave privata di CA (signature).
 
-![marco togni](./img/img46.png)
+![](./img/img46.png)
 
 Le informazioni sono le seguenti:
 
@@ -1696,17 +1716,17 @@ con PKI si intende un'infrastruttura costituita da un insieme di componenti che 
 
 La directory è un database distribuito (repository globale) capace di garantire alte prestazioni e alta disponibilità.
 
-![marco togni](./img/img48.jpg)
+![](./img/img48.jpg)
 
 Dato che è distribuito, ci sono diversi nodi che prendono il nome di DSA (Directory Service Agent). Essi gestiscono un sottoinsieme di informazioni e quando un utente detto DUA (Directory User Agents) chiede informazioni al proprio DSA, se non ha le informazioni richieste, si coordina con gli altri DSA per ottenerle. Il protocollo di accesso alla directory è LDAP. Ad esempio, per l'autenticazione in UNIBO si usa questo protocollo.
 
 Per archiviare i dati, la directory segue lo standard X.500 (servizio di directory standard). Tale standard definisce come archiviare e come accedere ai dati. Si basa su di un sistema di nomi gerarchico (come il DNS) e sul concetto di entry (costituita dalla coppia: tipo, valore). X.500 organizza le entry delle directory in una struttura gerarchica capace di supportare una grande quantità di informazioni.
 
-![marco togni](./img/img47.png)
+![](./img/img47.png)
 
 Le entry all’interno di una directory sono organizzate gerarchicamente, come in un file system. Ci si può riferire a loro tramite nome assoluto o nome relativo (a seconda della posizione in cui eseguiamo la ricerca). Il nome assoluto è l’identificativo univoco dell’entry e prende il nome di _distinguish name_ (DN); mentre il nome relativo prende il nome di _relative distinguish name_ (RDN).
 
-![marco togni](./img/img49.png)
+![](./img/img49.png)
 
 Nel seguente esempio, sono rappresentati gli utenti che appartengono ad una multinazionale. Le informazioni sono organizzate a livello geografico. Ad esempio, in Canada (che è la radice), si ha l'organizzazione e a sua volta ci sono le sedi fino ad arrivare ai dipendenti specifici.
 
@@ -1714,7 +1734,7 @@ Nel seguente esempio, sono rappresentati gli utenti che appartengono ad una mult
 
 Ogni utente finale sceglie un ente di certificazione che sarà responsabile. Ognuno può avere più chiavi ed enti di certificazione diversi.
 
-![marco togni](./img/img66.png)
+![](./img/img66.png)
 
 Si suppone che X voglia farsi certificare una chiave di firma:
 
@@ -1817,11 +1837,11 @@ gestire.
 
 È un modello pull il cui funzionamento è off-line.
 
-![marco togni](./img/img67.png)
+![](./img/img67.png)
 
 Per rendere partecipi tutti gli utenti che una chiave non deve essere più usata, CA mantiene on-line una lista di certificati revocati (CRL) e la rilascia periodicamente su una Directory (CRL firmata e garantita dall’autorità). Ogni utente scarica dalla Directory la struttura data CRL e, una volta scaricata, controlla **localmente** lo stato del certificato per sapere se è ancora valida la chiave pubblica di un determinato soggetto (se non lo fa, la responsabilità è solo ed esclusivamente dell’utente).
 
-![marco togni](./img/img52.png)
+![](./img/img52.png)
 
 La Certificate List è composta da alcuni campi che riguardano la revoca:
 
@@ -1854,7 +1874,7 @@ A seconda del meccanismo che si usa, nella struttura dati CRL ci sono campi aggi
 
 È un protocollo standard definito da RFC-2560 client-server in modalità pull che funziona solo online al contrario delle CRL che una volta scaricate possono essere consultate anche offline. Un cliente chiede al server lo stato di revoca di uno specifico certificato. Alla risposta di un cliente, il server verifica se un certificato è valido o è stato revocato e risponde con uno dei seguenti messaggi: good, revoked o unknown.
 
-![marco togni](./img/img68.png)
+![](./img/img68.png)
 
 Le risposte sono firmate dal server (non dalla CA!), quindi il server avrà una coppia di chiavi certificata da una CA. Il certificato del server non è verificabile con OCSP, che ovviamente non è un protocollo di certificazione: l’utente dovrà aver ricevuto in modo sicuro la chiave dalla CA per poi verificare con essa il certificato mandato e firmato dal server.
 
@@ -1892,7 +1912,7 @@ Ma è bene ricordare che esistono molti altri:
 
 Non si può pensare che tutti gli utenti appartengano sempre allo stesso dominio di certificazione: spesso appartengono a domini di certificazione diversi. Bisogna far comunicare le diverse CA tra di loro in modo da rendere il sistema scalabile. Bisogna costruire i cosiddetti _cammini/percorso di fiducia_.
 
-![marco togni](./img/img69.png)
+![](./img/img69.png)
 
 Un certificato emesso per una CA è chiamato _cross-certificate_. La freccia da CA5 a CA4 significa che CA5 ha firmato la chiave pubblica di CA4, ovvero CA5 ha emesso un _cross-certificate_ per CA4 (il certificato ha la solita struttura X.509 vista in precedenza). La doppia freccia tra CA4 e CA3 significa che si sono reciprocamente certificate fra loro etc.
 
@@ -1913,7 +1933,7 @@ Il protocollo che si occupa della ricerca del percorso di fiducia prende il nome
 Esistono diversi modelli gerarchici:
 
 - **Modello gerarchico puro**: i nodi foglia sono gli utenti finali e ogni CA, certifica i propri figli e viceversa. Ad esempio, CA1 cross-certificate CA3 e viceversa.
-![marco togni](./img/img70.png)
+![](./img/img70.png)
 Con questo modello è facile costruire un cammino di certificazione tra due utenti finali a cui basta rivolgersi solamente alle proprie
 CA perchè basta arrivare fino alla radice e poi riscendere fino alla CA di interesse.
 Questo modello garantisce buone caratteristiche di scalabilità ma un fattore che complica pesantemente questo modello è la fiducia.
@@ -1921,7 +1941,7 @@ Questo modello garantisce buone caratteristiche di scalabilità ma un fattore ch
 Dal punto di vista organizzativo questa struttura è possibile se e solo se queste CA (tutte) riconoscono il modello. La root si assume una responsabilità significativa, in quanto se compromessa può essere compromesso tutto. E se una CA non vuole far sapere quali sono gli utenti che amministra? Dunque, sebbene sia un modello più semplice da realizzare, non è detto che sia la soluzione a tutto.
 
 - **Struttura gerarchica top-down**: in questo modello, la radice certifica tutte le CA a scendere. L'utente finale ha sicuramente la chiave pubblica della propria CA e in fase di registrazione ha ricevuto sicuramente la chiave pubblica della radice in questo modo può scendere
-![marco togni](./img/img71.png)
+![](./img/img71.png)
 
 Un modello centralizzato non è sempre la soluzione adottata. Ad esempio, una multinazionale su più sedi può realizzare al suo interno un'infrastruttura del genere ma nella vita quotidiana, quando viene rilasciata una chiave non viene adottata questa soluzione qui. Esistono diversi provider che non hanno un si scambiano le chiavi fra di loro.
 
@@ -1929,7 +1949,7 @@ Un modello centralizzato non è sempre la soluzione adottata. Ad esempio, una mu
 
 In un modello distribuito si possono avere più radici che hanno tra loro dei cross-certificate. La struttura che si ottiene è quella di un grafo.
 
-![marco togni](./img/img72.png)
+![](./img/img72.png)
 
 Quando la CA emette dei certificati, nel campo estensione esistono diverse politiche. Informazioni su quella che è le regole seguite per rilasciare il certificato
 
@@ -1964,14 +1984,14 @@ IPsec: usa certificati associati alla macchina (associano in maniera certa un in
 
 Il protocollo della figura seguente è leggermente diverso rispetto a quello visto in precedenza. Se Y rimane sempre lo stesso è possibile effettuare attacchi. Ad ogni sessione di interazione tra un client e un server, il parametro Y (pre_master_secret) deve essere variabile per questo motivo si usano due numeri random RC e RS. La vera chiave prende il nome di master_secret = H(K||Rc||Rs) ed è variabile. In questo modo, per ogni sessione si ottiene un master_secret diverso e si evita di utilizzare sempre lo stesso segreto.
 
-![marco togni](./img/img73.png)
+![](./img/img73.png)
 
 Il problema fondamentale di questa versione è di essere anonima e nulla può garantire da chi proviene il dato pubblico Y. Esistono alcune varianti (diverse dalle varianti del COVID):
 - **Fixed DH**: il client immette i parametri pubblici di DH (p, g, Yc) nel certificato che si fa poi firmare dalla CA. Lo stesso fa il server (con Ys). Questi parametri rimarranno fissi nei certificati. Quindi questa modalità prevede che il dato pubblico (p, g, Y) di ciascun utente sia comunicato all’altro tramite un certificato X.509. Il client e il server si inviano i certificati pubblici creati. Una volta ricevuto il certificato viene verificato e poi entrambi calcolano l’esponenziazione modulare. 
-![marco togni](./img/img74.png)
+![](./img/img74.png)
 In questo schema non c’è identificazione, c’è solo supporto all’autenticità dell’informazione. Il client potrebbe avviare comunicazioni che un eventuale impostore non potrebbe decifrare, ma che gli permetterebbero comunque di perdere tempo. Infatti, in tale scenario, l’intrusore (fake server) che non è il vero possessore del certificato, può inviare il certificato (che è pubblico, quindi può recuperarlo facilmente), ma poi non può concordare il segreto, quindi non si faranno le altre operazioni (p, Xs; Rc,Rs; H) perché non possiede Xs. Il client non sa che il (fake) server non ha trovato la master secret e quindi il client perde tempo;
 - **Ephemeral DH**: solo la chiave pubblica è certificata (non p e g). Quindi, ogni volta viene generato un X diverso. Il client invia al server Yc firmato digitalmente. In questo modo in ricezione è possibile verificare l’integrità e l’autenticità di Y (non identificazione). Il valore del pre_master_secret inoltre così varia da una sessione all’altra; poi, per mantenere la compatibilità con il Fixed DH, si ha uno scambio dei numeri random (anche se dato che la pre_master_key cambia senso randomizzare con Rc e Rs).
-![marco togni](./img/img75.png)
+![](./img/img75.png)
 
 <!-- lezione 04/11/2021 -->
 
@@ -2018,7 +2038,7 @@ I test di primalità possono essere di due tipi:
 
 Adesso si vuole capire come mai bisogna generare un numero primo grande per ottenere robustezza. Si ricorda che il numero X è compreso fra 1 e (p-1). Se p è piccolo l'algoritmo di ricerca esauriente si riesce ad applicare.
 
-![marco togni](./img/img76.png)
+![](./img/img76.png)
 
 Si calcola `g^x mod p` per x= 1, 2 fino a quando non si trova Y.
 
@@ -2027,9 +2047,9 @@ Si calcola `g^x mod p` per x= 1, 2 fino a quando non si trova Y.
 Altre caratteristiche dei cifrari asimmetrici sono:
 
 - **Frammentazione del teto in chiaro**: bisogna fare in modo che ad ogni messaggio ci sia un cifrato diverso. Non si può correre il rischio di avere due cifrati uguali a fronte dello stesso testo in chiaro. Dal momento che ci sono le operazioni modulo (il resto della divisione), se si avessero messaggi di dimensione maggiore ad n, si potrebbero avere operazioni modulo che restituiscono, per messaggi diversi, lo stesso resto della divisione. Questo significa che a messaggi diversi può corrispondere lo stesso cifrato, che si contrappone con la solita ipotesi che ad ogni cifrato corrisponde ad un solo messaggio, e viceversa. Per risolvere questa situazione, appunto, si frammentano i messaggi in blocchi e il numero binario intero che rappresenta il blocco deve essere inferiore al modulo;
-![marco togni](./img/img77.png)
+![](./img/img77.png)
 - **Aleatorietà del testo cifrato**: dove ci sono messaggi da cifrare con range di valori prevedibili è un problema. Si possono effettuare attacchi di testo in chiaro noto (messaggi prevedibili). Ad esempio, sì o no in caso di voto elettronico. Se si cifra il si con la chiave pubblica dell'ente a cui si invia la risposta, anche l'attaccante cifra il si con la chiave pubblica dell'ente e confronta i due cifrati. Per rendere probabilistico il cifrario, o si rende probabilistico il messaggio originario concatenandolo ad un numero random, o si rende probabilistica l'uscita con una delle modalità di impiego viste nei cifrari simmetrici (CBC con vettore di inizializzazione)
-![marco togni](./img/img78.png)
+![](./img/img78.png)
 Tuttavia, non è sempre vero perchè algoritmi RSA sono deterministici;
 - **Variabilità della trasformazione**: tutti si basano su una trasformazione che varia nel tempo;
 - **Problema difficile su cui si basa la sicurezza**: la crittografia asimmetrica si basa su problemi difficili della matematica. A descrivere un meccanismo di crittografia asimmetrica è dunque anche il problema di cui fa uso. Il cifrario RSA è un cifrario deterministico, a blocchi che si basa sui problemi difficili di radice e-esima e fattorizzazione mentre il cifrario El Gamal è un cifrario probabilistico a blocchi che utilizza il problema del logaritmo discreto;
@@ -2091,7 +2111,7 @@ scelti e si ottengono i corrispondenti testi in chiaro. La contromisura è usare
 
 Nello schema ibrido si adotta un cifrario simmetrico per cifrare i dati, ma la chiave condivisa fra mittente e destinatario viene concordata ad esempio tramite DH e scambiata tramite crittografia a chiave pubblica. L'efficienza ottenuta è pari a quella di un cifrario simmetrico.
 
-![marco togni](./img/img79.png)
+![](./img/img79.png)
 
 Ogni volta che il mittente apre una nuova sessione viene generata una chiave simmetrica di sessione, la quale viene criptata con la chiave pubblica del destinatario, e poi spedita assieme al messaggio. Il destinatario, per prima cosa decripta la chiave di sessione attraverso la sua chiave privata, asimmetrica, ed infine usa la chiave di sessione, simmetrica, per decodificare il messaggio. Il vantaggio di questo sistema è che unisce la comodità nella gestione delle chiavi del sistema asimmetrico alla velocità propria di quello simmetrico.
 
@@ -2112,7 +2132,7 @@ Lato destinazione:
 
 Va bene RSA perchè anche se è deterministica si sta cifrando una chiave che è già di suo aleatoria.
 
-![marco togni](./img/img80.png)
+![](./img/img80.png)
 
 <!-- Si vuole cifrare un dato molto più piccolo del modulo. se il modulo è 2048 bit e il dato 56 bit (non bisogna neanche frammentarlo) e lo si invia. -->
 
@@ -2189,7 +2209,7 @@ Si usa un Time Stamp Service (TSS) solo dove è strettamente necessario perchè 
 
 Il tutto si basa su una terza parte fidata che è l’autore di marche temporali. La marca temporale deve essere autentica, integra e non ripudiabile. La terza parte, dato che è fidata, deve avere una coppia di chiavi asimmetriche e con la firma digitale dimostra di essere l’autore della marcatura. La terza parte deve essere certificata.
 
-![marco togni](./img/img81.png)
+![](./img/img81.png)
 
 - L’utente A, prima di firmare un documento m, invia a TSS il suo identificativo e la sola impronta di m (funzione hash unidirezionale, quindi crittograficamente sicura), per difenderne l’eventuale riservatezza sia sul canale che per la terza parte;
 - TSS concatena H(m||A) con il suo ID, con l’indicazione temporale t e con il numero progressivo n° che ha attribuito alla marca;
@@ -2228,7 +2248,7 @@ Fornisce 4 tipi di servizi:
 
 L’autenticazione è ottenuta allegando al documento in chiaro l'hash firmato del documento. Per motivi di compatibilità, il messaggi originario viene sottoposto ad una conversione (Radix-64) che ne aumenta la dimensione. PGP consente, dopo aver firmato (con appendice), anche di zippare, comprimere, il documento autenticato, per renderne efficienti la memorizzazione e la trasmissione.
 
-![marco togni](./img/img82.png)
+![](./img/img82.png)
 
 Un modello alternativo potrebbe essere quello di spostare la funzione di compressione Z mettendola da valle a monte: m lo si espande (Radix-64), lo si comprime, si fa la firma, lo si concatena a m compresso la firma su m e lo si invia.
 
@@ -2242,7 +2262,7 @@ Criteri da adottare per scegliere il punto giusto da scegliere:
 
 Per garantire la confidenzialità, PGP sfrutta cifrari simmetrici per cifratura e asimmetrici per la distribuzione di chiavi (cifrario ibrido).
 
-![marco togni](./img/img83.png)
+![](./img/img83.png)
 
 Si potrebbe pensare ad un discorso analogo a quello precedente cioè se è meglio posizionare Z a valle o a monte:
 
@@ -2250,7 +2270,7 @@ Si potrebbe pensare ad un discorso analogo a quello precedente cioè se è megli
 - **Efficienza**: irrilevante perchè gli ordini di differenza devono essere significativi;
 - **Manutenibilità**: non c'è un vincolo così stringente legato alla decifrabilità del messaggio anche se l'algoritmo di compressione viene aggiornato: l'importante è che il contenuto sia lo stesso anche se qualche bit del cifrato è diverso.
 
-![marco togni](./img/img84.png)
+![](./img/img84.png)
 
 È possibile inviare messaggi riservati a più destinatari: una volta cifrato un messaggio con una certa chiave k, è possibile inviarlo anche a più corrispondenti. A tal fine al testo cifrato occorre aggiungere tante chiavi k cifrate e tante firme quanti sono i destinatari, contenenti ciascuna la cifratura asimmetrica della chiave one-time con l’appropriata chiave pubblica. All’arrivo del messaggio, ogni destinatario dopo aver identificato la parte di intestazione che lo riguarda, può al solito rimettere in chiaro dapprima k e poi m.
 
@@ -2258,7 +2278,7 @@ Si potrebbe pensare ad un discorso analogo a quello precedente cioè se è megli
 
 Nella figura di seguito viene riportato il formato di un messaggio PGP:
 
-![marco togni](./img/img85.png)
+![](./img/img85.png)
 
 La chiave è potenzialmente 2048 bit ma non vengono inseriti tutti i bit nel messaggio per risparmiare in occupazione di banda. Viene messo un ID univoco di chiave in particolare si mettono i 64 bit meno significati della chiave. Ci possono essere collisioni ma è molto raro. In questo caso, se il mittente ha più chiavi, il destinatario le proverà tutte fino a quando non troverà quella giusta. Discorso analogo per la cifratura dei dati: si cifra la chiave di sessione con la chiave pubblica del destinatario.
 
@@ -2312,7 +2332,7 @@ Esistono due famiglia di identificazione:
 
 L’identificazione tramite uso di una password è il metodo più usato per controllare l’accesso ad un servizio informatico.
 
-![marco togni](./img/img86.png)
+![](./img/img86.png)
 
 Il protocollo prevede che:
 
@@ -2321,7 +2341,7 @@ Il protocollo prevede che:
 
 Un sistema che usa questo protocollo deve essere robusto ad attacchi che provano ad indovinare, intercettare e leggere la password. L’attacco con replica è quello più ovvio e ineminabile perchè l’intrusore intercetta la password e replica il messaggio quando vuole accedere al sistema.
 
-![marco togni](./img/img87.png)
+![](./img/img87.png)
 
 Come si può vedere, I prende la password di A e non risponde ad A (quest’ultima penserà ad un malfunzionamento della rete). Manda la password A a B, che si sentirà al sicuro, e che a sua volta manderà la sua password a I. L’identificazione passiva non può essere mutua.
 
@@ -2333,7 +2353,7 @@ La vera contromisura all’attacco con intercettazione e replica è il prevedere
 
 È un protocollo di identificazione attiva che prevede di generare a partire da un segreto X di generare fino ad N prove d'identità.
 
-![marco togni](./img/img88.png)
+![](./img/img88.png)
 
 In fase di registrazione, A sceglie a caso un numero X (segreto) ed impiega una serie di funzioni non invertibile F per calcolare la sequenza di valori. Viene dato in input X alla funzione F ottenendo F^1(X) che viene dato a sua volta in pasto di nuovo alla funzione F ottenendo F^2(X). Questo procedimento viene ripetuto fino ad ottenere F^n(X). Nella fase di pre-registrazione, nella macchina M (destinazione) viene inserito solo l’ultima A trasformazione impiegata da A cioè F^n(X).
 
@@ -2351,7 +2371,7 @@ Verranno presentate tre modi diversi per realizzare il protocollo sfida/risposta
 
 Nella una fase iniziale di pre-inizializzazione A e B scelgono una funzione H sicura e concordano un segreto s (precondiviso).
 
-![marco togni](./img/img89.png)
+![](./img/img89.png)
 
 Quando `A` chiede a `B` di essere identificato inizia l’esecuzione del seguente protocollo:
 
@@ -2369,7 +2389,7 @@ Nella una fase iniziale di pre-inizializzazione A e B concordano un segreto s (p
 - **Caso simmetrico**: chiave di cifratura;
 - **Caso asimmetrico**: chiave pubblica.
 
-![marco togni](./img/img90.png)
+![](./img/img90.png)
 
 <!-- Quando rifaccio la figura: ID non viene usato in ingresso per il PNRG -->
 
@@ -2385,7 +2405,7 @@ Quando `A` chiede a `B` di essere identificato inizia l’esecuzione del seguent
 
 Nella una fase iniziale di pre-inizializzazione A e B concordano un segreto s (precondiviso).
 
-![marco togni](./img/img91.png)
+![](./img/img91.png)
 
 <!-- Quando rifaccio la figura: ID non viene usato in ingresso per il PNRG -->
 
@@ -2409,10 +2429,10 @@ Un protocollo si dice di _identificazione muta_ se A verso B fa quello che A fa 
 Questo protocollo è soggetto ai seguenti attacchi:
 
 - **Attacco di interleaving**: per capire questo attacco si introduce _problema del Gran Maestro di Scacchi:_ a vuole spacciarsi per un grande esperto di scacchi pur non conoscendo il gioco. A sfida due Gran Maestri B e C, che sistema, senza che se ne accorgano, in due camere contigue: a B assegna i “bianchi”, a C i “neri”. Preso nota della prima mossa di B, A corre nell’altra stanza e la riproduce sulla scacchiera di C. Successivamente prende nota della contromossa di C e corre a riprodurla sulla scacchiera di B. C tenta di impersonare B, è sfidato (a dimostrare di essere B) da A, ed è in grado di inviare in tempo reale senza troppo ritardo e inganno pretendendo di essere A la sfida al vero B, riceve una risposta giusta da B a la passa indietro ad A.
-![marco togni](./img/img92.png)
+![](./img/img92.png)
 C apre due sessioni, una con B e una con A. All'istante t0, B manda la sfida (un nonce RB) ad A. In quel momento C ripropone ad A la stessa sfida lanciata da B. A, dunque, risponderà correttamente a C, che manderà tale risposta pensando che C sia B (che comprende la nuova sfida `RA` e la risposta alla sfida `RB`. C invia il messaggio appena ricevuta da A a B. Alla fine, A e B si sono autenticati con l’intromissione di C;
 - **Attacco di reflection**: apre due sessioni con lo stesso interlocutore contemporaneamente e prevede di rimbalzare indietro informazioni scambiate in sessioni diverse:
-![marco togni](./img/img93.png)
+![](./img/img93.png)
 Le frecce in verde appartengono alla prima sessione mentre quelle nero appartengono alla seconda sessione.
 A(C) apre una connessione con B il quale invia RB. C apre un'altra connessione con B e invia RB ricevuto nella sessione precedente. Non c’è nessun controllo sul fatto che i due nonce debbano essere diversi. B risponde nella seconda sessione con RA||H(RB||s). C prende questo messaggio e lo invia indietro nella prima sessione che aveva aperto con B. La sessione in verde una volta ricevuto H(RA||s) la può chiudere.
 
@@ -2538,16 +2558,16 @@ password, se troppo lungo problema di intercettazione e riutilizzo.
 
 Si assume che sulle workstation sia presente un client Kerberos. Per ogni dominio Realm di amministrazione Kerberos esiste un AS e un TGS. AS gestisce un insieme di utenti che appartengono a quel dominio e il TGS amministra il rilascio delle credenziali che appartengono a quel dominio. Gli utenti devono precondividere una prova di conoscenza con gli AS. L'utente sceglie una passphrase e la sottopone ad una funzione hash (chiave di cifratura). Viene precondivisa anche una chiave Ktgs tra AS e TGS e tra TGS e con i servizi.
 
-![marco togni](./img/img94.png)
+![](./img/img94.png)
 
 La comunicazione totale si articola in questo modo:
 
 - All’inizio della sessione di lavoro sulla stazione C, l’utente dichiara la sua identità ad AS:
-  ![marco togni](./img/img95.png)
+  ![](./img/img95.png)
   L’utente fornisce alla workstation C il proprio ID e l’ID del TGS a cui vuole accedere. C invia ad AS una richiesta di accesso a TGS, contenente anche l’indirizzo di C e una marca temporale T1 (timestamping utili per evitare intercettazioni e repliche). L'IDtgs è da specificare perchè potenzialmente si potrebbe accedere ad un servizi appartenenti a domini differenti:\
   `C -> AS: ID || ADC || IDtgs || T1`
 - AS fornisce a C il permesso d’accesso a TGS e lo sfida ad usarlo:
-  ![marco togni](./img/img96.png)
+  ![](./img/img96.png)
   AS controlla T1 tramite ID prelevando dalla sua memoria H(P) e la utilizza per cifrare il messaggio da inviare a C (crea una sfida), contenente la chiave di sessione KCT tra C e TGS, una marca temporale T2, una durata massima della sessione di ID su C e il ticket da inviare poi al TGS contenente le informazioni su chi è l’utente, su quale stazione lavora, qual è la chiave di sessione e per quanto è valida, il tutto cifrato con la chiave concordata tra AS e TGS:\
   `ticketTGS: KCT || ID || ADc || IDtgs || T2 || deltaT2`\
   \
@@ -2555,7 +2575,7 @@ La comunicazione totale si articola in questo modo:
   \
   `AS -> C: EPSW(KCT || IDtgs || T2 || DT2 || ticketTGS)`
 - C risponde alla sfida, richiedendo anche l’accesso al server V:
-  ![marco togni](./img/img97.png)
+  ![](./img/img97.png)
   C richiede all’utente di digitare la sua password, ne calcola l’hash e lo utilizza come chiave per decifrare il messaggio di AS. L’utente fornisce l’ID del server V e lo invia a TGS insieme al ticket ricevuto da AS e ad un autenticatore cifrato con Kct dimostrando di conoscere la password, dunque identificandosi come vero C. L’autenticatore contiene anche una marca temporale che consentirà a TGS di controllare se la sessione è ancora valida:\
   \
   `autenticatoreC: ID || ADc || T3`\
@@ -2566,7 +2586,7 @@ La comunicazione totale si articola in questo modo:
   \
   Se si prelevasse in una sessione precedente ticketTGS, non sarebbe utilizzabile perchè l'intrusore non saprebbe costruire l'autenticatore.
 - TGS fornisce a C il permesso d’accesso a V e lo sfida ad usarlo:
-  ![marco togni](./img/img98.png)
+  ![](./img/img98.png)
   TGS decifra il ticket ed estrae la chiave di sessione Kct con la quale può decifrare l’autenticatore e confrontare le informazioni contenute con quelle del ticket. TGS sceglie a caso una nuova chiave di sessione Kcv, fissa un intervallo DT4 di tempo per la sessione tra C e V e predispone un ticket che cifra con la chiave che ha concordato solo con V. L’intero messaggio viene inviato a C cifrato con Kct:\
   \
   `ticketV: KCV || ID || ADC || IDV || T4 || DT`\
@@ -2575,14 +2595,14 @@ La comunicazione totale si articola in questo modo:
   \
   `TGS -> C : EKCT(KCV || IDV || T4 || ticketV)`
 - C risponde alla sfida e si qualifica a V:
-  ![marco togni](./img/img99.png)
+  ![](./img/img99.png)
   C decifra il messaggio ed estrae la chiave di sessione. Inoltra quindi a V il ticket ottenuto da TGS e un autenticatore cifrato con la chiave Kcv contenente le sue informazioni, che serve anche a C per sfidare V. L’autenticatore contiene anche una marca temporale che indica il momento in cui C inizia la sua sessione con V (la sessione con V scadrà dopo un intervallo di tempo DT4):\
   \
   `autenticatoreC : EKCV(IDC || ADC || T5)`\
   \
   `C -> V: ticketV || autenticatoreC`
 - V si fa identificare da C:
-  ![marco togni](./img/img100.png)
+  ![](./img/img100.png)
   V decifra il ticket di TGS ed estrae quindi la chiave di sessione Kcv. Decifra quindi l’autenticatore e si accerta che le informazioni coincidano. Per rispondere alla sfida lanciata da C invia un messaggio cifrato con Kcv. C decifra, controlla e se tutto va bene può iniziare ad utilizzare i servizi di V:\
   \
   `V -> C : EKCV(T5+1)`\
@@ -2593,7 +2613,7 @@ La comunicazione totale si articola in questo modo:
 
 Se si chiede un servizio ad un dominio di autenticazione diverso da quello del cliente bisogna rendere scalabile questo servizio di autenticazione. È stata prevista la coesistenza di diversi domini tra cui esiste un rapporto di reciproca fiducia. La relazione di fiducia avviene tra TGS: il TGS remoto si fida del TGS del dominio di origine se quello di origine precondivide con lui una chiave. AS deve precondividere tante chiavi quanti sono i TGS che sono in relazione di fiducia tra di loro.
 
-![marco togni](./img/img101.png)
+![](./img/img101.png)
 
 Se un utente di un dominio ha bisogno di accedere ad un servizio inserito in un altro dominio e gestito quindi da un altro TGS a lui noto, ne indica l’identificativo al posto di IDv, quando, al passo 3, si mette in contatto con il suo TGS. Al passo 4, C ottiene il ticket d’accesso al TGS remoto, al passo 5 gli richiede il ticket d’accesso al server desiderato, al passo 6 lo ottiene ed al passo 7 contatta il server.
 
@@ -2622,7 +2642,7 @@ Per BlockChain si intende una catena di blocchi immutabili detto registro, che s
 
 Con blockchain si intende la struttura dati immutabile oltre alla tecnologia.
 
-![marco togni](./img/img102.png)
+![](./img/img102.png)
 
 Ogni blocco contiene:
 
@@ -2637,7 +2657,7 @@ Ogni blocco contiene:
 
 Ogni record linka il blocco precedente. Il primo blocco prende il nome di genesis block.
 
-![marco togni](./img/img104.png)
+![](./img/img104.png)
 
 L’hash al blocco precedente consente di formare una catena immutabile e inattaccabile. Se si modificasse un blocco bisognerebbe riuscire a re-computare l’hash di tutti i blocchi successivi. Se si cambia un dato, questa modifica si riflette su tutti i blocchi successivi della catena: il blocco uno viene cambiato con la parola _stupid_ al posto di _my_ ma solo una copia del registro su un nodo risulta essere alterata.
 
@@ -2652,7 +2672,7 @@ Se viene selezionato un nodo D malintenzionato:
 - D non può rubare la moneta di qualcun'altro perchè per pagare si deve firmare con chiave privata del mittente.
 - D può evitare di inserire una transazione valida nel suo blocco. Dato che le trasmissioni sono trasmesse in broadcast ci sarà un nodo non malevolo che la inserirà.
 - D può effettuare un attacco di doppia spesa perchè l'algoritmo converge in modo lento. D aver inviato una somma di denaro ad una persona, D viene selezionato e invia di nuovo la stessa somma ad un altra persona. Si genera un blocco che è in competizione con l'ultimo blocco generato in precedenza.\
-![marco togni](./img/img105.png)\
+![](./img/img105.png)\
 Dato che la trasmissione avviene in rete, alcuni nodi avranno prima il blocco in alto e altri il blocco in basso. Per evitare questa problematica, si richiede a tutti i nodi di estendere sempre la catena più lunga in caso di catene parallele. Per evitare di creare una catene parallele, viene creato ogni tot di tempo un nuovo blocco perchè in teoria è fattibile creare catene in parallelo. Per creare in tempo costante un blocco vengono usate due modalità:
 
 - Selezione del nodo: si basa su una competizione della rete tra tutti i nodi
@@ -2668,7 +2688,7 @@ Quando un insieme di transazioni è stata ascoltata sulla rete, un nodo può dec
 
 I dati sono organizzati in strutture chiamate Merkle Tree. Le foglie dell’albero sono i dati, ordinati, mentre gli altri nodi contengono coppie di puntatori hash. La struttura rende semplice provare che un certo dato appartiene a un blocco o meno: basta computare gli hash nel percorso tra il dato e la radice. Questa struttura rende il procedimento di verifica ordinato ed efficiente.
 
-![marco togni](./img/img103.png)
+![](./img/img103.png)
 
 Si parte dalle foglie (i dati). Per ogni coppia di dati si calcola una coppia di hash; poi, per ogni coppia di hash si calcola un hash, e così via fino alla radice, che è contenuta nell’header del blocco, da cui si calcola il fatidico _header hash_. Per verificare se un certo dato appartiene al blocco devo esplorare solo una porzione dell’albero (log n), efficienza. Una modifica ad uno solo dei dati si ripercuote fino alla radice, quindi al _header hash_.
 
@@ -2679,7 +2699,7 @@ Rete P2P di nodi dove ogni nodo potenzialmente memorizza una copia del registro.
 e i Bitcoin garantiscono l'anonimità dei partecipanti perchè in assenza di un'entità che associa un nome a una coppia di chiavi, si rimane anomimi.
 
 <!--- -->
-<!--[marco togni](./img/marco_togni.jpg)-->
+<!--[](./img/marco_togni.jpg)-->
 
 <!--![cyber sesso](https://user-images.githubusercontent.com/56556806/134823047-da26060a-3813-4e73-a13c-256bcd0483c4.png)-->
 
