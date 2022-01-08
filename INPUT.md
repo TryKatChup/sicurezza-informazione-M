@@ -842,6 +842,8 @@ Consiste nel:
 Ci sono implementazioni come MD5, SHA1 e SHA2 che utilizzano questo schema.
 
 Questo schema è soggetto ad un attacco che si chiama _attacco con estensione_.
+<!--Da capire meglio-->
+
 
 #### Attacco con estensione del messaggio
 L’assenza della lunghezza del messaggio dell’ultimo blocco può dare origine ad una vulnerabilità sull’**autenticità**, presente in tutti gli algoritmi di compressione iterata. 
@@ -857,8 +859,8 @@ Per evitare il problema, serve aggiungere all'ultimo blocco delle informazioni a
 Si potrebbe pensare di invertire la posizione di `s` e di `m` all’interno dell’autenticatore (in modo da avere `H(m || s)`), che eviterebbe l’estensione dell’algoritmo. 
 
 Questo stratagemma è utile solo se la funzione hash è resistente alla collisione debole. Altrimenti, supponiamo che un intrusore possa trovare un messaggio `m'` in collisione con `m`. Con questa ipotesi si avrebbe `H(m || s) = H(m' || s)`. Dunque, all’intrusore sarebbe sufficiente inviare sul canale il messaggio `m'` concatenato con `H(m || s)` che, per la collisione, autenticherebbe `m'`.
-
-m' || H(m || s) 
+<!--Da capire meglio-->
+<!--m' || H(m || s) -->
 
 ### Robustezza alle collisioni
 
@@ -872,20 +874,43 @@ La resistenza alle collisione è fondamentale quando la funzione hash è usata p
 
 **Problema**: data una funzione hash con `n` possibili output e un determinato `H(x)`, se `H` viene applicato a `K` input casuali, quale deve essere il valore di `k` tale che la probabilità che almeno un input `y` soddisfi `H(y) = H(x)` sia maggiore di 0.5?
 
-- **Resistenza debole**: si indica con $ P_1(2^{n}, 1) = \frac{1}{2^n} $ la probabilità di un tentativo di trovare una collisione. La probabilità di insuccesso, quindi, è 1 - 1/2^n. Se si hanno k tentativi, P_k(2^n, k) = 1 - (1 - 1/2^n)^k. Questo vuol dire che k= P_k(2^n, k) * 2^n. 2^n per avere un andamento esponenziale deve essere almeno 128. Dunque, l'impronta deve essere almeno 128 bit;
-- **Resistenza forte (paradosso del compleanno)**: nell’ipotesi che le date di nascita siano equiprobabili, è sufficiente scegliere a caso 253 persone per avere una probabilità > 0,5 che una di queste compia gli anni in un dato giorno. Sono invece sufficienti 23 persone scelte a caso per avere una probabilità > 0,5 che due o più compiano gli anni nello stesso giorno. Quindi, non bastano 128 bit. Il numero di bit deve essere il doppio perché per la resistenza forte sono necessari 2^(n/2) tentativi. Dunque, è più facile effettuare un attacco rispetto alla resistenza debole.
+<!--$ P_1(2^{n}, 1) = \frac{1}{2^n}$ -->
+- **Resistenza debole**: si indica con
+  
+  ![$  $](https://render.githubusercontent.com/render/math?math=\color{black}P_1{(2^{n},1)\=\frac{1}{2^n}}#gh-light-mode-only) ![$  $](https://render.githubusercontent.com/render/math?math=\color{white}\P_1{(2^{n},1)\=\frac{1}{2^n}}#gh-dark-mode-only)
+ 
+  La probabilità di un tentativo di trovare una collisione. La probabilità di insuccesso, quindi, è:
+
+  ![$  $](https://render.githubusercontent.com/render/math?math=\color{black}\1-\frac{1}{2^n}#gh-light-mode-only) ![$  $](https://render.githubusercontent.com/render/math?math=\color{white}\1-\frac{1}{2^n}#gh-dark-mode-only)
+ 
+   Se si hanno `k` tentativi:
+
+   ![$  $](https://render.githubusercontent.com/render/math?math=\color{black}\P_k(2^n,k)\=1-{(1-\frac{1}{2^n})^k}#gh-light-mode-only)![$  $](https://render.githubusercontent.com/render/math?math=\color{white}\P_k(2^n,k)\=1-{(1-\frac{1}{2^n})^k}#gh-dark-mode-only)
+
+   Questo vuol dire che:
+
+   ![$  $](https://render.githubusercontent.com/render/math?math=\color{black}\k=P_k(2^n,k)\times{2^n}#gh-light-mode-only)![$  $](https://render.githubusercontent.com/render/math?math=\color{white}\k=P_k(2^n,k)\times{2^n}#gh-dark-mode-only)
+
+  ![$  $](https://render.githubusercontent.com/render/math?math=\color{black}\2^n#gh-light-mode-only)![$  $](https://render.githubusercontent.com/render/math?math=\color{white}\2^n#gh-dark-mode-only), per avere un andamento esponenziale deve essere pari almeno a 128 (`n = 7`). Dunque, l'impronta deve essere almeno 128 bit;
+  <!--domanda: cosa ha esattamente spiegato la prof quest'anno?-->
+- **Resistenza forte (paradosso del compleanno)**: nell’ipotesi che le date di nascita siano equiprobabili, è sufficiente scegliere a caso 253 persone per avere una probabilità `> 0,5` che una di queste compia gli anni in un giorno prefissato (resistenza debole). Sono invece sufficienti 23 persone scelte a caso per avere una probabilità `> 0,5` che due o più compiano gli anni nello stesso giorno (resistenza forte).
+Quindi, non bastano 128 bit: il numero di bit deve essere il doppio, poiché per la resistenza forte sono necessari ![$  $](https://render.githubusercontent.com/render/math?math=\color{black}\2^n#gh-light-mode-only)![$  $](https://render.githubusercontent.com/render/math?math=\color{white}\2^{\frac{n}{2}}#gh-dark-mode-only) tentativi.
+
+  È quindi più facile effettuare un attacco rispetto alla resistenza debole.
 
 ### Unidirezionalità
 
-L'unidirezionalità è un'altra proprietà importante. Un caso tipico in cui `H` deve essere one-way si ha quando un messaggio in chiaro `m` è autenticato da `H(m || s)` altrimenti invertendo la funzione si risalirebbe al segreto.
+L'unidirezionalità è un'altra proprietà importante.
+Un caso tipico in cui `H` deve essere one-way si ha quando un messaggio in chiaro `m` è autenticato da `H(m || s)`, altrimenti invertendo la funzione si risalirebbe al segreto.
 
 ## 03.Meccanismi Simmetrici
 
 ### Cifrario simmetrico
 
-Nella crittografia classica, è stato individuato un cifrario perfetto chiamato _One-time pad_. Il cifrario perfetto è per definizione un algoritmo in grado di occultare il testo in chiaro escludendo ogni tipo di attacco, ne segue che un testo cifrato con un cifrario perfetto non può essere letto in nessun modo se non si è in possesso della chiave di cifratura unica per decifrarlo. Tuttavia, il suo impiego nella pratica è molto complicato.
+Nella crittografia classica, è stato individuato un cifrario perfetto chiamato _One-time pad_. Il cifrario perfetto è per definizione un algoritmo in grado di occultare il testo in chiaro escludendo ogni tipo di attacco.
+Ne segue che un testo cifrato con un cifrario perfetto non può essere letto in nessun modo se non si è in possesso della chiave di cifratura unica per decifrarlo. Tuttavia, il suo impiego nella pratica è molto complicato.
 
-Per questo motivo si parla di _cifrario computazionalmente sicuro_ cioè per risalre dal testo cifrato al testo in chiaro corrispondente si ha bisogno di una potenza di elaborazione superiore a quella a disposizione dell'intrusore.
+Per questo motivo si parla di _cifrario computazionalmente sicuro_: per risalre dal testo cifrato al testo in chiaro corrispondente si ha bisogno di una potenza di elaborazione superiore a quella a disposizione dell'intrusore.
 
 Per la _teoria dell'informazione_ sviluppata da Shannon, il cifrario è computazionalmente sicuro se adotta i criteri di:
 
@@ -998,7 +1023,7 @@ Ad esempio, il mittente sta cifrando dei dati strutturati. All'inizio di questi 
 
 Si prende un messaggio e lo si suddivide in blocchi di uguale lunghezza prefissata. Se l'ultimo blocco contiene meno bit della lunghezza che dovrebbe avere lo si completa con dei bit di padding.
 
-![marco togni](./img/img35.png)
+![](./img/img35.png)
 
 Ogni blocco viene dato in input alla funzione di encryption `E` tramite una chiave fissa condivisa dalle due parti. Il testo cifrato, quindi, non è altro che la concatenazione dei cifrati ottenuti dai singoli blocchi.
 
