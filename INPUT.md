@@ -803,8 +803,8 @@ Questo generatore prevede che il seme, imprevedibile e segreto, sia generato da 
 In questo modo si rende impossibile a un avversario che ha individuato uno stato di risalire agli stati precedenti e al seme.
 Occorre che sia verificato anche il _next-bit test_: dati L bit del seme, non deve esistere alcun algoritmo in grado di prevedere il L+1-esimo bit del seme con probabilità maggiore di 0,5.
 
-La funzione unidirezionale impiegata può sfruttare algoritmi di crittografia per produrre in uscita bit casuali (e.g. crittografia simmetrica e asimmetrica):
-<!-->
+La funzione unidirezionale impiegata può sfruttare algoritmi di crittografia per produrre in uscita bit casuali (e.g. crittografia simmetrica e asimmetrica).
+<!--
 - **Crittografia simmetrica**: le proprietà sono solo sperimentalmente verificabili. Hanno alta velocità di generazione delle sequenze di uscita;
 - **Crittografia asimmetrica**: si può dimostrare teoricamente che l'uscita è casuale, imprevedibile e indeducibile, ma hanno prestazioni più basse.
 -->
@@ -824,43 +824,90 @@ Gli algoritmi che realizzano la funzione hash devono presentare le seguenti prop
 - **Unidirezionalità**: data un'impronta `H(m)`, deve essere computazionalmente difficile risalire al messaggio originario che l'ha generata.
 
 ### Efficienza
+Ricapitolando, occorre trovare un algoritmo di hash per cui sia _facile_ calcolare l'impronta, anche se il messaggio in ingresso è molto lungo. Con _facile_ intendiamo l'esistenza di un algoritmo polinomiale in grado di risolvere un qualsiasi problema su una macchina di Turing deterministica. 
+A questo scopo, introduciamo la funzione di compressione iterata.
 
-#### Compressione iterata (Schema di Merkle-Damgard)
+### Compressione iterata (Schema di Merkle-Damgard)
 
-Per garantire efficienza, la maggior parte degli algoritmi utilizzano uno _schema di Merkle-Damgard_ o _compressione iterata_.
+La maggior parte degli algoritmi, per garantire efficienza, comprimendo agevolmente stringhe binarie aribtrariamente lunghe, utilizzano uno _schema di Merkle-Damgard_ o _compressione iterata_.
 
 ![dedurre](./img/img14.png)
 
-Consiste nel: 
-- Prendere il messaggio `m` di lunghezza arbitraria e suddividerlo in blocchi di dimensione prefissata `n` (a seconda dello specifico algoritmo di implementazione di `f`).
-- Si applica a `m0` (primo blocco), formato da `r` bit (`r > n`), la funzione `f` (che ha le caratteristiche di robustezza sia debole che forte alle collisioni e unidirezionalità) e un vettore di inizializzazione, che avrà un valore iniziale di lunghezza di `n` bit.
+- Si considera il messaggio `m` (di lunghezza arbitraria) e lo si suddivide in `N` blocchi di dimensione prefissata di `r` bit (a seconda dello specifico algoritmo di implementazione di `f`).
+- Si considera un vettore di inizializzazione `IV = h0`, con dimensione pari a `n` bit;
+- Si applica a `m_0` (primo blocco), formato da `r` bit (`r > n`), la funzione `f` (che ha le caratteristiche di robustezza sia debole che forte alle collisioni e unidirezionalità) e `h0`.
 - In uscita, viene prodotta un'impronta `h1` di lunghezza `n` bit. 
-- In pipeline, viene poi elaborato il secondo blocco `m1` concatenato all'impronta generata al passo precedente. 
-- L'impronta `h`-iesma è ottenuta applicando una funzione `f` all'impronta ottenuta al passo ottenuto `i-1` con il messaggio `m`-iesimo.
+- Ogni impronta in uscita da ciascuna funzione avrà lunghezza pari a `n`.
+- Sequenzialmente, viene elaborato il secondo blocco `m1`, concatenato a `h_(i-1)` (l'impronta generata al passo precedente). 
+- L'impronta `h`-iesima è ottenuta applicando una funzione `f` all'impronta ottenuta al passo ottenuto precedente concatenata con il messaggio `m`-iesimo.
 - L'impronta finale dell'intero messaggio corrisponde con l'ultima impronta generata dall'ultimo blocco.
 
-Ci sono implementazioni come MD5, SHA1 e SHA2 che utilizzano questo schema.
+Ci sono implementazioni come MD5, SHA-1 e SHA-2 che utilizzano questo schema.
 
 Questo schema è soggetto ad un attacco che si chiama _attacco con estensione_.
-<!--Da capire meglio-->
 
 
-#### Attacco con estensione del messaggio
+### Attacco con estensione del messaggio
 L’assenza della lunghezza del messaggio dell’ultimo blocco può dare origine ad una vulnerabilità sull’**autenticità**, presente in tutti gli algoritmi di compressione iterata. 
 ![dedurre](./img/img15.png)
 
-- Dalla sorgente `A` si invia un messaggio `m` concatenato al suo attestato di autenticità `H(s || m)`, dove `s` è il segreto condiviso tra mittente e destinatario. 
+- Dalla sorgente `A` si invia un messaggio `m` concatenato al suo attestato di autenticità `H(s || m)` (e non più `h0` dell'esempio precedente), dove `s` è il segreto condiviso tra mittente e destinatario.
 - Se la funzione hash è implementata secondo lo _schema di Merkle-Damgard_, allora è presente una vulnerabilità. 
-- `H(s || m)` non è altro che l'impronta di uscita dell'ultimo blocco del messaggio `m`. 
-- Mettendola come input di un nuovo blocco `f` insieme al messaggio dell'intrusore `m'` suddiviso in blocchi, si riesce a calcolare il nuovo attestato di autenticità.
+- Supponiamo di avere `m'`, messaggio dell'intrusore, concatenato con `m`, tale che `m || m'`.
+- Notare bene che l'intrusore non conosce `s`.
+- `H(s || m)` non è altro che l'impronta di uscita dell'ultimo blocco del messaggio `m`.
+- Quando si iniziano a processare i blocchi derivanti dalla scomposizione di `m'`, si ha come certificato di autenticità `H(s || m)`.
+- Avendo `H(s || m)` come input del primo blocco `m_0'` si ottiene come uscita `H(s || m || m_0')`
+- Continuando con questo schema, l'output dell'ultimo blocco sarà `H(s || m || m')`, ovvero il nuovo attestato di autenticità.
 
-Per evitare il problema, serve aggiungere all'ultimo blocco delle informazioni aggiuntive, e.g. la lunghezza del messaggio `m`. Tuttavia, non è sempre robusto, poiché chi riceve il messaggio, deve ricordarsi di elaborare queste informazioni aggiuntive.
+Per evitare il problema, occorre aggiungere all'ultimo blocco delle informazioni aggiuntive, e.g. la lunghezza del messaggio `m` e dei bit di padding. Tuttavia, non è sempre robusto, dato che il nuovo input, derivante da:
 
-Si potrebbe pensare di invertire la posizione di `s` e di `m` all’interno dell’autenticatore (in modo da avere `H(m || s)`), che eviterebbe l’estensione dell’algoritmo. 
+`segreto + messaggio + padding + length`
 
-Questo stratagemma è utile solo se la funzione hash è resistente alla collisione debole. Altrimenti, supponiamo che un intrusore possa trovare un messaggio `m'` in collisione con `m`. Con questa ipotesi si avrebbe `H(m || s) = H(m' || s)`. Dunque, all’intrusore sarebbe sufficiente inviare sul canale il messaggio `m'` concatenato con `H(m || s)` che, per la collisione, autenticherebbe `m'`.
-<!--Da capire meglio-->
-<!--m' || H(m || s) -->
+può avere un nuovo significato (e.g. attacco a Flickr).
+
+**Esempio per facilitare la comprensione a noi poveri studenti**
+
+Si consideri un messaggio composto da:
+- Numero di conto del mittente `10203040` 
+- Numero di conto del destinatario `90807060`
+- Importo pari a `100` da trasferire
+- Segreto `s` in accordo con mittente e destinatario pari a `SECRET`
+- Bit di padding, da applicare dopo il messaggio m, chiamati `PADDING`
+- Lunghezza del messaggio da inviare relativo al conto mittente, conto destinatario e importo da trasferire pari a `LENGTH`
+
+Allora, il messaggio da validare `m` sarà:
+
+`s + numContoMittente + numContoDest + somma + PADDING + LENGTH`
+
+ovvero
+
+`"SECRET1020304090807060100"+ PADDING + LENGTH`
+
+Un eventuale attaccante, senza sapere nulla sul valore di `PADDING` e `LENGTH` può concatenare a fine messaggio:
+- `m'` (in questo caso supponiamo che sia pari a `0`)
+- Un padding arbitrario
+- Una lunghezza arbitraria
+  
+Pertanto, il prodotto finale sarà:
+
+`"SECRET1020304090807060100"+ PADDING + LENGTH + 0 + PADDING + LENGTH`
+
+La destinazione, infine, come verifica di autenticità rimuoverà i bit relativi a `PADDING` e `LENGTH` _finali_, e il messaggio può:
+- non avere senso e venire giustamente scartato;
+- acquisire un nuovo senso (in questo caso un importo di denaro enorme) e provocare danni.
+
+### Attacco al segreto con una collisione
+
+Si potrebbe pensare di invertire la posizione di `s` e di `m` all’interno dell’autenticatore (in modo da avere `H(m || s)`), che eviterebbe l’estensione dell’algoritmo, dato che l'attaccante non conosce il segreto `s`. 
+
+Questo stratagemma è utile solo se la funzione hash **è resistente alla collisione debole**. Altrimenti, se **non è** debolmente resistente:
+- Supponiamo che un intrusore possa trovare un messaggio `m'` in collisione con `m`.
+- Con questa ipotesi si avrebbe `H(m || s) = H(m' || s)`. 
+- Dunque, all’intrusore sarebbe sufficiente inviare sul canale il messaggio `m'` concatenato con `H(m || s)` che, per la collisione, autenticherebbe `m'`.
+
+Come contromisura per migliorare un algoritmo di hash è l'utilizzo di una doppia compressione, realizzando l'impronta di un'impronta (sfavorendo l'efficienza).
+
 
 ### Robustezza alle collisioni
 
