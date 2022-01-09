@@ -70,7 +70,7 @@
   - [Robustezza alle collisioni](#robustezza-alle-collisioni)
   - [Unidirezionalità](#unidirezionalità)
   - [Complessità del calcolo di una collisione](#complessità-del-calcolo-di-una-collisione)
-- [03. Meccanismi Simmetrici](#03-meccanismi-simmetrici)
+- [Meccanismi Simmetrici](#meccanismi-simmetrici)
   - [Cifrario simmetrico](#cifrario-simmetrico)
   - [Cifrario a flusso](#cifrario-a-flusso)
   - [Esempio](#esempio-1)
@@ -1081,7 +1081,7 @@ Quindi, non bastano 128 bit: il numero di bit deve essere il doppio, poiché per
 
   È quindi più facile effettuare un attacco rispetto alla resistenza debole.
 
-## 03. Meccanismi Simmetrici
+## Meccanismi Simmetrici
 
 ### Cifrario simmetrico
 
@@ -1187,7 +1187,7 @@ Per garantire la _riservatezza_, i cifrari a flusso devono avere certe propriet�
 
 ### Uso della chiave una sola volta
 
-Il requisito fondamentale è che la chiave deve essere usata una e una sola volta. Se si usa lo stesso flusso di chiave su messaggi distinti si possono fare attacchi di analisi sui cifrati, poiché si sfruttano le proprietà dell'operazione di `XOR`.
+Il requisito fondamentale è che la chiave deve essere usata una e una sola volta. Se si usa lo stesso flusso di chiave su messaggi distinti si possono fare attacchi di analisi crittografica sui cifrati, poiché si sfruttano le proprietà dell'operazione di `XOR`.
 
 ![](./img/img41.png)
 
@@ -1306,7 +1306,7 @@ Molti algoritmi hanno la funzione E e D che coincidono. Questo vuol dire da un p
 
 ### Chipher Feedback Block (CFB)
 
-DARE UN'OCCHIATA A https://it.wikipedia.org/wiki/Modalità_di_funzionamento_dei_cifrari_a_blocchi
+DARE UN'OCCHIATA: https://it.wikipedia.org/wiki/Modalità_di_funzionamento_dei_cifrari_a_blocchi
 
 Questo schema ricorda un _cifrario a flusso autosincronizzante_. 
 
@@ -1401,11 +1401,11 @@ Bisogna eliminare l'effetto `K1` perché è quello che SSL userebbe come input e
 
 ### Dimensione del blocco
 
-Non solo la dimensione della chiave è importante ma anche la dimensione del blocco perché definisce quanti sono i dati possono essere cifrati con la stessa chiave. La cifratura deve essere robusta fino a 2^n input diversi.
-Purtroppo molte modalità di cifratura diventano insicure dopo 2^n/2 cifrature a causa dell’aumento di probabilità di collisioni tra due blocchi di cifrato per il paradosso del compleanno.
-Con 64 bit c'è questa problematica.
+Non solo la dimensione della chiave è importante ma anche la dimensione `n` del blocco perché definisce quanti sono i dati possono essere cifrati con la stessa chiave. La cifratura deve essere robusta fino a 2^n input diversi.
+Purtroppo molte modalità di cifratura diventano insicure dopo 2^(n/2) cifrature a causa dell’aumento di probabilità di collisioni tra due blocchi di cifrato per il paradosso del compleanno.
+Se si usa un blocco a 64 bit c'è questa problematica. Al momento, si suggerisce di adottare algoritmi che lavorano su blocchi di dimensione maggiore.
 
-La modalità CBC è usata ma nonostante ciò si va contro a questo attacco: se ci sono due testi uguali cifrati in modalità CBC vuol dire che se si mettono ogni bit in XOR dei due cifrati, si ottiene l'XOR dei due messaggi in chiaro. Si guardi paragrafo precedente sulla malleabilità.
+Ad esempio, la modalità CBC va contro a questo attacco: se ci sono due testi uguali cifrati in modalità CBC vuol dire che se si mettono ogni bit in XOR dei due cifrati, si ottiene l'XOR dei due messaggi in chiaro. Si guardi paragrafo precedente sulla malleabilità. Per il paradosso del compleanno la probabilità di avere una collisione tra due blocchi è proporzionale a 2^(n/2).
 
 ### Gestione della chiave
 
