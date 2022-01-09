@@ -1085,30 +1085,42 @@ Quindi, non bastano 128 bit: il numero di bit deve essere il doppio, poiché per
 
 ### Cifrario simmetrico
 
-Nella crittografia classica, è stato individuato un cifrario perfetto chiamato _One-time pad_. Il cifrario perfetto è per definizione un algoritmo in grado di occultare il testo in chiaro escludendo ogni tipo di attacco.
-Ne segue che un testo cifrato con un cifrario perfetto non può essere letto in nessun modo se non si è in possesso della chiave di cifratura unica per decifrarlo. Tuttavia, il suo impiego nella pratica è molto complicato.
+Nella crittografia classica, è stato individuato un cifrario perfetto chiamato _One-time pad_. 
+
+Il cifrario perfetto è per definizione un algoritmo in grado di occultare il testo in chiaro escludendo ogni tipo di attacco.
+Ne segue che un testo cifrato con un cifrario perfetto non può essere letto in nessun modo se non si è in possesso della *chiave di cifratura unica* per decifrarlo. Tuttavia, il suo impiego nella pratica è molto complicato.
 
 Per questo motivo si parla di _cifrario computazionalmente sicuro_: per risalre dal testo cifrato al testo in chiaro corrispondente si ha bisogno di una potenza di elaborazione superiore a quella a disposizione dell'intrusore.
+ 
+Per il principio di Kerckoff la sicurezza deve dipendere dalòòa chiave e non dalll'algoritmo, perché quest'ultimo non può essere mantenuto segreto.
 
 Per la _teoria dell'informazione_ sviluppata da Shannon, il cifrario è computazionalmente sicuro se adotta i criteri di:
 
-- **Confusione**: il cifrato deve essere aleatorio e l'aleatorietà non permette di individuare delle relazioni tra testo cifrato e la chiave usata;
-- **Diffusione**: la modifica di un solo carattere del messaggio in chiaro deve provocare una modifica sostanziale del messaggio criptato in modo da non poter usare attacchi con statistica.
+- **Confusione**: il cifrato deve essere aleatorio e l'aleatorietà non permette di individuare delle relazioni tra testo cifrato e la chiave usata. 
+
+  La confusione _nasconde_ la relazione esistente tra testo in chiaro e testo cifrato e rende poco efficace lo studio del secondo basato su statistiche e ridondanze del primo. Rende difficile prevedere che cosa accadrà al testo cifrato, anche modificando un solo simbolo del testo in chiaro.
+- **Diffusione**: la modifica di un solo carattere del messaggio in chiaro deve provocare una modifica sostanziale del messaggio cifrato, in modo da non poter usare attacchi con statistica.
+
+  La diffusione nasconde la ridondanza del testo in chiaro, spargendola all'interno del testo cifrato. Si impone a ogni simbolo del testo in chiaro di influire su molti/tutti i simboli del testo cifrato.
+  
+  È difficile prevedere quali e quanti simboli del testo cifrato si modificano se si modifica anche un solo simbolo del testo in chiaro.
 
 Ci sono due tecniche che garantiscono _confusione_ e _diffusione_:
 - **Tecnica di sostituzione**: tecnica che garantisce la confusione;
 - **Tecnica di trasposizione**: tecnica che garantisce la diffusione.
 
-Dalla _teoria dell'informazione_ di Shannon discende che un _cifrario simmerico_ è computazionalmente sicuro se usa _diffusione_ e _sostituzione_.
+Dalla _teoria dell'informazione_ di Shannon discende che un _cifrario simmerico_ è computazionalmente sicuro se usa _confusione_ e _diffusione_. In tal caso viene detto anche **cifrario composto**.
 
-I cifrari simmetrici vengono utilizzati per garantire riservatezza. In rarissimi casi, viene usato per garantire autenticazione, per generatori di numeri pseudo-casuali crittograficamente sicuri e per alcuni protocolli di identificazione.
+I cifrari simmetrici vengono utilizzati per garantire **riservatezza**. In rarissimi casi, viene usato per garantire *autenticazione*, per costruire generatori di numeri pseudo-casuali crittograficamente sicuri e alcuni protocolli di identificazione.
 
-Esistono come cifrari simmetrici due famiglie distinte:
+Se utilizzati in modo opportuno, i cifrari simmetrici sono estremamente efficienti e robusti.
 
-- **Cifrario a flusso**: si ispira al cifrario _One-time pad_. È un cifrario che opera su uno o pochi bit alla volta con una regola variabile al progredire del testo. Garantisce la  protezione dei singoli bit di una trasmissione seriale. Ad esempio, nel settore della telefonia, applicazione web etc;
-- **Cifrario a blocchi**: si ispira al _Cifrario poligrafico_ ed al _Cifrario composto_. Trasforma con una regola fissa blocchi di messaggio formati da molti bit. La lunghezza del blocco dipende dallo specifico algoritmo. Ad esempio, protezione di pacchetti, di file, posta elettronica etc.
+Esistono due famiglie distinte di cifrari simmetrici:
 
-Un _cifrario a flusso_, è più veloce di un _cifrario a blocchi_ perché non introduce rallentamenti. Se il _cifrario a flusso_ non è impiegato correttamente, è meno sicuro di un cifrario a blocchi non impiegato correttamente.
+- **Cifrario a flusso**: si ispira al cifrario _One-time pad_. È un cifrario che opera su uno o pochi bit alla volta, con una regola variabile al progredire del testo. Garantisce la protezione dei singoli bit di una trasmissione seriale (e.g. nel settore della telefonia, applicazione web etc);
+- **Cifrario a blocchi**: si ispira al _cifrario poligrafico_ e al _cifrario composto_. Trasforma con una regola fissa blocchi di messaggio formati da molti bit. La lunghezza del blocco dipende dallo specifico algoritmo. Ad esempio, protezione di pacchetti, di file, posta elettronica etc.
+
+Un _cifrario a flusso_ è più veloce di un _cifrario a blocchi_, poiché non introduce rallentamenti. Se il _cifrario a flusso_ non è impiegato correttamente, è meno sicuro di un cifrario a blocchi non impiegato correttamente.
 
 ### Cifrario a flusso
 
@@ -1121,9 +1133,18 @@ Encryption `E` e decryption `D` sono implementati con degli `XOR`:
 - **Decryption**: al bit `i`-esimo del messaggio cifrato `c`, si mette in `XOR` lo stesso `i`-esmo bit di chiave `k` usato nella fase di cifratura:\
 `ci XOR ki = (mi XOR ki) XOR ki = mi`
 
-Per questo motivo ci deve essere _sincronismo_ tra i flussi di chiave della sorgente e della chiave.
+La chiave deve essere:
+- della stessa lunghezza del testo; 
+- utilizzata una e una sola volta;
+- formata da bit pseudocasuali e imprevedibili;
+- generata casualmente da due PRNG sincronizzati tra loro, partendo da un seed condiviso tra sorgente e destinazione;
+- il seed deve essere scelto in segreto, non deve essere individuabile e deve essere scelto a caso in un periodo `p` lunghissimo. 
 
-Il testo cifrato `c` sarà sicuramente più lungo di 128 bit per cui non ha senso usare l'attacco di forza bruta perché in questi tipi di cifrari, la chiave è lunga quanto il testo. Inoltre, la chiave varia da messaggio a messaggio.
+Ci deve essere _sincronismo_ nella generazione dei bit dei flussi di chiave, sia a livello di sorgente, che destinazione.
+
+Il problema per cui non si ha un cifrario perfetto, ma solo computazionalmente sicuro, risulta nell'ottenimento di chiavi periodiche: dopo un periodo `p`, anche se grandissimo, si possono riottenere nuovamente le stesse chiavi.
+
+Il testo cifrato `c` sarà sicuramente più lungo di 128 bit, per cui un attacco di forza bruta non ha successo: in questi tipi di cifrari la chiave è lunga quanto il testo. Inoltre, la chiave varia da messaggio a messaggio.
 
 I cifrari a flusso si suddividono in:
 
@@ -1135,34 +1156,35 @@ I cifrari a flusso si suddividono in:
 
   ![dedurre](./img/img42.png)
 
-I più usati sono quelli a _cifrario flusso sincrono_ perché i componenti a _cifrario a flusso autosincronizzante_ sono più costosi.
+I più usati sono i _cifrario flusso sincrono_, poiché i componenti 
+del _cifrario a flusso autosincronizzante_ sono più costosi.
 
 ### Esempio
 
-Uno degli algoritmi più famosi è RC4 ma ormai è stato disabilitato nei browser a causa delle sue vulnerabilità.
+Uno degli algoritmi più famosi è RC4, ma ormai è stato disabilitato nei browser a causa delle sue vulnerabilità.
 Al giorno d'oggi vengono usati algoritmi come Salsa e Sosemanuk.
 
 ### Possibili vulnerabilità
 
 Per garantire la _riservatezza_, i cifrari a flusso devono avere certe proprietà e bisogna capire quali sono le loro vulnerabilità:
-- Attacchi attivi;
-- Uso della chiave una sola volta;
-- Malleabilità.
+- attacchi attivi;
+- uso della chiave una sola volta;
+- malleabilità.
 
 ### Attacchi attivi
 
 Nel _cifrato a flusso sincrono_, nel caso di attacchi attivi:
 
-- **Se si modifica un bit del cifrato**: la destinazione non decifra correttamente un bit perché è stato cambiato. Si dice che non si ha perdita di sincronismo perché solo il `i`-esimo è è stato cambiato. Tuttavia, la decifrazione non è corretta;
-- **Se si cancella/inserisce un bit**: dal punto in poi in cui è stato cancellato il bit, i restanti non corrisponderanno mai a quelli inviati. Si dice che si ha perdita di sincronismo perché tutti i bit sono da buttare via.
+- **Se si modifica un bit del cifrato**: la destinazione non decifra correttamente un bit perché è stato cambiato._Non si ha perdita di sincronismo_: solo il `i`-esimo è è stato modificato. Tuttavia, la decifrazione non è corretta;
+- **Se si cancella/inserisce un bit**: dal punto in poi in cui è stato aggiunto o cancellato il bit `c_i`, i restanti sbit non corrisponderanno mai a quelli inviati. Si dice che si ha perdita di sincronismo letale.
 
 Nel _cifrato a flusso autosincronizzante_, nel caso di attacchi attivi:
 
-- **Se modifica, cancella o elimina un bit del cifrato**: si ha una perdita di sincronismo ma non permanete, solo di un transitorio. Il transitorio è legato alla dimensione del registro di scorrimento (SHIFT) perché dipende da quanti cicli, il bit modificato/cancellato/inserito rimane dentro a questo registro.
+- **Se modifica, cancella o elimina un bit del cifrato**: si ha una perdita di sincronismo ma non permanente, solo di un periodo di transitorio. Il transitorio è legato alla dimensione del registro di scorrimento (SHIFT): dipende da quanti cicli il bit modificato/cancellato/inserito rimane all'interno di questo registro.
 
 ### Uso della chiave una sola volta
 
-Il requisito fondamentale è che la chiave deve essere usata una e una sola volta. Se si usa lo stesso flusso di chiave su messaggi distinti si possono fare attacchi di analisi sui cifrati perché si sfruttano le proprietà dell'`XOR`.
+Il requisito fondamentale è che la chiave deve essere usata una e una sola volta. Se si usa lo stesso flusso di chiave su messaggi distinti si possono fare attacchi di analisi sui cifrati, poiché si sfruttano le proprietà dell'operazione di `XOR`.
 
 ![](./img/img41.png)
 
@@ -1171,18 +1193,25 @@ Ad esempio, si consideri:\
 
 `m2 XOR k = c2`
 
-Fare `c1 XOR c2` è come fare l'`XOR` su due messaggi in chiaro: `m1 XOR m2`.
+Effettuare `c1 XOR c2` è come eseguire uno `XOR` su due messaggi in chiaro: `m1 XOR m2`.
 
 ### Esempio
 
-Nell'implementazione del protocollo WEB si presenta questo tipo di vulnerabilità.
+Nell'implementazione del protocollo WEP si presenta questo tipo di vulnerabilità. 
+L'obiettivo è ottenere un _seed_ variabile. Tuttavia questo protocollo presenta alcuni limiti:
+
+- Utilizzato nelle reti wireless (protocollo 802.11), il mittente sceglie di volta in volta un diverso vettore di inizializzazione `IV` (comunicato in chiaro), che concatenato con la chiave, crea il seed. Quest'ultimo viene fornito al PRNG, usato per ottenere il testo cifrato da trasmettere in chiaro. 
+- In questo modo, sembra che si abbia un seme sempre diverso. Il destinatario estrae `IV`, lo concatena con la chiave segreta condivisa e inizializza la generazione del flusso di chiave esattamente dallo stesso punto da cui è partito il corrispondente. 
+- `IV` possiede una dimensione limitata (24 bit). Dopo 5000 generazioni c'era una probabilità pari al 50% che `IV` si ripeteva.
+- Di conseguenza, dopo 2^{24} permutazioni si ha che la chiave si ripete.
+- Quando si spegneva il dispositivo che implementava questo protocollo, il vettore `IV `si inizializzava a zero e poi funzionava a incremento. Il suo comportamento è molto prevedibile, così come è prevedibile il seed.
+- Non è stato rispettato il fatto di non riutilizzare la chiave.
+
+WEP è stato dismesso, al suo posto è presente WPA/WPA2.
 
 ![](./img/img17.png)
 
-L'obiettivo è ottenere un _seed_ variabile ma in realtà questo protocollo presenta alcuni limiti:
 
-- Il vettore di inizializzazione ha una dimensione limitata (24 bit). Dopo 2^{24} generazioni si ha che il seed si ripete;
-- Quando si spegneva, il vettore si inizializzava a zero e poi funzionava ad incremento. Il comportamente è molto prevedibile.
 
 <!-- 11/10/2021 -->
 ### Malleabilità
