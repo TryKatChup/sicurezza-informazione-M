@@ -1092,7 +1092,7 @@ Ne segue che un testo cifrato con un cifrario perfetto non può essere letto in 
 
 Per questo motivo si parla di _cifrario computazionalmente sicuro_: per risalre dal testo cifrato al testo in chiaro corrispondente si ha bisogno di una potenza di elaborazione superiore a quella a disposizione dell'intrusore.
  
-Per il principio di Kerckoff la sicurezza deve dipendere dalòòa chiave e non dalll'algoritmo, perché quest'ultimo non può essere mantenuto segreto.
+Per il principio di Kerckoff la sicurezza deve dipendere dalla chiave e non dall'algoritmo, perché quest'ultimo non può essere mantenuto segreto.
 
 Per la _teoria dell'informazione_ sviluppata da Shannon, il cifrario è computazionalmente sicuro se adotta i criteri di:
 
@@ -1101,7 +1101,7 @@ Per la _teoria dell'informazione_ sviluppata da Shannon, il cifrario è computaz
   La confusione _nasconde_ la relazione esistente tra testo in chiaro e testo cifrato e rende poco efficace lo studio del secondo basato su statistiche e ridondanze del primo. Rende difficile prevedere che cosa accadrà al testo cifrato, anche modificando un solo simbolo del testo in chiaro.
 - **Diffusione**: la modifica di un solo carattere del messaggio in chiaro deve provocare una modifica sostanziale del messaggio cifrato, in modo da non poter usare attacchi con statistica.
 
-  La diffusione nasconde la ridondanza del testo in chiaro, spargendola all'interno del testo cifrato. Si impone a ogni simbolo del testo in chiaro di influire su molti/tutti i simboli del testo cifrato.
+La diffusione nasconde la ridondanza del testo in chiaro, spargendola all'interno del testo cifrato. Si impone a ogni simbolo del testo in chiaro di influire su molti/tutti i simboli del testo cifrato.
   
   È difficile prevedere quali e quanti simboli del testo cifrato si modificano se si modifica anche un solo simbolo del testo in chiaro.
 
@@ -1134,6 +1134,7 @@ Encryption `E` e decryption `D` sono implementati con degli `XOR`:
 `ci XOR ki = (mi XOR ki) XOR ki = mi`
 
 La chiave deve essere:
+
 - della stessa lunghezza del testo; 
 - utilizzata una e una sola volta;
 - formata da bit pseudocasuali e imprevedibili;
@@ -1164,23 +1165,25 @@ del _cifrario a flusso autosincronizzante_ sono più costosi.
 Uno degli algoritmi più famosi è RC4, ma ormai è stato disabilitato nei browser a causa delle sue vulnerabilità.
 Al giorno d'oggi vengono usati algoritmi come Salsa e Sosemanuk.
 
-### Possibili vulnerabilità
-
-Per garantire la _riservatezza_, i cifrari a flusso devono avere certe proprietà e bisogna capire quali sono le loro vulnerabilità:
-- attacchi attivi;
-- uso della chiave una sola volta;
-- malleabilità.
-
 ### Attacchi attivi
 
 Nel _cifrato a flusso sincrono_, nel caso di attacchi attivi:
 
-- **Se si modifica un bit del cifrato**: la destinazione non decifra correttamente un bit perché è stato cambiato._Non si ha perdita di sincronismo_: solo il `i`-esimo è è stato modificato. Tuttavia, la decifrazione non è corretta;
+- **Se si modifica un bit del cifrato**: la destinazione non decifra correttamente un bit perché è stato cambiato. _Non si ha perdita di sincronismo_: solo il `i`-esimo è è stato modificato. Tuttavia, la decifrazione non è corretta;
 - **Se si cancella/inserisce un bit**: dal punto in poi in cui è stato aggiunto o cancellato il bit `c_i`, i restanti sbit non corrisponderanno mai a quelli inviati. Si dice che si ha perdita di sincronismo letale.
 
 Nel _cifrato a flusso autosincronizzante_, nel caso di attacchi attivi:
 
 - **Se modifica, cancella o elimina un bit del cifrato**: si ha una perdita di sincronismo ma non permanente, solo di un periodo di transitorio. Il transitorio è legato alla dimensione del registro di scorrimento (SHIFT): dipende da quanti cicli il bit modificato/cancellato/inserito rimane all'interno di questo registro.
+
+Da come si può vedere da questi tipi di attacchi, l'_integrità_ non viene garantita.
+
+### Possibili vulnerabilità
+
+Per garantire la _riservatezza_, i cifrari a flusso devono avere certe proprietà e bisogna capire quali sono le loro vulnerabilità:
+
+- uso della chiave una sola volta;
+- malleabilità.
 
 ### Uso della chiave una sola volta
 
@@ -1197,28 +1200,28 @@ Effettuare `c1 XOR c2` è come eseguire uno `XOR` su due messaggi in chiaro: `m1
 
 ### Esempio
 
-Nell'implementazione del protocollo WEP si presenta questo tipo di vulnerabilità. 
+Nell'implementazione del protocollo WEP si presenta questo tipo di vulnerabilità cioè viene usata la stessa chiave più di una volta.
 L'obiettivo è ottenere un _seed_ variabile. Tuttavia questo protocollo presenta alcuni limiti:
 
 - Utilizzato nelle reti wireless (protocollo 802.11), il mittente sceglie di volta in volta un diverso vettore di inizializzazione `IV` (comunicato in chiaro), che concatenato con la chiave, crea il seed. Quest'ultimo viene fornito al PRNG, usato per ottenere il testo cifrato da trasmettere in chiaro. 
 - In questo modo, sembra che si abbia un seme sempre diverso. Il destinatario estrae `IV`, lo concatena con la chiave segreta condivisa e inizializza la generazione del flusso di chiave esattamente dallo stesso punto da cui è partito il corrispondente. 
 - `IV` possiede una dimensione limitata (24 bit). Dopo 5000 generazioni c'era una probabilità pari al 50% che `IV` si ripeteva.
 - Di conseguenza, dopo 2^{24} permutazioni si ha che la chiave si ripete.
-- Quando si spegneva il dispositivo che implementava questo protocollo, il vettore `IV `si inizializzava a zero e poi funzionava a incremento. Il suo comportamento è molto prevedibile, così come è prevedibile il seed.
+- Quando si spegneva il dispositivo che implementava questo protocollo, il vettore `IV` si inizializzava a zero e poi funzionava a incremento. Il suo comportamento è molto prevedibile, così come è prevedibile il seed.
 - Non è stato rispettato il fatto di non riutilizzare la chiave.
 
 WEP è stato dismesso, al suo posto è presente WPA/WPA2.
 
 ![](./img/img17.png)
 
-
-
 <!-- 11/10/2021 -->
 ### Malleabilità
 
-La proprietà di _malleabilità_ consiste nella possibilità di alterare il cifrato in modo da produrre un effetto desiderato sul testo in chiaro originario. L'attacco ha successo se e solo se l'intrusore conosce una parte del messaggio `m` che il mittente deve inviare.
+La proprietà di _malleabilità_ consiste nella possibilità di alterare il cifrato in modo da produrre un effetto desiderato sul testo in chiaro originario.
 
-Il mittente effettua `m XOR k`, l'attaccante prende `(m XOR k) XOR p` dove `p` è scelto da lui e sostituisce il messaggio sul canale con il nuovo messaggio cifrato modificato. La destinazione, decifra `((m XOR k) XOR p)) XOR k` e quindi non sarebbe altro che fare `m XOR p`.
+Questo attacco ha successo se e solo se l'intrusore conosce una parte del messaggio `m` che il mittente ha inviato.
+
+Il mittente effettua `m XOR k`, l'attaccante prende `(m XOR k) XOR p` dove `p` è scelto dall'attaccante e sostituisce il messaggio sul canale con il nuovo messaggio cifrato modificato. La destinazione, decifra `((m XOR k) XOR p)) XOR k` e quindi non sarebbe altro che fare `m XOR p`.
 
 Fare le tabelle di verità per credere!
 
@@ -1226,9 +1229,26 @@ Ad esempio, il mittente sta cifrando dei dati strutturati. All'inizio di questi 
 
 ### Cifrari a blocchi
 
+Si prende un messaggio e lo si suddivide in blocchi di uguale lunghezza prefissata. La lunghezza del blocco dipende dallo specifico algoritmo.
+
+La robustezza di un cifrario a blocchi dipende dalla dimensione della chiave e dalla dimensione del blocco. Se un blocco è di 64 bit, 2^64 sono le possibili uscite quindi se il messaggio ha dimensione molto più grande è possibile che due messaggi abbiano lo stesso cifrato (problema di collisione), Per il paradosso del compleanno, bastano 2^32 tentativi per trovare una collisione.
+
+Esistono tanti algoritmi di cifratura per i cifrari a blocchi (DES, TDES, AES). Oggi lo standard è AES.
+
+Quasi tutti i cifrari a blocchi seguono il modello della rete di Feistel. Ogni blocco di testo in chiaro deve produrre un blocco di testo cifrato univoco (Teoria di Shannon) a meno del problema delle collisioni.
+Il messaggio viene suddiviso in blocchi e ogni blocco viene sottoposto ad un numero di round n (dipende dall'algoritmo): ad ogni round ogni metà di bit di un blocco, viene sottoposta ad un'operazione di sostituzione (parte destra) e ad un'operazione di permutazione (parte di sinistra). Al round successivo, la parte di sinistra diventa la parte di destra e viceversa e così via.
+
+Ogni algoritmo è composto da due sotto-algoritmi: uno che implementa la rete di Feistel e un'altro che a partire da una chiave, genera una sottochiave perchè ad ogni round viene data in ingresso una sottochiave specifica.
+
+Algoritmi che usano la rete di Feistel: DES, TDES. No AES.
+
+### Modalità di cifratura
+
+Per modalità di cifratura si intende un cifrario a blocchi e bisogna capire quando è utile impiegarlo. Esistono le modalità ECB, CBC, CFB, OFB e CTR.
+
 ### Electronic Code Book (ECB)
 
-Si prende un messaggio e lo si suddivide in blocchi di uguale lunghezza prefissata. Se l'ultimo blocco contiene meno bit della lunghezza che dovrebbe avere lo si completa con dei bit di padding.
+Si prende un messaggio e lo si suddivide in blocchi di uguale lunghezza prefissata. La lunghezza del blocco dipende dallo specifico algoritmo. Se l'ultimo blocco contiene meno bit della lunghezza che dovrebbe avere lo si completa con dei bit di padding. Lo standard dei padding sono PKCS#5 e PKCS#7.
 
 ![](./img/img35.png)
 
@@ -1236,58 +1256,57 @@ Ogni blocco viene dato in input alla funzione di encryption `E` tramite una chia
 
 L'operazione di cifrare a blocchi ricorda molto la tecnica di base della sostituzione monoalfabetica della crittografia classica ma a differenza di quest'ultima, la grossa dimensione dei blocchi la rende immune da un attacco con statistiche.
 
-La chiave deve essere modificata frequentemente perché essa cifra moltissimi blocchi di testo in chiaro e quindi ci sono più possibilità di individuarla. Dunque, l'attacco con forza bruta è possibile ed è necessario dimensionare la chiave almeno con 128 bit.
+La chiave deve essere generata da un PNRG crittograficamente sicuro e deve essere modificata frequentemente perché essa cifra moltissimi blocchi di testo in chiaro e quindi ci sono più possibilità di individuarla. Dunque, l'attacco con forza bruta è possibile ed è necessario dimensionare la chiave almeno con 128 bit.
 
 Vantaggi:
 
 - **Alto parallelismo**: se si dispone di più CPU, l'esecuzione è parallela;
 - **No propagazione dell'errore**: se l'intrusore modifica a caso un bit, si dice che la propagazione dell'errore rimane confinata a quel blocco. Chi decifra avrà solo un blocco _sbagliato_.
 
+Molti algoritmi hanno la funzione E e D che coincidono. Questo vuol dire da un punto di vista hardware si usa lo stesso circuito altrimenti bisogna realizzare anche due circuiti diversi.
+
 Svantaggi:
 
-- **Determinismo**: a blocchi in chiaro identici corrispondono blocchi cifrati assolutamente identici. Sono informazioni in più che un intrusore può sfruttare a suo favore;
+- **Determinismo**: a blocchi in chiaro identici corrispondono blocchi cifrati assolutamente identici. Sono informazioni in più che un intrusore può sfruttare a suo favore. L'attacco con statistica può avere successo perchè si inizia a studiare il pattern dei blocchi;
+- **Padding**: se il blocco è di dimensione inferiore, bisogna riempirlo e questo comporta un overhead in termini di banda perchè si usano bit in più;
 - **Maleabilità**: un intrusore è in grado di modificare il testo cifrato in modo tale che la destinazione quando lo decifra ottiene un testo da lui scelto. Ad esempio, si consideri una transazione bancaria. Nel primo blocco si ha il mittente, nel secondo il destinatario e nel terzo la cifra da trasferire. L'intrusore, sostituisce al blocco del destinatario, il suo. Se il mittente è "Luca", il destinatario è "Lucia" e la somma da trasferire "100", l'attaccante basta che sostituisca "Lucia" con il suo nome.
 
 Questa modalità si usa solo in casi specifici: ad esempio, cifrare delle informazioni che sono già per natura aleatoria (per evitare determinismo) o un testo che risiede interamente in un solo blocco (per evitare la possibile sostituzione di blocchi). Ad esempio, si usa per cifrare una chiave di sessione.
 
-### Esempio
-
-Esistono tanti algoritmi di cifratura per i cifrari a blocchi (DES, TDES, AES). Oggi lo standard è AES.
-
-### Modalità di cifratura
-
-L'obiettivo, quindi, è quello di trovare modalità di _cifrature aleatorie_. Esistono le modalità CBC, CFB, OFB, CTR.
-
 ### Cipher Block Chaining (CBC)
 
-Solo questa modalità di cifratura utilizza il padding.
+Si prende un messaggio e lo si suddivide in blocchi di uguale lunghezza prefissata. La lunghezza del blocco dipende dallo specifico algoritmo. Se l'ultimo blocco contiene meno bit della lunghezza che dovrebbe avere lo si completa con dei bit di padding. Lo standard dei padding sono PKCS#5 e PKCS#7.
 
 ![](./img/img18.png)
 
-La modalità CBC prende il messaggio in chiaro, lo suddivide in blocchi e l'ultimo blocco è sottoposto a padding se necessario. Per ogni blocco, il testo in chiaro viene messo in `XOR` con il cifrato del blocco precedente e il risultato viene messo in input alla funzione di cifratura `E` ottenendo un testo cifrato c_i. Solo per quanto riguarda il blocco 1, il testo in chiaro viene dato in `XOR` con quello che si chiama _vettore di inizializzazione_ (IV) altrimenti questo blocco sarebbe sempre deterministico. IV può essere o concordato o inviato come primo blocco del cifrato e la sua dimensione è grande quanto quella del blocco.
+Per ogni blocco, il testo in chiaro viene messo in `XOR` con il cifrato del blocco precedente e il risultato viene messo in input alla funzione di cifratura `E` ottenendo un testo cifrato `c_i`. Solo per quanto riguarda il blocco 1, il testo in chiaro viene dato in `XOR` con quello che si chiama _vettore di inizializzazione_ (`IV`) altrimenti il blocco 1 sarebbe sempre deterministico. `IV` può essere o concordato o inviato come primo blocco del cifrato e la sua dimensione è grande quanto quella del blocco.
 
-In fase di decifrazione, le operazioni sono inverse ed è sufficiente invertire il verso delle frecce. Se si perde IV dopo aver cifrato il messaggio, si riesce comunque a decifrare tutto lato destinazione tranne il primo blocco.
+In fase di decifrazione, le operazioni sono inverse ed è sufficiente invertire il verso delle frecce. Se si perde `IV` dopo aver cifrato il messaggio, si riesce comunque a decifrare tutto lato destinazione tranne il primo blocco.
 
-Per ottenere aleatorietà, questo vettore deve essere:
+Per ottenere l'aleatorietà del cifrato, questo vettore deve essere:
 
-- **(pseudo)casuale**;
-- **Imprevedibile** anche se si genera un numero randomico ma si conosce il seed si può prevedere che numero verrà dopo. È importante questo punto altrimenti viola confidenzialità;
+- **(pseudo)casuale**: si genera un numero randomico;
+- **Imprevedibile** anche se si genera un numero randomico ma si conosce il seed si può prevedere che numero verrà dopo. È importante questo punto altrimenti viola la confidenzialità;
 - **Non ripetibile**: se si ripete il vettore e si hanno due messaggi uguali, si ottiene lo stesso cifrato.
 
-Il vettore non deve essere necessariamente segreto che non è un requisito fondamentale cifrare IV per garantire la riservatezza. L'intrusore non conosce la chiave `k`.
-
-In generale la dimensione del cifrato è maggiore del testo in chiaro. Se il messaggio è di `N` bit il cifrato sarà `N` bit + IV + padding.
+Il vettore non deve essere necessariamente segreto che non è un requisito fondamentale cifrare `IV` per garantire la riservatezza. L'intrusore non conosce la chiave `k`.
 
 Vantaggi:
 
+- Aleatorietà
 - Un cambiamento in un singolo blocco ha effetto su tutti i blocchi cifrati seguenti.
 
 Svantaggi:
 
+- **Padding**: se il blocco è di dimensione inferiore, bisogna riempirlo e questo comporta un overhead in termini di banda perchè si usano bit in più;
 - In questo caso, non si può procedere in modo parallelo con più CPU perché è necessario il cifrato del passo precedente in fase di cifrazione. Invece, il parallelismo lo si ottiene in fase di decifrazione se si hanno già tutti i pezzi di cifrato;
 - Se un attaccante, modifica un qualcunque bit di un blocco, l'errore si propaga nei blocchi successivi.
 
+Molti algoritmi hanno la funzione E e D che coincidono. Questo vuol dire da un punto di vista hardware si usa lo stesso circuito altrimenti bisogna realizzare anche due circuiti diversi.
+
 ### Chipher Feedback Block (CFB)
+
+DARE UN'OCCHIATA A https://it.wikipedia.org/wiki/Modalità_di_funzionamento_dei_cifrari_a_blocchi
 
 Questo schema ricorda un _cifrario a flusso autosincronizzante_. 
 
@@ -1297,7 +1316,7 @@ Nel dettaglio, può essere rappresentato nel seguente modo:
 
 ![](./img/img19.png)
 
-Si prende un registro a scorrimento che viene inizializzato con un vettore di inizializzazione che è casuale, non necessariamente segreto, imprevedibile e usato una sola volta. Il registro è formato da due parti: una parte formata dagli s bit meno significativi e l'altra dai b-s bit più significativi. A scorrimento vuol dire che ad ogni clock s bit "escono" dal registro. Lo stato del registro a scorrimento viene sottoposto ad una cifratura con la chiave `K`. L'uscita va a finire in un altro registro a scorrimento che è formato da s bit più significativi e b-s bit meno significativi. Il cifrato finale è ottenuto mettendo in `XOR` s bit del testo in chiaro con gli s bit più significati del vettore a scorrimento di cifratura. Il risultato è il cifrato costituito da s bit.
+Si prende un registro a scorrimento che viene inizializzato con un vettore di inizializzazione che è casuale, non necessariamente segreto, imprevedibile e usato una sola volta. Il registro è formato da due parti: una parte formata dagli s bit meno significativi e l'altra dai `b-s` bit più significativi. A scorrimento vuol dire che ad ogni clock `s` bit "escono" dal registro. Lo stato del registro a scorrimento viene sottoposto ad una cifratura con la chiave `K`. L'uscita va a finire in un altro registro a scorrimento che è formato da `s` bit più significativi e `b-s` bit meno significativi. Il cifrato finale è ottenuto mettendo in `XOR` `s` bit del testo in chiaro con gli `s` bit più significati del vettore a scorrimento di cifratura. Il risultato è il cifrato costituito da `s` bit.
 
 ![](./img/img20.png)
 
@@ -1305,7 +1324,7 @@ In decifrazione, si procede analogamente. Per decifrare il primo blocco di testo
 
 Si ha la propagazione dell’errore (una modifica su un cifrato si propaga sul successivo), ma si esaurisce dopo un certo lasso di tempo (si vedano cifrari a flusso auto-sincronizzante).
 
-Si usa, ad esempio, quando si ha una trasmissione carattere per carattere (8 bit alla volta).
+Si usa, ad esempio, quando si vuole trasferire flussi di carattere. Se il canale è rumoroso, questa modalità non è adatta perchè la modifica produce un transitorio e il testo decifrato viene scartato.
 
 ### Output Feedback (OFB)
 
@@ -1317,13 +1336,13 @@ Nel dettaglio, può essere rappresentato nel seguente modo:
 
 ![](./img/img21.png)
 
-Come in CFB, anche in questo caso IV serve per inizializzare il registro. Il procedimento iniziale è identico, tranne per l’ultimo passaggio: C1 viene infatti prodotto allo stesso modo, ma non viene mandato in ingresso al registro, al passo successivo.
+Come in CFB, anche in questo caso `IV` serve per inizializzare il registro. Il procedimento iniziale è identico, tranne per l’ultimo passaggio: C1 viene infatti prodotto allo stesso modo, ma non viene mandato in ingresso al registro, al passo successivo.
 
 ![](./img/img22.png)
 
-In decifrazione, non si usa la funzione inversa ma si continua ad usare la funzione di encryption `E` (stesso circuito hardware).
+In decifrazione, si usa sempre la stessa funzione di encryption `E` (stesso circuito hardware).
 
-Il vettore non deve essere necessariamente segreto e non deve essere necessariamente imprevedibile ma deve essere usato una e una sola volta perchè se questo schema ricorda un cifrario a flusso sincrono, si ha un problema di confidenzialità (proprietà dell'OXR).
+Il vettore non deve essere necessariamente segreto e non deve essere necessariamente imprevedibile ma deve essere usato una e una sola volta perchè se questo schema ricorda un cifrario a flusso sincrono, si ha un problema di confidenzialità (proprietà dell'`OXR`).
 
 L'OFB si preferisce usarlo quando i canali sono rumorosi (ad esempio i satelliti) perché la modifica di un blocco cifrato non si propaga sul blocco successivo.
 
@@ -1333,19 +1352,21 @@ Il comportamento è quello di un cifrario a flusso sincrono.
 
 ![](./img/img29.png)
 
-Funziona esattamente come una modalità ECB: il testo in chiaro viene suddiviso in blocchi, ciascuno dei quali viene lavorato indipendentemente dagli altri. Il flusso di chiave di L bit casuali, dove L è la lunghezza del blocco, è sommato modulo 2 con un pari numero di bit del testo in chiaro. Tali bit sono ottenuti cifrando lo stato di un contatore a L bit, incrementato di un’unità prima di procedere all’elaborazione di un nuovo blocco, con la chiave k.
+Il testo in chiaro viene suddiviso in blocchi, ciascuno dei quali viene lavorato indipendentemente dagli altri. In questa modalità viene utilizzato un contatore corrispondente alle dimensioni del blocco di testo in chiaro. Il requisito essenziale è che il suo valore sia differente per ciascun blocco da cifrare; in genere viene inizializzato con un determinato valore random e  imprevedibile generato da un PNRG e poi incrementato di un'unità per ogni blocco successivo.
+Per la cifratura, il contatore viene crittografato e poi si applica uno XOR col blocco di testo in chiaro per produrre il blocco di testo cifrato.
+Per la decifratura si utilizza la stessa sequenza di valori del contatore ai quali si applica lo XOR con i blocchi di testo cifrato.
 
-L’i-esimo bit di chiave non dipende né dal messaggio né dagli altri bit di chiave, bensì solo dal seed iniziale. Infatti, viene fornito come input della funzione Ek il seed iniziale e i suoi N incrementi unitari, dove N è il numero di blocchi da cifrare.
+Vantaggi:
 
-I blocchi possono lavorare in parallelo sia in fase di `E` che di `D`.
+- **Alto parallelismo**: I blocchi possono lavorare in parallelo sia in fase di `E` che di `D`. Se si dispone di più CPU, l'esecuzione è parallela.
 
-Si utilizza la sola funzione di cifratura Ek sia per cifrare che per decifrare.
+Si utilizza la sola funzione di cifratura `E` sia per cifrare che per decifrare (stesso circuito hardware).
 
 Questo schema viene usato, ad esempio, su reti ATM.
 
 ### Esempio
 
-In questo esempio la modalità CBC non è usata correttamente: si viola la confidenzialità se il vettore IV non è imprevedibile.
+In questo esempio la modalità CBC non è usata correttamente: si viola la confidenzialità se il vettore `IV` non è imprevedibile.
 
 Se la versione di TLS è la 1.0 si rischia di subire l'attacco _Beast Attack_ (Browser Exploit Against SSL/TLS) però è bene ricordare che l'attacco è molto difficile da realizzare.
 L'intrusore deve riuscire ad entrare in una sessione già avviata tra client e server e alterare il normale flusso dei dati (attacco _Man In The Middle_). Secondo la classificazione degli attacchi, questo fa parte della categoria _attacco con testo in chiaro scelto_.
