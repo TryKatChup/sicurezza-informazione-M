@@ -10,61 +10,172 @@
 </div>
 
 <!-- INDICE -->
-<details href="#indice" open="open">
-  <summary><h2 style="display: inline-block">Indice</h2></summary>
-  <ol>
-    <li>
-      <a href="#introduzione">Introduzione</a>
-      <ul>
-        <li><a href="#scopo-della-sicurezza-informatica">Scopo della sicurezza informatica</a></li>
-        <li><a href="#i-tre-capisaldi-della-sicurezza-informatica-cia-trade-triangle">I tre capisaldi della sicurezza informatica (CIA Trade Triangle)</a></li>
-        <li><a href="#calcolatore-sicuro">Calcolatore sicuro</a></li>
-        <li><a href="#valutazione-certificazione-enti">Valutazione, Certificazione, Enti</a></li>
-        <li><a href="#modello-a-canale-insicuro">Modello a canale insicuro</a></li>
-        <li><a href="#classificazione-attacchi">Classificazione attacchi</a></li>
-        <li><a href="#contromisure">Contromisure</a></li>
-        <li><a href="#possibili-contromisure-per-attacchi-passivi">Possibili contromisure per attacchi passivi</a></li>
-        <li><a href="#possibili-contromisure-per-attacchi-attivi">Possibili contromisure per attacchi attivi</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#dati-sicuri">Dati Sicuri</a>
-      <ul>
-        <li><a href="#algoritmi-e-protocolli">Algoritmi e protocolli</a></li>
-        <li><a href="#come-rendere-sicuri-i-dati">Come rendere sicuri i dati</a></li>
-        <li><a href="#"></a>Crittografia e Crittoanalisi</li>
-        <li><a href="#"></a>I principi della difesa</li>
-        <li><a href="#"></a>Proteggere la proprietà di confidenzialità</li>
-        <li><a href="#"></a>Proteggere la proprietà di integrità</li>
-        <li><a href="#"></a>Esempio: garantire riservatezza integrità</li>
-        <li><a href="#"></a>Esempio: garantire integrità</li>
-        <li><a href="#"></a>Esempio: garantire riservatezza</li>
-        <li><a href="#"></a>Proteggere la proprietà di autenticità</li>
-        <li><a href="#"></a>Firma digitale</li>
-        <li><a href="#"></a>Hash del messaggio e di un segreto</li>
-        <li><a href="#"></a>Firma digitale vs Hash del messaggio e di un segreto</li>
-        <li><a href="#"></a>Esempio: SSL</li>
-        <li><a href="#"></a>Esempio: SSH</li>
-        <li><a href="#"></a>Esempio: IPsec</li>
-        <li><a href="#"></a>Anonimato/Identificazione</li>
-        <li><a href="#"></a>Protocollo di identificazione</li>
-        <li><a href="#"></a>Funzioni one-way</li>
-        <li><a href="#"></a>Trasformazioni segrete</li>
-        <li><a href="#"></a>Algoritmo forza bruta</li>
-        <li><a href="#"></a>Relazioni fra le chiavi</li>
-        <li><a href="#"></a>Proprietà delle chiavi simmetriche</li>
-        <li><a href="#"></a>Proprietà delle chiavi asimmetriche</li>
-        <li><a href="#"></a>Crittoanalisi</li>
-        <li><a href="#"></a>Indovinare la chiave</li>
-        <li><a href="#"></a>Intercettare la chiave</li>
-        <li><a href="#"></a>Esempio: generazione, memorizzazione e uso di una chiave segreta</li>
-        <li><a href="#"></a>Dedurre la chiave</li>
-      </ul>
-    </li>
-    <li><a href="#meccanismi-di-base">Meccanismi di base</a></li>
-  </ol>
-</details>
-
+- [Introduzione](#introduzione)
+  - [Scopo della sicurezza informatica](#scopo-della-sicurezza-informatica)
+  - [I tre capisaldi della sicurezza informatica (CIA Trade Triangle)](#i-tre-capisaldi-della-sicurezza-informatica-cia-trade-triangle)
+  - [Terminologia](#terminologia)
+  - [Calcolatore sicuro](#calcolatore-sicuro)
+  - [Valutazione, Certificazione, Enti](#valutazione-certificazione-enti)
+  - [Modello a canale insicuro](#modello-a-canale-insicuro)
+  - [Classificazione attacchi](#classificazione-attacchi)
+  - [Contromisure](#contromisure)
+  - [Possibili contromisure per attacchi passivi](#possibili-contromisure-per-attacchi-passivi)
+  - [Possibili contromisure per attacchi attivi](#possibili-contromisure-per-attacchi-attivi)
+- [Dati Sicuri](#dati-sicuri)
+  - [Algoritmi e protocolli](#algoritmi-e-protocolli)
+  - [Come rendere sicuri i dati](#come-rendere-sicuri-i-dati)
+  - [Crittografia e Crittoanalisi](#crittografia-e-crittoanalisi)
+  - [I principi della difesa](#i-principi-della-difesa)
+  - [Proteggere la proprietà di confidenzialità (o riservatezza)](#proteggere-la-proprietà-di-confidenzialità-o-riservatezza)
+  - [Proteggere la proprietà di integrità](#proteggere-la-proprietà-di-integrità)
+  - [Esempio: garantire riservatezza e integrità](#esempio-garantire-riservatezza-e-integrità)
+  - [Esempio: garantire solo integrità](#esempio-garantire-solo-integrità)
+  - [Esempio: garantire solo riservatezza](#esempio-garantire-solo-riservatezza)
+  - [Proteggere la proprietà di autenticità](#proteggere-la-proprietà-di-autenticità)
+  - [Firma digitale](#firma-digitale)
+  - [Hash del messaggio e di un segreto](#hash-del-messaggio-e-di-un-segreto)
+  - [Firma digitale vs Hash del messaggio e di un segreto](#firma-digitale-vs-hash-del-messaggio-e-di-un-segreto)
+  - [Esempio: SSL](#esempio-ssl)
+  - [Esempio: SSH](#esempio-ssh)
+  - [Esempio: IPsec](#esempio-ipsec)
+  - [Anonimato/Identificazione](#anonimatoidentificazione)
+  - [Protocollo di identificazione](#protocollo-di-identificazione)
+  - [Funzioni one-way](#funzioni-one-way)
+  - [Trasformazioni segrete](#trasformazioni-segrete)
+  - [Algoritmo forza bruta](#algoritmo-forza-bruta)
+  - [Relazioni fra le chiavi](#relazioni-fra-le-chiavi)
+  - [Proprietà delle chiavi simmetriche](#proprietà-delle-chiavi-simmetriche)
+  - [Proprietà delle chiavi asimmetriche](#proprietà-delle-chiavi-asimmetriche)
+  - [Crittoanalisi](#crittoanalisi)
+  - [Indovinare la chiave](#indovinare-la-chiave)
+  - [Intercettare la chiave](#intercettare-la-chiave)
+  - [Esempio: generazione, memorizzazione e uso di una chiave segreta](#esempio-generazione-memorizzazione-e-uso-di-una-chiave-segreta)
+- [Dedurre la chiave](#dedurre-la-chiave)
+- [Teoria della complessità](#teoria-della-complessità)
+  - [Definizioni](#definizioni)
+  - [Classificazione degli algoritmi](#classificazione-degli-algoritmi)
+  - [Classificazione dei problemi](#classificazione-dei-problemi)
+  - [Complessità e Sicurezza](#complessità-e-sicurezza)
+- [Meccanismi di base](#meccanismi-di-base)
+  - [Generatori di numeri casuali (RNG)](#generatori-di-numeri-casuali-rng)
+  - [True Random Number Generator (TRNG)](#true-random-number-generator-trng)
+  - [Pseudo Random Number Generator (PRNG)](#pseudo-random-number-generator-prng)
+  - [Cryptographically Secure PseudoRandom Bit Generator (CSPRBG)](#cryptographically-secure-pseudorandom-bit-generator-csprbg)
+  - [Esempio](#esempio)
+  - [Algoritmi di hash](#algoritmi-di-hash)
+  - [Efficienza](#efficienza)
+  - [Compressione iterata (Schema di Merkle-Damgard)](#compressione-iterata-schema-di-merkle-damgard)
+  - [Attacco con estensione del messaggio](#attacco-con-estensione-del-messaggio)
+  - [Attacco al segreto con una collisione](#attacco-al-segreto-con-una-collisione)
+  - [Robustezza alle collisioni](#robustezza-alle-collisioni)
+  - [Unidirezionalità](#unidirezionalità)
+  - [Complessità del calcolo di una collisione](#complessità-del-calcolo-di-una-collisione)
+- [03. Meccanismi Simmetrici](#03-meccanismi-simmetrici)
+  - [Cifrario simmetrico](#cifrario-simmetrico)
+  - [Cifrario a flusso](#cifrario-a-flusso)
+  - [Esempio](#esempio-1)
+  - [Possibili vulnerabilità](#possibili-vulnerabilità)
+  - [Attacchi attivi](#attacchi-attivi)
+  - [Uso della chiave una sola volta](#uso-della-chiave-una-sola-volta)
+  - [Esempio](#esempio-2)
+  - [Malleabilità](#malleabilità)
+  - [Cifrari a blocchi](#cifrari-a-blocchi)
+  - [Electronic Code Book (ECB)](#electronic-code-book-ecb)
+  - [Esempio](#esempio-3)
+  - [Modalità di cifratura](#modalità-di-cifratura)
+  - [Cipher Block Chaining (CBC)](#cipher-block-chaining-cbc)
+  - [Chipher Feedback Block (CFB)](#chipher-feedback-block-cfb)
+  - [Output Feedback (OFB)](#output-feedback-ofb)
+  - [Counter (CTR)](#counter-ctr)
+  - [Esempio](#esempio-4)
+  - [Dimensione del blocco](#dimensione-del-blocco)
+  - [Gestione della chiave](#gestione-della-chiave)
+  - [Con precedente KA (key agremeent)](#con-precedente-ka-key-agremeent)
+  - [Key Distribution Center (KDC)](#key-distribution-center-kdc)
+  - [Esempio](#esempio-5)
+  - [Implementazione Key Distribution Center (KDC)](#implementazione-key-distribution-center-kdc)
+  - [Key Distribution Center (KDC) - Alternativo](#key-distribution-center-kdc---alternativo)
+  - [Implementazione Key Distribution Center (KDC) - Alternativo](#implementazione-key-distribution-center-kdc---alternativo)
+  - [Key Distribution Center (KDC) vs Key Distribution Center (KDC) - Alternativo](#key-distribution-center-kdc-vs-key-distribution-center-kdc---alternativo)
+  - [Senza precedente KA (key agremeent)](#senza-precedente-ka-key-agremeent)
+  - [Integrità e confidenzialità](#integrità-e-confidenzialità)
+  - [Autenticazione con cifrario simmetrico](#autenticazione-con-cifrario-simmetrico)
+  - [Meccanismi per l’autenticazione](#meccanismi-per-lautenticazione)
+  - [Message Authentication Code (MAC)](#message-authentication-code-mac)
+  - [Esempio](#esempio-6)
+  - [Message Authentication Code (MAC) + padding](#message-authentication-code-mac--padding)
+  - [CMAC](#cmac)
+  - [Authenticated encryption (AE)](#authenticated-encryption-ae)
+  - [Esempio](#esempio-7)
+  - [Esempio 2](#esempio-2)
+  - [Integrità, Autenticità e Non ripudio](#integrità-autenticità-e-non-ripudio)
+  - [Integrità, Autenticità e Non ripudio](#integrità-autenticità-e-non-ripudio-1)
+  - [Firma digitale con cifrario simmetrico](#firma-digitale-con-cifrario-simmetrico)
+  - [Registro Atti Privati (RAP)](#registro-atti-privati-rap)
+- [04. Meccanismi asimmetrici](#04-meccanismi-asimmetrici)
+  - [Autenticità della chiave pubblica](#autenticità-della-chiave-pubblica)
+  - [Esempio: attacco dell’uomo in mezzo](#esempio-attacco-delluomo-in-mezzo)
+  - [Ente certificatore](#ente-certificatore)
+  - [Certificato](#certificato)
+  - [Certificato ISO X.509](#certificato-iso-x509)
+  - [PKI (Public Key Infrastructure)](#pki-public-key-infrastructure)
+  - [Directory](#directory)
+  - [Richiesta di un certificato](#richiesta-di-un-certificato)
+  - [Generazione delle chiavi](#generazione-delle-chiavi)
+  - [Schema centralizzato](#schema-centralizzato)
+  - [Schema a tre parti](#schema-a-tre-parti)
+  - [Prova di possesso (POP)](#prova-di-possesso-pop)
+  - [Esempio](#esempio-8)
+  - [Revoca di un certificato](#revoca-di-un-certificato)
+  - [Modelli di notifica della revoca](#modelli-di-notifica-della-revoca)
+  - [Certificate Revocation List (CRL)](#certificate-revocation-list-crl)
+  - [Online Certificate Status Protocol (OCSP)](#online-certificate-status-protocol-ocsp)
+  - [Performance Evaluation Criteria](#performance-evaluation-criteria)
+  - [Modelli di Fiducia](#modelli-di-fiducia)
+  - [Modello centralizzato](#modello-centralizzato)
+  - [Modello distribuito](#modello-distribuito)
+  - [Politiche di gestione](#politiche-di-gestione)
+  - [Proprietà di PKI](#proprietà-di-pki)
+  - [Accordo sul segreto: Anonymous Diffie-Hellman](#accordo-sul-segreto-anonymous-diffie-hellman)
+- [05.Cifrari asimmetrici](#05cifrari-asimmetrici)
+  - [Caratteristiche della crittografia a chiave pubblica](#caratteristiche-della-crittografia-a-chiave-pubblica)
+  - [Numeri primi](#numeri-primi)
+  - [Aspetti caratteristici](#aspetti-caratteristici)
+  - [Algoritmo RSA](#algoritmo-rsa)
+  - [Algoritmo E e D](#algoritmo-e-e-d)
+  - [Algoritmo G](#algoritmo-g)
+  - [Sicurezza di RSA](#sicurezza-di-rsa)
+  - [Il cifrario Ibrido](#il-cifrario-ibrido)
+  - [Firma Digitale](#firma-digitale-1)
+- [Algoritmi di firma con recupero](#algoritmi-di-firma-con-recupero)
+  - [Proprietà di reversibilità](#proprietà-di-reversibilità)
+- [Servizi di Sicurezza a livello applicativo](#servizi-di-sicurezza-a-livello-applicativo)
+  - [Firma digitale con marca temporale](#firma-digitale-con-marca-temporale)
+  - [Implementazione TSS](#implementazione-tss)
+  - [Pretty Good Privacy (PGP)](#pretty-good-privacy-pgp)
+  - [Autenticazione](#autenticazione)
+  - [Riservatezza](#riservatezza)
+  - [Formato dei messaggi PGP](#formato-dei-messaggi-pgp)
+- [Servizi d’identificazione](#servizi-didentificazione)
+  - [Identificazione passiva](#identificazione-passiva)
+  - [Identificazione attiva](#identificazione-attiva)
+  - [One-time password](#one-time-password)
+  - [Protocollo sfida/risposta](#protocollo-sfidarisposta)
+  - [Protocollo sfida/risposta (hash)](#protocollo-sfidarisposta-hash)
+  - [Protocollo sfida/risposta (cifratura)](#protocollo-sfidarisposta-cifratura)
+  - [Protocollo sfida/risposta (firma digitale)](#protocollo-sfidarisposta-firma-digitale)
+  - [Esempio](#esempio-9)
+  - [Esempio](#esempio-10)
+- [Kerberos](#kerberos)
+  - [Esempio: semplice dialogo di autenticazione](#esempio-semplice-dialogo-di-autenticazione)
+  - [Esempio: dialogo di autenticazione più sicuro](#esempio-dialogo-di-autenticazione-più-sicuro)
+  - [Kerberos V4](#kerberos-v4)
+  - [Request for Service in Another Realm](#request-for-service-in-another-realm)
+- [Modello di Controllo dell’Accesso basato sui ruoli (RBAC)](#modello-di-controllo-dellaccesso-basato-sui-ruoli-rbac)
+- [Introduzione alla Blockchain](#introduzione-alla-blockchain)
+  - [Blockchain: struttura](#blockchain-struttura)
+  - [Merkle Trees](#merkle-trees)
+  - [Bitcoin](#bitcoin)
 
 <!-- lezione del 23/09/2021-->
 ## Introduzione
@@ -970,7 +1081,7 @@ Quindi, non bastano 128 bit: il numero di bit deve essere il doppio, poiché per
 
   È quindi più facile effettuare un attacco rispetto alla resistenza debole.
 
-## 03.Meccanismi Simmetrici
+## 03. Meccanismi Simmetrici
 
 ### Cifrario simmetrico
 
