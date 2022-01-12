@@ -1263,41 +1263,71 @@ Dunque, `p` deve essere `08 14 11 00 0E`.
 
 Si prende un messaggio da cifrare e lo si suddivide in blocchi di uguale lunghezza prefissata. La lunghezza del blocco dipende dallo specifico algoritmo.
 
-La robustezza di un cifrario a blocchi dipende dalla dimensione della chiave e dalla dimensione del blocco. Se un blocco è di 64 bit, `2^64` sono le possibili uscite quindi se il messaggio ha dimensione molto più grande è possibile che due messaggi abbiano lo stesso cifrato (problema di collisione), Per il paradosso del compleanno, bastano 2^32 tentativi per trovare una collisione.
+La robustezza di un cifrario a blocchi dipende dalla dimensione della chiave e dalla dimensione del blocco. Se un blocco è di 64 bit, `2^64` sono le possibili uscite.
 
-Esistono tanti algoritmi di cifratura per i cifrari a blocchi (DES, TDES, AES). Oggi lo standard è AES.
+Se il messaggio è di grande dimensione, è possibile che due blocchi di testo in chiaro abbiano lo stesso cifrato (problema di collisione). Per il paradosso del compleanno, bastano `2^32` tentativi per trovare una collisione.
 
-Quasi tutti i cifrari a blocchi seguono il modello della rete di Feistel. Ogni blocco di testo in chiaro deve produrre un blocco di testo cifrato univoco (Teoria di Shannon) a meno del problema delle collisioni.
-Il messaggio viene suddiviso in blocchi e ogni blocco viene sottoposto ad un numero di round n (dipende dall'algoritmo): ad ogni round ogni metà di bit di un blocco, viene sottoposta ad un'operazione di sostituzione (parte destra) e ad un'operazione di permutazione (parte di sinistra). Al round successivo, la parte di sinistra diventa la parte di destra e viceversa e così via.
+Esistono tanti algoritmi di cifratura per i cifrari a blocchi (DES, TDES, AES). Oggi lo standard è AES (Advanced Encryption Standard).
 
-Ogni algoritmo è composto da due sotto-algoritmi: uno che implementa la rete di Feistel e un'altro che a partire da una chiave, genera una sottochiave perchè ad ogni round viene data in ingresso una sottochiave specifica.
+Quasi tutti i cifrari a blocchi seguono il modello della **rete di Feistel**. Ogni blocco di testo in chiaro deve produrre un blocco di testo cifrato univoco (Teoria di Shannon), a meno del problema delle collisioni.
 
-Algoritmi che usano la rete di Feistel: DES, TDES. No AES.
+Il funzionamento è il seguente:
+
+- il messaggio viene suddiviso in blocchi;
+- ogni blocco viene sottoposto a un numero di round `n` (dipende dall'algoritmo).
+- i bit vengono divisi a metà tra quelli più significativi (`L_i`) e quelli meno significativi (`R_i`).
+- a ogni round, ogni metà di bit di un blocco viene sottoposta ad un'operazione di **sostituzione** (parte destra, `R_i`) e ad un' operazione di **permutazione** (parte di sinistra, `L_i`). 
+- A ogni round successivo, la parte di sinistra diventa la parte di destra e viceversa.
+
+Per ogni round `i = 0, 1, ...n`:
+
+```
+L_i = R_(i-1)
+R_i = L_(i-1) XOR F(R_i-1, K_i)
+```
+
+Ogni algoritmo è composto da due sotto-algoritmi: uno che implementa la rete di Feistel e un altro che, a partire da una chiave, genera una sottochiave; a ogni round viene data in ingresso una sottochiave specifica.
+
+La decifrazione si esegue con lo stesso algoritmo invertendo soltando le sottochiavi `k_i`
+
+
+Algoritmi che usano la rete di Feistel: 
+- DES
+- TDES.
+
+AES **non lo utilizza**.
 
 ### Modalità di cifratura
 
-Per modalità di cifratura si intende un cifrario a blocchi e bisogna capire quando è utile impiegarlo. Esistono le modalità ECB, CBC, CFB, OFB e CTR.
+Per modalità di cifratura si intende un cifrario a blocchi e bisogna capire quando è utile impiegarlo. Esistono le modalità: 
+- ECB (Electronic Code Book), **usa padding**
+- CBC (Cipher Block Chaining), **usa padding**
+- CFB (Cipher Feedback), non usa padding
+- OFB (Output Feedback), non usa padding
+- CTR (Counter), non usa padding
 
 ### Electronic Code Book (ECB)
 
-Si prende un messaggio e lo si suddivide in blocchi di uguale lunghezza prefissata. La lunghezza del blocco dipende dallo specifico algoritmo. Se l'ultimo blocco contiene meno bit della lunghezza che dovrebbe avere lo si completa con dei bit di padding. Lo standard dei padding sono PKCS#5 e PKCS#7.
+Si prende un messaggio e lo si suddivide in blocchi di uguale lunghezza prefissata. La lunghezza del blocco dipende dallo specifico algoritmo. Se l'ultimo blocco contiene meno bit della lunghezza che dovrebbe avere, lo si completa con dei **bit di padding**. Gli standard del padding sono `PKCS#5` e `PKCS#7`.
 
 ![](./img/img35.png)
 
-Ogni blocco viene dato in input alla funzione di encryption `E` tramite una chiave fissa condivisa dalle due parti. Il testo cifrato, quindi, non è altro che la concatenazione dei cifrati ottenuti dai singoli blocchi.
+Ogni blocco viene dato in input alla funzione di encryption `E` tramite una chiave fissa condivisa dalle due parti. 
+Il testo cifrato, quindi, non è altro che la concatenazione dei cifrati ottenuti dai singoli blocchi.
 
-L'operazione di cifrare a blocchi ricorda molto la tecnica di base della sostituzione monoalfabetica della crittografia classica ma a differenza di quest'ultima, la grossa dimensione dei blocchi la rende immune da un attacco con statistiche.
+L'operazione di cifratura a blocchi ricorda molto la tecnica di base della sostituzione monoalfabetica della crittografia classica ma, a differenza di quest'ultima, la grossa dimensione dei blocchi la rende immune da un attacco con statistiche.
 
-La chiave deve essere generata da un PNRG crittograficamente sicuro e deve essere modificata frequentemente perché essa cifra moltissimi blocchi di testo in chiaro e quindi ci sono più possibilità di individuarla. Dunque, l'attacco con forza bruta è possibile ed è necessario dimensionare la chiave almeno con 128 bit.
+La chiave deve essere generata da un *PNRG crittograficamente sicuro* e deve essere modificata frequentemente perché essa cifra moltissimi blocchi di testo in chiaro e quindi ci sono più possibilità di individuarla. 
+Dunque, l'attacco con forza bruta è possibile ed è necessario dimensionare la chiave almeno con 128 bit.
 
-Vantaggi:
+**Vantaggi:**
 
 - **Alto parallelismo**: se si dispone di più CPU, l'esecuzione è parallela;
 - **No propagazione dell'errore**: se l'intrusore modifica a caso un bit, si dice che la propagazione dell'errore rimane confinata a quel blocco. Chi decifra avrà solo un blocco _sbagliato_.
 
-Molti algoritmi hanno la funzione E e D che coincidono. Questo vuol dire da un punto di vista hardware si usa lo stesso circuito altrimenti bisogna realizzare anche due circuiti diversi.
+Molti algoritmi hanno la funzione `E` e `D` che coincidono. Questo vuol dire da un punto di vista hardware, si usa lo stesso circuito altrimenti bisogna realizzare anche due circuiti diversi.
 
-Svantaggi:
+**Svantaggi:**
 
 - **Determinismo**: a blocchi in chiaro identici corrispondono blocchi cifrati assolutamente identici. Sono informazioni in più che un intrusore può sfruttare a suo favore. L'attacco con statistica può avere successo perchè si inizia a studiare il pattern dei blocchi;
 - **Padding**: se il blocco è di dimensione inferiore, bisogna riempirlo e questo comporta un overhead in termini di banda perchè si usano bit in più;
@@ -1311,30 +1341,30 @@ Si prende un messaggio e lo si suddivide in blocchi di uguale lunghezza prefissa
 
 ![](./img/img18.png)
 
-Per ogni blocco, il testo in chiaro viene messo in `XOR` con il cifrato del blocco precedente e il risultato viene messo in input alla funzione di cifratura `E` ottenendo un testo cifrato `c_i`. Solo per quanto riguarda il blocco 1, il testo in chiaro viene dato in `XOR` con quello che si chiama _vettore di inizializzazione_ (`IV`) altrimenti il blocco 1 sarebbe sempre deterministico. `IV` può essere o concordato o inviato come primo blocco del cifrato e la sua dimensione è grande quanto quella del blocco.
+Per ogni blocco, il testo in chiaro viene messo in `XOR` con il cifrato del blocco precedente e il risultato viene messo in input alla funzione di cifratura `E`, ottenendo un testo cifrato `c_i`. Solo per quanto riguarda il blocco `1`, il testo in chiaro viene dato in `XOR` con quello che si chiama _vettore di inizializzazione_ (`IV`), altrimenti il blocco `1` sarebbe sempre deterministico. `IV` può essere o concordato o inviato come primo blocco del cifrato, e la sua dimensione è grande quanto quella del blocco.
 
-In fase di decifrazione, le operazioni sono inverse ed è sufficiente invertire il verso delle frecce. Se si perde `IV` dopo aver cifrato il messaggio, si riesce comunque a decifrare tutto lato destinazione tranne il primo blocco.
+In fase di decifrazione, le operazioni sono inverse ed è sufficiente invertire il verso delle frecce. Se si perde `IV` dopo aver cifrato il messaggio, si riesce comunque a decifrare tutto il lato destinazione, tranne il primo blocco.
 
 Per ottenere l'aleatorietà del cifrato, questo vettore deve essere:
 
-- **(pseudo)casuale**: si genera un numero randomico;
-- **Imprevedibile** anche se si genera un numero randomico ma si conosce il seed si può prevedere che numero verrà dopo. È importante questo punto altrimenti viola la confidenzialità;
+- **(Pseudo)casuale**: si genera un numero randomico;
+- **Imprevedibile**: anche se si genera un numero randomico, ma si conosce il *seed*, si può prevedere che numero verrà dopo. È importante questo punto altrimenti viola la confidenzialità;
 - **Non ripetibile**: se si ripete il vettore e si hanno due messaggi uguali, si ottiene lo stesso cifrato.
 
-Il vettore non deve essere necessariamente segreto che non è un requisito fondamentale cifrare `IV` per garantire la riservatezza. L'intrusore non conosce la chiave `k`.
+Il vettore non deve essere necessariamente segreto:non è un requisito fondamentale cifrare `IV` per garantire la riservatezza. L'intrusore non conosce la chiave `k`.
 
 Vantaggi:
 
-- Aleatorietà
+- aleatorietà;
 - Un cambiamento in un singolo blocco ha effetto su tutti i blocchi cifrati seguenti.
 
 Svantaggi:
 
-- **Padding**: se il blocco è di dimensione inferiore, bisogna riempirlo e questo comporta un overhead in termini di banda perchè si usano bit in più;
-- In questo caso, non si può procedere in modo parallelo con più CPU perché è necessario il cifrato del passo precedente in fase di cifrazione. Invece, il parallelismo lo si ottiene in fase di decifrazione se si hanno già tutti i pezzi di cifrato;
-- Se un attaccante, modifica un qualcunque bit di un blocco, l'errore si propaga nei blocchi successivi.
+- **Padding**: se il blocco è di dimensione inferiore, bisogna riempirlo e questo comporta un overhead in termini di banda, poichè si usano bit in più;
+- In questo caso, non si può procedere in modo parallelo con più CPU, perché è necessario il cifrato del passo precedente in fase di cifrazione. Invece, il parallelismo lo si ottiene in fase di decifratura, se si hanno già tutti i pezzi di cifrato;
+- Se un attaccante modifica un qualcunque bit di un blocco, l'errore si propaga nei blocchi successivi.
 
-Molti algoritmi hanno la funzione E e D che coincidono. Questo vuol dire da un punto di vista hardware si usa lo stesso circuito altrimenti bisogna realizzare anche due circuiti diversi.
+Molti algoritmi hanno la funzione `E` e `D` che coincidono. Questo vuol dire da un punto di vista hardware si usa lo stesso circuito altrimenti bisogna realizzare anche due circuiti diversi.
 
 ### Chipher Feedback Block (CFB)
 
@@ -2900,13 +2930,3 @@ Bitcoin è la prima criptovaluta.
 Rete P2P di nodi dove ogni nodo potenzialmente memorizza una copia del registro. Bitcoin permette di ricevere e fare pagamenti in forma anonima perchè non c'è un'autorità che effettua un'associazione persona-chiave e non tracciabile perchè ogni utente è individuato da un indirizzo che viene individuato dalla chiave pubblica. Vengono algoritmi di hash crittograficamente sicuri su curve elittiche per fare la firma delle transazioni.
 
 e i Bitcoin garantiscono l'anonimità dei partecipanti perchè in assenza di un'entità che associa un nome a una coppia di chiavi, si rimane anomimi.
-
-<!--- -->
-<!--# How I Defeated Fascism with the Power of Love
-
-## Chapter 1: The Power of Love
-
-The first step in my journey was realizing that it is impossible to defeat
-fascism with the power of love.
-
-## Chapter 2: The Power of Incredible Violence-->
