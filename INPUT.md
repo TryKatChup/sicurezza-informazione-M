@@ -2827,55 +2827,64 @@ Kerberos v4 presenta forti limitazioni:
 
 ## Introduzione alla Blockchain
 
-È una tecnologia innovativa in cui non esiste un'entità terza fidata centralizzata che garantisce integrità e autenticità delle informazioni. Spesso ci si confonde con i termini Blockchain e Bitcoin: non sono la stessa cosa. I Bitcoin sono stata la prima applicazione Blockchain. L'obiettivo di Bitcoin è quello di realizzare transazioni economiche valide tra entità che non si fidano tra di loro senza dover ricorrere ad intermediari fidati come gli istituti bancari.
+È una tecnologia innovativa in cui non esiste un'entità terza fidata e centralizzata che garantisce integrità e autenticità delle informazioni. Spesso ci si confonde con i termini Blockchain e Bitcoin: non sono la stessa cosa. I Bitcoin sono stata la prima applicazione Blockchain. L'obiettivo di Bitcoin è quello di realizzare transazioni economiche valide tra entità che non si fidano tra di loro senza dover ricorrere ad intermediari fidati come gli istituti bancari.
 
 Per BlockChain si intende una catena di blocchi immutabili detto registro, che sono distribuiti e decentralizzati. Ogni partecipante conserva e gestisce una copia di tutti i dati, che si presuppone uguale, in termini di contenuti, a quelli che gli altri partecipanti conservano. Il registro è dunque distribuito in questo senso: ognuno ne conserva una copia mentre per decentralizzato si intende che ogni nodo può interviene nella gestione dei dati. Il registro è append-only cioè i dati, una volta accettati dal registro, non possono essere cancellati né modificati ma solo aggiunti.
 
 ### Blockchain: struttura
 
-Con blockchain si intende la struttura dati immutabile oltre alla tecnologia.
+Con il termine blockchain si intende sia il nome della tecnologia sia la struttura dati immutabile.
 
 ![](./img/img102.png)
 
 Ogni blocco contiene:
 
-- header:
-  - altezza del blocco
-  - timestamp: istante temporale in cui è stato minato il blocco.
-  - nonce: 
-  - previous block hash: hash del riferimento al blocco precedente
-  - data_hash: hash crittograficamente sicuro per rendere immutabile il contenuto del campo data
-- dati: contiene un insieme di transazioni finanziarie. Questo campo è firmato
-- header hash: identifica univocamente l'hash applicato all'header del blocco e viene generato tramite un hash crittograficamente sicuro.
+- **header**:
+  - **#**: altezza del blocco
+  - **timestamp**: istante temporale in cui è stato minato il blocco.
+  - **nonce**: verrà approfondito più avanti.
+  - **previous block hash**: riferimento all'hash del blocco precedente.
+  - **data_hash**: hash crittograficamente sicuro per rendere immutabile il contenuto del campo data
+- **dati**: contiene un insieme di transazioni finanziarie (se riferito ai Bitcoin).
+- **header hash**: identifica univocamente l'hash applicato all'header del blocco e viene generato tramite un hash crittograficamente sicuro.
 
 Ogni record linka il blocco precedente. Il primo blocco prende il nome di genesis block.
 
 ![](./img/img104.png)
 
-L’hash al blocco precedente consente di formare una catena immutabile e inattaccabile. Se si modificasse un blocco bisognerebbe riuscire a re-computare l’hash di tutti i blocchi successivi. Se si cambia un dato, questa modifica si riflette su tutti i blocchi successivi della catena: il blocco uno viene cambiato con la parola _stupid_ al posto di _my_ ma solo una copia del registro su un nodo risulta essere alterata.
+L’hash al blocco precedente consente di formare una catena immutabile e inattaccabile. Se si modificasse un blocco bisognerebbe riuscire a re-computare l’hash di tutti i blocchi successivi. Se si cambia un dato, questa modifica si riflette su tutti i blocchi successivi della catena: il `blocco 1` viene cambiato con la parola _stupid_ al posto di _my_ ma solo una copia del registro su un nodo risulta essere alterata.
 
 Con queste caratteristiche il registro diventa un ottimo candidato per registrare le transazioni economiche. Nel caso dei Bitcoin, la valuta è completamente digitale per cui ci si espone all'attacco di doppia spesa. Questo attacco prevede di ricreare la moneta digitale in modo da poter spendere all'infinito.
 
 Quando si effettua una transazione, essa viene propagata agli altri nodi della rete in broadcast. Esiste un algoritmo di consenso per i nuovi dati che stabilisce se tutti i registri debbano accettare o no un nuovo dato per evitare il problema della doppia spesa.
 
-Ogni volta che i nodi hanno ricevuto la transazione, viene memorizzata nella cache. Periodicamente un nodo viene selezionato. Se il nodo viene selezionato deve raggruppare e selezionare le transazioni che ritiene valide, creare un blocco e inviarlo a tutti gli altri. Se il blocco viene ritenuto valido dai nodi, viene inserito nella blockchain.
+Ogni volta che i nodi hanno ricevuto la transazione, viene memorizzata nella cache. Periodicamente un nodo viene selezionato. Il nodo che viene selezionato deve raggruppare e selezionare le transazioni che ritiene valide, creare un blocco e inviarlo a tutti gli altri. Se il blocco viene ritenuto valido dagli altri nodi, viene inserito nella blockchain.
 
-Se viene selezionato un nodo D malintenzionato:
+Se viene selezionato un nodo `D` malintenzionato:
 
-- D non può rubare la moneta di qualcun'altro perchè per pagare si deve firmare con chiave privata del mittente.
-- D può evitare di inserire una transazione valida nel suo blocco. Dato che le trasmissioni sono trasmesse in broadcast ci sarà un nodo non malevolo che la inserirà.
-- D può effettuare un attacco di doppia spesa perchè l'algoritmo converge in modo lento. D aver inviato una somma di denaro ad una persona, D viene selezionato e invia di nuovo la stessa somma ad un altra persona. Si genera un blocco che è in competizione con l'ultimo blocco generato in precedenza.\
-![](./img/img105.png)\
-Dato che la trasmissione avviene in rete, alcuni nodi avranno prima il blocco in alto e altri il blocco in basso. Per evitare questa problematica, si richiede a tutti i nodi di estendere sempre la catena più lunga in caso di catene parallele. Per evitare di creare una catene parallele, viene creato ogni tot di tempo un nuovo blocco perchè in teoria è fattibile creare catene in parallelo. Per creare in tempo costante un blocco vengono usate due modalità:
+- `D` non può rubare la moneta di qualcun'altro perchè per pagare si deve firmare con chiave privata del mittente (non è problema).
+- `D` può evitare di inserire una transazione valida nel suo blocco. Dato che le trasmissioni avvengono in broadcast, ci sarà un nodo non malevolo che invece la inserirà (non è problema) e sarà prima o poi scelto.
+- `D` può effettuare un attacco di doppia spesa perchè l'algoritmo converge in modo lento. `D` invia una somma di denaro ad una persona e questa transazione viene inserita già dentro alla blockchain. Subito dopo `D` viene selezionato e include nel blocco una nuova transazione con dentro la stessa somma di denaro della transazione precedente ma inviata ad un altra persona. `D` genera un blocco che è in competizione con l'ultimo blocco generato in precedenza.
+![](./img/img105.png)
+Dato che la trasmissione avviene in rete, alcuni nodi avranno prima il blocco in alto e altri il blocco in basso. Per evitare questa problematica, si richiede a tutti i nodi di estendere sempre la catena più lunga in caso di catene parallele. Per evitare di creare catene parallele, viene creato ogni 10 minuti circa un nuovo blocco perchè è fattibile creare catene in parallelo. Per aumentare la probabilità di selezionare un nodo onesto, le criptovalute utilizzano un sistema di incentivi:
 
-- Selezione del nodo: si basa su una competizione della rete tra tutti i nodi
-- Sistemi di incentivi: vengono intascati entrambi da chi genera il blocco:
-  - **Block reward**: quando un nodo viene selezionato per generare un blocco, il nodo ha diritto di realizzare **una** transazione che crea moneta dal nulla (coinbase transaction). Questo nodo ha il diritto di attribuire a chiunque il denaro creato anche a se stesso.
-  - **Transaction fees**: ogni volta che un nodo ha il diritto di generare un blocco deve scegliere delle transazioni perchè esse sono tante e la dimensione del blocco è limitata. La scelta avviene in base alla commissione e per questo si scelgono le transazioni con le commissioni più alte.
+  - **Block reward**: quando un nodo viene selezionato per generare un blocco, il nodo ha diritto di realizzare **una** transazione che crea moneta dal nulla (coinbase transaction). Questo nodo ha il diritto di attribuire a chiunque il denaro creato (anche a se stesso).
+  - **Transaction fees**: ogni volta che un nodo ha il diritto di generare un blocco deve scegliere delle transazioni perchè esse sono tante e la dimensione del blocco è limitata. La scelta avviene in base alla commissione e per questo si scelgono le transazioni con le commissioni più alte. Più alta è la commissione più è probabile che la transazione venga inserita prima in un blocco.
 
-1.02.53
+Vengono intascati entrambi da chi genera il blocco.
 
-Quando un insieme di transazioni è stata ascoltata sulla rete, un nodo può decidere di confezionarle in un blocco e minarlo (costruirlo + pubblicarlo sulla rete e fare in modo che venga aggiunto al registro di tutti i nodi). Per minare il blocco si deve risolvere una sfida. Il primo nodo che riesce a risolvere la sfida lo pubblica mandandolo sulla rete che viene ascoltato dagli altri. Gli altri nodi che stavano minando il blocco si ferma e aggiunge il blocco ricevuta dalla rete al proprio registro.
+Dunque, è importante la **selezione del nodo**: la selezione dei nodi non è casuale ma deriva da una competizione tra tutti i nodi. La competizione può essere:
+Un algoritmo più usato è **Prof of Work (Pow)**: i nodi devono dedicare alla rete del potere computazionale (es. CPU, GPU). I nodi devono risolvere un puzzle e il nodo che termina prima avrà diritto ai premi e manda in broadcast il blocco generato. L'operazione di risolvere il puzzle si chiama mining. Un nodo miner è un nodo che partecipa a questa competizione e dedica le sue risorse computazionali. Il puzzle consiste nel trovare il valore di un nonce (un numero intero) tale per cui l'hash dell'**intero blocco** (questo valore non è presente nella struttura del blockchain ma viene calcolato dal nodo) ha un valore inferiore di una certa soglia:
+
+`HASH < soglia`
+
+Più è elevato il valore soglia, più si trova in fretta l'once.
+Inoltre, la soglia è un valore numerico deciso in modo dinamico: se per generare un blocco viene impiegato un tempo pari a 6 minuti, l'algoritmo fa in modo che la volta successiva ci voglia più tempo.
+L'hash è un valore esadecimale (un numero) che può essere convertito in decimale.
+![](./img/img106.png)
+Questa operazione non è altro che un attacco di forza bruta perchè bisogna provare tutti i valori del nonce.
+Se due nodi risolvono il blocco nello stesso momento, alcuni nodi riceveranno un blocco e altre un altro ma solo uno dei due rimarrà nella _storia_. Quando la catena si allunga, i nodi si allinereanno nella versione con la catena più lunga e quindi resterà solo un blocco. Quindi, quando una transazione è inserita in un nodo non è detto che sia _approvata_ ma bisogna aspettare almeno sei conferme cioè aspettare che vengano generati altri sei blocchi.
+Un attacco che può essere eseguito è detto attacco del 51%: se la competizione per la generazione di un blocco non è _dura_ allora controllare la capacità computazionale della rete perchè verrà sempre quasi scelto. Se un nodo ha il 51% della capacità computazionale, allora si possono creare catene alternative perchè si viene sempre quasi scelti. I sistemi come Bitcoin non hanno questo problema perchè il sistema su incentivi sono vantagiosi e quindi molti partecipano.
 
 ### Merkle Trees
 
@@ -2887,15 +2896,12 @@ Si parte dalle foglie (i dati). Per ogni coppia di dati si calcola una coppia di
 
 ### Bitcoin
 
+Bitcoin è la prima criptovaluta.
 Rete P2P di nodi dove ogni nodo potenzialmente memorizza una copia del registro. Bitcoin permette di ricevere e fare pagamenti in forma anonima perchè non c'è un'autorità che effettua un'associazione persona-chiave e non tracciabile perchè ogni utente è individuato da un indirizzo che viene individuato dalla chiave pubblica. Vengono algoritmi di hash crittograficamente sicuri su curve elittiche per fare la firma delle transazioni.
 
 e i Bitcoin garantiscono l'anonimità dei partecipanti perchè in assenza di un'entità che associa un nome a una coppia di chiavi, si rimane anomimi.
 
 <!--- -->
-<!--[](./img/marco_togni.jpg)-->
-
-<!--![cyber sesso](https://user-images.githubusercontent.com/56556806/134823047-da26060a-3813-4e73-a13c-256bcd0483c4.png)-->
-
 <!--# How I Defeated Fascism with the Power of Love
 
 ## Chapter 1: The Power of Love
