@@ -74,25 +74,24 @@
   - [Cifrario simmetrico](#cifrario-simmetrico)
   - [Cifrario a flusso](#cifrario-a-flusso)
   - [Esempio](#esempio-1)
-  - [Possibili vulnerabilità](#possibili-vulnerabilità)
   - [Attacchi attivi](#attacchi-attivi)
-  - [Uso della chiave una sola volta](#uso-della-chiave-una-sola-volta)
+  - [Possibili vulnerabilità](#possibili-vulnerabilità)
+  - [Uso della chiave due volte](#uso-della-chiave-due-volte)
   - [Esempio](#esempio-2)
   - [Malleabilità](#malleabilità)
   - [Cifrari a blocchi](#cifrari-a-blocchi)
-  - [Electronic Code Book (ECB)](#electronic-code-book-ecb)
-  - [Esempio](#esempio-3)
   - [Modalità di cifratura](#modalità-di-cifratura)
+  - [Electronic Code Book (ECB)](#electronic-code-book-ecb)
   - [Cipher Block Chaining (CBC)](#cipher-block-chaining-cbc)
   - [Chipher Feedback Block (CFB)](#chipher-feedback-block-cfb)
   - [Output Feedback (OFB)](#output-feedback-ofb)
   - [Counter (CTR)](#counter-ctr)
-  - [Esempio](#esempio-4)
+  - [Esempio](#esempio-3)
   - [Dimensione del blocco](#dimensione-del-blocco)
   - [Gestione della chiave](#gestione-della-chiave)
   - [Con precedente KA (key agremeent)](#con-precedente-ka-key-agremeent)
   - [Key Distribution Center (KDC)](#key-distribution-center-kdc)
-  - [Esempio](#esempio-5)
+  - [Esempio](#esempio-4)
   - [Implementazione Key Distribution Center (KDC)](#implementazione-key-distribution-center-kdc)
   - [Key Distribution Center (KDC) - Alternativo](#key-distribution-center-kdc---alternativo)
   - [Implementazione Key Distribution Center (KDC) - Alternativo](#implementazione-key-distribution-center-kdc---alternativo)
@@ -102,11 +101,11 @@
   - [Autenticazione con cifrario simmetrico](#autenticazione-con-cifrario-simmetrico)
   - [Meccanismi per l’autenticazione](#meccanismi-per-lautenticazione)
   - [Message Authentication Code (MAC)](#message-authentication-code-mac)
-  - [Esempio](#esempio-6)
+  - [Esempio](#esempio-5)
   - [Message Authentication Code (MAC) + padding](#message-authentication-code-mac--padding)
   - [CMAC](#cmac)
   - [Authenticated encryption (AE)](#authenticated-encryption-ae)
-  - [Esempio](#esempio-7)
+  - [Esempio](#esempio-6)
   - [Esempio 2](#esempio-2)
   - [Integrità, Autenticità e Non ripudio](#integrità-autenticità-e-non-ripudio)
   - [Integrità, Autenticità e Non ripudio](#integrità-autenticità-e-non-ripudio-1)
@@ -125,7 +124,7 @@
   - [Schema centralizzato](#schema-centralizzato)
   - [Schema a tre parti](#schema-a-tre-parti)
   - [Prova di possesso (POP)](#prova-di-possesso-pop)
-  - [Esempio](#esempio-8)
+  - [Esempio](#esempio-7)
   - [Revoca di un certificato](#revoca-di-un-certificato)
   - [Modelli di notifica della revoca](#modelli-di-notifica-della-revoca)
   - [Certificate Revocation List (CRL)](#certificate-revocation-list-crl)
@@ -164,8 +163,8 @@
   - [Protocollo sfida/risposta (hash)](#protocollo-sfidarisposta-hash)
   - [Protocollo sfida/risposta (cifratura)](#protocollo-sfidarisposta-cifratura)
   - [Protocollo sfida/risposta (firma digitale)](#protocollo-sfidarisposta-firma-digitale)
+  - [Esempio](#esempio-8)
   - [Esempio](#esempio-9)
-  - [Esempio](#esempio-10)
 - [Kerberos](#kerberos)
   - [Esempio: semplice dialogo di autenticazione](#esempio-semplice-dialogo-di-autenticazione)
   - [Esempio: dialogo di autenticazione più sicuro](#esempio-dialogo-di-autenticazione-più-sicuro)
@@ -1170,11 +1169,11 @@ Al giorno d'oggi vengono usati algoritmi come Salsa e Sosemanuk.
 Nel _cifrato a flusso sincrono_, nel caso di attacchi attivi:
 
 - **Se si modifica un bit del cifrato**: la destinazione non decifra correttamente un bit perché è stato cambiato. _Non si ha perdita di sincronismo_: solo il `i`-esimo è è stato modificato. Tuttavia, la decifrazione non è corretta;
-- **Se si cancella/inserisce un bit**: dal punto in poi in cui è stato aggiunto o cancellato il bit `c_i`, i restanti sbit non corrisponderanno mai a quelli inviati. Si dice che si ha perdita di sincronismo letale.
+- **Se si cancella/inserisce un bit**: dal punto in poi in cui è stato aggiunto o cancellato il bit `c_i`, i restanti bit non corrisponderanno mai a quelli inviati. Si dice che si ha perdita di _sincronismo letale_.
 
 Nel _cifrato a flusso autosincronizzante_, nel caso di attacchi attivi:
 
-- **Se modifica, cancella o elimina un bit del cifrato**: si ha una perdita di sincronismo ma non permanente, solo di un periodo di transitorio. Il transitorio è legato alla dimensione del registro di scorrimento (SHIFT): dipende da quanti cicli il bit modificato/cancellato/inserito rimane all'interno di questo registro.
+- **Se modifica, cancella o elimina un bit del cifrato**: si ha una perdita di sincronismo, non permanente, bensì pari a un solo periodo di transitorio. Il transitorio è legato alla dimensione del registro di scorrimento (SHIFT): dipende da quanti cicli il bit modificato/cancellato/inserito rimane all'interno di questo registro.
 
 Da come si può vedere da questi tipi di attacchi, l'_integrità_ non viene garantita.
 
@@ -1185,9 +1184,9 @@ Per garantire la _riservatezza_, i cifrari a flusso devono avere certe propriet�
 - uso della chiave una sola volta;
 - malleabilità.
 
-### Uso della chiave una sola volta
+### Uso della chiave due volte
 
-Il requisito fondamentale è che la chiave deve essere usata una e una sola volta. Se si usa lo stesso flusso di chiave su messaggi distinti si possono fare attacchi di analisi crittografica sui cifrati, poiché si sfruttano le proprietà dell'operazione di `XOR`.
+Il requisito fondamentale è che la chiave deve essere usata una e una sola volta. Se si usa lo stesso flusso di chiave su messaggi distinti (quindi si usa la stessa chiave più volte) si possono fare attacchi di analisi crittografica sui cifrati, poiché si sfruttano le proprietà dell'operazione di `XOR`.
 
 ![](./img/img41.png)
 
@@ -1196,7 +1195,9 @@ Ad esempio, si consideri:\
 
 `m2 XOR k = c2`
 
-Effettuare `c1 XOR c2` è come eseguire uno `XOR` su due messaggi in chiaro: `m1 XOR m2`.
+Effettuare `c1 XOR c2` è come eseguire uno `XOR` su due messaggi in chiaro:
+
+`m1 XOR m2`.
 
 ### Esempio
 
@@ -1221,17 +1222,48 @@ La proprietà di _malleabilità_ consiste nella possibilità di alterare il cifr
 
 Questo attacco ha successo se e solo se l'intrusore conosce una parte del messaggio `m` che il mittente ha inviato.
 
-Il mittente effettua `m XOR k`, l'attaccante prende `(m XOR k) XOR p` dove `p` è scelto dall'attaccante e sostituisce il messaggio sul canale con il nuovo messaggio cifrato modificato. La destinazione, decifra `((m XOR k) XOR p)) XOR k` e quindi non sarebbe altro che fare `m XOR p`.
+1. Il mittente effettua `m XOR k`.
+2. L'attaccante prende 
+   
+   `(m XOR k) XOR p` 
+   
+   dove `p` è scelto dall'attaccante e sostituisce il messaggio sul canale con il nuovo messaggio cifrato modificato. 
+3. La destinazione, decifra 
+   
+   `((m XOR k) XOR p)) XOR k` 
 
-Fare le tabelle di verità per credere!
+   che equivale a
 
-Ad esempio, il mittente sta cifrando dei dati strutturati. All'inizio di questi dati, c'è sempre la parola "From". L'attaccante, conosce che il flusso è strutturato. Il suo obiettivo è quello di cambiare la provenienza del messaggio `m`. Si ipotizzi che l'inizio del messaggio sia "From Dario" con rappresentazione esadecimale "44 61 72 69 6F". L'obiettivo dell'intrusore è ottenere "From Lucia" con rappresentazione esadecimale "4C 75 63 69 61". Sapendo che `((m XOR k) XOR p)) XOR k` diventa `m XOR p`, bisogna trovare quel `p` tale per cui `m XOR p = Lucia`. Dunque, `p` deve essere "08 14 11 00 0E".
+   `m XOR p`.
+
+Ad esempio, il mittente sta cifrando dei dati strutturati. All'inizio di questi dati è sempre presente la parola "From". 
+
+L'obiettivo dell'attaccante è quello di cambiare la provenienza del messaggio `m`. 
+
+Si ipotizzi che l'inizio del messaggio sia "From Dario", con rappresentazione esadecimale `44 61 72 69 6F`.
+
+L'obiettivo dell'intrusore è ottenere "From Lucia" con rappresentazione esadecimale `4C 75 63 69 61`. 
+
+Sapendo che:
+
+ `((m XOR k) XOR p)) XOR k` 
+ 
+ diventa
+ 
+`m XOR p`
+
+bisogna trovare quel `p` tale per cui
+
+`m XOR p = Lucia`
+
+Dunque, `p` deve essere `08 14 11 00 0E`.
+
 
 ### Cifrari a blocchi
 
-Si prende un messaggio e lo si suddivide in blocchi di uguale lunghezza prefissata. La lunghezza del blocco dipende dallo specifico algoritmo.
+Si prende un messaggio da cifrare e lo si suddivide in blocchi di uguale lunghezza prefissata. La lunghezza del blocco dipende dallo specifico algoritmo.
 
-La robustezza di un cifrario a blocchi dipende dalla dimensione della chiave e dalla dimensione del blocco. Se un blocco è di 64 bit, 2^64 sono le possibili uscite quindi se il messaggio ha dimensione molto più grande è possibile che due messaggi abbiano lo stesso cifrato (problema di collisione), Per il paradosso del compleanno, bastano 2^32 tentativi per trovare una collisione.
+La robustezza di un cifrario a blocchi dipende dalla dimensione della chiave e dalla dimensione del blocco. Se un blocco è di 64 bit, `2^64` sono le possibili uscite quindi se il messaggio ha dimensione molto più grande è possibile che due messaggi abbiano lo stesso cifrato (problema di collisione), Per il paradosso del compleanno, bastano 2^32 tentativi per trovare una collisione.
 
 Esistono tanti algoritmi di cifratura per i cifrari a blocchi (DES, TDES, AES). Oggi lo standard è AES.
 
