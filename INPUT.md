@@ -1292,8 +1292,8 @@ La decifrazione si esegue con lo stesso algoritmo invertendo soltando le sottoch
 
 
 Algoritmi che usano la rete di Feistel: 
-- DES
-- TDES.
+- DES (Data Encryption Standard)
+- TDES (Triple DES).
 
 AES **non lo utilizza**.
 
@@ -1312,32 +1312,40 @@ Si prende un messaggio e lo si suddivide in blocchi di uguale lunghezza prefissa
 
 ![](./img/img35.png)
 
-Ogni blocco viene dato in input alla funzione di encryption `E` tramite una chiave fissa condivisa dalle due parti. 
+Ogni blocco (di dimensione di almeno 64 bit) viene dato in input alla funzione di encryption `E` tramite una chiave fissa condivisa dalle due parti. 
 Il testo cifrato, quindi, non è altro che la concatenazione dei cifrati ottenuti dai singoli blocchi.
 
 L'operazione di cifratura a blocchi ricorda molto la tecnica di base della sostituzione monoalfabetica della crittografia classica ma, a differenza di quest'ultima, la grossa dimensione dei blocchi la rende immune da un attacco con statistiche.
 
-La chiave deve essere generata da un *PNRG crittograficamente sicuro* e deve essere modificata frequentemente perché essa cifra moltissimi blocchi di testo in chiaro e quindi ci sono più possibilità di individuarla. 
-Dunque, l'attacco con forza bruta è possibile ed è necessario dimensionare la chiave almeno con 128 bit.
+La chiave deve essere generata da un *PRNG crittograficamente sicuro* e deve essere modificata frequentemente, poiché essa cifra moltissimi blocchi di testo in chiaro e quindi ci sono più possibilità di individuarla: gli attacchi con statistica sono più probabili.
+
+Dunque, l'attacco con forza bruta è possibile ed è necessario dimensionare la chiave *almeno con 128 bit*.
 
 **Vantaggi:**
 
-- **Alto parallelismo**: se si dispone di più CPU, l'esecuzione è parallela;
+- **Alto parallelismo**: la cifratura è parallelizzabile;
 - **No propagazione dell'errore**: se l'intrusore modifica a caso un bit, si dice che la propagazione dell'errore rimane confinata a quel blocco. Chi decifra avrà solo un blocco _sbagliato_.
 
-Molti algoritmi hanno la funzione `E` e `D` che coincidono. Questo vuol dire da un punto di vista hardware, si usa lo stesso circuito altrimenti bisogna realizzare anche due circuiti diversi.
+Molti algoritmi hanno la funzione `E` e `D` che coincidono. Questo vuol dire che da un punto di vista hardware si utilizza lo stesso circuito altrimenti bisogna realizzare anche due circuiti diversi.
 
 **Svantaggi:**
 
 - **Determinismo**: a blocchi in chiaro identici corrispondono blocchi cifrati assolutamente identici. Sono informazioni in più che un intrusore può sfruttare a suo favore. L'attacco con statistica può avere successo perchè si inizia a studiare il pattern dei blocchi;
 - **Padding**: se il blocco è di dimensione inferiore, bisogna riempirlo e questo comporta un overhead in termini di banda perchè si usano bit in più;
-- **Maleabilità**: un intrusore è in grado di modificare il testo cifrato in modo tale che la destinazione quando lo decifra ottiene un testo da lui scelto. Ad esempio, si consideri una transazione bancaria. Nel primo blocco si ha il mittente, nel secondo il destinatario e nel terzo la cifra da trasferire. L'intrusore, sostituisce al blocco del destinatario, il suo. Se il mittente è "Luca", il destinatario è "Lucia" e la somma da trasferire "100", l'attaccante basta che sostituisca "Lucia" con il suo nome.
+- **Maleabilità**: un intrusore è in grado di modificare il testo cifrato, in modo tale che la destinazione, nel momento in cui decifra il messaggio, ottiene un testo da lui scelto. Ciò compromette la proprietà di **integrità** del messaggio.
+  
+Ad esempio, si consideri una transazione bancaria:
+- nel primo blocco si ha il mittente;
+- nel secondo blocco si ha il destinatario;
+- nel terzo blocco si ha la cifra da trasferire;
+- l'intrusore sostituisce al blocco del destinatario il suo blocco;
+- se il mittente è "Luca", il destinatario è "Lucia" e la somma da trasferire "100", l'attaccante basta che sostituisca "Lucia" con il suo nome.
 
 Questa modalità si usa solo in casi specifici: ad esempio, cifrare delle informazioni che sono già per natura aleatoria (per evitare determinismo) o un testo che risiede interamente in un solo blocco (per evitare la possibile sostituzione di blocchi). Ad esempio, si usa per cifrare una chiave di sessione.
 
 ### Cipher Block Chaining (CBC)
 
-Si prende un messaggio e lo si suddivide in blocchi di uguale lunghezza prefissata. La lunghezza del blocco dipende dallo specifico algoritmo. Se l'ultimo blocco contiene meno bit della lunghezza che dovrebbe avere lo si completa con dei bit di padding. Lo standard dei padding sono PKCS#5 e PKCS#7.
+Si prende un messaggio e lo si suddivide in blocchi di uguale lunghezza prefissata. La lunghezza del blocco dipende dallo specifico algoritmo. Se l'ultimo blocco contiene meno bit della lunghezza che dovrebbe avere lo si completa con dei bit di padding. Lo standard dei padding sono `PKCS#5` e `PKCS#7`.
 
 ![](./img/img18.png)
 
