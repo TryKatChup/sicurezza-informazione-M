@@ -1,5 +1,0 @@
-1) cancellare tutte le immagini da svgs
-
-2) python -m readme2tex --nocdn --usepackage "xcolor"  --readme INPUT.md --output README.md
-
-3) aggiungere tag finale alle immagini

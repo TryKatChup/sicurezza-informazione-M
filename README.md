@@ -403,8 +403,6 @@ Oltre alla proprietà appena scritta, risulta importante che essa sia crittograf
 - **Comportamento da "oracolo casuale"**: se si decide che l'impronta sia costituita da `n` bit, le possibili uscite della funzione hash sono `2^n`. 
 Considerato il messaggio `m`, bisogna fare in modo che la probabilità che esca un'uscita rispetto ad un'altra sia la stessa. Inoltre, se il messaggio viene ripetuto, la risposta sarà la medesima, dato che è stata assegnata precedentemente dall'oracolo.
 
-![zeus](./img/zeus.jpg)
-
 - **Resistente alle collisioni**: per un intrusore deve essere molto difficile individuare due messaggi che abbiano la stessa impronta.
 È inevitabile che due messaggi diversi possano avere in uscita la stessa impronta perché lo spazio di input è molto più grande dello spazio di output (`m > n`). Per un intrusore deve essere computazionalmente difficile trovare un messaggio `m2` con impronta `H(m2)` uguale a quella di `m1`, cioè `H(m1)`.
 Ad esempio, se i messaggi sono `10` e il numero di bit è pari a `3`, le possibili uscite della funzione hash sono `8` e alcuni messaggi avranno sicuramente la stessa impronta.
@@ -665,8 +663,6 @@ Questo processo può scomporsi in:
   - **Dichiarazione**: l'identificando dichiara la sua identità.
   - **Interrogazione**: il verificatore interroga l'identificando, che deve dimostrare la sua identità.
   - **Dimostrazione**: l'identificando deve fornire la stessa prova che aveva fornito in fase di registrazione. La dimostrazione deve essere semplice per chi è il legittimo identificando, mentre complesso per l'intrusore.
-
-![kronk](./img/kronk.jpeg)
 
 In generale, un intrusore può:
 
@@ -1168,7 +1164,7 @@ Al giorno d'oggi vengono usati algoritmi come Salsa e Sosemanuk.
 
 Nel _cifrato a flusso sincrono_, nel caso di attacchi attivi:
 
-- **Se si modifica un bit del cifrato**: la destinazione non decifra correttamente un bit perché è stato cambiato. _Non si ha perdita di sincronismo_: solo il `i`-esimo è è stato modificato. Tuttavia, la decifrazione non è corretta;
+- **Se si modifica un bit del cifrato**: la destinazione non decifra correttamente un bit perché è stato cambiato. _Non si ha perdita di sincronismo_: solo il `i`-esimo è stato modificato. Tuttavia, la decifrazione non è corretta;
 - **Se si cancella/inserisce un bit**: dal punto in poi in cui è stato aggiunto o cancellato il bit `c_i`, i restanti bit non corrisponderanno mai a quelli inviati. Si dice che si ha perdita di _sincronismo letale_.
 
 Nel _cifrato a flusso autosincronizzante_, nel caso di attacchi attivi:
