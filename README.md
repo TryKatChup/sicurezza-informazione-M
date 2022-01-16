@@ -1328,7 +1328,7 @@ Molti algoritmi hanno la funzione `E` e `D` che coincidono. Questo vuol dire che
 
 - **Determinismo**: a blocchi in chiaro identici corrispondono blocchi cifrati assolutamente identici. Sono informazioni in più che un intrusore può sfruttare a suo favore. L'attacco con statistica può avere successo perchè si inizia a studiare il pattern dei blocchi;
 - **Padding**: se il blocco è di dimensione inferiore, bisogna riempirlo e questo comporta un overhead in termini di banda perchè si usano bit in più;
-- **Maleabilità**: un intrusore è in grado di modificare il testo cifrato, in modo tale che la destinazione, nel momento in cui decifra il messaggio, ottiene un testo da lui scelto. Ciò compromette la proprietà di **integrità** del messaggio.
+- **Malleabilità**: un intrusore è in grado di modificare il testo cifrato, in modo tale che la destinazione, nel momento in cui decifra il messaggio, ottiene un testo da lui scelto. Ciò compromette la proprietà di **integrità** del messaggio.
   
 Ad esempio, si consideri una transazione bancaria:
 - nel primo blocco si ha il mittente;
