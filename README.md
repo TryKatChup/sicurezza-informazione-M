@@ -1535,7 +1535,7 @@ Possibili soluzioni:
 In generale, i problemi del protocollo sono i seguenti:
 
 - Collo di bottiglia (n° max di utenti);
-- Overhed di comunicazione perché è installata una terza entità;
+- Overhead di comunicazione perché è installata una terza entità;
 - Gestire la memoria in modo sicuro;
 - Rendere il servizio sempre disponibile (online);
 - Scalabile;
@@ -2015,7 +2015,7 @@ Possibile protocollo:
 
 A, PP(PU)
 
-A->RA: A || Etoken(VPrivA(A||PubA))
+A->RA: A || E<sub>token</sub>(V<sub>PrivA</sub>(A||PubA))
 
 ### Revoca di un certificato
 
@@ -2050,7 +2050,13 @@ gestire.
 
 ![](./img/img67.png)
 
-Per rendere partecipi tutti gli utenti che una chiave non deve essere più usata, CA mantiene on-line una lista di certificati revocati (CRL) e la rilascia periodicamente su una Directory (CRL firmata e garantita dall'autorità). Ogni utente scarica dalla Directory la struttura data CRL e, una volta scaricata, controlla **localmente** lo stato del certificato per sapere se è ancora valida la chiave pubblica di un determinato soggetto (se non lo fa, la responsabilità è solo ed esclusivamente dell'utente).
+Per rendere partecipi tutti gli utenti che una chiave non deve essere più usata,
+CA mantiene on-line una lista di certificati revocati (CRL) e la rilascia
+periodicamente su una Directory (CRL firmata e garantita dall'autorità). Ogni
+utente scarica dalla Directory la struttura data CRL e, una volta scaricata,
+controlla **localmente** lo stato del certificato per sapere se è ancora valida
+la chiave pubblica di un determinato soggetto (se non lo fa, la responsabilità è
+solo ed esclusivamente dell'utente).
 
 ![](./img/img52.png)
 
@@ -2058,7 +2064,7 @@ La Certificate List è composta da alcuni campi che riguardano la revoca:
 
 - **Signature algorithm identifier**: algoritmo usato dalla CRL per firmare la lista dei certificati e parametri per l'algoritmo;
 - **Issuer Name**: identificativo della CA che ha emesso la CRL;
-- **This Update Date** e **Next Update Date**: l'autorità di certificazione emette a scadenze temporali, ad esempio, con scandenza bisettimanale, ogni ora etc, la lista di revoca. Le informazioni contenute in questa struttura dati valgono dal valore di _This Update Date_, fino a _Next Update Date_. Non valgono né prima né dopo;
+- **This Update Date** e **Next Update Date**: l'autorità di certificazione emette a scadenze temporali, ad esempio, con scadenza bisettimanale, ogni ora etc, la lista di revoca. Le informazioni contenute in questa struttura dati valgono dal valore di _This Update Date_, fino a _Next Update Date_. Non valgono né prima né dopo;
 - **Revoked certificate**: questo campo contiene a sua volta:
   - **User certificate serial**: numero seriale del certificato. Il numero seriale è un ID univoco. In generale, in questo campo si potrebbe inserire:
     - **Chiave pubblica**
@@ -2077,7 +2083,7 @@ Possibili soluzioni:
 - Le CRL possono diventare molto grosse e quindi onerose da scaricare e da esaminare:
   - **Eliminare la revoca dopo la prima CRL successiva alla scadenza del certificato**: se un certificato è scaduto temporalmente, non ha senso mantenerlo nella lista di revoca perché non passerebbe l'operazione di verifica ma la si elimina **solo dopo** la prima CRL successiva alla scadenza;
   - **Pubblicare CRL complete (Base CRL) e poi solo le differenze (Delta CRL)**: Ad esempio, si suppone che dopo la prima settimana di operatività della CA, essa emette la prima lista di revoca. Questa lista è chiamata Base CRL e sarà sempre disponibile. Ogni settimana, la CA non emette tutta la storia fino a quel momento ma emette solo le variazioni di quello specifico arco temporale. Queste variazioni prendono il nome di Delta CRL. L'utente finale, la prima volta scarica la Base CRL. Se il certificato non è nella Base, scarica le Delta CRL fino a quando non trova il certificato. Nei casi fortunati, si scaricano poche liste e c'è anche un risparmio di memorizzazione però nel caso sfortunato si scarica tutta la storia;
-  - **Partizionare le CRL in tanti gruppi (es. per ogni mille certificati emessi) usando CRL DP**: la CRL viene partizionata. I criteri possono essere molteplici: ad esempio, tutti i certificate serial number che vanno da 0 a 1000 finiscono in una partizione, da 1000 a 2000 in quest'altra etc. La CA sa di certo che se un certificato verrà revocato, finisce già in una certa partizione perché conosce qual è il criterio adotatto. Nel certificato, ci sono campi estensioni in cui è possibile veicolare informazioni in più. Si aggiunge come campo _Distribution Point_ (CRL DP). Quindi, viene già indicato all'interno del campo la partizione in cui si troverà eventualmente l'informazione sullo stato di revoca. L'utente, userà il Distribution Point nella query LDAP.
+  - **Partizionare le CRL in tanti gruppi (es. per ogni mille certificati emessi) usando CRL DP**: la CRL viene partizionata. I criteri possono essere molteplici: ad esempio, tutti i certificate serial number che vanno da 0 a 1000 finiscono in una partizione, da 1000 a 2000 in quest'altra etc. La CA sa di certo che se un certificato verrà revocato, finisce già in una certa partizione perché conosce qual è il criterio adottato. Nel certificato, ci sono campi estensioni in cui è possibile veicolare informazioni in più. Si aggiunge come campo _Distribution Point_ (CRL DP). Quindi, viene già indicato all'interno del campo la partizione in cui si troverà eventualmente l'informazione sullo stato di revoca. L'utente, userà il Distribution Point nella query LDAP.
 
 A seconda del meccanismo che si usa, nella struttura dati CRL ci sono campi aggiuntivi come ad esempio se è una CRL Base o Delta, Distribution Point etc.
 
@@ -2102,21 +2108,21 @@ Se il server restituisce un'informazione in tempo reale si supera il problema 1 
 
 I criteri di valutazione delle performance di un sistema di revoca possono essere valutati in base a:
 
-- **Tempestività**: freschezza dell'informazione di revoca, tempo massimo tra revoca e distribuzione;
-- **Prestazioni**: lato CA, lato cliente etc;
-- **Overhed in termini di banda**;
+- **Tempestività**: freschezza dell'informazione di revoca, tempo massimo tra revoca e distribuzione
+- **Prestazioni**: lato CA, lato cliente etc
+- **Overhead in termini di banda**
 
-Ma è bene ricordare che esistono molti altri:
+Ma è bene ricordare che esistono molti altri criteri:
 
-- **Scalabilità (lato amministratore)**: complessità dello schema;
+- **Scalabilità (lato amministratore)**: complessità dello schema
 - **Sicurezza**: capire se l'informazione quali delle seguenti proprietà assicurare (dipende da cosa si vuole progettare):
-  - Autenticità;
-  - Integrità;
-  - Riservatezza;
-  - Non ripudio;
+  - Autenticità
+  - Integrità
+  - Riservatezza
+  - Non ripudio
 - **Standard**: standard, proprietario etc.
-- **Espressività**: granularità dell'informazione di revoca. Se mi servono delle informazioni per sapere il motivo per cui il certificato è stato revocato;
-- **On-line vs Off-line**: se si viaggia in aereo molto, prima scarico e durante il volo verifico.
+- **Espressività**: granularità dell'informazione di revoca. Se mi servono delle informazioni per sapere il motivo per cui il certificato è stato revocato
+- **Online vs Offline**: se si viaggia in aereo molto, prima scarico e durante il volo verifico
 
 <!-- lezione 28/10/2021 -->
 ### Modelli di Fiducia
@@ -2125,12 +2131,12 @@ Non si può pensare che tutti gli utenti appartengano sempre allo stesso dominio
 
 ![](./img/img69.png)
 
-Un certificato emesso per una CA è chiamato _cross-certificate_. La freccia da CA5 a CA4 significa che CA5 ha firmato la chiave pubblica di CA4, ovvero CA5 ha emesso un _cross-certificate_ per CA4 (il certificato ha la solita struttura X.509 vista in precedenza). La doppia freccia tra CA4 e CA3 significa che si sono reciprocamente certificate fra loro etc.
+Un certificato emesso per una CA è chiamato _cross-certificate_. La freccia da CA<sub>5</sub> a CA<sub>4</sub> significa che CA<sub>5</sub> ha firmato la chiave pubblica di CA<sub>4</sub>, ovvero CA<sub>5</sub> ha emesso un _cross-certificate_ per CA<sub>4</sub> (il certificato ha la solita struttura X.509 vista in precedenza). La doppia freccia tra CA<sub>4</sub> e CA<sub>3</sub> significa che si sono reciprocamente certificate fra loro etc.
 
 In generale, il modello di fiducia potrebbe essere _centralizzato_ o
 _distribuito_. Nel primo caso si hanno delle strutture gerarchiche: cioè si ha una CA radice che certifica le CA sottostanti. Invece, nel modello distribuito ognuno si fida di chi vuole la cui struttura è quella di un grafo.
 
-Il modello della figura è un modello distribuito. L'utente A invia un messaggio all'utente B. Il certificato di B è stato rilasciato dall'autorità di certificazione CA3, quello di A da CA5. L'utente B vuole essere sicuro di potersi fidare del certificato che CA5 ha emesso per A e cerca dunque quali entità hanno emesso un certificato per la chiave pubblica di CA5. Trova CA4 (con cui fra l'altro c'è fiducia reciproca, cross-certificate). Adesso deve trovare quali entità si fidano di CA4 e trova proprio CA5, ovvero la sua CA. Il cammino di fiducia è stato trovato, quindi B si può fidare di A. Il contrario non è possibile in quanto non esiste un percorso di fiducia che permetta di raggiungere CA5.
+Il modello della figura è un modello distribuito. L'utente A invia un messaggio all'utente B. Il certificato di B è stato rilasciato dall'autorità di certificazione CA<sub>3</sub>, quello di A da CA<sub>5</sub>. L'utente B vuole essere sicuro di potersi fidare del certificato che CA<sub>5</sub> ha emesso per A e cerca dunque quali entità hanno emesso un certificato per la chiave pubblica di CA<sub>5</sub>. Trova CA<sub>4</sub> (con cui fra l'altro c'è fiducia reciproca, cross-certificate). Adesso deve trovare quali entità si fidano di CA<sub>4</sub> e trova proprio CA<sub>5</sub>, ovvero la sua CA. Il cammino di fiducia è stato trovato, quindi B si può fidare di A. Il contrario non è possibile in quanto non esiste un percorso di fiducia che permetta di raggiungere CA<sub>5</sub>.
 
 Il protocollo che si occupa della ricerca del percorso di fiducia prende il nome di _Certification Path Discovery_ e dipende se il modello che si sta usando è centralizzato o distribuito. Una volta trovato un percorso di certificazione è necessario:
 
@@ -2143,7 +2149,7 @@ Il protocollo che si occupa della ricerca del percorso di fiducia prende il nome
 
 Esistono diversi modelli gerarchici:
 
-- **Modello gerarchico puro**: i nodi foglia sono gli utenti finali e ogni CA, certifica i propri figli e viceversa. Ad esempio, CA1 cross-certificate CA3 e viceversa.
+- **Modello gerarchico puro**: i nodi foglia sono gli utenti finali e ogni CA, certifica i propri figli e viceversa. Ad esempio, CA<sub>1</sub> cross-certifica CA<sub>3</sub> e viceversa.
 ![](./img/img70.png)
 Con questo modello è facile costruire un cammino di certificazione tra due utenti finali a cui basta rivolgersi solamente alle proprie
 CA perché basta arrivare fino alla radice e poi riscendere fino alla CA di interesse.
@@ -2154,7 +2160,7 @@ Dal punto di vista organizzativo questa struttura è possibile se e solo se ques
 - **Struttura gerarchica top-down**: in questo modello, la radice certifica tutte le CA a scendere. L'utente finale ha sicuramente la chiave pubblica della propria CA e in fase di registrazione ha ricevuto sicuramente la chiave pubblica della radice in questo modo può scendere
 ![](./img/img71.png)
 
-Un modello centralizzato non è sempre la soluzione adottata. Ad esempio, una multinazionale su più sedi può realizzare al suo interno un'infrastruttura del genere ma nella vita quotidiana, quando viene rilasciata una chiave non viene adottata questa soluzione qui. Esistono diversi provider che non hanno un si scambiano le chiavi fra di loro.
+Un modello centralizzato non è sempre la soluzione adottata. Ad esempio, una multinazionale su più sedi può realizzare al suo interno un'infrastruttura del genere ma nella vita quotidiana, quando viene rilasciata una chiave non viene adottata questa soluzione qui. Esistono diversi provider che non si scambiano le chiavi fra di loro.
 
 ### Modello distribuito
 
@@ -2166,42 +2172,50 @@ Quando la CA emette dei certificati, nel campo estensione esistono diverse polit
 
 Quando la CA emette dei certificati, nel campo estensione esistono varie tipologie:
 
-### Politiche di gestione
+- **Politiche di gestione**
 
-Lo standard X.509 prevede nei campi estensioni, campi che consentono di verificare le politiche di emissione del certificato: qual è la politica con cui è stata emessa (procedura di identificazione dell'utente, regole che sono state seguite per rilasciare il certificato, prova di possesso etc).
+  Lo standard X.509 prevede nei campi estensioni, campi che consentono di verificare le politiche di emissione del certificato: qual è la politica con cui è stata emessa (procedura di identificazione dell'utente, regole che sono state seguite per rilasciare il certificato, prova di possesso etc).
 
-Si potrebbe avere un codice 10 che identifica una certa policy. Non esiste uno standard per la policy. In assenza di standard, si potrebbe fare che due CA hanno concordato che un codice ha un significato per loro comune. Oltre a verificare "E' valido temporalmente?"è stato revocato?" è stato emesso con una policy che riconosco altrimento lo scarto.
+  Si potrebbe avere un codice 10 che identifica una certa policy. Non esiste uno standard per la policy. In assenza di standard, due CA potrebbero concordare che un codice abbia un significato per loro comune. Inoltre devono verificare che sia valido temporalmente, che non sia stato revocato e che sia stato emesso con una policy che riconoscono, altrimenti viene scartato.
 
-Discorso analogo vale per i cross-certificate: si possono verificare che sono compatibili anche alle politiche di emissione del certificato.
+  Discorso analogo vale per i cross-certificate: si possono verificare che sono compatibili anche alle politiche di emissione del certificato.
 
-### Proprietà di PKI
+- **Proprietà di PKI**
 
-Una PKI ha il dovere di garantire certi servizi, e a seconda dei servizi offerti un utente può decidere a quale rivolgersi:
+  Una PKI ha il dovere di garantire certi servizi, e a seconda dei servizi offerti un utente può decidere a quale rivolgersi:
 
-- **CA**: requisito obbligatorio per tutte le infrastrutture per ovvi motivi;
-- **Supportare la revoca dei certificati**: altro requisito obbligatorio;
-- **Backup delle chiavi private e supportare il Recovery**: un'infrastruttura deve consentire ad un utente di rilasciare più coppie di chiavi. Se si utilizzasse solo un'unica coppia di chiavi per effettuare firma digitale e cifratura, con l'operazione di Backup della chiave privata si va in contrasto con il supporto al non ripudio. È importante tenere separate le due operazioni da eseguire;
-- **Supporto al non ripudio**: si legga il punto precedente;
-- **Aggiornamento automatico della chiave**: se un certificato scade ci deve essere un aggiornamento automatico della chiave altrimenti l'utente non può più continuare ad usufruire del servizio;
-- **Storia delle chiavi**: tenere traccia di tutte le chiavi che sono state generate. Se un certificato è scaduto e un contratto è stato firmato quando il certificato era ancora valido, si vorrebbe poter continuare a verificare il certificato;
-- **Repository pubblico dei certificati**: requisito obbligatorio;
-- **Cross-certification**;
-- **Timestamping**: marcatura temporale. Consente di risalire a quando un contratto è stato firmato/revocato. Utile per risolvere dei contenziosi.
+  - **CA**: requisito obbligatorio per tutte le infrastrutture per ovvi motivi;
+  - **Supportare la revoca dei certificati**: altro requisito obbligatorio;
+  - **Backup delle chiavi private e supportare il Recovery**: un'infrastruttura deve consentire ad un utente di rilasciare più coppie di chiavi. Se si utilizzasse solo un'unica coppia di chiavi per effettuare firma digitale e cifratura, con l'operazione di backup della chiave privata si va in contrasto con il supporto al non ripudio. È importante tenere separate le due operazioni da eseguire;
+  - **Supporto al non ripudio**: si legga il punto precedente;
+  - **Aggiornamento automatico della chiave**: se un certificato scade ci deve essere un aggiornamento automatico della chiave altrimenti l'utente non può più continuare ad usufruire del servizio;
+  - **Storia delle chiavi**: tenere traccia di tutte le chiavi che sono state generate. Se un certificato è scaduto e un contratto è stato firmato quando il certificato era ancora valido, si vorrebbe poter continuare a verificare il certificato;
+  - **Repository pubblico dei certificati**: requisito obbligatorio;
+  - **Cross-certification**;
+  - **Timestamping**: marcatura temporale. Consente di risalire a quando un contratto è stato firmato/revocato. Utile per risolvere dei contenziosi.
 
 ### Accordo sul segreto: Anonymous Diffie-Hellman
 
-SSL: usa certificati associati al client e al server
+SSL: usa certificati associati al client e al server\
 IPsec: usa certificati associati alla macchina (associano in maniera certa un indirizzo IP a una determinata chiave)
 
-Il protocollo della figura seguente è leggermente diverso rispetto a quello visto in precedenza. Se Y rimane sempre lo stesso è possibile effettuare attacchi. Ad ogni sessione di interazione tra un client e un server, il parametro Y (pre_master_secret) deve essere variabile per questo motivo si usano due numeri random RC e RS. La vera chiave prende il nome di master_secret = H(K||Rc||Rs) ed è variabile. In questo modo, per ogni sessione si ottiene un master_secret diverso e si evita di utilizzare sempre lo stesso segreto.
+Il protocollo della figura seguente è leggermente diverso rispetto a quello
+visto in precedenza. Se Y rimane sempre lo stesso è possibile effettuare
+attacchi. Ad ogni sessione di interazione tra un client e un server, il
+parametro Y (pre\_master\_secret) deve essere variabile per questo motivo si
+usano due numeri random R<sub>C</sub> e R<sub>S</sub>.\
+La vera chiave prende il nome di master\_secret =
+H(K||R<sub>C</sub>||R<sub>S</sub>) ed è variabile. In questo modo, per ogni
+sessione si ottiene un master\_secret diverso e si evita di utilizzare sempre lo
+stesso segreto.
 
 ![](./img/img73.png)
 
-Il problema fondamentale di questa versione è di essere anonima e nulla può garantire da chi proviene il dato pubblico Y. Esistono alcune varianti (diverse dalle varianti del COVID):
-- **Fixed DH**: il client immette i parametri pubblici di DH (p, g, Yc) nel certificato che si fa poi firmare dalla CA. Lo stesso fa il server (con Ys). Questi parametri rimarranno fissi nei certificati. Quindi questa modalità prevede che il dato pubblico (p, g, Y) di ciascun utente sia comunicato all'altro tramite un certificato X.509. Il client e il server si inviano i certificati pubblici creati. Una volta ricevuto il certificato viene verificato e poi entrambi calcolano l'esponenziazione modulare. 
+Il problema fondamentale di questa versione è di essere anonima e nulla può garantire da chi proviene il dato pubblico Y. Esistono alcune varianti:
+- **Fixed DH**: il client immette i parametri pubblici di DH (p, g, Y<sub>C</sub>) nel certificato che si fa poi firmare dalla CA. Lo stesso fa il server (con Y<sub>S</sub>). Questi parametri rimarranno fissi nei certificati. Quindi questa modalità prevede che il dato pubblico (p, g, Y) di ciascun utente sia comunicato all'altro tramite un certificato X.509. Il client e il server si inviano i certificati pubblici creati. Una volta ricevuto il certificato viene verificato e poi entrambi calcolano l'esponenziazione modulare. 
 ![](./img/img74.png)
-In questo schema non c'è identificazione, c'è solo supporto all'autenticità dell'informazione. Il client potrebbe avviare comunicazioni che un eventuale impostore non potrebbe decifrare, ma che gli permetterebbero comunque di perdere tempo. Infatti, in tale scenario, l'intrusore (fake server) che non è il vero possessore del certificato, può inviare il certificato (che è pubblico, quindi può recuperarlo facilmente), ma poi non può concordare il segreto, quindi non si faranno le altre operazioni (p, Xs; Rc,Rs; H) perché non possiede Xs. Il client non sa che il (fake) server non ha trovato la master secret e quindi il client perde tempo;
-- **Ephemeral DH**: solo la chiave pubblica è certificata (non p e g). Quindi, ogni volta viene generato un X diverso. Il client invia al server Yc firmato digitalmente. In questo modo in ricezione è possibile verificare l'integrità e l'autenticità di Y (non identificazione). Il valore del pre_master_secret inoltre così varia da una sessione all'altra; poi, per mantenere la compatibilità con il Fixed DH, si ha uno scambio dei numeri random (anche se dato che la pre_master_key cambia senso randomizzare con Rc e Rs).
+In questo schema non c'è identificazione, c'è solo supporto all'autenticità dell'informazione. Il client potrebbe avviare comunicazioni che un eventuale impostore non potrebbe decifrare, ma che gli permetterebbero comunque di perdere tempo. Infatti, in tale scenario, l'intrusore (fake server) che non è il vero possessore del certificato, può inviare il certificato (che è pubblico, quindi può recuperarlo facilmente), ma poi non può concordare il segreto, quindi non si faranno le altre operazioni (p, X<sub>S</sub>; R<sub>C</sub>,R<sub>S</sub>; H) perché non possiede X<sub>S</sub>. Il client non sa che il (fake) server non ha trovato la master secret e quindi il client perde tempo;
+- **Ephemeral DH**: solo la chiave pubblica è certificata (non p e g). Quindi, ogni volta viene generato un X diverso. Il client invia al server Y<sub>C</sub> firmato digitalmente. In questo modo in ricezione è possibile verificare l'integrità e l'autenticità di Y (non identificazione). Il valore del pre\_master\_secret inoltre così varia da una sessione all'altra; poi, per mantenere la compatibilità con il Fixed DH, si ha uno scambio dei numeri random (anche se dato che la pre\_master\_key cambia senso randomizzare con R<sub>C</sub> e R<sub>S</sub>).
 ![](./img/img75.png)
 
 <!-- lezione 04/11/2021 -->
