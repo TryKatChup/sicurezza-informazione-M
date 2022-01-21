@@ -2212,13 +2212,14 @@ stesso segreto.
 ![](./img/img73.png)
 
 Il problema fondamentale di questa versione è di essere anonima e nulla può garantire da chi proviene il dato pubblico Y. Esistono alcune varianti:
-- **Fixed DH**: il client immette i parametri pubblici di DH (p, g, Y<sub>C</sub>) nel certificato che si fa poi firmare dalla CA. Lo stesso fa il server (con Y<sub>S</sub>). Questi parametri rimarranno fissi nei certificati. Quindi questa modalità prevede che il dato pubblico (p, g, Y) di ciascun utente sia comunicato all'altro tramite un certificato X.509. Il client e il server si inviano i certificati pubblici creati. Una volta ricevuto il certificato viene verificato e poi entrambi calcolano l'esponenziazione modulare. 
+- **Fixed DH**: il client immette i parametri pubblici di DH (p, g, Y<sub>C</sub>) nel certificato che si fa poi firmare dalla CA. Lo stesso fa il server (con Y<sub>S</sub>). Questi parametri rimarranno fissi nei certificati. Quindi questa modalità prevede che il dato pubblico (p, g, Y) di ciascun utente sia comunicato all'altro tramite un certificato X.509. Il client e il server si inviano i certificati pubblici creati. Una volta ricevuto il certificato viene verificato e poi entrambi calcolano l'esponenziazione modulare, come nell'anonymous DH.
+In questo modo il pre\_master\_secret è sempre lo stesso per ogni coppia di
+utenti, quindi per non utilizzare lo stesso segreto vengono anche scambiati due
+numeri casuali R<sub>C</sub> ed R<sub>S</sub> che consentono di variare il
+master\_secret ad ogni sessione.
 ![](./img/img74.png)
 In questo schema non c'è identificazione, c'è solo supporto all'autenticità dell'informazione. Il client potrebbe avviare comunicazioni che un eventuale impostore non potrebbe decifrare, ma che gli permetterebbero comunque di perdere tempo. Infatti, in tale scenario, l'intrusore (fake server) che non è il vero possessore del certificato, può inviare il certificato (che è pubblico, quindi può recuperarlo facilmente), ma poi non può concordare il segreto, quindi non si faranno le altre operazioni (p, X<sub>S</sub>; R<sub>C</sub>,R<sub>S</sub>; H) perché non possiede X<sub>S</sub>. Il client non sa che il (fake) server non ha trovato la master secret e quindi il client perde tempo;
-- **Ephemeral DH**: solo la chiave pubblica è certificata (non p e g). Quindi, ogni volta viene generato un X diverso. Il client invia al server Y<sub>C</sub> firmato digitalmente. In questo modo in ricezione è possibile verificare l'integrità e l'autenticità di Y (non identificazione). Il valore del pre\_master\_secret inoltre così varia da una sessione all'altra; poi, per mantenere la compatibilità con il Fixed DH, si ha uno scambio dei numeri random (anche se dato che la pre\_master\_key cambia senso randomizzare con R<sub>C</sub> e R<sub>S</sub>).
-![](./img/img75.png)
-
-<!-- lezione 04/11/2021 -->
+- **Ephemeral DH**: solo la chiave pubblica è certificata (non p e g). Quindi all'inizio di ogni sessione, i due partecipanti generano un X diverso. Calcolano il loro dato pubblico Y e lo autenticano con una chiave privata, dopodiché lo comunicano al corrispondente insieme ad un certificato della loro chiave pubblica. In questo modo in ricezione è possibile verificare l'integrità e l'autenticità di Y (non identificazione). Il valore del pre\_master\_secret inoltre così varia da una sessione all'altra; poi, per mantenere la compatibilità con il Fixed DH, si ha uno scambio dei nonce ed un loro impiego nel calcolo del master\_secret.
 
 ## Cifrari Asimmetrici
 
@@ -2235,7 +2236,7 @@ I problemi dell'esponenziazione modulare (`a = b^e mod m`) sono i seguenti:
 
 Bisogna cercare di renderla il più efficiente possibile.
 
-- **Accoppiare l'elevamento al quadrato delle moltiplicazioni riducendo a modulo**: rer ridurre l'occupazione di memoria, al posto di eseguire `a = (b*b*...*b) mod m`, e volte si può riscrivere la seguente formula nel seguente modo: `a = [(b mod m)*(b mod m)* ...*(b mod m)] mod m`, e volte (esiste l'algoritmo _repeated square and multiply_);
+- **Accoppiare l'elevamento al quadrato delle moltiplicazioni riducendo a modulo**: per ridurre l'occupazione di memoria, al posto di eseguire `a = (b*b*...*b) mod m`, e volte si può riscrivere la seguente formula nel seguente modo: `a = [(b mod m)*(b mod m)* ...*(b mod m)] mod m`, e volte (esiste l'algoritmo _repeated square and multiply_);
 - **Rappresentazione binaria**: si può ridurre il numero di moltiplicazioni passando alla forma binaria. Si consideri `e = 53`. Si può riscrivere in forma binaria nel seguente modo:
 
 `x = 53 = 110101 = 32 + 16 + 4 + 1`
@@ -2250,39 +2251,38 @@ I numeri primi sono alla base dei cifrari RSA. Per individuare i numeri primi si
 
 ```
   // 1) x dispari (generato a caso nel desiderato intervallo con un PNRG)
-  // 2) if (x primo?) = false (si controlla tramite il test di primalità)
-  // then x = x + 2 and repeat 2
-  // else
-  // return x
+  // 2) while (x primo?) = false (si controlla tramite il test di primalità)
+  //        x = x + 2 
+  //    return x
 ```
 
 I test di primalità possono essere di due tipi:
 
-- **Deterministici**: questo test dice con certezza se un numero è primo. Questi test sono computazionalmente più onerosi dei test probabilistici;
-- **Probabilistici**: questi test sono polinomiali motivo per cui si adottano più spesso nella pratica ma devono essere poi ripetuti più e più volte per far tendere a 1 la probabilità di avere realmente individuato un primo. Molto famoso è l'algoritmo di Miller Rabin.
+- **Deterministici**: questo test dice con certezza se un numero è primo. Questi test sono computazionalmente più onerosi dei test probabilistici
+- **Probabilistici**: questi test sono polinomiali motivo per cui si adottano più spesso nella pratica ma devono essere poi ripetuti più e più volte per far tendere a 1 la probabilità di avere realmente individuato un numero primo. Molto famoso è l'algoritmo di Miller Rabin
 
 Adesso si vuole capire come mai bisogna generare un numero primo grande per ottenere robustezza. Si ricorda che il numero X è compreso fra 1 e (p-1). Se p è piccolo l'algoritmo di ricerca esauriente si riesce ad applicare.
 
 ![](./img/img76.png)
 
-Si calcola `g^x mod p` per x= 1, 2 fino a quando non si trova Y.
+Si calcola `g^x mod p` per x= 1, 2... fino a quando non si trova Y.
 
 ### Aspetti caratteristici
 
 Altre caratteristiche dei cifrari asimmetrici sono:
 
-- **Frammentazione del teto in chiaro**: bisogna fare in modo che ad ogni messaggio ci sia un cifrato diverso. Non si può correre il rischio di avere due cifrati uguali a fronte dello stesso testo in chiaro. Dal momento che ci sono le operazioni modulo (il resto della divisione), se si avessero messaggi di dimensione maggiore ad n, si potrebbero avere operazioni modulo che restituiscono, per messaggi diversi, lo stesso resto della divisione. Questo significa che a messaggi diversi può corrispondere lo stesso cifrato, che si contrappone con la solita ipotesi che ad ogni cifrato corrisponde ad un solo messaggio, e viceversa. Per risolvere questa situazione, appunto, si frammentano i messaggi in blocchi e il numero binario intero che rappresenta il blocco deve essere inferiore al modulo;
+- **Frammentazione del testo in chiaro**: bisogna fare in modo che ad ogni messaggio ci sia un cifrato diverso. Non si può correre il rischio di avere due cifrati uguali a fronte dello stesso testo in chiaro. Dal momento che ci sono le operazioni modulo (il resto della divisione), se si avessero messaggi di dimensione maggiore ad n, si potrebbero avere operazioni modulo che restituiscono, per messaggi diversi, lo stesso resto della divisione. Questo significa che a messaggi diversi può corrispondere lo stesso cifrato, che si contrappone con la solita ipotesi che ad ogni cifrato corrisponde ad un solo messaggio, e viceversa. Per risolvere questa situazione, appunto, si frammentano i messaggi in blocchi e il numero binario intero che rappresenta il blocco deve essere inferiore al modulo
 ![](./img/img77.png)
 - **Aleatorietà del testo cifrato**: dove ci sono messaggi da cifrare con range di valori prevedibili è un problema. Si possono effettuare attacchi di testo in chiaro noto (messaggi prevedibili). Ad esempio, sì o no in caso di voto elettronico. Se si cifra il si con la chiave pubblica dell'ente a cui si invia la risposta, anche l'attaccante cifra il si con la chiave pubblica dell'ente e confronta i due cifrati. Per rendere probabilistico il cifrario, o si rende probabilistico il messaggio originario concatenandolo ad un numero random, o si rende probabilistica l'uscita con una delle modalità di impiego viste nei cifrari simmetrici (CBC con vettore di inizializzazione)
 ![](./img/img78.png)
-Tuttavia, non è sempre vero perché algoritmi RSA sono deterministici;
-- **Variabilità della trasformazione**: tutti si basano su una trasformazione che varia nel tempo;
-- **Problema difficile su cui si basa la sicurezza**: la crittografia asimmetrica si basa su problemi difficili della matematica. A descrivere un meccanismo di crittografia asimmetrica è dunque anche il problema di cui fa uso. Il cifrario RSA è un cifrario deterministico, a blocchi che si basa sui problemi difficili di radice e-esima e fattorizzazione mentre il cifrario El Gamal è un cifrario probabilistico a blocchi che utilizza il problema del logaritmo discreto;
-- **Modalità di impiego**: esistono un insieme di standard (PKCS) che definiscono le modalità di utilizzo di un cifrario asimmetrico e le chiavi coinvolte in un cifrario asimmetrico.
+Tuttavia, non è sempre vero perché algoritmi RSA sono deterministici
+- **Variabilità della trasformazione**: tutti si basano su una trasformazione che varia nel tempo
+- **Problema difficile su cui si basa la sicurezza**: la crittografia asimmetrica si basa su problemi difficili della matematica. A descrivere un meccanismo di crittografia asimmetrica è dunque anche il problema di cui fa uso. Il cifrario RSA è un cifrario deterministico, a blocchi che si basa sui problemi difficili di radice e-esima e fattorizzazione mentre il cifrario El Gamal è un cifrario probabilistico a blocchi che utilizza il problema del logaritmo discreto
+- **Modalità di impiego**: esistono un insieme di standard (PKCS) che definiscono le modalità di utilizzo di un cifrario asimmetrico e le chiavi coinvolte in un cifrario asimmetrico
 
 ### Algoritmo RSA
 
-L'algoritmo RSA è formato da tre algoritmi: G di generazione di chiave, E per la cifratura e D per la decifratura.
+L'algoritmo RSA è formato da tre algoritmi: G di generazione di chiave, E per la cifratura e D per la decifrazione.
 
 ### Algoritmo E e D
 
@@ -2300,37 +2300,37 @@ Per decifrare, si usa la chiave privata ed è sempre un'esponenziazione modulare
 
 Ogni utente di RSA deve eseguire il seguente algoritmo:
 
-- Si scelgono segretamente due numeri primi grandi segreti `p` e `q`. Per impedire di trovare questi due numeri ad un malintenzionato si sceglie in un insieme sufficientemente esteso. Per far ciò si scelgono numeri dispari sufficientemente grandi e si verifica con qualche test (ad esempio quello di Miller Rabin) se sono primi;
-- Si calcola `n` come il prodotto di `p` e `q` (`n = p*q`);
-- Si calcola: `Φ(n) = (p-1)(q-1)` (per definizione);
-- Si sceglie un intero `e`, `1 < e < Φ(n)`, tale che sia coprimo con `Φ(n)`, (si sceglie casualmente e poi si verifica se è coprimo con l'algoritmo di Euclide);
-- Si calcola `e` numero noto co-primo `φ(n) = (p-1)*(q-1)`;
-- Si calcola `d = e^-1 mod Φ(n)`;
+- Si scelgono segretamente due numeri primi grandi segreti `p` e `q`. Per impedire di trovare questi due numeri ad un malintenzionato si sceglie in un insieme sufficientemente esteso. Per far ciò si scelgono numeri dispari sufficientemente grandi e si verifica con qualche test (ad esempio quello di Miller Rabin) se sono primi
+- Si calcola `n` come il prodotto di `p` e `q` (`n = p*q`)
+- Si calcola: `Φ(n) = (p-1)(q-1)` (per definizione)
+- Si sceglie un intero `e`, `1 < e < Φ(n)`, tale che sia coprimo con `Φ(n)`, (si sceglie casualmente e poi si verifica se è coprimo con l'algoritmo di Euclide)
+- Si calcola `e` numero noto co-primo `φ(n) = (p-1)*(q-1)`
+- Si calcola _d = e<sup>-1</sup> mod Φ(n)_
 
 Tutti gli algoritmi usati sono polinomiali. Per il calcolo dell'esponenziazione modulare si usa l'algoritmo Repeated Square and Multiply, che aumenta l'efficienza.
 
 Aspetti computazionali:
 
-- Generazione della chiave;
-- Cifratura/decifrazione.
+- Generazione della chiave
+- Cifratura/decifrazione
 
 Per rendere efficiente:
 
-- La cifratura (xe mod n con x < n) si adottano algoritmi Repeated Square and Multiply con scelta opportuna di e;
-- La decifrazione si ricorre al teorema cinese dei resti (CTR) (impiego più efficiente della chiave privata). Per ottenere un'alta efficienza è importante vedere l'algoritmo nella libreria crittografica che si sta usando.
+- La cifratura (xe mod n con x < n) si adottano algoritmi Repeated Square and Multiply con scelta opportuna di e
+- La decifrazione si ricorre al teorema cinese dei resti (CTR) (impiego più efficiente della chiave privata). Per ottenere un'alta efficienza è importante vedere l'algoritmo nella libreria crittografica che si sta usando
 
 ### Sicurezza di RSA
 
 Gli attacchi possibili sono:
 
-- **Attacchi di forza bruta**: l'algoritmo di ricerca esauriente è in grado di rompere RSA, ma se la chiave è ben dimensionata, oggi fino a 2048 bit , potrebbero essere necessari tempi elevatissimi;
+- **Attacchi di forza bruta**: l'algoritmo di ricerca esauriente è in grado di rompere RSA, ma se la chiave è ben dimensionata, oggi fino a 2048 bit , potrebbero essere necessari tempi elevatissimi
 - **Attacchi matematici**: in questo caso sono a disposizione tre possibilità:
-  - **Fattorizzare n nei suoi due fattori primi**: questo permette di calcolare la funzione totiente di Eulero `(p-1) * (q-1)` e quindi `d`. È il metodo più frequentemente usato;
-  - **Determinare direttamente la funzione totiente di Eulero (p - 1) * (q - 1) senza prima determinare p e q**;
-  - **Determinare direttamente d senza prima determinare la funzione totiente di Eulero**;
-- **Attacchi a tempo**: si basano unicamente sul testo cifrato. Il principio alla base è che si è dimostrato che si può determinare una chiave privata analizzando il tempo impiegato dai computer per decifrare i messaggi. Si possono raccogliere informazioni semplicemente vedendo quanto tempo impiega un pc a decifrare un messaggio. Sono attacchi analoghi ad un ladro che cerca di indovinare la combinazione di sicurezza di una cassaforte osservando il tempo impiegato per ruotare la manopola. Una contromisura è la cosiddetta tecnica di blinding, un algoritmo che maschera il cifrato nascondendo la deducibilità temporale;
+  - **Fattorizzare n nei suoi due fattori primi**: questo permette di calcolare la funzione totiente di Eulero `(p-1) * (q-1)` e quindi `d`. È il metodo più frequentemente usato
+  - **Determinare direttamente la funzione totiente di Eulero (p - 1) * (q - 1) senza prima determinare p e q**
+  - **Determinare direttamente d senza prima determinare la funzione totiente di Eulero**
+- **Attacchi a tempo**: si basano unicamente sul testo cifrato. Il principio alla base è che si è dimostrato che si può determinare una chiave privata analizzando il tempo impiegato dai computer per decifrare i messaggi. Si possono raccogliere informazioni semplicemente vedendo quanto tempo impiega un pc a decifrare un messaggio. Sono attacchi analoghi ad un ladro che cerca di indovinare la combinazione di sicurezza di una cassaforte osservando il tempo impiegato per ruotare la manopola. Una contromisura è la cosiddetta tecnica di blinding, un algoritmo che maschera il cifrato nascondendo la deducibilità temporale
 - **Attacchi a testo chiaro scelto**: si scelgono testi cifrati
-scelti e si ottengono i corrispondenti testi in chiaro. La contromisura è usare una tecnica di riempimento probabilistica standardizzata detta OAEP (Optimal Asymmetric Encryption Padding).
+scelti e si ottengono i corrispondenti testi in chiaro. La contromisura è usare una tecnica di riempimento probabilistica standardizzata detta OAEP (Optimal Asymmetric Encryption Padding)
 
 ### Il cifrario Ibrido
 
@@ -2342,18 +2342,18 @@ Ogni volta che il mittente apre una nuova sessione viene generata una chiave sim
 
 Lato sorgente:
 
-- Si procura la chiave pubblica del destinatario, PU che è ovviamente certificata;
-- Genera a caso la chiave k che sarà poi la chiave condivisa e sceglie la funzione Ek che userà per cifrare i messaggi;
-- Genera c1 che è la chiave k cifrata con la chiave pubblica PU del destinatario: c1 = EPU(k || ID.Ek) dove ID.Ek sarebbe che tipo di cifratura viene usata;
-- Genera c2 che è il messaggio m che vuole comunicare al destinatario, opportunamente cifrato;
-con la chiave k: c2 = Ek (m);
-- Concatena c1 con c2 e lo invia.
+- Si procura la chiave pubblica del destinatario, PU che è ovviamente certificata
+- Genera a caso la chiave k che sarà poi la chiave condivisa e sceglie la funzione E<sub>k</sub> che userà per cifrare i messaggi
+- Genera c1 che è la chiave k cifrata con la chiave pubblica PU del destinatario: c1 = E<sub>PU</sub>(k || ID.E<sub>k</sub>) dove ID.E<sub>k</sub> sarebbe che tipo di cifratura viene usata
+- Genera c2 che è il messaggio m che vuole comunicare al destinatario, opportunamente cifrato
+con la chiave k: c2 = E<sub>k</sub> (m)
+- Concatena c1 con c2 e lo invia
 
 Lato destinazione:
 
-- Separa c1 e c2;
-- Ricava la chiave k usando la sua chiave segreta con k = DSU(c1);
-- Decifra il messaggio m = Dk(c2).
+- Separa c1 e c2
+- Ricava la chiave k usando la sua chiave segreta con k = D<sub>SU</sub>(c1)
+- Decifra il messaggio m = D<sub>k</sub>(c2)
 
 Va bene RSA perché anche se è deterministica si sta cifrando una chiave che è già di suo aleatoria.
 
@@ -2382,13 +2382,13 @@ La firma digitale deve:
 
 Il grande pregio è che l'autenticità di un messaggio può essere verificata con un dato reso di dominio pubblico dal firmatario:
 
-- **Autenticazione**: U autentica il documento calcolando SSU(m) e rendendolo disponibile a chi è interessato;
-- **Verifica**: un qualsiasi utente X verifica l'autenticità di m calcolando Vpu(c), che gli fornisce m e una risposta di tipo vero/falso.
+- **Autenticazione**: U autentica il documento calcolando S<sub>SU</sub>(m) e rendendolo disponibile a chi è interessato;
+- **Verifica**: un qualsiasi utente X verifica l'autenticità di m calcolando V<sub>PU</sub>(c), che gli fornisce m e una risposta di tipo vero/falso.
 
 Chiaramente:
 
-- Per ogni SU, per ogni m e per c = SSU(m), deve essere vero VPU(c) = m;
-- Mentre per chi non ha SU e per ogni m di sua invenzione deve essere infattibile costruire un c tale che VPU(c) = m risulti vero.
+- Per ogni SU, per ogni m e per c = S<sub>SU</sub>(m), deve essere vero V<sub>PU</sub>(c) = m;
+- Mentre per chi non ha SU e per ogni m di sua invenzione deve essere infattibile costruire un c tale che V<sub>PU</sub>(c) = m risulti vero.
 
 La firma digitale ha validità legale. In Italia ciò avviene già dal 1997. Solo nel 1999 è stata redatta una norma a livello europeo e nel 2002 l'Italia ha introdotto le leggi necessarie ad adeguarsi a quanto
 richiesto dall'Unione Europea. S e V possono dunque essere implementati con algoritmi RSA.
@@ -2422,13 +2422,13 @@ Per misurare il tempo è necessario avere dei riferimenti internazionali comuni 
 - **Tempo Atomico Internazionale (TAI)**: prende in considerazione il comportamento medio di 260 orologi atomici in più di 40 nazioni. Ogni orologio atomico è connesso ad un server che conta i periodi di oscillazione e l'unicità è ottenuta facendo interagire tra di loro i server via rete;
 - **Tempo Universale Coordinato (UTC)**: simile al TAI ma apporta una piccola modifica perché l'obiettivo è quello di far passare alle 12:00:00 il sole al meridiano di Greenwich.
 
-Si usa un Time Stamp Service (TSS) solo dove è strettamente necessario perché introde un overhead molto alto. Le marche temporali sono presenti anche nel file system, nella messagistica elettronica ma non sono sicure. Invece, un servizio **sicuro** di marcatura temporale deve avere diverse proprietà:
+Si usa un Time Stamp Service (TSS) solo dove è strettamente necessario perché introduce un overhead molto alto. Le marche temporali sono presenti anche nel filesystem, nella messaggistica elettronica ma non sono sicure. Invece, un servizio **sicuro** di marcatura temporale deve avere diverse proprietà:
 
-- Il tempo della marca non deve essere falso: si fa affidamento ad un ente fidato;
-- Tramite la marca deve essere possibile individuare in modo sicuro un documento, un istante ed un autore: si la firma digitale;
-- La modifica anche di un solo bit di una marca deve poter essere rilevata: hash crittograficamente sicuro;
-- Deve essere possibile farsi marcare documenti mantenendone riservato il contenuto: hash crittograficamente sicuro;
-- Chiunque deve poter sia farsi marcare i suoi documenti, sia verificare la marcatura dei documenti di chiunque altro: servizio pubblico che consente di verificare il documento.
+- Il tempo della marca non deve essere falso: si fa affidamento ad un ente fidato
+- Tramite la marca deve essere possibile individuare in modo sicuro un documento, un istante ed un autore: si la firma digitale
+- La modifica anche di un solo bit di una marca deve poter essere rilevata: hash crittograficamente sicuro
+- Deve essere possibile farsi marcare documenti mantenendone riservato il contenuto: hash crittograficamente sicuro
+- Chiunque deve poter sia farsi marcare i suoi documenti, sia verificare la marcatura dei documenti di chiunque altro: servizio pubblico che consente di verificare il documento
 
 ### Implementazione TSS
 
@@ -2436,27 +2436,27 @@ Il tutto si basa su una terza parte fidata che è l'autore di marche temporali. 
 
 ![](./img/img81.png)
 
-- L'utente A, prima di firmare un documento m, invia a TSS il suo identificativo e la sola impronta di m (funzione hash unidirezionale, quindi crittograficamente sicura), per difenderne l'eventuale riservatezza sia sul canale che per la terza parte;
-- TSS concatena H(m||A) con il suo ID, con l'indicazione temporale t e con il numero progressivo n° che ha attribuito alla marca;
-- TSS restituisce ad A sia questo dato in chiaro, sia la firma che ha apposto al tutto;
-- A, dopo aver verificato la correttezza della marca (l'impronta arrivata a TSS potrebbe essersi deteriorata lungo il percorso od aver subito un qualche attacco attivo), la allega al suo documento;
-- A firma l'intero documento ed allega la firma della marca apposta da TSS.
+- L'utente A, prima di firmare un documento m, invia a TSS il suo identificativo e la sola impronta di m (funzione hash unidirezionale, quindi crittograficamente sicura), per difenderne l'eventuale riservatezza sia sul canale che per la terza parte
+- TSS concatena H(m||A) con il suo ID, con l'indicazione temporale t e con il numero progressivo n° che ha attribuito alla marca
+- TSS restituisce ad A sia questo dato in chiaro, sia la firma che ha apposto al tutto
+- A, dopo aver verificato la correttezza della marca (l'impronta arrivata a TSS potrebbe essersi deteriorata lungo il percorso od aver subito un qualche attacco attivo), la allega al suo documento
+- A firma l'intero documento ed allega la firma della marca apposta da TSS
 
 Firma con appendice; firme allegate o separate dal messaggio (vantaggi ad es. firme multiple, verifica di virus nel messaggio se file eseguibile)
 
 Ci sono diverse modalità per fare la firma con appendice. Si ipotizzi che un documento debba essere firmato da più persone:
 
-- **Firma a cipolla**: Dario firma  (m || firma), Luca prende il documento, verifica la firma, firma sia il documento che la firma di Dario;
-- **Firma concatenata**: Dario firma  (m || firma), Luca firma solo il documento e invia a Lucia, il documento firmato || firma di Dario || firma di Luca.
+- **Firma a cipolla**: Dario firma  (m || firma), Luca prende il documento, verifica la firma, firma sia il documento che la firma di Dario
+- **Firma concatenata**: Dario firma  (m || firma), Luca firma solo il documento e invia a Lucia, il documento firmato || firma di Dario || firma di Luca
 
 Firmare il documento vuol dire prendere atto di averlo letto, firmare la firma della persona precedenti, vuol dire che si sta verificando che la persona precedente ha preso atto del documento e si conferma.
 
 Problemi:
 
-- Se il servizio deve essere integrato in tutti i meccanismi con non ripudio necessita di uno standard. Lo standard PKIX prevede che il servizio di timestamping sia incluso tra quelli offerti da una PKI;
-- Al crescere la domanda il TSS perde in efficienza (overhead). Si necessita di più TSS coordinati tra loro;
-- Se la marca è firmata digitalmente, vuol dire che l'ente fidato non è la CA ma un altro ente. Nel caso in cui scade la validità del certificato della chiave del TSS i documenti valgono ancora? Stesso problema anche con firma digitale in cui si decide di firmare nuovamente tutti i documenti periodicamente (altro overhead);
-- TSS deve essere un ente fidato.
+- Se il servizio deve essere integrato in tutti i meccanismi con non ripudio necessita di uno standard. Lo standard PKIX prevede che il servizio di timestamping sia incluso tra quelli offerti da una PKI
+- Al crescere la domanda il TSS perde in efficienza (overhead). Si necessita di più TSS coordinati tra loro
+- Se la marca è firmata digitalmente, vuol dire che l'ente fidato non è la CA ma un altro ente. Nel caso in cui scade la validità del certificato della chiave del TSS i documenti valgono ancora? Stesso problema anche con firma digitale in cui si decide di firmare nuovamente tutti i documenti periodicamente (altro overhead)
+- TSS deve essere un ente fidato
 
 ### Pretty Good Privacy (PGP)
 
@@ -2464,10 +2464,10 @@ Problemi:
 
 Fornisce 4 tipi di servizi:
 
-- Autenticazione;
-- Confidenzialità;
-- Compressione;
-- Compatibilità.
+- Autenticazione
+- Confidenzialità
+- Compressione
+- Compatibilità
 
 ### Autenticazione
 
@@ -2514,18 +2514,18 @@ Non avendo CA che si assumano una responsabilità legale, il livello di fiducia 
 Inoltre, servono strutture per memorizzare chiavi pubbliche e private:
 
 - **Portachiavi privato**: sono salvate, cifrate (con un cifrario simmetrico che usa come chiave dell'hash della passphrase), le sue chiavi private:
-  - **Timestamp**: è l'indicazione del momento in cui la chiave è stata generata. Non è un timestamp universale;
-  - **Key ID**: ogni utente può avere più chiavi. Nel momento in cui un utente A invia un messaggio firmato ad un utente B, come fa a dirgli quale chiave utilizzare per verificare l'autenticità del messaggio? Non gli comunica l'intera chiave perché sarebbe dispendioso, ma un ID. L'ID di una chiave è costituito dai 64 bit meno significativi. La probabilità di errore (cioè di identificare più di una chiave fra quelle di un utente con lo stesso ID è bassissima);
-  - **Public Key**: la chiave pubblica associata alla chiave privata;
-  - **Encrypted Private Key**: la chiave privata non viene memorizzata in chiaro, ma cifrata utilizzando una password che viene.
+  - **Timestamp**: è l'indicazione del momento in cui la chiave è stata generata. Non è un timestamp universale
+  - **Key ID**: ogni utente può avere più chiavi. Nel momento in cui un utente A invia un messaggio firmato ad un utente B, come fa a dirgli quale chiave utilizzare per verificare l'autenticità del messaggio? Non gli comunica l'intera chiave perché sarebbe dispendioso, ma un ID. L'ID di una chiave è costituito dai 64 bit meno significativi. La probabilità di errore (cioè di identificare più di una chiave fra quelle di un utente con lo stesso ID è bassissima)
+  - **Public Key**: la chiave pubblica associata alla chiave privata
+  - **Encrypted Private Key**: la chiave privata non viene memorizzata in chiaro, ma cifrata utilizzando una password
 - **Portachiavi pubblico**: vengono salvate le chiavi pubbliche personali dell'utente e quelle dei suoi corrispondenti:
-  - **Key ID**: si veda il campo Key ID del portachiavi privato;
-  - **Public Key**: la chiave pubblica associata alla chiave privata;
-  - **Owner Trust**: fiducia iniziale che io ripongo in una data chiave pubblica. Esistono diversi livelli di fiducia: contenuto fidato, non fidato, parzialmente fidato... A seconda di come ho ottenuto la chiave e di quanto conosco il proprietario posso impostare il livello di fiducia;
-  - **User ID**: ID del proprietario della chiave pubblica;
-  - **Signature(s)**: la chiave pubblica può ad esempio essere stata ottenuta tramite un certificato. Il certificato X.509 può essere emesso da un'entità di certificazione ma non è detto. Nel caso in cui Luca ha passato a mano la sua chiave, il campo Signature (e con esso il campo collegato Signature Trust) rimane vuoto;
-  - **Signature Trust(s)**: fiducia che ho nei confronti del firmatario del certificato (vedi campo precedente). Il firmatario è presente già nel portachiavi a chiave pubblica? Se l'utente ha firmato già dei certificati, si copia il livello di fiducia presente nel campo Owner Trust corrispondente a quel firmatario;
-  - **Key Legitimacy**: la chiave potrebbe essere stata ricevuta da più firmatari. PGP calcola automaticamente sulla base di Owner Trust e Signature Trust il livello di fiducia (fidata, non fidata, incerta, ...). A intervalli regolari questo campo viene automaticamente ricalcolato da PGP: infatti, un peer potrebbe passare da fidato a non fidato (perché magari è stata compromessa la sua chiave privata).
+  - **Key ID**: si veda il campo Key ID del portachiavi privato
+  - **Public Key**: la chiave pubblica associata alla chiave privata
+  - **Owner Trust**: fiducia iniziale che io ripongo in una data chiave pubblica. Esistono diversi livelli di fiducia: contenuto fidato, non fidato, parzialmente fidato... A seconda di come ho ottenuto la chiave e di quanto conosco il proprietario posso impostare il livello di fiducia
+  - **User ID**: ID del proprietario della chiave pubblica
+  - **Signature(s)**: la chiave pubblica può ad esempio essere stata ottenuta tramite un certificato. Il certificato X.509 può essere emesso da un'entità di certificazione ma non è detto. Nel caso in cui Luca ha passato a mano la sua chiave, il campo Signature (e con esso il campo collegato Signature Trust) rimane vuoto
+  - **Signature Trust(s)**: fiducia che ho nei confronti del firmatario del certificato (vedi campo precedente). Il firmatario è presente già nel portachiavi a chiave pubblica? Se l'utente ha firmato già dei certificati, si copia il livello di fiducia presente nel campo Owner Trust corrispondente a quel firmatario
+  - **Key Legitimacy**: la chiave potrebbe essere stata ricevuta da più firmatari. PGP calcola automaticamente sulla base di Owner Trust e Signature Trust il livello di fiducia (fidata, non fidata, incerta, ...). A intervalli regolari questo campo viene automaticamente ricalcolato da PGP: infatti, un peer potrebbe passare da fidato a non fidato (perché magari è stata compromessa la sua chiave privata)
 
 Nel tempo il livello di fiducia della chiave di un utente potrebbe cambiare, e si definisce in maniera sempre più precisa acquisendo informazioni da altri utenti. Anche nel caso di revoca, se si revoca una chiave, è necessario propagare agli utenti tale informazione. Il processo potrebbe essere lento. "Mi fido di una chiave perché mi fido di altri utenti" è un'assunzione utile in ambienti in cui non serve validità legale. Ma in questo modello si rinuncia ad alcuni vantaggi della CA (revoca in questo caso molto più lunga, latenza naturale prima che tutti conoscano la revoca).
 
@@ -2534,10 +2534,10 @@ Nel tempo il livello di fiducia della chiave di un utente potrebbe cambiare, e s
 
 Gli obiettivi che bisogna tenere a mente durante la progettazione di protocolli sono i seguenti:
 
-- Se le entità in gioco (A e B) sono fidate, B deve poter completare il protocollo di identificazione certo dell'identità di A;
-- (Transferability) B non può riutilizzare lo scambio di identificazione con A per impersonare illegittimamente A presso un'altra entità (non può trasferire la credibilità ad altri);
-- (Impersonation) Deve essere irrilevante la probabilità che un'entità terza C, che esegue il protocollo spacciandosi per A, possa indurre B a completare con successo il protocollo accettando l'identità di C come se fosse quella di A;
-- Tutti gli obiettivi devono essere validi anche se si osservano numerose autenticazioni tra A e B e se l'intrusore C è stato coinvolto in protocolli di identificazione con A e B anche in presenza di simultanee sessioni (ovvero se C spia per tanto tempo A e B devono comunque rimanere saldi gli obiettivi).
+- Se le entità in gioco (A e B) sono fidate, B deve poter completare il protocollo di identificazione certo dell'identità di A
+- (Transferability) B non può riutilizzare lo scambio di identificazione con A per impersonare illegittimamente A presso un'altra entità (non può trasferire la credibilità ad altri)
+- (Impersonation) Deve essere irrilevante la probabilità che un'entità terza C, che esegue il protocollo spacciandosi per A, possa indurre B a completare con successo il protocollo accettando l'identità di C come se fosse quella di A
+- Tutti gli obiettivi devono essere validi anche se si osservano numerose autenticazioni tra A e B e se l'intrusore C è stato coinvolto in protocolli di identificazione con A e B anche in presenza di simultanee sessioni (ovvero se C spia per tanto tempo A e B devono comunque rimanere saldi gli obiettivi)
 
 quindi devono avere le seguenti proprietà:
 
@@ -2580,11 +2580,11 @@ La vera contromisura all'attacco con intercettazione e replica è il prevedere c
 
 ![](./img/img88.png)
 
-In fase di registrazione, A sceglie a caso un numero X (segreto) ed impiega una serie di funzioni non invertibile F per calcolare la sequenza di valori. Viene dato in input X alla funzione F ottenendo F^1(X) che viene dato a sua volta in pasto di nuovo alla funzione F ottenendo F^2(X). Questo procedimento viene ripetuto fino ad ottenere F^n(X). Nella fase di pre-registrazione, nella macchina M (destinazione) viene inserito solo l'ultima A trasformazione impiegata da A cioè F^n(X).
+In fase di registrazione, A sceglie a caso un numero X (segreto) ed impiega una serie di funzioni non invertibile F per calcolare la sequenza di valori. Viene dato in input X alla funzione F ottenendo F<sup>1(X)</sup> che viene dato a sua volta in pasto di nuovo alla funzione F ottenendo F<sup>2(X)</sup>. Questo procedimento viene ripetuto fino ad ottenere F<sup>n(X)</sup>. Nella fase di pre-registrazione, nella macchina M (destinazione) viene inserito solo l'ultima A trasformazione impiegata da A cioè F<sup>n(X)</sup>.
 
-Quando A si vuole identificare, invia sul canale insicuro F^n-1(X) e M applica a quest'ultima la trasformazione F e controlla se il risultato è uguale a Fn(x) ricevuta. Anche se l'intrusore ha intercettato F^n(X), non ci sono problemi perché non sa calcolare F^n-1(X). Queste prove verranno usate una e una sola volta. Se la sessione di identificazione va a buon fine, M aggiorna il DB con la nuova prova d'identità F^n-1(X).
+Quando A si vuole identificare, invia sul canale insicuro F<sup>n-1(X)</sup> e M applica a quest'ultima la trasformazione F e controlla se il risultato è uguale a F<sup>n(X)</sup> ricevuta. Anche se l'intrusore ha intercettato F<sup>n(X)</sup>, non ci sono problemi perché non sa calcolare F<sup>n-1(X)</sup>. Queste prove verranno usate una e una sola volta. Se la sessione di identificazione va a buon fine, M aggiorna il DB con la nuova prova d'identità F<sup>n-1(X)</sup>.
 
-La macchina M non conosce il segreto X, e non lo conoscerà mai, ma solo il termine di paragone per stabilire se la one-time password è stata generata da A, la prima volta sarà Fn(X), la seconda Fn-1(X) e così via. Prima di arrivare a F^1(X), ovvero all'esaurirsi delle N trasformazioni, rinnova l'accordo sul segreto con N nuove trasformazioni.
+La macchina M non conosce il segreto X, e non lo conoscerà mai, ma solo il termine di paragone per stabilire se la one-time password è stata generata da A, la prima volta sarà F<sup>n(X)</sup>, la seconda F<sup>n-1(X)</sup> e così via. Prima di arrivare a F<sup>1(X)</sup>, ovvero all'esaurirsi delle N trasformazioni, rinnova l'accordo sul segreto con N nuove trasformazioni.
 
 Questo sistema protegge anche nei casi in cui ci si vuole proteggere dal verificatore perché dispone di prove d'identità che nemmeno lui può usare.
 
@@ -2915,8 +2915,8 @@ Inoltre, la soglia è un valore numerico deciso in modo dinamico: se per generar
 L'hash è un valore esadecimale (un numero) che può essere convertito in decimale.
 ![](./img/img106.png)
 Questa operazione non è altro che un attacco di forza bruta perché bisogna provare tutti i valori del nonce.
-Se due nodi risolvono il blocco nello stesso momento, alcuni nodi riceveranno un blocco e altre un altro ma solo uno dei due rimarrà nella _storia_. Quando la catena si allunga, i nodi si allinereanno nella versione con la catena più lunga e quindi resterà solo un blocco. Quindi, quando una transazione è inserita in un nodo non è detto che sia _approvata_ ma bisogna aspettare almeno sei conferme cioè aspettare che vengano generati altri sei blocchi.
-Un attacco che può essere eseguito è detto attacco del 51%: se la competizione per la generazione di un blocco non è _dura_ allora controllare la capacità computazionale della rete perché verrà sempre quasi scelto. Se un nodo ha il 51% della capacità computazionale, allora si possono creare catene alternative perché si viene sempre quasi scelti. I sistemi come Bitcoin non hanno questo problema perché il sistema su incentivi sono vantagiosi e quindi molti partecipano.
+Se due nodi risolvono il blocco nello stesso momento, alcuni nodi riceveranno un blocco e altre un altro ma solo uno dei due rimarrà nella _storia_. Quando la catena si allunga, i nodi si allineeranno nella versione con la catena più lunga e quindi resterà solo un blocco. Quindi, quando una transazione è inserita in un nodo non è detto che sia _approvata_ ma bisogna aspettare almeno sei conferme cioè aspettare che vengano generati altri sei blocchi.
+Un attacco che può essere eseguito è detto attacco del 51%: se la competizione per la generazione di un blocco non è _dura_ allora controllare la capacità computazionale della rete perché verrà sempre quasi scelto. Se un nodo ha il 51% della capacità computazionale, allora si possono creare catene alternative perché si viene sempre quasi scelti. I sistemi come Bitcoin non hanno questo problema perché il sistema su incentivi sono vantaggiosi e quindi molti partecipano.
 
 ### Merkle Trees
 
