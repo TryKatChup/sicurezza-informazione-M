@@ -2564,7 +2564,7 @@ Il protocollo prevede che:
 - L'utente trasmette in chiaro il suo identificativo ID e la password PSW che ha imparato a memoria;
 - La macchina estrae da un suo file o DB delle password quella che ha concordato con ID e confronta i due dati.
 
-Un sistema che usa questo protocollo deve essere robusto ad attacchi che provano ad indovinare, intercettare e leggere la password. L'attacco con replica è quello più ovvio e ineminabile perché l'intrusore intercetta la password e replica il messaggio quando vuole accedere al sistema.
+Un sistema che usa questo protocollo deve essere robusto ad attacchi che provano ad indovinare, intercettare e leggere la password. L'attacco con replica è quello più ovvio e ineliminabile perché l'intrusore intercetta la password e replica il messaggio quando vuole accedere al sistema.
 
 ![](./img/img87.png)
 
@@ -2576,7 +2576,7 @@ La vera contromisura all'attacco con intercettazione e replica è il prevedere c
 
 ### One-time password
 
-È un protocollo di identificazione attiva che prevede di generare a partire da un segreto X di generare fino ad N prove d'identità.
+È un protocollo di identificazione attiva che prevede di generare a partire da un segreto X fino ad N prove d'identità.
 
 ![](./img/img88.png)
 
@@ -2590,7 +2590,7 @@ Questo sistema protegge anche nei casi in cui ci si vuole proteggere dal verific
 
 ### Protocollo sfida/risposta
 
-Verranno presentate tre modi diversi per realizzare il protocollo sfida/risposta a seconda della trasformazione che si usa. Queste tre soluzioni hanno tempi di risposta diversa perché usano trasformazioni diverse ma anche un deploy diverso. Bisogna anche considerare che il segreto deve essere poi distribuito (distribuzione chiavi simmetriche/asimmetriche)
+Verranno presentati tre modi diversi per realizzare il protocollo sfida/risposta a seconda della trasformazione che si usa. Queste tre soluzioni hanno tempi di risposta diversa perché usano trasformazioni diverse ma anche un deploy diverso. Bisogna anche considerare che il segreto deve essere poi distribuito (distribuzione chiavi simmetriche/asimmetriche)
 
 ### Protocollo sfida/risposta (hash)
 
@@ -2601,7 +2601,7 @@ Nella una fase iniziale di pre-inizializzazione A e B scelgono una funzione H si
 Quando `A` chiede a `B` di essere identificato inizia l'esecuzione del seguente protocollo:
 
 - `B` invia ad `A` un dato di sfida RB. Tale numero è chiamato _nonce_ e deve essere:
-  - **No ripetibile (unico)**: PNRG con periodo lungo perché se il numero si ripete ed è stato già usato da A, la risposta la si potrebbe riusare;
+  - **Non ripetibile (unico)**: PNRG con periodo lungo perché se il numero si ripete ed è stato già usato da A, la risposta la si potrebbe riusare;
   - **Imprevedibile**: se l'intrusore prevede il numero successivo di RB, lo invia ad A e riceve la risposta perché A non sa da chi riceve la risposta.
 
 - `A` calcola `c = H(RB || s)` e trasmette `c` come risposta di sfida;
@@ -2647,31 +2647,35 @@ Quando `A` chiede a `B` di essere identificato inizia l'esecuzione del seguente 
 Dal protocollo di sfida/risposta si possono creare protocolli di identificazione muta.
 Un protocollo si dice di _identificazione muta_ se A verso B fa quello che A fa verso B cioè B invia la sfida ad A che a sua volta la invia a B (risposta alla sfida):
 
-- `B -> A: RB`;
-- `A -> B: cA = RA || H(RB|| s)`;
-- `B -> A: cB = H(RA|| s)`.
+- `B -> A: RB`
+- `A -> B: cA = RA || H(RB|| s)`
+- `B -> A: cB = H(RA|| s)`
 
 Questo protocollo è soggetto ai seguenti attacchi:
 
 - **Attacco di interleaving**: per capire questo attacco si introduce _problema del Gran Maestro di Scacchi:_ a vuole spacciarsi per un grande esperto di scacchi pur non conoscendo il gioco. A sfida due Gran Maestri B e C, che sistema, senza che se ne accorgano, in due camere contigue: a B assegna i “bianchi”, a C i “neri”. Preso nota della prima mossa di B, A corre nell'altra stanza e la riproduce sulla scacchiera di C. Successivamente prende nota della contromossa di C e corre a riprodurla sulla scacchiera di B. C tenta di impersonare B, è sfidato (a dimostrare di essere B) da A, ed è in grado di inviare in tempo reale senza troppo ritardo e inganno pretendendo di essere A la sfida al vero B, riceve una risposta giusta da B a la passa indietro ad A.
+
 ![](./img/img92.png)
+
 C apre due sessioni, una con B e una con A. All'istante t0, B manda la sfida (un nonce RB) ad A. In quel momento C ripropone ad A la stessa sfida lanciata da B. A, dunque, risponderà correttamente a C, che manderà tale risposta pensando che C sia B (che comprende la nuova sfida `RA` e la risposta alla sfida `RB`. C invia il messaggio appena ricevuta da A a B. Alla fine, A e B si sono autenticati con l'intromissione di C;
 - **Attacco di reflection**: apre due sessioni con lo stesso interlocutore contemporaneamente e prevede di rimbalzare indietro informazioni scambiate in sessioni diverse:
+
 ![](./img/img93.png)
+
 Le frecce in verde appartengono alla prima sessione mentre quelle nero appartengono alla seconda sessione.
 A(C) apre una connessione con B il quale invia RB. C apre un'altra connessione con B e invia RB ricevuto nella sessione precedente. Non c'è nessun controllo sul fatto che i due nonce debbano essere diversi. B risponde nella seconda sessione con RA||H(RB||s). C prende questo messaggio e lo invia indietro nella prima sessione che aveva aperto con B. La sessione in verde una volta ricevuto H(RA||s) la può chiudere.
 
 Le contromisure da adottare per evitare questi tipi di attacchi sono: numeri random, timestamp e numeri di sequenza. Tuttavia, ci sono dei contro ad usare queste contromisure:
 
 - **Numeri random**:
-  - Uso di un PRNG crittograficamente sicuro. È un componente più costoso rispetto ad una libreria o un RNG;
-  - Il protocollo richiede più scambi di messaggi;
+  - Uso di un PRNG crittograficamente sicuro. È un componente più costoso rispetto ad una libreria o un RNG
+  - Il protocollo richiede più scambi di messaggi
 - **Numeri di sequenza**:
-  - Devono essere memorizzati perché introducono il concetto di stato;
-  - Sono problematici in reti poco affidabili perché si perde il sincronismo e bisogna ripetere tutto da capo;
+  - Devono essere memorizzati perché introducono il concetto di stato
+  - Sono problematici in reti poco affidabili perché si perde il sincronismo e bisogna ripetere tutto da capo
 - **Timestamp**:
-  - Richiede un servizio di timestamp sicuro, perché potrebbe essere falsificato;
-  - Problemi di sincronizzazione.
+  - Richiede un servizio di timestamp sicuro, perché potrebbe essere falsificato
+  - Problemi di sincronizzazione
 
 Se occorre mantenere l'informazione d'identità nel tempo (ad esempio nel corso di un'intera sessione) occorre affiancare al protocollo di identificazione altre misure, ad esempio di autenticazione del messaggio. Ad esempio, SSL. In fase di negoziazione avviene l'identificazione, la prova d'identità viene conservata usando un'HMAC in tutti gli scambi di messaggi successivamente al protocollo d'identificazione.
 
@@ -2680,7 +2684,22 @@ Se occorre mantenere l'informazione d'identità nel tempo (ad esempio nel corso 
 
 Si supponga che un'azienda debba realizzare servizi di confidenzialità (basati su cifrari ibridi), firma digitale con validità legale e identificazione appoggiandosi a una PKI per la gestione dei certificati. In particolare si supponga che l'azienda fornisca un servizio di identificazione unilaterale di sfida risposta basato su firma digitale per i propri dipendenti aziendali per collegarsi da remoto alla rete aziendale. Si utilizza RSA come cifrario asimmetrico. Quante coppie di chiavi devono essere rilasciate ad ogni dipendente aziendale (una, due o tre)? Motivare la risposta.
 
-L'azienda se usa una sola coppia di chiavi di decifrazioni, e sono previsti tutti questi servizi vuol dire che c'è anche un sistema di recovery. Utile quando si perde la chiave o l'utente non vuole più restituirla. Se esiste una copia della chiave, si sa, che non è possibile usarla ai fini di firma digitale perché non viene garantito il non ripudio. Per questo motivo non è una buona soluzione usare solo una coppia di chiavi. Anche usare due coppie di chiavi, non è una buona soluzione. Se la stessa coppia di chiavi, viene usata per identificazione e firma digitale, dato che il server fa identificazione unilaterale, il dipendente non sa con chi si sta identificando. Quindi, un attaccante può falsificarsi per il server. Il dipendente invia un documento firmato pensando di identificarsi e a questo punto è fregato. Se il servizio di firma digitale non prevede validità legale è meglio avere una coppia di chiavi distinta. È bene tenere distinte le coppie di chiavi anche in caso di cifratura e identificazione: Lucia, ha inviato un giorno a Luca delle email cifrate. L'intrusore può intercettare le email, prende il messaggio cifrato, lo ripropone a Luca e firmando non fa altro che recuperare il testo in chiaro.
+Se l'azienda usasse una sola coppia di chiavi, e fossero previsti
+tutti questi servizi, significa che avrebbe bisogno di un sistema di recovery. Utile
+quando si perde la chiave o l'utente non vuole più restituirla. Se esiste una
+copia della chiave non è possibile usarla ai fini di firma digitale
+perché non viene garantito il non ripudio. Per questo motivo non è una buona
+soluzione usare solo una coppia di chiavi. Anche usare due coppie di chiavi, non
+è una buona soluzione. Se la stessa coppia di chiavi viene usata per
+identificazione e firma digitale, dato che il server fa identificazione
+unilaterale, il dipendente non sa chi lo stia identificando. Quindi un
+attaccante può farsi passare per il server. Il dipendente invia un documento
+firmato pensando di identificarsi e a questo punto è fregato. Se il servizio di
+firma digitale non prevede validità legale è meglio avere una coppia di chiavi
+distinta. È bene tenere distinte le coppie di chiavi anche in caso di cifratura
+e identificazione: Lucia, ha inviato un giorno a Luca delle email cifrate.
+L'intrusore può intercettare le email, prende il messaggio cifrato, lo ripropone
+a Luca e firmando non fa altro che recuperare il testo in chiaro.
 
 Quindi, la soluzione migliore è usare tre coppie di chiavi.
 
@@ -2702,25 +2721,25 @@ La gestione di tante workstation e tanti server è complessa, per questo si rico
 
 È stato progettato per evitare tre tipi di attacchi:
 
-- Un utente pretende di essere un altro.
-- Un utente non può alterare un indirizzo IP di una workstation.
-- Un utente può osservare gli scambi di autenticazione e quindi replicare i messaggi in sessioni successive.
+- Un utente finge di essere un altro
+- Un utente altera un indirizzo IP di una workstation
+- Un utente osserva gli scambi di autenticazione e quindi replica i messaggi in sessioni successive
 
-Un protocollo di autenticazione deve essere progettato per evitare attacchi, si facile da essere utilizzato da un utente e così via. Si considerino gli esempi successivi per capire meglio il problema.
+Un protocollo di autenticazione deve essere progettato per evitare attacchi, sia abbastanza semplice da essere utilizzato da un utente e così via. Si considerino gli esempi successivi per capire meglio il problema.
 
 ### Esempio: semplice dialogo di autenticazione
 
 Si indica con C il client, con AS authentication server e con V il servizio a cui l'utente vuole accedere:
 
-- `C -> AS: IDc || Pc || IDv`
-- `AS -> C: Ticket`
-- `C -> V: IDc || Ticket`
+- C -> AS: ID<sub>C</sub> || P<sub>C</sub> || ID<sub>V</sub>
+- AS -> C: Ticket
+- C -> V: ID<sub>C</sub> || Ticket
 
 I passaggi del protocollo sono:
 
 - Il cliente invia una richiesta all'authentication server inviando il suo ID, la password e l'ID del server che ha il servizio a cui vuole accedere.
 - L'authentication server risponde inviando un _ticket_ che solo AS è in grado di costruire. Un ticket è formato nel seguente modo:\
-`Ticket = Ekv[IDc || ADc || IDv]`\
+Ticket = E<sub>KV</sub>[ID<sub>C</sub> || AD<sub>C</sub> || ID<sub>V</sub>]\
 ID del cliente, indirizzo IP da cui ha ricevuto il messaggio dall'utente e l'ID del server che ha il servizio a cui il cliente vuole accedere. Il tutto è cifrato con una chiave che è precondivisa tra server e AS.
 - Viene restituito al client il messaggio ma non può decifrare il messaggio perché non ha la chiave e lo invia il server.
 
@@ -2736,14 +2755,14 @@ Per usare questo protocollo è necessario introdurre un'altra entità: ticket gr
 
 Per ogni sessione di login:
 
-- ` C -> AS: IDc || IDtgs`
-- ` AS -> C: Ekc[Tickettgs]`
+- C -> AS: ID<sub>C</sub> || ID<sub>TGS</sub>
+- AS -> C: E<sub>KC</sub>[Ticket<sub>TGS</sub>]
 
 I passaggi del protocollo sono:
 
 - Il cliente invia all'AS il proprio ID e l'ID del ticket granting server con cui vuole interagire.
 - AS risponde inviando un ticket cifrato con la chiave pre-condivisa tra client e AS. Il ticket è formato nel seguente modo:\
-`Tickettgs = Ektgs[IDc || ADc || IDtgs || TS1 || Lifetime1]`\
+Ticket<sub>TGS</sub> = E<sub>KTGS</sub>[ID<sub>C</sub> || AD<sub>C</sub> || ID<sub>TGS</sub> || TS<sub>1</sub> || Lifetime<sub>1</sub>]\
 Il ticket a sua volta è cifrato, per evitare la falsificazione, con il segreto pre-condiviso tra AS e TGS. Il ticket è formato da:
   - ID dell'utente;
   - IP dell'utente da cui ha inviato la richiesta;
@@ -2751,21 +2770,21 @@ Il ticket a sua volta è cifrato, per evitare la falsificazione, con il segreto 
   - Timestamping;
   - Validità temporale.
 
-  Con questo protocollo si evita invio della pwd perché deriva da Ekc e si riduce la possibilità che un intrusore catturi e riutilizzi il ticket. Ad esempio, aspetta che l'utente faccia logout, falsifica l'indirizzo di rete e lo riutilizzi. Non è impossibile ma è molto difficile proprio perché si controllano i campi Timestamping e Lifetime1.
+  Con questo protocollo si evita invio della password perché deriva da E<sub>KC</sub> e si riduce la possibilità che un intrusore catturi e riutilizzi il ticket. Ad esempio, aspetta che l'utente faccia logout, falsifica l'indirizzo di rete e lo riutilizzi. Non è impossibile ma è molto difficile proprio perché si controllano i campi Timestamping e Lifetime<sub>1</sub>.
 
 Per ogni tipo di servizio di un TGS:
 
-- `C -> TGS: IDc|| IDv || Tickettgs`
-- `TGS -> C: Ticketv`
+- C -> TGS: ID<sub>C</sub>|| ID<sub>V</sub> || Ticket<sub>TGS</sub>
+- TGS -> C: Ticket<sub>V</sub>
 
-- Adesso, il client può contattare il TGS inviando il suo ID, l'ID del servizio che vuole usare e il ticket ottenuno nella fase precedente.
+- Adesso, il client può contattare il TGS inviando il suo ID, l'ID del servizio che vuole usare e il ticket ottenuto nella fase precedente.
 - Il TGS invia al client un ticket che consente di far comunicare il cliente ogni volta che vuole usare uno specifico servizio. Il ticket è formato nel seguente modo:
 
-  `Ticketv = Ekv[IDc || ADc || IDv || TS2 || Lifetime2]`
+  Ticket<sub>V</sub> = E<sub>KV</sub>[ID<sub>C</sub> || AD<sub>C</sub> || ID<sub>V</sub> || TS<sub>2</sub> || Lifetime<sub>2</sub>]
 
 Per ogni sessione di servizio di un TGS:
 
-`C -> V: IDc || Ticketv`
+C -> V: ID<sub>C</sub> || Ticket<sub>V</sub>
 
 Il cliente invia solo una richiesta al servizio V specificando il ticket che ha ottenuto dal TGS.
 
@@ -2781,7 +2800,7 @@ password, se troppo lungo problema di intercettazione e riutilizzo.
 
 ### Kerberos V4
 
-Si assume che sulle workstation sia presente un client Kerberos. Per ogni dominio Realm di amministrazione Kerberos esiste un AS e un TGS. AS gestisce un insieme di utenti che appartengono a quel dominio e il TGS amministra il rilascio delle credenziali che appartengono a quel dominio. Gli utenti devono precondividere una prova di conoscenza con gli AS. L'utente sceglie una passphrase e la sottopone ad una funzione hash (chiave di cifratura). Viene precondivisa anche una chiave Ktgs tra AS e TGS e tra TGS e con i servizi.
+Si assume che sulle workstation sia presente un client Kerberos. Per ogni dominio Realm di amministrazione Kerberos esiste un AS e un TGS. AS gestisce un insieme di utenti che appartengono a quel dominio e il TGS amministra il rilascio delle credenziali che appartengono a quel dominio. Gli utenti devono precondividere una prova di conoscenza con gli AS. L'utente sceglie una passphrase e la sottopone ad una funzione hash (chiave di cifratura). Viene precondivisa anche una chiave K<sub>TGS</sub> tra AS e TGS e tra TGS e con i servizi.
 
 ![](./img/img94.png)
 
@@ -2789,48 +2808,49 @@ La comunicazione totale si articola in questo modo:
 
 - All'inizio della sessione di lavoro sulla stazione C, l'utente dichiara la sua identità ad AS:
   ![](./img/img95.png)
-  L'utente fornisce alla workstation C il proprio ID e l'ID del TGS a cui vuole accedere. C invia ad AS una richiesta di accesso a TGS, contenente anche l'indirizzo di C e una marca temporale T1 (timestamping utili per evitare intercettazioni e repliche). L'IDtgs è da specificare perché potenzialmente si potrebbe accedere ad un servizi appartenenti a domini differenti:\
-  `C -> AS: ID || ADC || IDtgs || T1`
+  L'utente fornisce alla workstation C il proprio ID e l'ID del TGS a cui vuole accedere. C invia ad AS una richiesta di accesso a TGS, contenente anche l'indirizzo di C e una marca temporale T<sub>1</sub> (timestamping utili per evitare intercettazioni e repliche). L'ID<sub>TGS</sub> è da specificare perché potenzialmente si potrebbe accedere a servizi appartenenti a domini differenti:\
+  C -> AS: ID || AD<sub>C</sub> || ID<sub>TGS</sub> || T<sub>1</sub>
 - AS fornisce a C il permesso d'accesso a TGS e lo sfida ad usarlo:
   ![](./img/img96.png)
-  AS controlla T1 tramite ID prelevando dalla sua memoria H(P) e la utilizza per cifrare il messaggio da inviare a C (crea una sfida), contenente la chiave di sessione KCT tra C e TGS, una marca temporale T2, una durata massima della sessione di ID su C e il ticket da inviare poi al TGS contenente le informazioni su chi è l'utente, su quale stazione lavora, qual è la chiave di sessione e per quanto è valida, il tutto cifrato con la chiave concordata tra AS e TGS:\
-  `ticketTGS: KCT || ID || ADc || IDtgs || T2 || deltaT2`\
+  AS controlla T<sub>1</sub> tramite ID prelevando dalla sua memoria H(P) e la utilizza per cifrare il messaggio da inviare a C (crea una sfida), contenente la chiave di sessione K<sub>CT</sub> tra C e TGS, una marca temporale T<sub>2</sub>, una durata massima della sessione di ID su C e il ticket da inviare poi al TGS contenente le informazioni su chi è l'utente, su quale stazione lavora, qual è la chiave di sessione e per quanto è valida, il tutto cifrato con la chiave concordata tra AS e TGS:\
+  ticket<sub>TGS</sub>: K<sub>CT</sub> || ID || AD<sub>C</sub> || ID<sub>TGS</sub> || T<sub>2</sub> || deltaT<sub>2</sub>\
   \
-  `ticketTGS: EKtgs(ticketTGS)`\
+  ticket<sub>TGS</sub>: E<sub>K<sub>TGS</sub></sub>(ticket<sub>TGS</sub>)\
   \
-  `AS -> C: EPSW(KCT || IDtgs || T2 || DT2 || ticketTGS)`
+  AS -> C: E<sub>PSW</sub>(K<sub>CT</sub> || ID<sub>TGS</sub> || T<sub>2</sub> || DT<sub>2</sub> || ticket<sub>TGS</sub>)
 - C risponde alla sfida, richiedendo anche l'accesso al server V:
   ![](./img/img97.png)
-  C richiede all'utente di digitare la sua password, ne calcola l'hash e lo utilizza come chiave per decifrare il messaggio di AS. L'utente fornisce l'ID del server V e lo invia a TGS insieme al ticket ricevuto da AS e ad un autenticatore cifrato con Kct dimostrando di conoscere la password, dunque identificandosi come vero C. L'autenticatore contiene anche una marca temporale che consentirà a TGS di controllare se la sessione è ancora valida:\
+  C richiede all'utente di digitare la sua password, ne calcola l'hash e lo utilizza come chiave per decifrare il messaggio di AS. L'utente fornisce l'ID del server V e lo invia a TGS insieme al ticket ricevuto da AS e ad un autenticatore cifrato con K<sub>CT</sub> dimostrando di conoscere la password, dunque identificandosi come vero C. L'autenticatore contiene anche una marca temporale che consentirà a TGS di controllare se la sessione è ancora valida:\
   \
-  `autenticatoreC: ID || ADc || T3`\
+  autenticatore<sub>C</sub>: ID || AD<sub>C</sub> || T<sub>3</sub>\
   \
-  `autenticatoreC: Ekct(autenticatoreC)`\
+  autenticatore<sub>C</sub>:
+  E<sub>K<sub>CT</sub></sub>(autenticatore<sub>C</sub>)\
   \
-  `C -> TGS: IDV || ticketTGS || autenticatoreC`\
+  C -> TGS: ID<sub>V</sub> || ticket<sub>TGS</sub> || autenticatore<sub>C</sub>\
   \
   Se si prelevasse in una sessione precedente ticketTGS, non sarebbe utilizzabile perché l'intrusore non saprebbe costruire l'autenticatore.
 - TGS fornisce a C il permesso d'accesso a V e lo sfida ad usarlo:
   ![](./img/img98.png)
   TGS decifra il ticket ed estrae la chiave di sessione Kct con la quale può decifrare l'autenticatore e confrontare le informazioni contenute con quelle del ticket. TGS sceglie a caso una nuova chiave di sessione Kcv, fissa un intervallo DT4 di tempo per la sessione tra C e V e predispone un ticket che cifra con la chiave che ha concordato solo con V. L'intero messaggio viene inviato a C cifrato con Kct:\
   \
-  `ticketV: KCV || ID || ADC || IDV || T4 || DT`\
+  ticket<sub>V</sub>: K<sub>CV</sub> || ID || AD<sub>C</sub> || ID<sub>V</sub> || T<sub>4</sub> || DT\
   \
-  `ticketV: EKV(ticketV)`\
+  ticket<sub>V</sub>: E<sub>KV</sub>(ticket<sub>V</sub>)\
   \
-  `TGS -> C : EKCT(KCV || IDV || T4 || ticketV)`
+  TGS -> C : E<sub>K<sub>CT</sub></sub>(K<sub>CV</sub> || ID<sub>V</sub> || T<sub>4</sub> || ticket<sub>V</sub>)
 - C risponde alla sfida e si qualifica a V:
   ![](./img/img99.png)
-  C decifra il messaggio ed estrae la chiave di sessione. Inoltra quindi a V il ticket ottenuto da TGS e un autenticatore cifrato con la chiave Kcv contenente le sue informazioni, che serve anche a C per sfidare V. L'autenticatore contiene anche una marca temporale che indica il momento in cui C inizia la sua sessione con V (la sessione con V scadrà dopo un intervallo di tempo DT4):\
+  C decifra il messaggio ed estrae la chiave di sessione. Inoltra quindi a V il ticket ottenuto da TGS e un autenticatore cifrato con la chiave K<sub>CV</sub> contenente le sue informazioni, che serve anche a C per sfidare V. L'autenticatore contiene anche una marca temporale che indica il momento in cui C inizia la sua sessione con V (la sessione con V scadrà dopo un intervallo di tempo DT<sub>4</sub>):\
   \
-  `autenticatoreC : EKCV(IDC || ADC || T5)`\
+  autenticatore<sub>C</sub> : E<sub>K<sub>CV</sub></sub>(ID<sub>C</sub> || AD<sub>C</sub> || T<sub>5</sub>)\
   \
-  `C -> V: ticketV || autenticatoreC`
+  C -> V: ticket<sub>V</sub> || autenticatore<sub>C</sub>
 - V si fa identificare da C:
   ![](./img/img100.png)
-  V decifra il ticket di TGS ed estrae quindi la chiave di sessione Kcv. Decifra quindi l'autenticatore e si accerta che le informazioni coincidano. Per rispondere alla sfida lanciata da C invia un messaggio cifrato con Kcv. C decifra, controlla e se tutto va bene può iniziare ad utilizzare i servizi di V:\
+  V decifra il ticket di TGS ed estrae quindi la chiave di sessione K<sub>CV</sub>. Decifra quindi l'autenticatore e si accerta che le informazioni coincidano. Per rispondere alla sfida lanciata da C invia un messaggio cifrato con K<sub>CV</sub>. C decifra, controlla e se tutto va bene può iniziare ad utilizzare i servizi di V:\
   \
-  `V -> C : EKCV(T5+1)`\
+  V -> C : E<sub>K<sub>CV</sub></sub>(T<sub>5+1</sub>)\
   \
   Se l'utente ha ancora bisogno di V il protocollo ricomincia dal passo 5. Se ha bisogno di accedere ad un altro server ricomincia dal passo 3. Questo protocollo non ammette operazioni illecite da parte di intrusi malevoli.
 
@@ -2840,14 +2860,14 @@ Se si chiede un servizio ad un dominio di autenticazione diverso da quello del c
 
 ![](./img/img101.png)
 
-Se un utente di un dominio ha bisogno di accedere ad un servizio inserito in un altro dominio e gestito quindi da un altro TGS a lui noto, ne indica l'identificativo al posto di IDv, quando, al passo 3, si mette in contatto con il suo TGS. Al passo 4, C ottiene il ticket d'accesso al TGS remoto, al passo 5 gli richiede il ticket d'accesso al server desiderato, al passo 6 lo ottiene ed al passo 7 contatta il server.
+Se un utente di un dominio ha bisogno di accedere ad un servizio inserito in un altro dominio e gestito quindi da un altro TGS a lui noto, ne indica l'identificativo al posto di ID<sub>V</sub>, quando, al passo 3, si mette in contatto con il suo TGS. Al passo 4, C ottiene il ticket d'accesso al TGS remoto, al passo 5 gli richiede il ticket d'accesso al server desiderato, al passo 6 lo ottiene ed al passo 7 contatta il server.
 
 Kerberos v4 presenta forti limitazioni:
 
 - Forte dipendenza dal DES.
 - Dipende dallo schema di indirizzamento IP.
 - Il dimensionamento della durata del ticket porta a compromessi tra robustezza ed efficienza.
-- Se si hanno N domini esterni, servono N^2 chiavi da condividere e predistribuite (scalabilità limitata). Infatti, se un TGS è presente in un altro dominio rispetto a C, serve: una chiave condivisa tra C e AS, una chiave tra AS e TGS, una chiave per ogni TGS di dominio diverso.
+- Se si hanno N domini esterni, servono N<sup>2</sup> chiavi da condividere e predistribuite (scalabilità limitata). Infatti, se un TGS è presente in un altro dominio rispetto a C, serve: una chiave condivisa tra C e AS, una chiave tra AS e TGS, una chiave per ogni TGS di dominio diverso.
 
 <!-- lezione 01/12 -->
 
@@ -2897,7 +2917,9 @@ Se viene selezionato un nodo `D` malintenzionato:
 - `D` non può rubare la moneta di qualcun'altro perché per pagare si deve firmare con chiave privata del mittente (non è problema).
 - `D` può evitare di inserire una transazione valida nel suo blocco. Dato che le trasmissioni avvengono in broadcast, ci sarà un nodo non malevolo che invece la inserirà (non è problema) e sarà prima o poi scelto.
 - `D` può effettuare un attacco di doppia spesa perché l'algoritmo converge in modo lento. `D` invia una somma di denaro ad una persona e questa transazione viene inserita già dentro alla blockchain. Subito dopo `D` viene selezionato e include nel blocco una nuova transazione con dentro la stessa somma di denaro della transazione precedente ma inviata ad un altra persona. `D` genera un blocco che è in competizione con l'ultimo blocco generato in precedenza.
+
 ![](./img/img105.png)
+
 Dato che la trasmissione avviene in rete, alcuni nodi avranno prima il blocco in alto e altri il blocco in basso. Per evitare questa problematica, si richiede a tutti i nodi di estendere sempre la catena più lunga in caso di catene parallele. Per evitare di creare catene parallele, viene creato ogni 10 minuti circa un nuovo blocco perché è fattibile creare catene in parallelo. Per aumentare la probabilità di selezionare un nodo onesto, le criptovalute utilizzano un sistema di incentivi:
 
   - **Block reward**: quando un nodo viene selezionato per generare un blocco, il nodo ha diritto di realizzare **una** transazione che crea moneta dal nulla (coinbase transaction). Questo nodo ha il diritto di attribuire a chiunque il denaro creato (anche a se stesso).
@@ -2913,10 +2935,12 @@ Un algoritmo più usato è **Prof of Work (Pow)**: i nodi devono dedicare alla r
 Più è elevato il valore soglia, più si trova in fretta l'once.
 Inoltre, la soglia è un valore numerico deciso in modo dinamico: se per generare un blocco viene impiegato un tempo pari a 6 minuti, l'algoritmo fa in modo che la volta successiva ci voglia più tempo.
 L'hash è un valore esadecimale (un numero) che può essere convertito in decimale.
+
 ![](./img/img106.png)
+
 Questa operazione non è altro che un attacco di forza bruta perché bisogna provare tutti i valori del nonce.
 Se due nodi risolvono il blocco nello stesso momento, alcuni nodi riceveranno un blocco e altre un altro ma solo uno dei due rimarrà nella _storia_. Quando la catena si allunga, i nodi si allineeranno nella versione con la catena più lunga e quindi resterà solo un blocco. Quindi, quando una transazione è inserita in un nodo non è detto che sia _approvata_ ma bisogna aspettare almeno sei conferme cioè aspettare che vengano generati altri sei blocchi.
-Un attacco che può essere eseguito è detto attacco del 51%: se la competizione per la generazione di un blocco non è _dura_ allora controllare la capacità computazionale della rete perché verrà sempre quasi scelto. Se un nodo ha il 51% della capacità computazionale, allora si possono creare catene alternative perché si viene sempre quasi scelti. I sistemi come Bitcoin non hanno questo problema perché il sistema su incentivi sono vantaggiosi e quindi molti partecipano.
+Un attacco che può essere eseguito è detto attacco del 51%: se la competizione per la generazione di un blocco non è _dura_ allora controllare la capacità computazionale della rete perché verrà quasi sempre scelto. Se un nodo ha il 51% della capacità computazionale, allora si possono creare catene alternative affinché si venga scelti molto probabilmente. I sistemi come Bitcoin non hanno questo problema perché il sistema su incentivi sono vantaggiosi e quindi molti partecipano.
 
 ### Merkle Trees
 
@@ -2929,6 +2953,5 @@ Si parte dalle foglie (i dati). Per ogni coppia di dati si calcola una coppia di
 ### Bitcoin
 
 Bitcoin è la prima criptovaluta.
-Rete P2P di nodi dove ogni nodo potenzialmente memorizza una copia del registro. Bitcoin permette di ricevere e fare pagamenti in forma anonima perché non c'è un'autorità che effettua un'associazione persona-chiave e non tracciabile perché ogni utente è individuato da un indirizzo che viene individuato dalla chiave pubblica. Vengono algoritmi di hash crittograficamente sicuri su curve elittiche per fare la firma delle transazioni.
-
-e i Bitcoin garantiscono l'anonimità dei partecipanti perché in assenza di un'entità che associa un nome a una coppia di chiavi, si rimane anomimi.
+Rete P2P di nodi dove ogni nodo potenzialmente memorizza una copia del registro. Bitcoin permette di ricevere e fare pagamenti in forma anonima perché non c'è un'autorità che effettua un'associazione persona-chiave e non tracciabile perché ogni utente è individuato da un indirizzo che viene individuato dalla chiave pubblica. Vengono algoritmi di hash crittograficamente sicuri su curve ellittiche per fare la firma delle transazioni.
+I Bitcoin garantiscono l'anonimato dei partecipanti perché in assenza di un'entità che associa un nome a una coppia di chiavi, si rimane anonimi.
