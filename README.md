@@ -2800,27 +2800,56 @@ password, se troppo lungo problema di intercettazione e riutilizzo.
 
 ### Kerberos V4
 
-Si assume che sulle workstation sia presente un client Kerberos. Per ogni dominio Realm di amministrazione Kerberos esiste un AS e un TGS. AS gestisce un insieme di utenti che appartengono a quel dominio e il TGS amministra il rilascio delle credenziali che appartengono a quel dominio. Gli utenti devono precondividere una prova di conoscenza con gli AS. L'utente sceglie una passphrase e la sottopone ad una funzione hash (chiave di cifratura). Viene precondivisa anche una chiave K<sub>TGS</sub> tra AS e TGS e tra TGS e con i servizi.
+Si assume che sulle workstation sia presente un client Kerberos. Per ogni
+dominio Realm di amministrazione Kerberos esiste un AS e un TGS. AS gestisce un
+insieme di utenti che appartengono a quel dominio e il TGS amministra il
+rilascio delle credenziali che appartengono a quel dominio. Gli utenti devono
+precondividere una prova di conoscenza con gli AS. L'utente sceglie una
+passphrase e la sottopone ad una funzione hash (chiave di cifratura). Viene
+precondivisa anche una chiave K<sub>TGS</sub> tra AS e TGS e tra TGS e con i
+servizi.
 
 ![](./img/img94.png)
 
 La comunicazione totale si articola in questo modo:
 
 - All'inizio della sessione di lavoro sulla stazione C, l'utente dichiara la sua identità ad AS:
+
   ![](./img/img95.png)
-  L'utente fornisce alla workstation C il proprio ID e l'ID del TGS a cui vuole accedere. C invia ad AS una richiesta di accesso a TGS, contenente anche l'indirizzo di C e una marca temporale T<sub>1</sub> (timestamping utili per evitare intercettazioni e repliche). L'ID<sub>TGS</sub> è da specificare perché potenzialmente si potrebbe accedere a servizi appartenenti a domini differenti:\
+
+  L'utente fornisce alla workstation C il proprio ID e l'ID del TGS a cui vuole
+  accedere. C invia ad AS una richiesta di accesso a TGS, contenente anche
+  l'indirizzo di C e una marca temporale T<sub>1</sub> (timestamping utili per
+  evitare intercettazioni e repliche). L'ID<sub>TGS</sub> è da specificare
+  perché potenzialmente si potrebbe accedere a servizi appartenenti a domini
+  differenti:\
   C -> AS: ID || AD<sub>C</sub> || ID<sub>TGS</sub> || T<sub>1</sub>
 - AS fornisce a C il permesso d'accesso a TGS e lo sfida ad usarlo:
+
   ![](./img/img96.png)
-  AS controlla T<sub>1</sub> tramite ID prelevando dalla sua memoria H(P) e la utilizza per cifrare il messaggio da inviare a C (crea una sfida), contenente la chiave di sessione K<sub>CT</sub> tra C e TGS, una marca temporale T<sub>2</sub>, una durata massima della sessione di ID su C e il ticket da inviare poi al TGS contenente le informazioni su chi è l'utente, su quale stazione lavora, qual è la chiave di sessione e per quanto è valida, il tutto cifrato con la chiave concordata tra AS e TGS:\
+
+  AS controlla T<sub>1</sub> tramite ID prelevando dalla sua memoria H(P) e la
+  utilizza per cifrare il messaggio da inviare a C (crea una sfida), contenente
+  la chiave di sessione K<sub>CT</sub> tra C e TGS, una marca temporale
+  T<sub>2</sub>, una durata massima della sessione di ID su C e il ticket da
+  inviare poi al TGS contenente le informazioni su chi è l'utente, su quale
+  stazione lavora, qual è la chiave di sessione e per quanto è valida, il tutto
+  cifrato con la chiave concordata tra AS e TGS:\
   ticket<sub>TGS</sub>: K<sub>CT</sub> || ID || AD<sub>C</sub> || ID<sub>TGS</sub> || T<sub>2</sub> || deltaT<sub>2</sub>\
   \
   ticket<sub>TGS</sub>: E<sub>K<sub>TGS</sub></sub>(ticket<sub>TGS</sub>)\
   \
   AS -> C: E<sub>PSW</sub>(K<sub>CT</sub> || ID<sub>TGS</sub> || T<sub>2</sub> || DT<sub>2</sub> || ticket<sub>TGS</sub>)
 - C risponde alla sfida, richiedendo anche l'accesso al server V:
+
   ![](./img/img97.png)
-  C richiede all'utente di digitare la sua password, ne calcola l'hash e lo utilizza come chiave per decifrare il messaggio di AS. L'utente fornisce l'ID del server V e lo invia a TGS insieme al ticket ricevuto da AS e ad un autenticatore cifrato con K<sub>CT</sub> dimostrando di conoscere la password, dunque identificandosi come vero C. L'autenticatore contiene anche una marca temporale che consentirà a TGS di controllare se la sessione è ancora valida:\
+
+  C richiede all'utente di digitare la sua password, ne calcola l'hash e lo
+  utilizza come chiave per decifrare il messaggio di AS. L'utente fornisce l'ID
+  del server V e lo invia a TGS insieme al ticket ricevuto da AS e ad un
+  autenticatore cifrato con K<sub>CT</sub> dimostrando di conoscere la password,
+  dunque identificandosi come vero C. L'autenticatore contiene anche una marca
+  temporale che consentirà a TGS di controllare se la sessione è ancora valida:\
   \
   autenticatore<sub>C</sub>: ID || AD<sub>C</sub> || T<sub>3</sub>\
   \
@@ -2829,10 +2858,18 @@ La comunicazione totale si articola in questo modo:
   \
   C -> TGS: ID<sub>V</sub> || ticket<sub>TGS</sub> || autenticatore<sub>C</sub>\
   \
-  Se si prelevasse in una sessione precedente ticketTGS, non sarebbe utilizzabile perché l'intrusore non saprebbe costruire l'autenticatore.
+  Se si prelevasse in una sessione precedente ticketTGS, non sarebbe
+  utilizzabile perché l'intrusore non saprebbe costruire l'autenticatore.
 - TGS fornisce a C il permesso d'accesso a V e lo sfida ad usarlo:
+
   ![](./img/img98.png)
-  TGS decifra il ticket ed estrae la chiave di sessione Kct con la quale può decifrare l'autenticatore e confrontare le informazioni contenute con quelle del ticket. TGS sceglie a caso una nuova chiave di sessione Kcv, fissa un intervallo DT4 di tempo per la sessione tra C e V e predispone un ticket che cifra con la chiave che ha concordato solo con V. L'intero messaggio viene inviato a C cifrato con Kct:\
+
+  TGS decifra il ticket ed estrae la chiave di sessione K<sub>CT</sub> con la
+  quale può decifrare l'autenticatore e confrontare le informazioni contenute
+  con quelle del ticket. TGS sceglie a caso una nuova chiave di sessione
+  K<sub>CV</sub>, fissa un intervallo DT<sub>4</sub> di tempo per la sessione
+  tra C e V e predispone un ticket che cifra con la chiave che ha concordato
+  solo con V. L'intero messaggio viene inviato a C cifrato con K<sub>CT</sub>:\
   \
   ticket<sub>V</sub>: K<sub>CV</sub> || ID || AD<sub>C</sub> || ID<sub>V</sub> || T<sub>4</sub> || DT\
   \
@@ -2840,15 +2877,28 @@ La comunicazione totale si articola in questo modo:
   \
   TGS -> C : E<sub>K<sub>CT</sub></sub>(K<sub>CV</sub> || ID<sub>V</sub> || T<sub>4</sub> || ticket<sub>V</sub>)
 - C risponde alla sfida e si qualifica a V:
+
   ![](./img/img99.png)
-  C decifra il messaggio ed estrae la chiave di sessione. Inoltra quindi a V il ticket ottenuto da TGS e un autenticatore cifrato con la chiave K<sub>CV</sub> contenente le sue informazioni, che serve anche a C per sfidare V. L'autenticatore contiene anche una marca temporale che indica il momento in cui C inizia la sua sessione con V (la sessione con V scadrà dopo un intervallo di tempo DT<sub>4</sub>):\
+
+  C decifra il messaggio ed estrae la chiave di sessione. Inoltra quindi a V il
+  ticket ottenuto da TGS e un autenticatore cifrato con la chiave K<sub>CV</sub>
+  contenente le sue informazioni, che serve anche a C per sfidare V.
+  L'autenticatore contiene anche una marca temporale che indica il momento in
+  cui C inizia la sua sessione con V (la sessione con V scadrà dopo un
+  intervallo di tempo DT<sub>4</sub>):\
   \
   autenticatore<sub>C</sub> : E<sub>K<sub>CV</sub></sub>(ID<sub>C</sub> || AD<sub>C</sub> || T<sub>5</sub>)\
   \
   C -> V: ticket<sub>V</sub> || autenticatore<sub>C</sub>
 - V si fa identificare da C:
+
   ![](./img/img100.png)
-  V decifra il ticket di TGS ed estrae quindi la chiave di sessione K<sub>CV</sub>. Decifra quindi l'autenticatore e si accerta che le informazioni coincidano. Per rispondere alla sfida lanciata da C invia un messaggio cifrato con K<sub>CV</sub>. C decifra, controlla e se tutto va bene può iniziare ad utilizzare i servizi di V:\
+
+  V decifra il ticket di TGS ed estrae quindi la chiave di sessione
+  K<sub>CV</sub>. Decifra quindi l'autenticatore e si accerta che le
+  informazioni coincidano. Per rispondere alla sfida lanciata da C invia un
+  messaggio cifrato con K<sub>CV</sub>. C decifra, controlla e se tutto va bene
+  può iniziare ad utilizzare i servizi di V:\
   \
   V -> C : E<sub>K<sub>CV</sub></sub>(T<sub>5+1</sub>)\
   \
@@ -2856,7 +2906,13 @@ La comunicazione totale si articola in questo modo:
 
 ### Request for Service in Another Realm
 
-Se si chiede un servizio ad un dominio di autenticazione diverso da quello del cliente bisogna rendere scalabile questo servizio di autenticazione. È stata prevista la coesistenza di diversi domini tra cui esiste un rapporto di reciproca fiducia. La relazione di fiducia avviene tra TGS: il TGS remoto si fida del TGS del dominio di origine se quello di origine precondivide con lui una chiave. AS deve precondividere tante chiavi quanti sono i TGS che sono in relazione di fiducia tra di loro.
+Se si chiede un servizio ad un dominio di autenticazione diverso da quello del
+cliente bisogna rendere scalabile questo servizio di autenticazione. È stata
+prevista la coesistenza di diversi domini tra cui esiste un rapporto di
+reciproca fiducia. La relazione di fiducia avviene tra TGS: il TGS remoto si
+fida del TGS del dominio di origine se quello di origine precondivide con lui
+una chiave. AS deve precondividere tante chiavi quanti sono i TGS che sono in
+relazione di fiducia tra di loro.
 
 ![](./img/img101.png)
 
@@ -2900,7 +2956,7 @@ Ogni blocco contiene:
 - **dati**: contiene un insieme di transazioni finanziarie (se riferito ai Bitcoin).
 - **header hash**: identifica univocamente l'hash applicato all'header del blocco e viene generato tramite un hash crittograficamente sicuro.
 
-Ogni record linka il blocco precedente. Il primo blocco prende il nome di genesis block.
+Ogni record ha un riferimento al blocco precedente. Il primo blocco prende il nome di genesis block.
 
 ![](./img/img104.png)
 
@@ -2914,7 +2970,7 @@ Ogni volta che i nodi hanno ricevuto la transazione, viene memorizzata nella cac
 
 Se viene selezionato un nodo `D` malintenzionato:
 
-- `D` non può rubare la moneta di qualcun'altro perché per pagare si deve firmare con chiave privata del mittente (non è problema).
+- `D` non può rubare la moneta di qualcun altro perché per pagare si deve firmare con chiave privata del mittente (non è problema).
 - `D` può evitare di inserire una transazione valida nel suo blocco. Dato che le trasmissioni avvengono in broadcast, ci sarà un nodo non malevolo che invece la inserirà (non è problema) e sarà prima o poi scelto.
 - `D` può effettuare un attacco di doppia spesa perché l'algoritmo converge in modo lento. `D` invia una somma di denaro ad una persona e questa transazione viene inserita già dentro alla blockchain. Subito dopo `D` viene selezionato e include nel blocco una nuova transazione con dentro la stessa somma di denaro della transazione precedente ma inviata ad un altra persona. `D` genera un blocco che è in competizione con l'ultimo blocco generato in precedenza.
 
@@ -2928,7 +2984,7 @@ Dato che la trasmissione avviene in rete, alcuni nodi avranno prima il blocco in
 Vengono intascati entrambi da chi genera il blocco.
 
 Dunque, è importante la **selezione del nodo**: la selezione dei nodi non è casuale ma deriva da una competizione tra tutti i nodi. La competizione può essere:
-Un algoritmo più usato è **Prof of Work (Pow)**: i nodi devono dedicare alla rete del potere computazionale (es. CPU, GPU). I nodi devono risolvere un puzzle e il nodo che termina prima avrà diritto ai premi e manda in broadcast il blocco generato. L'operazione di risolvere il puzzle si chiama mining. Un nodo miner è un nodo che partecipa a questa competizione e dedica le sue risorse computazionali. Il puzzle consiste nel trovare il valore di un nonce (un numero intero) tale per cui l'hash dell'**intero blocco** (questo valore non è presente nella struttura del blockchain ma viene calcolato dal nodo) ha un valore inferiore di una certa soglia:
+Un algoritmo più usato è **Proof of Work (PoW)**: i nodi devono dedicare alla rete del potere computazionale (es. CPU, GPU). I nodi devono risolvere un puzzle e il nodo che termina prima avrà diritto ai premi e manda in broadcast il blocco generato. L'operazione di risolvere il puzzle si chiama mining. Un nodo miner è un nodo che partecipa a questa competizione e dedica le sue risorse computazionali. Il puzzle consiste nel trovare il valore di un nonce (un numero intero) tale per cui l'hash dell'**intero blocco** (questo valore non è presente nella struttura del blockchain ma viene calcolato dal nodo) ha un valore inferiore di una certa soglia:
 
 `HASH < soglia`
 
