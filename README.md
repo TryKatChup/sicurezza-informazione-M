@@ -400,7 +400,7 @@ Una funzione hash ha la seguente proprietà:
 
 Oltre alla proprietà appena scritta, risulta importante che essa sia crittograficamente sicura e abbia anche le seguenti proprietà:
 
-- **Comportamento da "oracolo casuale"**: se si decide che l'impronta sia costituita da `n` bit, le possibili uscite della funzione hash sono `2^n`. 
+- **Comportamento da "oracolo casuale"**: se si decide che l'impronta sia costituita da `n` bit, le possibili uscite della funzione hash sono 2<sup>n</sup>. 
 Considerato il messaggio `m`, bisogna fare in modo che la probabilità che esca un'uscita rispetto ad un'altra sia la stessa. Inoltre, se il messaggio viene ripetuto, la risposta sarà la medesima, dato che è stata assegnata precedentemente dall'oracolo.
 
 - **Resistente alle collisioni**: per un intrusore deve essere molto difficile individuare due messaggi che abbiano la stessa impronta.
@@ -624,7 +624,7 @@ In questo caso, si invia un messaggio che rispetta le proprietà di **riservatez
 
 In fase di invio, il messaggio viene cifrato e autenticato, mentre in fase di ricezione viene controllato l'attestato di autenticità e decifrato il messaggio.
 
-Questo schema viene usato dal protocollo IPsec. È un protocollo SSL a livello di trasporto (TCP). Vengono creati socket sicuri in cui i messaggi sono autenticati.
+Questo schema viene usato dal protocollo IPsec. È un protocollo di sicurezza a livello di rete.
 
 La ricezione è efficiente: viene risparmiata una trasformazione. Se il testo cifrato ha subito delle modifiche, chi riceve verifica il certificato e, se qualche operazione illegale è avvenuta, si evita l'operazione di decifratura.
 
@@ -694,8 +694,8 @@ Possiamo avere tre approcci:
 - **Parametro**: la macchina e l'algoritmo sono noti, ma un parametro di ingresso dell'algoritmo è segreto (chiave crittografica).
 
 I primi due approcci non sono molto funzionali:
-- **No manutenibilità**: _security through obscurity is always a bad idea_. <!--stfu Microsoft and Apple)-->
-- **No scalabilità**: vedi sopra. <!--apple-->
+- **No manutenibilità**: _security through obscurity is always a bad idea_.
+- **No scalabilità**: vedi sopra.
 - **No Certificazione**: chi garantisce che quello che si sta usando è davvero sicuro, se nessuno conosce come è stato costruito?
 
 L'approccio usato al giorno d'oggi, quindi, risulta essere la trasfrormazione segreta tramite parametro.
