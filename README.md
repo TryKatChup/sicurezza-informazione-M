@@ -2929,7 +2929,80 @@ Kerberos v4 presenta forti limitazioni:
 
 ## Modello di Controllo dell'Accesso basato sui ruoli (RBAC)
 
-25.20
+Sistemi di tipo Role Based Access Control (RBAC) assegnano i privilegi non agli
+utenti, ma alla funzione che questi possono svolgere nel contesto di una certa
+organizzazione. L’utente acquista quindi privilegi assumendo uno o più ruoli.
+
+RBAC consente di supportare facilmente i ben conosciuti principi di sicurezza:
+- minimo privilegio
+- separazione dei compiti: l’utilizzo di ruoli mutuamente esclusivi potrebbe
+  essere necessario in certe situazioni critiche (evitare che il “controllato”
+  sia anche il “controllore”)
+- astrazione dei dati: invece dei tipici permessi “read”, “write”, “execute”
+  utilizzati nei sistemi operativi, possono essere stabiliti permessi più di
+  alto livello
+
+In RBAC un ruolo è visto come un costrutto semantico
+attorno al quale vengono formulate le politiche di controllo
+d’accesso. Il concetto di controllo ha diversi significati: rappresenta la
+*competenza* nel compiere una specifica attività e incorpora l'*autorità* e la
+*responsabilità*.
+
+Un sistema RBAC correttamente amministrato fornisce una grande flessibilità agli
+amministratori di sistema con il minimo sforzo: i ruoli nell'organizzazione
+variano molto raramente, quindi dopo aver stabilito inizialmente i permessi per
+ogni ruolo, tutto quello che l'amministratore deve fare è gestire l'assegnazione
+degli utenti ai ruoli.\
+Questo si traduce in un grande vantaggio rispetto alle politiche DAC o MAC.
+
+RBAC è stato standardizzato come ANSI/INCITS 359-2004, e in questo documento
+sono stati proposti 4 modelli RBAC in modo incrementale:
+- Core RBAC: in questo modello vengono definiti gli elementi essenziali:
+    - Utente: tipicamente una persona ma potrebbe per esempio essere un agente
+      software
+    - Ruolo: è una “funzione lavorativa” all’interno di un sistema
+      (organizzazione) che descrive le autorità e le responsabilità conferite al
+      “membro” del ruolo
+    - Permesso: è l'approvazione di un particolare modo di accesso ad uno o più
+      oggetti (risorse) del sistema (organizzazione)
+    - Sessione: l'utente stabilisce una sessione durante la quale può attivare
+      un sottoinsieme dei ruoli che gli appartengono. Ogni sessione mappa un
+      utente sui possibili ruoli che può attivare
+
+  Non esiste il permesso di compiere un operazione generale, ma per ogni risorsa
+  esiste un permesso per ogni singola operazione che è possibile eseguire su di
+  essa.
+  Implementare un modello Core RBAC vuol dire fornire un sistema con cui è
+  possibile interagire mediante:
+  - Funzioni di amministrazione
+  - Funzioni di supporto
+  - Funzioni di monitoraggio
+
+- RBAC Gerarchico: Una gerarchia è un modo naturale di strutturare i ruoli
+  all'interno di una organizzazione che rispecchia l'effettiva responsabilità e
+  autorità di ognuno.
+  A questa gerarchia di ruoli corrisponde di solito una effettiva ereditarietà
+  di permessi, ovvero, salendo nella gerarchia, i vari ruoli possiedono tutti i
+  permessi dei ruoli sottoposti, oltre ai propri.
+
+- RBAC con Vincoli SSD: In RBAC è possibile definire vincoli SSD (Static
+  Separation of Duty) sia sulla relazione utente-ruolo che sulla relazione
+  gerarchica tra ruoli: è possibile escludere a priori dei ruoli sia tra quelli
+  assegnabili direttamente ad un certo utente, sia tra quelli da cui può
+  ereditare dei permessi. Un vincolo SSD è espresso con un insieme di coppie rs
+  e n, ossia un sottoinsieme di ruoli e un numero intero maggiore di 1. Una
+  coppia di questo tipo specifica che nessun utente può essere assegnato
+  (direttamente o tramite ereditarietà) a n o più ruoli nel sottoinsieme rs.
+
+- RBAC con Vincoli DSD: Non si vuole limitare a priori il numero di ruoli che i
+  vari utenti possono assumere, ma solo quelli che posso essere attivati
+  contemporaneamente, oppure i vincoli imposti staticamente potrebbero non
+  bastare ed occorre introdurne altri in fase di esecuzione. Attraverso vincoli
+  dinamici è possibile impedire che un utente attivi contemporaneamente più
+  ruoli (e quindi acquisisca più privilegi) di quelli che gli sono strettamente
+  necessari al momento
+
+<!-- da ricontrollare e aggiungere qualcosa -->
 
 <!-- lezione 09/12 -->
 
