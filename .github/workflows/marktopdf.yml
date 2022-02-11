@@ -15,8 +15,9 @@ jobs:
         with:
           input_dir: .
           images_dir: img
+          image_import: ./img
           output_dir: pdf
-          table_of_contents: true
+          table_of_contents: false
           build_html: false
       - name: Update PDF
         run: |
