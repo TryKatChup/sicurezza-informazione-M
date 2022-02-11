@@ -1,0 +1,20 @@
+name: Markdown to PDF and HTML
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  converttopdf:
+    name: Build PDF
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: BaileyJM02/markdown-to-pdf@v1
+        with:
+          input_dir: .
+          images_dir: ./img
+          output_dir: .
+          table_of_contents: true
+          build_html: false
