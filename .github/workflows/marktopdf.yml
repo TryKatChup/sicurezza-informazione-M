@@ -14,7 +14,12 @@ jobs:
       - uses: BaileyJM02/markdown-to-pdf@v1
         with:
           input_dir: .
-          images_dir: ./img
-          output_dir: .
+          images_dir: img
+          output_dir: pdf
           table_of_contents: true
           build_html: false
+      - uses: actions/upload-artifact@v1
+        with:
+          name: .
+          path: pdf
+
