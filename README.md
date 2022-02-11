@@ -1638,11 +1638,6 @@ Quindi il nuovo vettore di inizializzazione deve essere: IV' = IV XOR 80 XOR 25:
 
 `D(k, c[0]) XOR IV XOR 80 XOR 25 = 25`
 
-In conclusione:
-
-- Se si vuole garantire solo integrità si usa MAC (Message Autenthication Code);
-- Se si vuole garantire integrità e confidenzialità si usa _authenticated encryption_.
-
 ### Autenticazione con cifrario simmetrico
 
 Il cifrario simmetrico non garantisce autenticazione (solo in sotto scenari).
