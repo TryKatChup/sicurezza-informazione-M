@@ -185,7 +185,7 @@ Il tema della sicurezza informatica è molto importante, in un mondo come quello
 Lo scopo della sicurezza informatica è di proteggere le risorse da accessi indesiderati, garantire la riservatezza delle informazioni, assicurare il funzionamento e la disponibilità dei servizi a fronte di eventi imprevedibili.
 Per essere più precisi, è l'insieme dei prodotti, dei servizi, delle regole organizzative e dei comportamenti individuali che proteggono i sistemi informatici di un'azienda.
 
-[Torna all'indice](#indice)
+[Torna all'indice](#sicurezza-dellinformazione-2021-2022)
 
 ### I tre capisaldi della sicurezza informatica (CIA Trade Triangle)
 
