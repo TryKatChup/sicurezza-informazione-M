@@ -5,7 +5,7 @@
 
 <div align="center">
 
-[![Dark/Light Mode](https://img.shields.io/badge/Compatible-Dark&Light%20Mode-1f425f.svg)](https://github.com/dariodenardi)
+[![Dark/Light Mode](https://img.shields.io/badge/Compatible-Dark%26Light%20Mode-1f425f.svg)](https://github.com/dariodenardi)
 [![License: CC0-1.0](https://img.shields.io/badge/License-CC0%201.0-blue.svg)](http://creativecommons.org/publicdomain/zero/1.0/)
 </div>
 
@@ -185,7 +185,7 @@ Il tema della sicurezza informatica è molto importante, in un mondo come quello
 Lo scopo della sicurezza informatica è di proteggere le risorse da accessi indesiderati, garantire la riservatezza delle informazioni, assicurare il funzionamento e la disponibilità dei servizi a fronte di eventi imprevedibili.
 Per essere più precisi, è l'insieme dei prodotti, dei servizi, delle regole organizzative e dei comportamenti individuali che proteggono i sistemi informatici di un'azienda.
 
-<a href="#indice">Torna all'indice</a>
+[Torna all'indice](#indice)
 
 ### I tre capisaldi della sicurezza informatica (CIA Trade Triangle)
 
